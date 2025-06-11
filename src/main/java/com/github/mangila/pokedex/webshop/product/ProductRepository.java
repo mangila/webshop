@@ -12,6 +12,4 @@ public class ProductRepository {
         this.jdbc = jdbc;
     }
 
-
-
 }

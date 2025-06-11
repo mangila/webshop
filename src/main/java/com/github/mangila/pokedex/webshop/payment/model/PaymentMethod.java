@@ -1,4 +1,4 @@
-package com.github.mangila.pokedex.webshop.order.model;
+package com.github.mangila.pokedex.webshop.payment.model;
 
 public enum PaymentMethod {
     CREDIT_CARD,

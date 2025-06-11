@@ -9,3 +9,8 @@ spring:
   graphql:
     schema:
       file-extensions: .graphql
+  docker:
+    compose:
+      enabled: true
+      skip:
+        in-tests: true
