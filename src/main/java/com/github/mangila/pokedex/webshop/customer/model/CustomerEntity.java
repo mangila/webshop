@@ -1,7 +1,7 @@
 package com.github.mangila.pokedex.webshop.customer.model;
 
 import com.github.mangila.pokedex.webshop.order.model.OrderEntity;
-import com.github.mangila.pokedex.webshop.shared.BaseEntity;
+import com.github.mangila.pokedex.webshop.shared.model.BaseEntity;
 
 import java.util.Set;
 

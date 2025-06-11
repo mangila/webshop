@@ -1,6 +1,6 @@
 package com.github.mangila.pokedex.webshop.product.model;
 
-import com.github.mangila.pokedex.webshop.shared.BaseEntity;
+import com.github.mangila.pokedex.webshop.shared.model.BaseEntity;
 
 import java.math.BigDecimal;
 
