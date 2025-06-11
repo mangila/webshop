@@ -2,3 +2,10 @@
 spring:
   application:
     name: "webshop"
+  datasource:
+    username: "my_user"
+    password: "secret"
+    url: "jdbc:postgresql://localhost:5432/webshop"
+  graphql:
+    schema:
+      file-extensions: .graphql

@@ -1,10 +1,8 @@
 package com.github.mangila.pokedex.webshop.customer;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
-@RestController
+@Controller
 public class CustomerController {
-
-
 
 }

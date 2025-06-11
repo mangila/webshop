@@ -10,5 +10,6 @@ public class OrderEntity extends BaseEntity {
     private String orderId;
     private String customerId;
     private String status;
+    private String paymentMethod;
     private Set<ProductEntity> products;
 }
