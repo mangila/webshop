@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class CustomerEntity extends BaseEntity {
     private String id;
+    private String customerId;
     private String name;
     private Set<OrderEntity> orders;
 }

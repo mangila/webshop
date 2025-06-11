@@ -6,7 +6,6 @@ import java.util.Map;
 public abstract class BaseEntity {
 
     private Instant createdAt;
-    private Instant updatedAt;
     private Map<String, Object> extensions;
 
     public Instant getCreatedAt() {
@@ -15,14 +14,6 @@ public abstract class BaseEntity {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Map<String, Object> getExtensions() {
