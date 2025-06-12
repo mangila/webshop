@@ -55,14 +55,15 @@ public class PostgresNotificationListener implements Runnable {
     public void run() {
         log.info("Listening for notifications");
         int timeout = (int) Duration.ofMillis(300).toMillis();
+        var listenQuery = ChannelTopic.getTopicsAsStrings()
+                .stream()
+                .filter(s -> !s.equals("UNKNOWN"))
+                .map(topic -> String.format("LISTEN \"%s\"", topic))
+                .collect(Collectors.joining("; "));
         jdbcTemplate.execute((Connection c) -> {
-            var listenQuery = ChannelTopic.getTopicsAsStrings()
-                    .stream()
-                    .filter(s -> !s.equals("UNKNOWN"))
-                    .map(topic -> String.format("LISTEN \"%s\"", topic))
-                    .collect(Collectors.joining("; "));
             log.info("Listening for notifications: {}", listenQuery);
             try (var statement = c.createStatement()) {
+                //noinspection SqlSourceToSinkFlow
                 statement.execute(listenQuery);
             }
             var pg = c.unwrap(PgConnection.class);
