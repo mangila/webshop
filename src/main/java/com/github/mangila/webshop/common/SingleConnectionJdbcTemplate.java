@@ -7,7 +7,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SingleConnectionJdbcTemplate implements DisposableBean {
+public class SingleConnectionJdbcTemplate {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,14 +21,5 @@ public class SingleConnectionJdbcTemplate implements DisposableBean {
 
     public JdbcTemplate getTemplate() {
         return jdbcTemplate;
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        if (jdbcTemplate.getDataSource() != null) {
-            jdbcTemplate.getDataSource()
-                    .getConnection()
-                    .close();
-        }
     }
 }
