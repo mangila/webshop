@@ -30,7 +30,7 @@ public class PostgresNotificationListenerConfig {
     }
 
     @Bean
-    public PgNotificationListener productNotificationListener(
+    public PgNotificationListener productPgNotificationListener(
             ApplicationEventPublisher publisher,
             ObjectMapper objectMapper,
             SingleConnectionJdbcTemplate template

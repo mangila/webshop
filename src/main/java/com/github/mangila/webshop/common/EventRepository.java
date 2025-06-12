@@ -18,7 +18,7 @@ public class EventRepository {
 
     public void insertEvent(Event event) {
         // Use update() for INSERT operations
-        var r = jdbc.update(
+        jdbc.update(
                 "INSERT INTO event (event_type, aggregate_id, topic, event_data) VALUES (?, ?, ?, ?)",
                 ps -> {
                     ps.setString(1, event.getEventType());
@@ -27,7 +27,6 @@ public class EventRepository {
                     ps.setObject(4, event.getEventData(), Types.OTHER); // Set as JSONB
                 }
         );
-        System.out.println(r);
     }
 
     @PostConstruct
@@ -43,8 +42,7 @@ public class EventRepository {
                     payload := json_build_object(
                         'event_id', NEW.event_id,
                         'event_type', NEW.event_type,
-                        'aggregate_id', NEW.aggregate_id,
-                        'created', NEW.created
+                        'aggregate_id', NEW.aggregate_id
                     )::text;
                     PERFORM pg_notify(channel_name, payload);
                     RETURN NEW;
