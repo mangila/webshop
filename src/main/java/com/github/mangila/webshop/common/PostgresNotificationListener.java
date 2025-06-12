@@ -48,24 +48,21 @@ public class PostgresNotificationListener implements Runnable {
     @EventListener(ApplicationReadyEvent.class)
     public void onReady() {
         log.info("ApplicationReadyEvent received. Starting listener.");
-        executorService.submit(this);
-    }
-
-    @Override
-    public void run() {
-        log.info("Listening for notifications");
-        int timeout = (int) Duration.ofMillis(300).toMillis();
         var listenQuery = ChannelTopic.getTopicsAsStrings()
                 .stream()
                 .filter(s -> !s.equals("UNKNOWN"))
                 .map(topic -> String.format("LISTEN \"%s\"", topic))
                 .collect(Collectors.joining("; "));
+        //noinspection SqlSourceToSinkFlow
+        jdbcTemplate.execute(listenQuery);
+        log.info("Listening for notifications: {}", listenQuery);
+        executorService.submit(this);
+    }
+
+    @Override
+    public void run() {
+        int timeout = (int) Duration.ofMillis(300).toMillis();
         jdbcTemplate.execute((Connection c) -> {
-            log.info("Listening for notifications: {}", listenQuery);
-            try (var statement = c.createStatement()) {
-                //noinspection SqlSourceToSinkFlow
-                statement.execute(listenQuery);
-            }
             var pg = c.unwrap(PgConnection.class);
             while (!shutdown.get()) {
                 var notifications = pg.getNotifications(timeout);
