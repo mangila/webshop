@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.model;
+package com.github.mangila.webshop.product.model.event;
 
 /**
  * Enum representing the types of events that can occur for Product entities.

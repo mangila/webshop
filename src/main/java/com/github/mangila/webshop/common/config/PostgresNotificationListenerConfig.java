@@ -5,12 +5,12 @@ import com.github.mangila.webshop.common.PgNotificationListener;
 import com.github.mangila.webshop.common.SingleConnectionJdbcTemplate;
 import com.github.mangila.webshop.common.model.ChannelTopic;
 import com.github.mangila.webshop.product.model.ProductNotification;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import java.time.Duration;
 
@@ -19,15 +19,21 @@ public class PostgresNotificationListenerConfig {
 
     @Bean
     @Scope("prototype")
-    public SingleConnectionJdbcTemplate singleConnectionJdbcTemplateProtoType(DataSourceProperties props) {
-        return new SingleConnectionJdbcTemplate(props);
+    public SingleConnectionJdbcTemplate singleConnectionJdbcTemplateProtoType(HikariDataSource dataSource) {
+        var scds = new SingleConnectionDataSource(
+                dataSource.getJdbcUrl(),
+                dataSource.getUsername(),
+                dataSource.getPassword(),
+                Boolean.TRUE
+        );
+        return new SingleConnectionJdbcTemplate(scds);
     }
 
     @Bean
     public PgNotificationListener productNotificationListener(
             ApplicationEventPublisher publisher,
             ObjectMapper objectMapper,
-            @Qualifier("singleConnectionJdbcTemplateProtoType") SingleConnectionJdbcTemplate template
+            SingleConnectionJdbcTemplate template
     ) {
         return new PgNotificationListener(
                 ChannelTopic.PRODUCTS,
@@ -35,7 +41,7 @@ public class PostgresNotificationListenerConfig {
                 ProductNotification.class,
                 publisher,
                 objectMapper,
-                template
+                template.getTemplate()
         );
     }
 

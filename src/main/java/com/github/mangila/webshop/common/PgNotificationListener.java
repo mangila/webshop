@@ -7,12 +7,11 @@ import org.postgresql.jdbc.PgConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.PayloadApplicationEvent;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -26,7 +25,7 @@ public class PgNotificationListener implements Runnable {
     private final Constructor<?> typeConstructor;
     private final ApplicationEventPublisher publisher;
     private final ObjectMapper objectMapper;
-    private final SingleConnectionJdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
     public final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     public PgNotificationListener(ChannelTopic channel,
@@ -34,7 +33,7 @@ public class PgNotificationListener implements Runnable {
                                   Class<?> type,
                                   ApplicationEventPublisher publisher,
                                   ObjectMapper objectMapper,
-                                  SingleConnectionJdbcTemplate jdbc) {
+                                  JdbcTemplate jdbc) {
         this.channel = channel;
         this.timeout = timeout;
         this.type = type;
@@ -50,7 +49,7 @@ public class PgNotificationListener implements Runnable {
 
     public void shutdown() {
         this.shutdown.set(true);
-        jdbc.getTemplate().execute("UNLISTEN \"" + channel + "\"");
+        jdbc.execute("UNLISTEN \"" + channel + "\"");
         log.info("Shutting down listener for channel {}", channel);
     }
 
@@ -58,9 +57,8 @@ public class PgNotificationListener implements Runnable {
     public void run() {
         log.info("Starting listener for channel {}", channel);
         var timeoutMillis = (int) this.timeout.toMillis();
-        var template = jdbc.getTemplate();
-        template.execute(String.format("LISTEN \"%s\"", channel));
-        template.execute((Connection c) -> {
+        jdbc.execute(String.format("LISTEN \"%s\"", channel.toString()));
+        jdbc.execute((Connection c) -> {
             var pg = c.unwrap(PgConnection.class);
             while (!shutdown.get()) {
                 var notifications = pg.getNotifications(timeoutMillis);
@@ -72,7 +70,7 @@ public class PgNotificationListener implements Runnable {
                     var payload = notification.getParameter();
                     log.debug("Received notification: {} -- {}", channel, payload);
                     var instance = tryCreateNewInstance(payload);
-                    publisher.publishEvent(new PayloadApplicationEvent<>(payload, type.cast(instance)));
+                    publisher.publishEvent(type.cast(instance));
                 }
             }
             return 0;
