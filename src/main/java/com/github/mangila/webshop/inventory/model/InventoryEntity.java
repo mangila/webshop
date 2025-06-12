@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.inventory.model;
 
-import com.github.mangila.webshop.shared.model.BaseEntity;
+import com.github.mangila.webshop.common.model.BaseEntity;
 
 import java.math.BigInteger;
 

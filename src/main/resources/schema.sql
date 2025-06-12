@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS event_offset;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS inventory;
+
 CREATE TABLE event
 (
     event_id     BIGSERIAL PRIMARY KEY,
@@ -10,10 +15,8 @@ CREATE TABLE event
 
 CREATE TABLE event_offset
 (
-    consumer VARCHAR(100) NOT NULL,
-    topic    VARCHAR(100) NOT NULL,
-    offset   BIGINT       NOT NULL,
-    PRIMARY KEY (consumer, topic)
+    topic          VARCHAR(100) PRIMARY KEY,
+    current_offset BIGINT DEFAULT 0
 );
 
 CREATE TABLE product

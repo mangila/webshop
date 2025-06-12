@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.model;
+package com.github.mangila.webshop.common.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

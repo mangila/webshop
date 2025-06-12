@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.customer.model;
 
 import com.github.mangila.webshop.order.model.OrderEntity;
-import com.github.mangila.webshop.shared.model.BaseEntity;
+import com.github.mangila.webshop.common.model.BaseEntity;
 
 import java.util.Set;
 

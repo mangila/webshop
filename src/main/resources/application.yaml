@@ -6,9 +6,18 @@ spring:
     username: "my_user"
     password: "secret"
     url: "jdbc:postgresql://localhost:5432/webshop"
+    hikari:
+      maximum-pool-size: 10
+  sql:
+    init:
+      mode: always
+      platform: postgres
   graphql:
     schema:
       file-extensions: .graphql
+  threads:
+    virtual:
+      enabled: true
   docker:
     compose:
       enabled: true
