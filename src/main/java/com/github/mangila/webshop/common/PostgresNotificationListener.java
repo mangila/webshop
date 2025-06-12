@@ -12,7 +12,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -30,19 +29,19 @@ public class PostgresNotificationListener implements Runnable {
     private final ExecutorService executorService;
     private final ApplicationEventPublisher publisher;
     private final ObjectMapper objectMapper;
-    private final JdbcTemplate jdbcTemplate;
+    private final SingleConnectionJdbcTemplate jdbc;
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
     public PostgresNotificationListener(DataSourceProperties dataSourceProperties,
                                         @Qualifier("virtualThreadExecutor") ExecutorService executorService,
                                         ApplicationEventPublisher publisher,
                                         ObjectMapper objectMapper,
-                                        @Qualifier("singleConnectionJdbcTemplate") JdbcTemplate jdbcTemplate) {
+                                        @Qualifier("singleConnectionJdbcTemplateProtoType") SingleConnectionJdbcTemplate jdbc) {
         this.dataSourceProperties = dataSourceProperties;
         this.executorService = executorService;
         this.publisher = publisher;
         this.objectMapper = objectMapper;
-        this.jdbcTemplate = jdbcTemplate;
+        this.jdbc = jdbc;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -54,7 +53,8 @@ public class PostgresNotificationListener implements Runnable {
                 .map(topic -> String.format("LISTEN \"%s\"", topic))
                 .collect(Collectors.joining("; "));
         //noinspection SqlSourceToSinkFlow
-        jdbcTemplate.execute(listenQuery);
+        jdbc.getTemplate()
+                .execute(listenQuery);
         log.info("Listening for notifications: {}", listenQuery);
         executorService.submit(this);
     }
@@ -62,30 +62,31 @@ public class PostgresNotificationListener implements Runnable {
     @Override
     public void run() {
         int timeout = (int) Duration.ofMillis(500).toMillis();
-        jdbcTemplate.execute((Connection c) -> {
-            var pg = c.unwrap(PgConnection.class);
-            while (!shutdown.get()) {
-                var notifications = pg.getNotifications(timeout);
-                if (notifications == null) {
-                    continue;
-                }
-                for (PGNotification notification : notifications) {
-                    var channel = ChannelTopic.fromString(notification.getName());
-                    var payload = notification.getParameter();
-                    log.debug("Received notification: {} -- {}", channel, payload);
-                    switch (channel) {
-                        case ORDERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case PAYMENTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case PRODUCTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case CUSTOMERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case INVENTORY -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case DELIVERIES -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                        case UNKNOWN -> log.warn("Unknown channel: {}", notification.getName());
+        jdbc.getTemplate()
+                .execute((Connection c) -> {
+                    var pg = c.unwrap(PgConnection.class);
+                    while (!shutdown.get()) {
+                        var notifications = pg.getNotifications(timeout);
+                        if (notifications == null) {
+                            continue;
+                        }
+                        for (PGNotification notification : notifications) {
+                            var channel = ChannelTopic.fromString(notification.getName());
+                            var payload = notification.getParameter();
+                            log.debug("Received notification: {} -- {}", channel, payload);
+                            switch (channel) {
+                                case ORDERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case PAYMENTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case PRODUCTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case CUSTOMERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case INVENTORY -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case DELIVERIES -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case UNKNOWN -> log.warn("Unknown channel: {}", notification.getName());
+                            }
+                        }
                     }
-                }
-            }
-            return 0;
-        });
+                    return 0;
+                });
     }
 
     public void shutdown() {
@@ -96,5 +97,4 @@ public class PostgresNotificationListener implements Runnable {
     public void on(PayloadApplicationEvent<?> event) {
 
     }
-
 }

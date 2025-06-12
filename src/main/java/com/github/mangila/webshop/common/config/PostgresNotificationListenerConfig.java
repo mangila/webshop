@@ -1,19 +1,17 @@
 package com.github.mangila.webshop.common.config;
 
+import com.github.mangila.webshop.common.SingleConnectionJdbcTemplate;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class PostgresNotificationListenerConfig {
 
-    @Bean
-    public JdbcTemplate singleConnectionJdbcTemplate(DataSourceProperties props) {
-        var sdb = props.initializeDataSourceBuilder()
-                .type(SingleConnectionDataSource.class)
-                .build();
-        return new JdbcTemplate(sdb);
+    @Bean(destroyMethod = "destroy")
+    @Scope("prototype")
+    public SingleConnectionJdbcTemplate singleConnectionJdbcTemplateProtoType(DataSourceProperties props) {
+        return new SingleConnectionJdbcTemplate(props);
     }
 }
