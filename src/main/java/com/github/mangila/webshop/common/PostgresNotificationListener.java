@@ -2,6 +2,7 @@ package com.github.mangila.webshop.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.common.model.ChannelTopic;
+import com.github.mangila.webshop.product.model.ProductNotification;
 import org.postgresql.PGNotification;
 import org.postgresql.jdbc.PgConnection;
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class PostgresNotificationListener implements Runnable {
                             switch (channel) {
                                 case ORDERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
                                 case PAYMENTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
-                                case PRODUCTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
+                                case PRODUCTS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, new ProductNotification(payload)));
                                 case CUSTOMERS -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
                                 case INVENTORY -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
                                 case DELIVERIES -> publisher.publishEvent(new PayloadApplicationEvent<>(this, payload));
@@ -94,7 +95,7 @@ public class PostgresNotificationListener implements Runnable {
     }
 
     @EventListener
-    public void on(PayloadApplicationEvent<?> event) {
+    public void on(PayloadApplicationEvent<String> event) {
 
     }
 }
