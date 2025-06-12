@@ -61,7 +61,7 @@ public class PostgresNotificationListener implements Runnable {
 
     @Override
     public void run() {
-        int timeout = (int) Duration.ofMillis(300).toMillis();
+        int timeout = (int) Duration.ofMillis(500).toMillis();
         jdbcTemplate.execute((Connection c) -> {
             var pg = c.unwrap(PgConnection.class);
             while (!shutdown.get()) {
