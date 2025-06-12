@@ -13,7 +13,7 @@ public enum ChannelTopic {
     UNKNOWN;
 
 
-    public static List<String> getTopicAsStrings() {
+    public static List<String> getTopicsAsStrings() {
         return EnumSet.allOf(ChannelTopic.class)
                 .stream()
                 .map(Enum::toString)
@@ -27,5 +27,4 @@ public enum ChannelTopic {
                 .findFirst()
                 .orElse(UNKNOWN);
     }
-
 }
