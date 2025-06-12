@@ -66,6 +66,9 @@ public class PostgresNotificationListener implements Runnable {
             var pg = c.unwrap(PgConnection.class);
             while (!shutdown.get()) {
                 var notifications = pg.getNotifications(timeout);
+                if (notifications == null) {
+                    continue;
+                }
                 for (PGNotification notification : notifications) {
                     var channel = ChannelTopic.fromString(notification.getName());
                     var payload = notification.getParameter();
