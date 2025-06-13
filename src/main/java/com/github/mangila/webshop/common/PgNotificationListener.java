@@ -41,14 +41,14 @@ public class PgNotificationListener implements Runnable {
     }
 
     public void shutdown() {
+        log.info("Shutting down listener for channel -- {}", channel);
         jdbc.execute(String.format("UNLISTEN \"%s\"", channel.toString()));
         this.shutdown.set(true);
-        log.info("Shutting down listener for channel {}", channel);
     }
 
     @Override
     public void run() {
-        log.info("Starting listener for channel {}", channel);
+        log.info("Starting listener for channel -- {}", channel);
         var timeoutMillis = (int) this.timeout.toMillis();
         jdbc.execute(String.format("LISTEN \"%s\"", channel.toString()));
         jdbc.execute((Connection c) -> {
