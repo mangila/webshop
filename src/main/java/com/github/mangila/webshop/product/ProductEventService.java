@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.mangila.webshop.common.EventMapper;
 import com.github.mangila.webshop.common.EventService;
 import com.github.mangila.webshop.common.model.ChannelTopic;
-import com.github.mangila.webshop.common.model.Event;
+import com.github.mangila.webshop.common.model.exception.ValidationException;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductEventService {
@@ -19,11 +18,14 @@ public class ProductEventService {
 
     private final EventService eventService;
     private final EventMapper eventMapper;
+    private final ProductValidator validator;
 
     public ProductEventService(EventService eventService,
-                               EventMapper eventMapper) {
+                               EventMapper eventMapper,
+                               ProductValidator validator) {
         this.eventService = eventService;
         this.eventMapper = eventMapper;
+        this.validator = validator;
     }
 
     public Product processMutation(ProductEventType intent, Product product) {
@@ -37,26 +39,23 @@ public class ProductEventService {
                 case DESCRIPTION_UPDATED -> null;
                 case IMAGE_UPDATED -> null;
             };
+        } catch (ValidationException e) {
+            log.error("ERR", e);
         } catch (Exception e) {
             log.error("ERR", e);
         }
         return null;
     }
 
-    private Product createNewProductEvent(ProductEventType eventType, Product product) {
-        // TODO validation
-        Event event = null;
-        try {
-            event = eventMapper.toEvent(
-                    ChannelTopic.PRODUCTS,
-                    product.getId(),
-                    eventType.toString(),
-                    product
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        eventService.insertNewEvent(event);
+    private Product createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
+        validator.validateRequiredFields(product);
+        var event = eventMapper.toEvent(
+                ChannelTopic.PRODUCTS,
+                product.getId(),
+                eventType.toString(),
+                product
+        );
+        eventService.emit(event);
         return product;
     }
 }

@@ -20,7 +20,7 @@ public class EventRepository {
         this.jdbc = jdbc;
     }
 
-    public void insertNewEvent(Event event) {
+    public void emit(Event event) {
         int rows = jdbc.update(
                 "INSERT INTO event (event_type, aggregate_id, topic, event_data) VALUES (?, ?, ?, ?)",
                 ps -> {

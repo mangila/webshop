@@ -12,8 +12,8 @@ public class EventService {
         this.repository = repository;
     }
 
-    public void insertNewEvent(Event event) {
-        repository.insertNewEvent(event);
+    public void emit(Event event) {
+        repository.emit(event);
     }
 
     public Event acknowledgeNewEvent(long id) {
