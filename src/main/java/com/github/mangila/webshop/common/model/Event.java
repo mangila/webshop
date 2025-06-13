@@ -58,4 +58,16 @@ public class Event {
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", topic='" + topic + '\'' +
+                ", eventType='" + eventType + '\'' +
+                ", aggregateId='" + aggregateId + '\'' +
+                ", eventData='" + eventData + '\'' +
+                ", created=" + created +
+                '}';
+    }
 }

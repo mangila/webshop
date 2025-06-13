@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS inventory;
 
 CREATE TABLE event
 (
-    id     BIGSERIAL PRIMARY KEY,
+    id           BIGSERIAL PRIMARY KEY,
     topic        VARCHAR(255) NOT NULL,
     event_type   VARCHAR(100) NOT NULL,
     aggregate_id VARCHAR(255) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE event
 
 CREATE TABLE event_offset
 (
-    topic          VARCHAR(100) PRIMARY KEY,
+    event_topic    VARCHAR(100) PRIMARY KEY,
     current_offset BIGINT DEFAULT 0
 );
 

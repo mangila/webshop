@@ -27,7 +27,7 @@ public class ProductController {
     @MutationMapping
     public Product mutateProduct(
             @Argument ProductEventType intent,
-            @Argument Product product) {
+            @Argument("input") Product product) {
         return productEventService.processMutation(intent, product);
     }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.mangila.webshop.common.EventMapper;
 import com.github.mangila.webshop.common.EventService;
 import com.github.mangila.webshop.common.model.ChannelTopic;
-import com.github.mangila.webshop.common.model.exception.ValidationException;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.slf4j.Logger;
@@ -38,13 +37,11 @@ public class ProductEventService {
                 case CATEGORY_CHANGED -> null;
                 case DESCRIPTION_UPDATED -> null;
                 case IMAGE_UPDATED -> null;
+                case null, default -> throw new IllegalArgumentException("Invalid intent: " + intent);
             };
-        } catch (ValidationException e) {
-            log.error("ERR", e);
         } catch (Exception e) {
-            log.error("ERR", e);
+            return null;
         }
-        return null;
     }
 
     private Product createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {

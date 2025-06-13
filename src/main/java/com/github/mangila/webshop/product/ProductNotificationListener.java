@@ -38,14 +38,18 @@ public class ProductNotificationListener implements AbstractNotificationListener
 
     @Override
     public void onNotification(ProductNotification notification) {
-        log.info("Received notification: {}", notification.getId());
-        var event = eventService.acknowledgeNewEvent(notification.getId());
-        log.info("New event received: {}", event);
+        try {
+            log.info("Received notification: {} -- {}", notification.getId(), notification.getTopic());
+            var event = eventService.acknowledgeEvent(notification.getId(), notification.getTopic());
+            log.info("New event received: {}", event);
+        } catch (Exception e) {
+            handleException(e, notification);
+        }
     }
 
     @Override
     public void handleException(Exception e, ProductNotification notification) {
-
+        log.error("Failed to process notification: {}", notification, e);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class EventService {
         repository.emit(event);
     }
 
-    public Event acknowledgeNewEvent(long id) {
-        return repository.acknowledgeNewEvent(id);
+    public Event acknowledgeEvent(long id, String topic) {
+        return repository.acknowledgeEvent(id, topic);
     }
 }

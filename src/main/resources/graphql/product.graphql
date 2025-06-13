@@ -9,7 +9,7 @@ type Query {
 }
 
 type Product {
-    productId: ID
+    id: ID
     name: String
     description: String
     price: Float
@@ -29,7 +29,7 @@ enum ProductIntent {
 }
 
 input MutateProduct {
-    productId: ID!
+    id: ID!
     name: String!
     description: String
     price: Float!
