@@ -1,13 +1,12 @@
 package com.github.mangila.webshop.common.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.time.Instant;
+import java.util.Map;
 
 public abstract class BaseEntity {
 
     private Instant updated;
-    private JsonNode extensions;
+    private Map<String, Object> extensions;
 
     public Instant getUpdated() {
         return updated;
@@ -17,11 +16,11 @@ public abstract class BaseEntity {
         this.updated = updated;
     }
 
-    public JsonNode getExtensions() {
+    public Map<String, Object> getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(JsonNode extensions) {
+    public void setExtensions(Map<String, Object> extensions) {
         this.extensions = extensions;
     }
 }

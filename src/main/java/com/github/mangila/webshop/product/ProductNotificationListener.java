@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.product;
 
 import com.github.mangila.webshop.common.AbstractNotificationListener;
+import com.github.mangila.webshop.common.EventService;
 import com.github.mangila.webshop.common.PgNotificationListener;
 import com.github.mangila.webshop.product.model.ProductNotification;
 import org.slf4j.Logger;
@@ -18,13 +19,15 @@ public class ProductNotificationListener implements AbstractNotificationListener
 
     private final ExecutorService executor;
     private final PgNotificationListener pgNotificationListener;
-    private final ProductEventService service;
+    private final EventService eventService;
+    private final ProductCommandService service;
 
-    public ProductNotificationListener(@Qualifier("virtualThreadExecutorProtoType") ExecutorService executor,
-                                       @Qualifier("productPgNotificationListener") PgNotificationListener pgNotificationListener,
-                                       ProductEventService service) {
+    public ProductNotificationListener(@Qualifier("virtualThreadExecutor") ExecutorService executor,
+                                       @Qualifier("productPgNotificationListener") PgNotificationListener pgNotificationListener, EventService eventService,
+                                       ProductCommandService service) {
         this.executor = executor;
         this.pgNotificationListener = pgNotificationListener;
+        this.eventService = eventService;
         this.service = service;
     }
 
@@ -35,7 +38,9 @@ public class ProductNotificationListener implements AbstractNotificationListener
 
     @Override
     public void onNotification(ProductNotification notification) {
-        log.info("Received event: {}", notification.getEventId());
+        log.info("Received notification: {}", notification.getId());
+        var event = eventService.acknowledgeNewEvent(notification.getId());
+        log.info("New event received: {}", event);
     }
 
     @Override

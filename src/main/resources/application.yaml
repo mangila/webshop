@@ -14,6 +14,9 @@ spring:
       mode: always
       platform: postgres
   graphql:
+    graphiql:
+      enabled: true
+      path: "/graphiql"
     schema:
       file-extensions: ".graphql"
   threads:

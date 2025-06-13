@@ -12,7 +12,11 @@ public class EventService {
         this.repository = repository;
     }
 
-    public void insertEvent(Event event) {
-        repository.insertEvent(event);
+    public void insertNewEvent(Event event) {
+        repository.insertNewEvent(event);
+    }
+
+    public Event acknowledgeNewEvent(long id) {
+        return repository.acknowledgeNewEvent(id);
     }
 }

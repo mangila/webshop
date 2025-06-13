@@ -4,19 +4,19 @@ import java.time.LocalDateTime;
 
 public class Event {
 
-    private Long eventId;
+    private Long id;
     private String topic;
     private String eventType;
     private String aggregateId;
     private String eventData;
     private LocalDateTime created;
 
-    public Long getEventId() {
-        return eventId;
+    public Long getId() {
+        return id;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTopic() {

@@ -1,0 +1,39 @@
+scalar JSON
+
+type Mutation {
+    mutateProduct(intent: ProductIntent!,input: MutateProduct!): Product
+}
+
+type Query {
+    queryProductById(input: ID!): Product
+}
+
+type Product {
+    productId: ID
+    name: String
+    description: String
+    price: Float
+    imageUrl: String
+    category: String
+    extensions: JSON
+}
+
+enum ProductIntent {
+    CREATE_NEW,
+    UPDATED,
+    DELETED,
+    PRICE_CHANGED,
+    CATEGORY_CHANGED,
+    DESCRIPTION_UPDATED,
+    IMAGE_UPDATED
+}
+
+input MutateProduct {
+    productId: ID!
+    name: String!
+    description: String
+    price: Float!
+    imageUrl: String
+    category: String
+    extensions: JSON
+}

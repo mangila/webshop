@@ -2,6 +2,8 @@ package com.github.mangila.webshop.common;
 
 import com.github.mangila.webshop.common.model.Event;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -10,15 +12,16 @@ import java.sql.Types;
 @Repository
 public class EventRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(EventRepository.class);
+
     private final JdbcTemplate jdbc;
 
     public EventRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
-    public void insertEvent(Event event) {
-        // Use update() for INSERT operations
-        jdbc.update(
+    public void insertNewEvent(Event event) {
+        int rows = jdbc.update(
                 "INSERT INTO event (event_type, aggregate_id, topic, event_data) VALUES (?, ?, ?, ?)",
                 ps -> {
                     ps.setString(1, event.getEventType());
@@ -27,40 +30,38 @@ public class EventRepository {
                     ps.setObject(4, event.getEventData(), Types.OTHER); // Set as JSONB
                 }
         );
+        log.debug("Inserted {} -- {}", event, rows);
+    }
+
+    public Event acknowledgeNewEvent(long id) {
+        return new Event();
     }
 
     @PostConstruct
-    public void createFunctionManually() {
-        // Split the function creation and trigger creation for better error handling
-        jdbc.update("""
-                CREATE OR REPLACE FUNCTION notify_event_topic() RETURNS trigger AS $$
+    private void createNotificationTrigger() {
+        log.info("Creating function pg_notify(topic,payload) with trigger");
+        jdbc.execute("""
+                CREATE OR REPLACE FUNCTION notify_new_event_by_topic() RETURNS trigger AS $$
                 DECLARE
-                    channel_name TEXT;
+                    topic TEXT;
                     payload      TEXT;
                 BEGIN
-                    channel_name := NEW.topic;
+                    topic := NEW.topic;
                     payload := json_build_object(
-                        'event_id', NEW.event_id,
-                        'event_type', NEW.event_type,
-                        'aggregate_id', NEW.aggregate_id
+                        'id', NEW.id,
+                        'topic', topic
                     )::text;
-                    PERFORM pg_notify(channel_name, payload);
+                    PERFORM pg_notify(topic, payload);
                     RETURN NEW;
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-
-        // Create trigger separately to handle potential "trigger already exists" errors
-        try {
-            jdbc.update("""
-                    CREATE TRIGGER event_notify_trigger
-                    AFTER INSERT ON event
-                    FOR EACH ROW
-                    EXECUTE FUNCTION notify_event_topic();
-                    """);
-        } catch (Exception e) {
-            // Log warning or handle case where trigger might already exist
-            // This avoids errors on application restart
-        }
+        jdbc.execute("""
+                DROP TRIGGER IF EXISTS notify_new_event_by_topic_trigger ON event;
+                CREATE TRIGGER notify_new_event_by_topic_trigger
+                AFTER INSERT ON event
+                FOR EACH ROW
+                EXECUTE FUNCTION notify_new_event_by_topic();
+                """);
     }
 }

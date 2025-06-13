@@ -41,8 +41,8 @@ public class PgNotificationListener implements Runnable {
     }
 
     public void shutdown() {
+        jdbc.execute(String.format("UNLISTEN \"%s\"", channel.toString()));
         this.shutdown.set(true);
-        jdbc.execute("UNLISTEN \"" + channel + "\"");
         log.info("Shutting down listener for channel {}", channel);
     }
 

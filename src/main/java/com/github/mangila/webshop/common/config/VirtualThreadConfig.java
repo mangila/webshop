@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.common.config;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -17,8 +18,8 @@ public class VirtualThreadConfig {
     }
 
     @Bean
-    @Scope("prototype")
-    public ExecutorService virtualThreadExecutorProtoType(ThreadFactory virtualThreadFactory) {
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public ExecutorService virtualThreadExecutor(ThreadFactory virtualThreadFactory) {
         return Executors.newThreadPerTaskExecutor(virtualThreadFactory);
     }
 }
