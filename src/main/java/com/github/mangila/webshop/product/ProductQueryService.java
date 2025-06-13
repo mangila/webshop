@@ -12,7 +12,7 @@ public class ProductQueryService {
         this.repository = repository;
     }
 
-    public Product queryById(String productId) {
-        return new Product();
+    public Product queryById(String id) {
+        return repository.queryById(id);
     }
 }

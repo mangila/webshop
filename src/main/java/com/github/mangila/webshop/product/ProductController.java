@@ -20,8 +20,8 @@ public class ProductController {
     }
 
     @QueryMapping
-    public Product queryProductById(@Argument String productId) {
-        return productQueryService.queryById(productId);
+    public Product queryProductById(@Argument String id) {
+        return productQueryService.queryById(id);
     }
 
     @MutationMapping
