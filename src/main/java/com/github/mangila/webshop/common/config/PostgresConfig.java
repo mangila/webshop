@@ -60,7 +60,7 @@ public class PostgresConfig {
     }
 
     private void createNotificationTrigger() {
-        log.info("Creating Postgres function notify_new_event_by_topic with trigger on event table");
+        log.info("Creating Postgres function notify_new_event_by_topic() with trigger on event table");
         jdbc.execute("""
                 DROP FUNCTION IF EXISTS notify_new_event_by_topic();
                 CREATE OR REPLACE FUNCTION notify_new_event_by_topic() RETURNS trigger AS $$
