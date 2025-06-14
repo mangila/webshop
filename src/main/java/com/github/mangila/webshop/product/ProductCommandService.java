@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.product;
 
+import com.github.mangila.webshop.product.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,20 @@ public class ProductCommandService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductCommandService.class);
 
-    public void createNewProduct(Long eventId) {
+    private final ProductRepository repository;
 
+    public ProductCommandService(ProductRepository repository) {
+        this.repository = repository;
+    }
+
+    public void createNewProduct(Product product) {
+        repository.insertNew(product);
+    }
+
+    public void deleteProductById(String id) {
+        var delete = repository.deleteProduct(id);
+        if (delete) {
+            log.debug("Product with id {} deleted", id);
+        }
     }
 }

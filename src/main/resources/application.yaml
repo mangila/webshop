@@ -19,6 +19,13 @@ spring:
       path: "/graphiql"
     schema:
       file-extensions: ".graphql"
+  task:
+    execution:
+      mode: force
+      thread-name-prefix: "spring-task-"
+      pool:
+        shutdown:
+          accept-tasks-after-context-close: true
   threads:
     virtual:
       enabled: true

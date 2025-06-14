@@ -37,7 +37,7 @@ public class PostgresNotificationListenerConfig {
     ) {
         return new PgNotificationListener(
                 ChannelTopic.PRODUCTS,
-                Duration.ofMillis(500),
+                Duration.ofMillis(200),
                 ProductNotification.class,
                 publisher,
                 objectMapper,

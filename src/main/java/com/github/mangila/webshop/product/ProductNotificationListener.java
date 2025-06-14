@@ -1,75 +1,79 @@
 package com.github.mangila.webshop.product;
 
-import com.github.mangila.webshop.common.AbstractNotificationListener;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.common.EventService;
 import com.github.mangila.webshop.common.PgNotificationListener;
+import com.github.mangila.webshop.product.model.Product;
+import com.github.mangila.webshop.product.model.ProductEventType;
 import com.github.mangila.webshop.product.model.ProductNotification;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-
 @Service
-public class ProductNotificationListener implements AbstractNotificationListener<ProductNotification> {
+public class ProductNotificationListener {
 
     private static final Logger log = LoggerFactory.getLogger(ProductNotificationListener.class);
 
-    private final ExecutorService executor;
+    private final ObjectMapper objectMapper;
     private final PgNotificationListener pgNotificationListener;
     private final EventService eventService;
-    private final ProductCommandService service;
+    private final ProductCommandService productCommandService;
 
-    public ProductNotificationListener(@Qualifier("virtualThreadExecutor") ExecutorService executor,
+    public ProductNotificationListener(ObjectMapper objectMapper,
                                        @Qualifier("productPgNotificationListener") PgNotificationListener pgNotificationListener, EventService eventService,
-                                       ProductCommandService service) {
-        this.executor = executor;
+                                       ProductCommandService productCommandService) {
+        this.objectMapper = objectMapper;
         this.pgNotificationListener = pgNotificationListener;
         this.eventService = eventService;
-        this.service = service;
+        this.productCommandService = productCommandService;
     }
 
-    @Override
+    @Async
+    @EventListener(ApplicationReadyEvent.class)
     public void onReady() {
-        executor.submit(pgNotificationListener);
+        pgNotificationListener.start();
     }
 
-    @Override
+    @Async
+    @EventListener
     public void onNotification(ProductNotification notification) {
         try {
             log.info("Received notification: {} -- {}", notification.getId(), notification.getTopic());
             var event = eventService.acknowledgeEvent(notification.getId(), notification.getTopic());
-            log.info("New event received: {}", event);
+            var productId = event.getAggregateId();
+            var eventType = ProductEventType.valueOf(event.getEventType());
+            switch (eventType) {
+                case PRICE_CHANGED, EXTENSION_CHANGED, QUANTITY_CHANGED -> {
+                    log.info("Ignoring -- not yet supported event: {}", event.getEventType());
+                }
+                case CREATE_NEW -> {
+                    log.info("Creating new product: {}", event.getEventData());
+                    var product = objectMapper.readValue(event.getEventData(), Product.class);
+                    productCommandService.createNewProduct(product);
+                }
+                case DELETE -> {
+                    log.info("Deleting product: {}", productId);
+                    productCommandService.deleteProductById(productId);
+                }
+                case null -> throw new IllegalArgumentException(String.format("Invalid eventType: %s", eventType));
+            }
         } catch (Exception e) {
             handleException(e, notification);
         }
     }
 
-    @Override
     public void handleException(Exception e, ProductNotification notification) {
         log.error("Failed to process notification: {}", notification, e);
     }
 
-    @Override
-    public void shutdown() {
+    @PreDestroy
+    public void shutdownPgListener() {
         pgNotificationListener.shutdown();
-        executor.shutdown();
-        try {
-            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-                log.warn("Executor did not terminate in the specified time. Will force shutdown");
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-            Thread.currentThread().interrupt();
-            log.error("Interrupted while waiting for executor to terminate", e);
-        }
-    }
-
-    @Override
-    public void destroy() {
-        shutdown();
     }
 }

@@ -1,0 +1,8 @@
+type Event {
+  id: ID
+  topic: String
+  eventType: String
+  aggregateId: String
+  eventData: String
+  created: DateTime
+}

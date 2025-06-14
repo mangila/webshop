@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.common.model;
 
-public class Notification {
+public abstract class Notification {
 
     private final Long id;
     private final String topic;
@@ -16,5 +16,13 @@ public class Notification {
 
     public String getTopic() {
         return topic;
+    }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "id=" + id +
+                ", topic='" + topic + '\'' +
+                '}';
     }
 }

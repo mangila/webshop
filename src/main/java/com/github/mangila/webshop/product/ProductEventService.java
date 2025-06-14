@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.mangila.webshop.common.EventMapper;
 import com.github.mangila.webshop.common.EventService;
 import com.github.mangila.webshop.common.model.ChannelTopic;
+import com.github.mangila.webshop.common.model.Event;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.slf4j.Logger;
@@ -27,25 +28,19 @@ public class ProductEventService {
         this.validator = validator;
     }
 
-    public Product processMutation(ProductEventType intent, Product product) {
-        try {
-            return switch (intent) {
-                case CREATE_NEW -> createNewProductEvent(intent, product);
-                case UPDATED -> null;
-                case DELETED -> null;
-                case PRICE_CHANGED -> null;
-                case CATEGORY_CHANGED -> null;
-                case DESCRIPTION_UPDATED -> null;
-                case IMAGE_UPDATED -> null;
-                case null, default -> throw new IllegalArgumentException("Invalid intent: " + intent);
-            };
-        } catch (Exception e) {
-            return null;
-        }
+    public Event processMutation(ProductEventType eventType, Product product) throws JsonProcessingException {
+        return switch (eventType) {
+            case CREATE_NEW -> createNewProductEvent(eventType, product);
+            case DELETE -> deleteProductEvent(eventType, product);
+            case PRICE_CHANGED -> null;
+            case QUANTITY_CHANGED -> null;
+            case EXTENSION_CHANGED -> null;
+            case null -> throw new IllegalArgumentException(String.format("Invalid eventType: %s", eventType));
+        };
     }
 
-    private Product createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
-        validator.validateRequiredFields(product);
+    private Event deleteProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
+        validator.ensureProductId(product);
         var event = eventMapper.toEvent(
                 ChannelTopic.PRODUCTS,
                 product.getId(),
@@ -53,6 +48,18 @@ public class ProductEventService {
                 product
         );
         eventService.emit(event);
-        return product;
+        return event;
+    }
+
+    private Event createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
+        validator.ensureRequiredFields(product);
+        var event = eventMapper.toEvent(
+                ChannelTopic.PRODUCTS,
+                product.getId(),
+                eventType.toString(),
+                product
+        );
+        eventService.emit(event);
+        return event;
     }
 }

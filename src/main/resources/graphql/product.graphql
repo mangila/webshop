@@ -1,7 +1,5 @@
-scalar JSON
-
 type Mutation {
-    mutateProduct(intent: ProductIntent!,input: MutateProduct!): Product
+    mutateProduct(intent: ProductIntent!,input: MutateProduct!): Event
 }
 
 type Query {
@@ -20,17 +18,15 @@ type Product {
 
 enum ProductIntent {
     CREATE_NEW,
-    UPDATED,
-    DELETED,
+    DELETE,
     PRICE_CHANGED,
-    CATEGORY_CHANGED,
-    DESCRIPTION_UPDATED,
-    IMAGE_UPDATED
+    QUANTITY_CHANGED,
+    EXTENSION_CHANGED
 }
 
 input MutateProduct {
     id: ID!
-    name: String!
+    name: String
     description: String
     price: Float!
     imageUrl: String

@@ -5,10 +5,8 @@ package com.github.mangila.webshop.product.model;
  */
 public enum ProductEventType {
     CREATE_NEW,
-    UPDATED,
-    DELETED,
+    DELETE,
     PRICE_CHANGED,
-    CATEGORY_CHANGED,
-    DESCRIPTION_UPDATED,
-    IMAGE_UPDATED
+    QUANTITY_CHANGED,
+    EXTENSION_CHANGED
 }

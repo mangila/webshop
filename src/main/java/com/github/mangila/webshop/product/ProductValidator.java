@@ -7,11 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductValidator {
 
-    public void validateRequiredFields(Product product) {
-        ValidationUtils.ensureNotNull(product, "product must not be null");
-        ValidationUtils.ensureNotNull(product.getId(), "id must not be null");
+    public void ensureRequiredFields(Product product) {
+        ensureProductId(product);
         ValidationUtils.ensureNotNull(product.getName(), "name must not be null");
         ValidationUtils.ensureNotNull(product.getPrice(), "price must not be null");
+    }
+
+    public void ensureProductId(Product product) {
+        ValidationUtils.ensureNotNull(product, "product must not be null");
+        ValidationUtils.ensureNotNull(product.getId(), "id must not be null");
     }
 }
 

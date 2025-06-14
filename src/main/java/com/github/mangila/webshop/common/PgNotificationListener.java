@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class PgNotificationListener implements Runnable {
+public class PgNotificationListener {
 
     private static final Logger log = LoggerFactory.getLogger(PgNotificationListener.class);
 
@@ -43,17 +43,27 @@ public class PgNotificationListener implements Runnable {
     public void shutdown() {
         log.info("Shutting down listener for channel -- {}", channel);
         jdbc.execute(String.format("UNLISTEN \"%s\"", channel.toString()));
-        this.shutdown.set(true);
+        shutdown.set(true);
     }
 
-    @Override
-    public void run() {
-        log.info("Starting listener for channel -- {}", channel);
+    public void start() {
+        log.info("Starting Postgres listener for channel -- {}", channel);
         var timeoutMillis = (int) this.timeout.toMillis();
+        while (!shutdown.get()) {
+            listen(timeoutMillis);
+        }
+    }
+
+    private void listen(int timeoutMillis) {
         jdbc.execute(String.format("LISTEN \"%s\"", channel.toString()));
         jdbc.execute((Connection c) -> {
             var pg = c.unwrap(PgConnection.class);
             while (!shutdown.get()) {
+                if (Thread.currentThread().isInterrupted()) {
+                    log.warn("Interrupted while waiting for Postgres notification");
+                    shutdown.set(true);
+                    break;
+                }
                 var pgNotifications = pg.getNotifications(timeoutMillis);
                 if (pgNotifications == null) {
                     continue;
@@ -61,7 +71,7 @@ public class PgNotificationListener implements Runnable {
                 for (PGNotification pgNotification : pgNotifications) {
                     var channel = pgNotification.getName();
                     var payload = pgNotification.getParameter();
-                    log.debug("Received notification: {} -- {}", channel, payload);
+                    log.debug("Received Postgres notification: {} -- {}", channel, payload);
                     var notification = deserializePayload(payload, notificationType);
                     if (notification == null) {
                         continue;
@@ -72,6 +82,7 @@ public class PgNotificationListener implements Runnable {
             return 0;
         });
     }
+
 
     private Object deserializePayload(String payload, Class<? extends Notification> notificationType) {
         try {

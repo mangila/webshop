@@ -1,5 +1,7 @@
 package com.github.mangila.webshop.product;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.mangila.webshop.common.model.Event;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -20,14 +22,14 @@ public class ProductController {
     }
 
     @QueryMapping
-    public Product queryProductById(@Argument String id) {
+    public Product queryProductById(@Argument("input") String id) {
         return productQueryService.queryById(id);
     }
 
     @MutationMapping
-    public Product mutateProduct(
-            @Argument ProductEventType intent,
-            @Argument("input") Product product) {
-        return productEventService.processMutation(intent, product);
+    public Event mutateProduct(
+            @Argument("intent") ProductEventType eventType,
+            @Argument("input") Product product) throws JsonProcessingException {
+        return productEventService.processMutation(eventType, product);
     }
 }

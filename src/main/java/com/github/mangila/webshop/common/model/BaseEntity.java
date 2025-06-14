@@ -1,12 +1,11 @@
 package com.github.mangila.webshop.common.model;
 
 import java.time.Instant;
-import java.util.Map;
 
 public abstract class BaseEntity {
 
     private Instant updated;
-    private Map<String, Object> extensions;
+    private String extensions;
 
     public Instant getUpdated() {
         return updated;
@@ -16,11 +15,11 @@ public abstract class BaseEntity {
         this.updated = updated;
     }
 
-    public Map<String, Object> getExtensions() {
+    public String getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(Map<String, Object> extensions) {
+    public void setExtensions(String extensions) {
         this.extensions = extensions;
     }
 }
