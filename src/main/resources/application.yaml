@@ -19,16 +19,13 @@ spring:
       path: "/graphiql"
     schema:
       file-extensions: ".graphql"
+  threads:
+    virtual:
+      enabled: true
   task:
     execution:
       mode: force
       thread-name-prefix: "spring-task-"
-      pool:
-        shutdown:
-          accept-tasks-after-context-close: true
-  threads:
-    virtual:
-      enabled: true
   docker:
     compose:
       enabled: true
