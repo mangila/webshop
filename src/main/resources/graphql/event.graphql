@@ -4,5 +4,5 @@ type Event {
   eventType: String
   aggregateId: String
   eventData: String
-  created: DateTime
+  created: String
 }

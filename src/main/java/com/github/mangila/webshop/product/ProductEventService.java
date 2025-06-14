@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class ProductEventService {
 
@@ -41,25 +43,11 @@ public class ProductEventService {
 
     private Event deleteProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
         validator.ensureProductId(product);
-        var event = eventMapper.toEvent(
-                ChannelTopic.PRODUCTS,
-                product.getId(),
-                eventType.toString(),
-                product
-        );
-        eventService.emit(event);
-        return event;
+        return eventService.emit(eventType, product);
     }
 
     private Event createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
         validator.ensureRequiredFields(product);
-        var event = eventMapper.toEvent(
-                ChannelTopic.PRODUCTS,
-                product.getId(),
-                eventType.toString(),
-                product
-        );
-        eventService.emit(event);
-        return event;
+        return eventService.emit(eventType, product);
     }
 }
