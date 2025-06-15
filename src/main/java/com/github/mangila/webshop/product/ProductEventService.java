@@ -1,33 +1,39 @@
 package com.github.mangila.webshop.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.mangila.webshop.common.EventMapper;
-import com.github.mangila.webshop.common.EventService;
-import com.github.mangila.webshop.common.model.ChannelTopic;
-import com.github.mangila.webshop.common.model.Event;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mangila.webshop.common.event.Event;
+import com.github.mangila.webshop.common.event.EventService;
+import com.github.mangila.webshop.common.event.EventTopic;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class ProductEventService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductEventService.class);
 
-    private final EventService eventService;
-    private final EventMapper eventMapper;
-    private final ProductValidator validator;
+    private final EventTopic topic = EventTopic.PRODUCT;
 
-    public ProductEventService(EventService eventService,
-                               EventMapper eventMapper,
-                               ProductValidator validator) {
+    private final ObjectMapper objectMapper;
+    private final EventService eventService;
+    private final ProductValidator validator;
+    private final ProductCommandService commandService;
+
+    public ProductEventService(ObjectMapper objectMapper,
+                               EventService eventService,
+                               ProductValidator validator,
+                               ProductCommandService commandService) {
+        this.objectMapper = objectMapper;
         this.eventService = eventService;
-        this.eventMapper = eventMapper;
         this.validator = validator;
+        this.commandService = commandService;
     }
 
     public Event processMutation(ProductEventType eventType, Product product) throws JsonProcessingException {
@@ -41,13 +47,38 @@ public class ProductEventService {
         };
     }
 
+    @Transactional
+    public void acknowledgeEvent(long id) throws JsonProcessingException {
+        Event event = eventService.acknowledge(id);
+        log.info("Processing event: {}", event);
+        ProductEventType eventType = ProductEventType.valueOf(event.getEventType());
+        Product product = objectMapper.readValue(event.getEventData(), Product.class);
+        log.info("EventType -- {} -- Product -- {}", eventType, product);
+        switch (eventType) {
+            case CREATE_NEW -> commandService.createNewProduct(product);
+            case DELETE -> commandService.deleteProductById(product.getId());
+        }
+    }
+
     private Event deleteProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
-        validator.ensureProductId(product);
-        return eventService.emit(eventType, product);
+        return eventService.emit(
+                topic,
+                product.getId(),
+                eventType.toString(),
+                product
+        );
     }
 
     private Event createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
-        validator.ensureRequiredFields(product);
-        return eventService.emit(eventType, product);
+        return eventService.emit(
+                topic,
+                product.getId(),
+                eventType.toString(),
+                product
+        );
+    }
+
+    public List<Event> queryPendingEventsByTopic(EventTopic topic) {
+        return eventService.queryPendingEventsByTopic(topic);
     }
 }

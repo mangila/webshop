@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.mangila.webshop.common.model.Event;
+import com.github.mangila.webshop.common.event.Event;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEventType;
 import org.springframework.graphql.data.method.annotation.Argument;

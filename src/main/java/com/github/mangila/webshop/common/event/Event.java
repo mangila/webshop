@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.common.model;
+package com.github.mangila.webshop.common.event;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,4 @@
-package com.github.mangila.webshop.product.model;
-
-import com.github.mangila.webshop.common.model.Notification;
+package com.github.mangila.webshop.common.notification.model;
 
 public class ProductNotification extends Notification {
 

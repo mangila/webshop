@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS event;
-DROP TABLE IF EXISTS event_offset;
+DROP TABLE IF EXISTS event_processed;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS inventory;
 
@@ -13,10 +13,11 @@ CREATE TABLE event
     created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE event_offset
+CREATE TABLE event_processed
 (
-    event_topic    VARCHAR(100) PRIMARY KEY,
-    current_offset BIGINT DEFAULT 0
+    event_id    BIGINT PRIMARY KEY,
+    event_topic VARCHAR(255) NOT NULL,
+    status      VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE product

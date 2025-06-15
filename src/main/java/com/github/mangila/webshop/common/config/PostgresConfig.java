@@ -19,47 +19,12 @@ public class PostgresConfig {
 
     @PostConstruct
     public void init() {
-        createAcknowledgeEventFunction();
-        createNotificationTrigger();
+        insertNewPendingEvent();
+        notifyNewEventByTopic();
+        acknowledgeEvent();
     }
 
-    private void createAcknowledgeEventFunction() {
-        log.info("Creating Postgres function acknowledge_event(f_event_id BIGINT, f_event_topic VARCHAR)");
-        jdbc.execute("""
-                DROP FUNCTION IF EXISTS acknowledge_event(BIGINT, VARCHAR);
-                CREATE OR REPLACE FUNCTION acknowledge_event(f_event_id BIGINT, f_event_topic VARCHAR)
-                 RETURNS TABLE (
-                     id BIGINT,
-                     event_type VARCHAR,
-                     aggregate_id VARCHAR,
-                     topic VARCHAR,
-                     event_data JSONB,
-                     created TIMESTAMP
-                 ) AS $$
-                 BEGIN
-                     -- Update the offset first
-                     INSERT INTO event_offset (event_topic, current_offset)
-                     VALUES (f_event_topic, f_event_id)
-                     ON CONFLICT (event_topic) DO UPDATE
-                     SET current_offset = EXCLUDED.current_offset;
-                
-                     -- Return the event data with explicit column aliases matching the function's output columns
-                     RETURN QUERY
-                     SELECT
-                         e.id AS id,
-                         e.event_type AS event_type,
-                         e.aggregate_id AS aggregate_id,
-                         e.topic AS topic,
-                         e.event_data AS event_data,
-                         e.created AS created
-                     FROM event e
-                     WHERE e.id = f_event_id AND e.topic = f_event_topic;
-                 END;
-                 $$ LANGUAGE plpgsql;
-                """);
-    }
-
-    private void createNotificationTrigger() {
+    private void notifyNewEventByTopic() {
         log.info("Creating Postgres function notify_new_event_by_topic() with trigger on event table");
         jdbc.execute("""
                 DROP FUNCTION IF EXISTS notify_new_event_by_topic();
@@ -84,6 +49,60 @@ public class PostgresConfig {
                 AFTER INSERT ON event
                 FOR EACH ROW
                 EXECUTE FUNCTION notify_new_event_by_topic();
+                """);
+    }
+
+    private void insertNewPendingEvent() {
+        log.info("Creating Postgres function insert_new_pending_event() with trigger on event table");
+        jdbc.execute("""
+                DROP FUNCTION IF EXISTS insert_new_pending_event();
+                CREATE OR REPLACE FUNCTION insert_new_pending_event() RETURNS TRIGGER AS $$
+                BEGIN
+                INSERT INTO event_processed (event_id, event_topic, status)
+                     VALUES (NEW.id, NEW.topic, 'PENDING');
+                RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                """);
+        jdbc.execute("""
+                DROP TRIGGER IF EXISTS insert_new_pending_event ON event;
+                CREATE TRIGGER insert_new_pending_event
+                AFTER INSERT ON event
+                FOR EACH ROW
+                EXECUTE FUNCTION insert_new_pending_event();
+                """);
+    }
+
+    private void acknowledgeEvent() {
+        jdbc.execute("""
+                CREATE OR REPLACE FUNCTION acknowledge_event(
+                    f_event_id BIGINT
+                )
+                RETURNS TABLE (
+                        id         BIGINT ,
+                        topic        VARCHAR,
+                        event_type   VARCHAR,
+                        aggregate_id VARCHAR,
+                        event_data   JSONB  ,
+                        created      TIMESTAMP
+                ) AS
+                $$
+                BEGIN
+                    UPDATE event_processed
+                    SET status = 'ACKNOWLEDGED'
+                    WHERE event_id = f_event_id;
+                
+                    RETURN QUERY
+                    SELECT e.id,
+                           e.topic,
+                           e.event_type,
+                           e.aggregate_id,
+                           e.event_data,
+                           e.created
+                    FROM event e
+                    WHERE e.id = f_event_id;
+                END;
+                $$ LANGUAGE plpgsql;
                 """);
     }
 }

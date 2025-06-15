@@ -1,10 +1,9 @@
 package com.github.mangila.webshop.product.model;
 
-import com.github.mangila.webshop.common.model.BaseEntity;
-
 import java.math.BigDecimal;
+import java.time.Instant;
 
-public class Product extends BaseEntity {
+public class Product {
 
     private String id;
     private String name;
@@ -12,6 +11,8 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     private String imageUrl;
     private String category;
+    private Instant updated;
+    private String extensions;
 
     public String getId() {
         return id;
@@ -59,5 +60,35 @@ public class Product extends BaseEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(String extensions) {
+        this.extensions = extensions;
+    }
+
+    public Instant getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Instant updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", category='" + category + '\'' +
+                ", updated=" + updated +
+                ", extensions='" + extensions + '\'' +
+                '}';
     }
 }

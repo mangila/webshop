@@ -1,14 +1,14 @@
-package com.github.mangila.webshop.common;
+package com.github.mangila.webshop.common.event;
 
-import com.github.mangila.webshop.common.model.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -21,17 +21,6 @@ public class EventRepository {
     public EventRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
-
-    private final RowMapper<Event> eventRowMapper = (rs, rowNum) -> {
-        Event event = new Event();
-        event.setId(rs.getLong("id"));
-        event.setEventType(rs.getString("event_type"));
-        event.setAggregateId(rs.getString("aggregate_id"));
-        event.setTopic(rs.getString("topic"));
-        event.setEventData(rs.getString("event_data"));
-        event.setCreated(rs.getTimestamp("created").toLocalDateTime());
-        return event;
-    };
 
     public Map<String, Object> emit(Event event) {
         final String sql = """
@@ -51,14 +40,33 @@ public class EventRepository {
         return keyHolder.getKeyList().getFirst();
     }
 
-    public Event acknowledgeEvent(long id, String topic) {
+    public Event acknowledge(Long eventId) {
         final String sql = """
                 SELECT id, event_type, aggregate_id, topic, event_data, created
-                FROM acknowledge_event(?, ?)
+                FROM acknowledge_event(?)
                 """;
-        log.trace("{} -- {} -- {}", sql, id, topic);
-        var event = jdbc.queryForObject(sql, eventRowMapper, id, topic);
-        log.debug("Acknowledged event: {}", event);
-        return event;
+        return jdbc.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(Event.class),
+                eventId);
+    }
+
+    public List<Event> queryPendingEventsByTopic(EventTopic topic) {
+        final String sql = """
+                SELECT e.id,
+                       e.event_type,
+                       e.aggregate_id,
+                       e.topic,
+                       e.event_data,
+                       e.created
+                FROM event e
+                LEFT JOIN event_processed ep ON e.id = ep.event_id
+                WHERE e.topic = ? AND ep.status = ?
+                """;
+        return jdbc.query(
+                sql,
+                new BeanPropertyRowMapper<>(Event.class),
+                topic.toString(),
+                EventStatus.PENDING.toString());
     }
 }

@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.common.util;
 
-import com.github.mangila.webshop.common.model.exception.ValidationException;
+import com.github.mangila.webshop.common.exception.ValidationException;
 
 public final class ValidationUtils {
 
