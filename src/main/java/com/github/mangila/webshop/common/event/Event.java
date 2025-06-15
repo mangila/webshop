@@ -6,9 +6,9 @@ public class Event {
 
     private Long id;
     private String topic;
-    private String eventType;
+    private String type;
     private String aggregateId;
-    private String eventData;
+    private String data;
     private LocalDateTime created;
 
     public Long getId() {
@@ -27,12 +27,12 @@ public class Event {
         this.topic = topic;
     }
 
-    public String getEventType() {
-        return eventType;
+    public String getType() {
+        return type;
     }
 
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getAggregateId() {
@@ -43,12 +43,12 @@ public class Event {
         this.aggregateId = aggregateId;
     }
 
-    public String getEventData() {
-        return eventData;
+    public String getData() {
+        return data;
     }
 
-    public void setEventData(String eventData) {
-        this.eventData = eventData;
+    public void setData(String data) {
+        this.data = data;
     }
 
     public LocalDateTime getCreated() {
@@ -64,9 +64,9 @@ public class Event {
         return "Event{" +
                 "id=" + id +
                 ", topic='" + topic + '\'' +
-                ", eventType='" + eventType + '\'' +
+                ", eventType='" + type + '\'' +
                 ", aggregateId='" + aggregateId + '\'' +
-                ", eventData='" + eventData + '\'' +
+                ", eventData='" + data + '\'' +
                 ", created=" + created +
                 '}';
     }

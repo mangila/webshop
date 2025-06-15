@@ -31,10 +31,10 @@ public class EventRepository {
         var keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
             var ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, event.getEventType());
+            ps.setString(1, event.getType());
             ps.setString(2, event.getAggregateId());
             ps.setString(3, event.getTopic());
-            ps.setString(4, event.getEventData());
+            ps.setString(4, event.getData());
             return ps;
         }, keyHolder);
         return keyHolder.getKeyList().getFirst();

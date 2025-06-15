@@ -21,17 +21,17 @@ public class EventService {
 
     public Event emit(EventTopic eventTopic,
                       String aggregateId,
-                      String eventType,
-                      Object eventData) throws JsonProcessingException {
+                      String type,
+                      Object data) throws JsonProcessingException {
         var event = eventMapper.toEvent(
                 eventTopic,
                 aggregateId,
-                eventType,
-                eventData
+                type,
+                data
         );
         var map = repository.emit(event);
         event.setId((Long) map.get("id"));
-        event.setEventData(((PGobject) map.get("event_data")).getValue());
+        event.setData(((PGobject) map.get("data")).getValue());
         event.setCreated(((Timestamp) map.get("created")).toLocalDateTime());
         return event;
     }

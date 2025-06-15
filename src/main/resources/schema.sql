@@ -7,9 +7,9 @@ CREATE TABLE event
 (
     id           BIGSERIAL PRIMARY KEY,
     topic        VARCHAR(255) NOT NULL,
-    event_type   VARCHAR(100) NOT NULL,
+    type         VARCHAR(100) NOT NULL,
     aggregate_id VARCHAR(255) NOT NULL,
-    event_data   JSONB        NOT NULL,
+    data         JSONB        NOT NULL,
     created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

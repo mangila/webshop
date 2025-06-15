@@ -51,8 +51,8 @@ public class ProductEventService {
     public void acknowledgeEvent(long id) throws JsonProcessingException {
         Event event = eventService.acknowledge(id);
         log.info("Processing event: {}", event);
-        ProductEventType eventType = ProductEventType.valueOf(event.getEventType());
-        Product product = objectMapper.readValue(event.getEventData(), Product.class);
+        ProductEventType eventType = ProductEventType.valueOf(event.getType());
+        Product product = objectMapper.readValue(event.getData(), Product.class);
         log.info("EventType -- {} -- Product -- {}", eventType, product);
         switch (eventType) {
             case CREATE_NEW -> commandService.createNewProduct(product);
@@ -61,6 +61,7 @@ public class ProductEventService {
     }
 
     private Event deleteProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
+        validator.ensureProductId(product);
         return eventService.emit(
                 topic,
                 product.getId(),
@@ -70,6 +71,7 @@ public class ProductEventService {
     }
 
     private Event createNewProductEvent(ProductEventType eventType, Product product) throws JsonProcessingException {
+        validator.ensureRequiredFields(product);
         return eventService.emit(
                 topic,
                 product.getId(),

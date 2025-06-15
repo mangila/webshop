@@ -20,8 +20,8 @@ public class EventMapper {
         var pgEvent = new Event();
         pgEvent.setAggregateId(aggregateId);
         pgEvent.setTopic(eventTopic.toString());
-        pgEvent.setEventType(eventType);
-        pgEvent.setEventData(objectMapper.writeValueAsString(eventData));
+        pgEvent.setType(eventType);
+        pgEvent.setData(objectMapper.writeValueAsString(eventData));
         return pgEvent;
     }
 
