@@ -81,9 +81,9 @@ public class PostgresConfig {
                 RETURNS TABLE (
                         id         BIGINT ,
                         topic        VARCHAR,
-                        event_type   VARCHAR,
+                        type   VARCHAR,
                         aggregate_id VARCHAR,
-                        event_data   JSONB  ,
+                        data   JSONB  ,
                         created      TIMESTAMP
                 ) AS
                 $$
@@ -95,9 +95,9 @@ public class PostgresConfig {
                     RETURN QUERY
                     SELECT e.id,
                            e.topic,
-                           e.event_type,
+                           e.type,
                            e.aggregate_id,
-                           e.event_data,
+                           e.data,
                            e.created
                     FROM event e
                     WHERE e.id = f_event_id;

@@ -24,7 +24,7 @@ public class EventRepository {
 
     public Map<String, Object> emit(Event event) {
         final String sql = """
-                INSERT INTO event (event_type, aggregate_id, topic, event_data)
+                INSERT INTO event (type, aggregate_id, topic, data)
                 VALUES (?, ?, ?, ?::jsonb)
                 """;
         log.trace("{} -- {}", event, sql);
@@ -42,7 +42,7 @@ public class EventRepository {
 
     public Event acknowledge(Long eventId) {
         final String sql = """
-                SELECT id, event_type, aggregate_id, topic, event_data, created
+                SELECT id, type, aggregate_id, topic, data, created
                 FROM acknowledge_event(?)
                 """;
         return jdbc.queryForObject(
@@ -54,10 +54,10 @@ public class EventRepository {
     public List<Event> queryPendingEventsByTopic(EventTopic topic) {
         final String sql = """
                 SELECT e.id,
-                       e.event_type,
+                       e.type,
                        e.aggregate_id,
                        e.topic,
-                       e.event_data,
+                       e.data,
                        e.created
                 FROM event e
                 LEFT JOIN event_processed ep ON e.id = ep.event_id
