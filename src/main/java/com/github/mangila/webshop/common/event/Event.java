@@ -9,6 +9,7 @@ public class Event {
     private String type;
     private String aggregateId;
     private String data;
+    private String metadata;
     private LocalDateTime created;
 
     public Long getId() {
@@ -59,14 +60,23 @@ public class Event {
         this.created = created;
     }
 
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
                 "id=" + id +
                 ", topic='" + topic + '\'' +
-                ", eventType='" + type + '\'' +
+                ", type='" + type + '\'' +
                 ", aggregateId='" + aggregateId + '\'' +
-                ", eventData='" + data + '\'' +
+                ", data='" + data + '\'' +
+                ", metadata='" + metadata + '\'' +
                 ", created=" + created +
                 '}';
     }

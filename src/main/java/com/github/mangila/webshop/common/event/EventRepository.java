@@ -45,28 +45,49 @@ public class EventRepository {
                 SELECT id, type, aggregate_id, topic, data, created
                 FROM acknowledge_event(?)
                 """;
-        return jdbc.queryForObject(
+        var event = jdbc.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(Event.class),
                 eventId);
+        log.trace("Acknowledged event -- {}", event);
+        return event;
     }
 
-    public List<Event> queryPendingEventsByTopic(EventTopic topic) {
+    public List<Long> queryEventIdsByTopicAndStatus(EventTopic topic, EventStatus status) {
         final String sql = """
-                SELECT e.id,
-                       e.type,
-                       e.aggregate_id,
-                       e.topic,
-                       e.data,
-                       e.created
+                SELECT e.id
                 FROM event e
-                LEFT JOIN event_processed ep ON e.id = ep.event_id
+                INNER JOIN event_processed ep ON e.id = ep.event_id
                 WHERE e.topic = ? AND ep.status = ?
                 """;
-        return jdbc.query(
+        var list = jdbc.query(
                 sql,
-                new BeanPropertyRowMapper<>(Event.class),
+                (rs, rowNum) -> rs.getLong("id"),
                 topic.toString(),
-                EventStatus.PENDING.toString());
+                status.toString());
+        log.trace("Found {} events for topic -- {} and status -- {}", list.size(), topic, status);
+        return list;
+    }
+
+    public int incrementEventFailCounter(long id) {
+        final String sql = """
+                UPDATE event_processed
+                SET fail_counter = fail_counter + 1
+                WHERE event_id = ?
+                RETURNING fail_counter
+                """;
+        int updatedCount = jdbc.queryForObject(sql, Integer.class, id);
+        log.trace("Incremented fail counter for event with id -- {}", id);
+        return updatedCount;
+    }
+
+    public void changeEventStatus(long id, EventStatus status) {
+        final String sql = """
+                UPDATE event_processed
+                SET status = ?
+                WHERE event_id = ?
+                """;
+        jdbc.update(sql, status, id);
+        log.trace("Failed event with id -- {}", id);
     }
 }

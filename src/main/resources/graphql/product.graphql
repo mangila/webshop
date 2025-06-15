@@ -1,5 +1,5 @@
 type Mutation {
-    mutateProduct(intent: ProductIntent!,input: MutateProduct!): Event
+    mutateProduct(command: ProductCommand!,input: MutateProduct!): Product
 }
 
 type Query {
@@ -13,22 +13,22 @@ type Product {
     price: Float
     imageUrl: String
     category: String
+    created: String
+    updated: String
     extensions: JSON
 }
 
-enum ProductIntent {
-    CREATE_NEW,
-    DELETE,
-    PRICE_CHANGED,
-    QUANTITY_CHANGED,
-    EXTENSION_CHANGED
+enum ProductCommand {
+    UPSERT_PRODUCT,
+    UPDATE_PRODUCT_PRICE,
+    DELETE_PRODUCT
 }
 
 input MutateProduct {
-    id: ID!
+    id: ID
     name: String
     description: String
-    price: Float!
+    price: Float
     imageUrl: String
     category: String
     extensions: JSON

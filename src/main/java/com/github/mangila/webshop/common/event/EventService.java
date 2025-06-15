@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.common.event;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class EventService {
     public Event emit(EventTopic eventTopic,
                       String aggregateId,
                       String type,
-                      Object data) throws JsonProcessingException {
+                      Object data) {
         var event = eventMapper.toEvent(
                 eventTopic,
                 aggregateId,
@@ -40,7 +39,15 @@ public class EventService {
         return repository.acknowledge(eventId);
     }
 
-    public List<Event> queryPendingEventsByTopic(EventTopic topic) {
-        return repository.queryPendingEventsByTopic(topic);
+    public List<Long> queryEventIdsByTopicAndStatus(EventTopic topic, EventStatus status) {
+        return repository.queryEventIdsByTopicAndStatus(topic, status);
+    }
+
+    public int incrementEventFailCounter(long id) {
+        return repository.incrementEventFailCounter(id);
+    }
+
+    public void changeEventStatus(long id, EventStatus status) {
+        repository.changeEventStatus(id, status);
     }
 }

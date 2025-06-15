@@ -4,7 +4,7 @@ package com.github.mangila.webshop.inventory.model;
  * Enum representing the types of events that can occur for Inventory entities.
  */
 public enum InventoryEventType {
-    CREATED,
+    CREATE_NEW,
     UPDATED,
     DELETED,
     QUANTITY_INCREASED,

@@ -24,7 +24,7 @@ public class GraphQLConfig extends DataFetcherExceptionResolverAdapter {
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         if (ex instanceof RuntimeException e) {
             return GraphqlErrorBuilder.newError(env)
-                    .message("Something went wrong: " + e.getMessage())
+                    .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
         }

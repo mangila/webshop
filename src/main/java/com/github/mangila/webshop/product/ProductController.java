@@ -1,9 +1,11 @@
 package com.github.mangila.webshop.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.mangila.webshop.common.event.Event;
+import com.github.mangila.webshop.product.command.ProductCommandService;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.ProductEventType;
+import com.github.mangila.webshop.product.model.ProductCommandType;
+import com.github.mangila.webshop.product.query.ProductQueryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -12,13 +14,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductController {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final ProductQueryService productQueryService;
-    private final ProductEventService productEventService;
+    private final ProductCommandService productCommandService;
 
     public ProductController(ProductQueryService productQueryService,
-                             ProductEventService productEventService) {
+                             ProductCommandService productCommandService) {
         this.productQueryService = productQueryService;
-        this.productEventService = productEventService;
+        this.productCommandService = productCommandService;
     }
 
     @QueryMapping
@@ -27,9 +30,14 @@ public class ProductController {
     }
 
     @MutationMapping
-    public Event mutateProduct(
-            @Argument("intent") ProductEventType eventType,
-            @Argument("input") Product product) throws JsonProcessingException {
-        return productEventService.processMutation(eventType, product);
+    public Product mutateProduct(
+            @Argument("command") ProductCommandType command,
+            @Argument("input") Product product) {
+        try {
+            return productCommandService.processCommand(command, product);
+        } catch (Exception e) {
+            log.error("Failed to process command: {}", command, e);
+            throw new RuntimeException(e);
+        }
     }
 }

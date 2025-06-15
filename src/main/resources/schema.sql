@@ -10,14 +10,8 @@ CREATE TABLE event
     type         VARCHAR(100) NOT NULL,
     aggregate_id VARCHAR(255) NOT NULL,
     data         JSONB        NOT NULL,
+    metadata     JSONB     DEFAULT '{}'::jsonb,
     created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE event_processed
-(
-    event_id    BIGINT PRIMARY KEY,
-    event_topic VARCHAR(255) NOT NULL,
-    status      VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE product
@@ -28,6 +22,7 @@ CREATE TABLE product
     price       DECIMAL(10, 2) NOT NULL,
     image_url   VARCHAR(255),
     category    VARCHAR(100),
+    created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     extensions  JSONB     DEFAULT '{}'::jsonb
 );

@@ -17,5 +17,10 @@ public class ProductValidator {
         ValidationUtils.ensureNotNull(product, "product must not be null");
         ValidationUtils.ensureNotNull(product.getId(), "id must not be null");
     }
+
+    public void ensurePrice(Product product) {
+        ensureProductId(product);
+        ValidationUtils.ensureNotNull(product.getPrice(), "price must not be null");
+    }
 }
 

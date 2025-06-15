@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.common.event;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mangila.webshop.common.util.JsonUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,12 +16,12 @@ public class EventMapper {
     public Event toEvent(EventTopic eventTopic,
                          String aggregateId,
                          String eventType,
-                         Object eventData) throws JsonProcessingException {
+                         Object eventData) {
         var pgEvent = new Event();
         pgEvent.setAggregateId(aggregateId);
         pgEvent.setTopic(eventTopic.toString());
         pgEvent.setType(eventType);
-        pgEvent.setData(objectMapper.writeValueAsString(eventData));
+        pgEvent.setData(JsonUtils.ensureSerialize(eventData, objectMapper));
         return pgEvent;
     }
 

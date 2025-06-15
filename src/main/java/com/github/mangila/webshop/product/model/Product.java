@@ -11,6 +11,7 @@ public class Product {
     private BigDecimal price;
     private String imageUrl;
     private String category;
+    private Instant created;
     private Instant updated;
     private String extensions;
 
@@ -70,6 +71,14 @@ public class Product {
         this.extensions = extensions;
     }
 
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
     public Instant getUpdated() {
         return updated;
     }
@@ -87,6 +96,7 @@ public class Product {
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", category='" + category + '\'' +
+                ", created=" + created +
                 ", updated=" + updated +
                 ", extensions='" + extensions + '\'' +
                 '}';

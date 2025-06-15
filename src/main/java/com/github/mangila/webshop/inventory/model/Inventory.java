@@ -3,21 +3,12 @@ package com.github.mangila.webshop.inventory.model;
 import java.math.BigInteger;
 import java.time.Instant;
 
-public class InventoryEntity {
+public class Inventory {
 
-    private String id;
     private String productId;
     private BigInteger quantity;
     private Instant updated;
     private String extensions;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getProductId() {
         return productId;
