@@ -24,9 +24,7 @@ public class ProductNotificationService {
     public void onNotification(ProductNotification notification) {
         log.debug("Received ProductNotification: {} -- {}", notification.getTopic(), notification.getId());
         try {
-            if (notification.getId() == 1) {
-                productEventService.acknowledgeEvent(notification.getId());
-            }
+            productEventService.acknowledgeEvent(notification.getId());
         } catch (JsonProcessingException e) {
             log.error("Failed to process notification: {}", notification, e);
         }
