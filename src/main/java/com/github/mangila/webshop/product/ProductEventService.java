@@ -55,8 +55,16 @@ public class ProductEventService {
         Product product = objectMapper.readValue(event.getData(), Product.class);
         log.info("EventType -- {} -- Product -- {}", eventType, product);
         switch (eventType) {
-            case CREATE_NEW -> commandService.createNewProduct(product);
-            case DELETE -> commandService.deleteProductById(product.getId());
+            case CREATE_NEW -> {
+                log.info("Creating new product: {}", product);
+                commandService.createNewProduct(product);
+                log.info("Product created: {}", product);
+            }
+            case DELETE -> {
+                log.info("Deleting product: {}", product);
+                commandService.deleteProductById(product.getId());
+                log.info("Product deleted: {}", product);
+            }
         }
     }
 

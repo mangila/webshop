@@ -51,10 +51,10 @@ public class ProductRepository {
         });
     }
 
-    public boolean deleteProduct(String id) {
+    public void deleteProduct(String id) {
         final String sql = """
                 DELETE FROM product WHERE id = ?
                 """;
-        return jdbc.update(sql, id) == 1;
+        jdbc.update(sql, id);
     }
 }

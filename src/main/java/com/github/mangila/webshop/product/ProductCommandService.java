@@ -21,9 +21,6 @@ public class ProductCommandService {
     }
 
     public void deleteProductById(String id) {
-        var delete = repository.deleteProduct(id);
-        if (delete) {
-            log.debug("Product with id {} deleted", id);
-        }
+        repository.deleteProduct(id);
     }
 }
