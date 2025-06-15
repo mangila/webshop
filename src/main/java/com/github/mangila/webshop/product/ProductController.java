@@ -33,11 +33,6 @@ public class ProductController {
     public Product mutateProduct(
             @Argument("command") ProductCommandType command,
             @Argument("input") Product product) {
-        try {
-            return productCommandService.processCommand(command, product);
-        } catch (Exception e) {
-            log.error("Failed to process command: {}", command, e);
-            throw new RuntimeException(e);
-        }
+        return productCommandService.processCommand(command, product);
     }
 }
