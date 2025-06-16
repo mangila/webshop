@@ -1,7 +1,9 @@
-package com.github.mangila.webshop.common.event;
+package com.github.mangila.webshop.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.common.util.JsonUtils;
+import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventTopic;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.common.event;
+package com.github.mangila.webshop.event.command;
 
+import com.github.mangila.webshop.event.model.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -7,13 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EventRepository {
+public class EventCommandRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(EventRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(EventCommandRepository.class);
 
     private final JdbcTemplate jdbc;
 
-    public EventRepository(JdbcTemplate jdbc) {
+    public EventCommandRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 

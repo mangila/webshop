@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.product.command;
 
-import com.github.mangila.webshop.common.event.EventService;
-import com.github.mangila.webshop.common.event.EventTopic;
 import com.github.mangila.webshop.common.util.JsonUtils;
+import com.github.mangila.webshop.event.command.EventCommandService;
+import com.github.mangila.webshop.event.model.EventTopic;
 import com.github.mangila.webshop.product.ProductEventType;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
@@ -18,16 +18,16 @@ public class ProductCommandService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductCommandService.class);
 
-    private final EventService eventService;
+    private final EventCommandService eventCommandService;
     private final ProductQueryService queryService;
     private final ProductCommandRepository commandRepository;
     private final ProductValidator validator;
 
-    public ProductCommandService(EventService eventService,
+    public ProductCommandService(EventCommandService eventCommandService,
                                  ProductQueryService queryService,
                                  ProductCommandRepository commandRepository,
                                  ProductValidator validator) {
-        this.eventService = eventService;
+        this.eventCommandService = eventCommandService;
         this.queryService = queryService;
         this.commandRepository = commandRepository;
         this.validator = validator;
@@ -45,7 +45,7 @@ public class ProductCommandService {
     private Product upsertProduct(Product product) {
         validator.ensureRequiredFields(product);
         var result = commandRepository.upsertProduct(product);
-        var event = eventService.emit(
+        var event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 result.getId(),
                 ProductEventType.PRODUCT_UPSERTED.toString(),
@@ -61,7 +61,7 @@ public class ProductCommandService {
         var id = product.getId();
         var result = queryService.queryById(id);
         commandRepository.deleteProductById(id);
-        var event = eventService.emit(
+        var event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 result.getId(),
                 ProductEventType.PRODUCT_DELETED.toString(),
@@ -78,7 +78,7 @@ public class ProductCommandService {
                 product.getId(),
                 "price",
                 product.getPrice());
-        var event = eventService.emit(
+        var event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 update.getId(),
                 ProductEventType.PRODUCT_PRICE_UPDATED.toString(),
