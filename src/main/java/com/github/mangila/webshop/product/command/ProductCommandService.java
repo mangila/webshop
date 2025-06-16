@@ -2,6 +2,7 @@ package com.github.mangila.webshop.product.command;
 
 import com.github.mangila.webshop.common.event.EventService;
 import com.github.mangila.webshop.common.event.EventTopic;
+import com.github.mangila.webshop.common.util.JsonUtils;
 import com.github.mangila.webshop.product.ProductEventType;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
@@ -44,13 +45,14 @@ public class ProductCommandService {
     private Product upsertProduct(Product product) {
         validator.ensureRequiredFields(product);
         var result = commandRepository.upsertProduct(product);
-        eventService.emit(
+        var event = eventService.emit(
                 EventTopic.PRODUCT,
                 result.getId(),
                 ProductEventType.PRODUCT_UPSERTED.toString(),
-                result
+                result,
+                JsonUtils.EMPTY_JSON
         );
-        log.debug("Product upserted -- {}", result);
+        log.debug("Product upserted -- {} -- {}", result, event);
         return result;
     }
 
@@ -59,26 +61,28 @@ public class ProductCommandService {
         var id = product.getId();
         var result = queryService.queryById(id);
         commandRepository.deleteProductById(id);
-        eventService.emit(
+        var event = eventService.emit(
                 EventTopic.PRODUCT,
                 result.getId(),
                 ProductEventType.PRODUCT_DELETED.toString(),
-                result
+                result,
+                JsonUtils.EMPTY_JSON
         );
-        log.debug("Product deleted -- {}", result);
+        log.debug("Product deleted -- {} -- {}", result, event);
         return result;
     }
 
     private Product updateProductPrice(Product product) {
         validator.ensurePrice(product);
         var update = commandRepository.update(product.getId(), product.getPrice(), "price");
-        eventService.emit(
+        var event = eventService.emit(
                 EventTopic.PRODUCT,
                 update.getId(),
                 ProductEventType.PRODUCT_PRICE_UPDATED.toString(),
-                update
+                update,
+                JsonUtils.EMPTY_JSON
         );
-        log.debug("Product price updated -- {}", update);
+        log.debug("Product price updated -- {} -- {}", update, event);
         return update;
     }
 }

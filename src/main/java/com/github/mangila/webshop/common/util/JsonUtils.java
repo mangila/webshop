@@ -48,4 +48,13 @@ public final class JsonUtils {
         }
     }
 
+    public static <T> String serialize(T payload, ObjectMapper objectMapper) {
+        try {
+            return objectMapper.writeValueAsString(payload);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize payload: {}", payload, e);
+            return EMPTY_JSON;
+        }
+    }
+
 }

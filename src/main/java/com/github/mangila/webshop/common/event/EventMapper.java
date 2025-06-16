@@ -16,12 +16,14 @@ public class EventMapper {
     public Event toEvent(EventTopic eventTopic,
                          String aggregateId,
                          String eventType,
-                         Object eventData) {
+                         Object data,
+                         Object metadata) {
         var pgEvent = new Event();
         pgEvent.setAggregateId(aggregateId);
         pgEvent.setTopic(eventTopic.toString());
         pgEvent.setType(eventType);
-        pgEvent.setData(JsonUtils.ensureSerialize(eventData, objectMapper));
+        pgEvent.setData(JsonUtils.ensureSerialize(data, objectMapper));
+        pgEvent.setMetadata(JsonUtils.serialize(metadata, objectMapper));
         return pgEvent;
     }
 

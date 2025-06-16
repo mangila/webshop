@@ -1,9 +1,7 @@
 package com.github.mangila.webshop.common.event;
 
-import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -21,18 +19,16 @@ public class EventService {
     public Event emit(EventTopic eventTopic,
                       String aggregateId,
                       String type,
-                      Object data) {
+                      Object data,
+                      Object metadata) {
         var event = eventMapper.toEvent(
                 eventTopic,
                 aggregateId,
                 type,
-                data
+                data,
+                metadata
         );
-        var map = repository.emit(event);
-        event.setId((Long) map.get("id"));
-        event.setData(((PGobject) map.get("data")).getValue());
-        event.setCreated(((Timestamp) map.get("created")).toLocalDateTime());
-        return event;
+        return repository.emit(event);
     }
 
     public Event acknowledge(Long eventId) {

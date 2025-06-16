@@ -51,7 +51,13 @@ public class ProductCommandRepository {
                 p.getCategory(),
                 p.getExtensions() != null ? p.getExtensions() : JsonUtils.EMPTY_JSON
         };
-        return jdbc.queryForObject(sql, repositoryMapper.getProductRowMapper(), params);
+        try {
+            return jdbc.queryForObject(sql, repositoryMapper.getProductRowMapper(), params);
+        } catch (Exception e) {
+            var msg = "Failed to upsert product -- %s".formatted(p);
+            log.error(msg, e);
+            throw new RuntimeException(msg);
+        }
     }
 
     public void deleteProductById(String id) {

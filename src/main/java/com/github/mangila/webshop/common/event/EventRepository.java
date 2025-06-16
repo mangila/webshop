@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.common.event;
 
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,8 +9,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class EventRepository {
@@ -22,22 +23,33 @@ public class EventRepository {
         this.jdbc = jdbc;
     }
 
-    public Map<String, Object> emit(Event event) {
+    public Event emit(Event event) {
         final String sql = """
-                INSERT INTO event (type, aggregate_id, topic, data)
-                VALUES (?, ?, ?, ?::jsonb)
+                INSERT INTO event (type, aggregate_id, topic, data, metadata)
+                VALUES (?, ?, ?, ?::jsonb, ?::jsonb)
                 """;
-        log.trace("{} -- {}", event, sql);
-        var keyHolder = new GeneratedKeyHolder();
-        jdbc.update(connection -> {
-            var ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, event.getType());
-            ps.setString(2, event.getAggregateId());
-            ps.setString(3, event.getTopic());
-            ps.setString(4, event.getData());
-            return ps;
-        }, keyHolder);
-        return keyHolder.getKeyList().getFirst();
+        log.debug("{} -- {}", event, sql);
+        try {
+            var keyHolder = new GeneratedKeyHolder();
+            jdbc.update(connection -> {
+                var ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, event.getType());
+                ps.setString(2, event.getAggregateId());
+                ps.setString(3, event.getTopic());
+                ps.setString(4, event.getData());
+                ps.setString(5, event.getMetadata());
+                return ps;
+            }, keyHolder);
+            var map = keyHolder.getKeyList().getFirst();
+            event.setId((Long) map.get("id"));
+            event.setData(((PGobject) map.get("data")).getValue());
+            event.setCreated(((Timestamp) map.get("created")).toLocalDateTime());
+            return event;
+        } catch (Exception e) {
+            var msg = "Failed to emit event -- %s".formatted(event);
+            log.error(msg, e);
+            throw new RuntimeException(msg);
+        }
     }
 
     public Event acknowledge(Long eventId) {

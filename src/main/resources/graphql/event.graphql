@@ -1,8 +1,9 @@
 type Event {
-  id: ID
-  topic: String
-  eventType: String
-  aggregateId: String
-  eventData: String
-  created: String
+    id: ID
+    topic: String
+    type: String
+    aggregateId: String
+    data: JSON
+    metadata: JSON
+    created: String
 }
