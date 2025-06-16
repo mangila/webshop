@@ -3,7 +3,12 @@ extend type Query {
 }
 
 extend type Mutation {
-    mutateQuantity(input: ID!): Inventory
+    mutateQuantity(input: MutateQuantity): Inventory
+}
+
+input MutateQuantity {
+    productId: ID!
+    quantity: Int!
 }
 
 type Inventory {
