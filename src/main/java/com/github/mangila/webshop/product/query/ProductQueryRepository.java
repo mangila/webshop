@@ -22,7 +22,7 @@ public class ProductQueryRepository {
                 SELECT id, name, description, price, image_url, category, created, updated, extensions
                 FROM product WHERE id = ?
                 """;
-        log.trace("Querying product by id -- {}", id);
+        log.debug("{} -- {}", id, sql);
         try {
             return jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
         } catch (Exception e) {

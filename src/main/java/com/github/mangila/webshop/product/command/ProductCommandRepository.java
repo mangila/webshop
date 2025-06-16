@@ -73,7 +73,7 @@ public class ProductCommandRepository {
         }
     }
 
-    public Product update(String id, Object data, String fieldName) {
+    public Product updateOneField(String id, String fieldName, Object data) {
         final String sql = """
                 UPDATE product
                 SET

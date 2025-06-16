@@ -74,7 +74,10 @@ public class ProductCommandService {
 
     private Product updateProductPrice(Product product) {
         validator.ensurePrice(product);
-        var update = commandRepository.update(product.getId(), product.getPrice(), "price");
+        var update = commandRepository.updateOneField(
+                product.getId(),
+                "price",
+                product.getPrice());
         var event = eventService.emit(
                 EventTopic.PRODUCT,
                 update.getId(),
