@@ -1,15 +1,11 @@
 package com.github.mangila.webshop.common.event;
 
-import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -27,24 +23,20 @@ public class EventRepository {
         final String sql = """
                 INSERT INTO event (type, aggregate_id, topic, data, metadata)
                 VALUES (?, ?, ?, ?::jsonb, ?::jsonb)
+                RETURNING id, type, aggregate_id, topic, data, created, metadata
                 """;
         log.debug("{} -- {}", event, sql);
         try {
-            var keyHolder = new GeneratedKeyHolder();
-            jdbc.update(connection -> {
-                var ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, event.getType());
-                ps.setString(2, event.getAggregateId());
-                ps.setString(3, event.getTopic());
-                ps.setString(4, event.getData());
-                ps.setString(5, event.getMetadata());
-                return ps;
-            }, keyHolder);
-            var map = keyHolder.getKeyList().getFirst();
-            event.setId((Long) map.get("id"));
-            event.setData(((PGobject) map.get("data")).getValue());
-            event.setCreated(((Timestamp) map.get("created")).toLocalDateTime());
-            return event;
+            var params = new Object[]{
+                    event.getType(),
+                    event.getAggregateId(),
+                    event.getTopic(),
+                    event.getData(),
+                    event.getMetadata()
+            };
+            return jdbc.queryForObject(sql,
+                    new BeanPropertyRowMapper<>(Event.class),
+                    params);
         } catch (Exception e) {
             var msg = "Failed to emit event -- %s".formatted(event);
             log.error(msg, e);

@@ -1,10 +1,10 @@
 package com.github.mangila.webshop.product.command;
 
 import com.github.mangila.webshop.common.util.JsonUtils;
-import com.github.mangila.webshop.product.ProductRepositoryMapper;
 import com.github.mangila.webshop.product.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +17,9 @@ public class ProductCommandRepository {
     private static final Logger log = LoggerFactory.getLogger(ProductCommandRepository.class);
 
     private final JdbcTemplate jdbc;
-    private final ProductRepositoryMapper repositoryMapper;
 
-    public ProductCommandRepository(JdbcTemplate jdbc,
-                                    ProductRepositoryMapper repositoryMapper) {
+    public ProductCommandRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-        this.repositoryMapper = repositoryMapper;
     }
 
     public Product upsertProduct(Product p) {
@@ -52,7 +49,9 @@ public class ProductCommandRepository {
                 p.getExtensions() != null ? p.getExtensions() : JsonUtils.EMPTY_JSON
         };
         try {
-            return jdbc.queryForObject(sql, repositoryMapper.getProductRowMapper(), params);
+            return jdbc.queryForObject(sql,
+                    new BeanPropertyRowMapper<>(Product.class),
+                    params);
         } catch (Exception e) {
             var msg = "Failed to upsert product -- %s".formatted(p);
             log.error(msg, e);
@@ -86,7 +85,7 @@ public class ProductCommandRepository {
         log.debug("{} -- {} -- {}", id, data, sql);
         try {
             return jdbc.queryForObject(sql,
-                    repositoryMapper.getProductRowMapper(),
+                    new BeanPropertyRowMapper<>(Product.class),
                     data,
                     Timestamp.from(Instant.now()),
                     id);
