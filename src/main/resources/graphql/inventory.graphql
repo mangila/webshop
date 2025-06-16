@@ -1,0 +1,14 @@
+extend type Query {
+    queryInventoryById (input: ID!): Inventory
+}
+
+extend type Mutation {
+    mutateQuantity(input: ID!): Inventory
+}
+
+type Inventory {
+    productId: ID
+    quantity: Int
+    updated: String
+    extensions: JSON
+}

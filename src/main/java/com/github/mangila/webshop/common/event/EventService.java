@@ -2,8 +2,6 @@ package com.github.mangila.webshop.common.event;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class EventService {
 
@@ -29,21 +27,5 @@ public class EventService {
                 metadata
         );
         return repository.emit(event);
-    }
-
-    public Event acknowledge(Long eventId) {
-        return repository.acknowledge(eventId);
-    }
-
-    public List<Long> queryEventIdsByTopicAndStatus(EventTopic topic, EventStatus status) {
-        return repository.queryEventIdsByTopicAndStatus(topic, status);
-    }
-
-    public int incrementEventFailCounter(long id) {
-        return repository.incrementEventFailCounter(id);
-    }
-
-    public void changeEventStatus(long id, EventStatus status) {
-        repository.changeEventStatus(id, status);
     }
 }

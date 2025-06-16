@@ -1,8 +1,8 @@
-type Mutation {
+extend type Mutation {
     mutateProduct(command: ProductCommand!,input: MutateProduct!): Product
 }
 
-type Query {
+extend type Query {
     queryProductById(input: ID!): Product
 }
 

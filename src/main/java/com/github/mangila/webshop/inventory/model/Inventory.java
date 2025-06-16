@@ -41,4 +41,14 @@ public class Inventory {
     public void setExtensions(String extensions) {
         this.extensions = extensions;
     }
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "productId='" + productId + '\'' +
+                ", quantity=" + quantity +
+                ", updated=" + updated +
+                ", extensions='" + extensions + '\'' +
+                '}';
+    }
 }

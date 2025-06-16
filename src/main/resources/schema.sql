@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS event;
-DROP TABLE IF EXISTS event_processed;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS inventory;
 
