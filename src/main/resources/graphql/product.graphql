@@ -1,5 +1,8 @@
 extend type Mutation {
-    mutateProduct(command: ProductCommand!,input: MutateProduct!): Product
+    mutateProduct(
+        command: ProductCommand!,
+        input: MutateProduct!
+    ): Product
 }
 
 extend type Query {

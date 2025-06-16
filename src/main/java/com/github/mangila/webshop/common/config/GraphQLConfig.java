@@ -17,6 +17,7 @@ public class GraphQLConfig extends DataFetcherExceptionResolverAdapter {
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder
+                .scalar(ExtendedScalars.GraphQLBigInteger)
                 .scalar(ExtendedScalars.Json);
     }
 
