@@ -9,7 +9,6 @@ CREATE TABLE event
     type         VARCHAR(100) NOT NULL,
     aggregate_id VARCHAR(255) NOT NULL,
     data         JSONB        NOT NULL,
-    metadata     JSONB     DEFAULT '{}'::jsonb,
     created      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

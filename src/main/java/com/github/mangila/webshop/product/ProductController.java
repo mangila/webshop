@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product;
 
-import com.github.mangila.webshop.product.command.ProductCommandService;
+import com.github.mangila.webshop.product.command.ProductCommandGateway;
 import com.github.mangila.webshop.product.model.ProductCommandType;
 import com.github.mangila.webshop.product.model.ProductDto;
 import com.github.mangila.webshop.product.model.ProductMutate;
@@ -15,14 +15,14 @@ public class ProductController {
 
     private final ProductMapper productMapper;
     private final ProductQueryService productQueryService;
-    private final ProductCommandService productCommandService;
+    private final ProductCommandGateway productCommandGateway;
 
     public ProductController(ProductMapper productMapper,
                              ProductQueryService productQueryService,
-                             ProductCommandService productCommandService) {
+                             ProductCommandGateway productCommandGateway) {
         this.productMapper = productMapper;
         this.productQueryService = productQueryService;
-        this.productCommandService = productCommandService;
+        this.productCommandGateway = productCommandGateway;
     }
 
     @QueryMapping
@@ -35,7 +35,7 @@ public class ProductController {
     public ProductDto mutateProduct(
             @Argument("command") ProductCommandType command,
             @Argument("mutate") ProductMutate productMutate) {
-        var product = productCommandService.processMutateCommand(command, productMutate);
+        var product = productCommandGateway.processCommand(command, productMutate);
         return productMapper.toDto(product);
     }
 }

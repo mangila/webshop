@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class ProductQueryRepository {
         var result = jdbc.query(sql,
                 new BeanPropertyRowMapper<>(ProductEntity.class),
                 id);
-        if (result.isEmpty()) {
+        if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
         var product = productMapper.toProduct(result.getFirst());

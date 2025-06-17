@@ -13,6 +13,5 @@ type Event {
     type: String
     aggregateId: String
     data: JSON
-    metadata: JSON
     created: String
 }

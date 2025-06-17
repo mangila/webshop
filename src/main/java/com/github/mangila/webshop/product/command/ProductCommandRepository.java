@@ -66,49 +66,38 @@ public class ProductCommandRepository {
     }
 
     public Optional<Product> deleteProductById(String id) {
-        try {
-            final String sql = """
-                    DELETE FROM product WHERE id = ?
-                    RETURNING id, name, description, price, image_url, category, created, updated, extensions
-                    """;
-            log.debug("{} -- {}", id, sql);
-            var entity = jdbc.queryForObject(sql,
-                    new BeanPropertyRowMapper<>(ProductEntity.class),
-                    id);
-            if (entity == null) {
-                return Optional.empty();
-            }
-            return Optional.of(productMapper.toProduct(entity));
-        } catch (Exception e) {
-            var msg = "Failed to delete product with id -- %s".formatted(id);
-            log.error(msg, e);
-            throw new RuntimeException(msg);
+        final String sql = """
+                DELETE FROM product WHERE id = ?
+                RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                """;
+        log.debug("{} -- {}", id, sql);
+        var result = jdbc.query(sql,
+                new BeanPropertyRowMapper<>(ProductEntity.class),
+                id);
+        if (CollectionUtils.isEmpty(result)) {
+            return Optional.empty();
         }
+        var product = productMapper.toProduct(result.getFirst());
+        return Optional.of(product);
     }
 
     public Optional<Product> updateOneField(String id, String fieldName, Object data) {
-        try {
-            final String sql = """
-                    UPDATE product
-                    SET
-                    %s = ?,
-                    updated = ?
-                    WHERE id = ?
-                    RETURNING id, name, description, price, image_url, category, created, updated, extensions
-                    """.formatted(fieldName);
-            var params = new Object[]{data, Timestamp.from(Instant.now()), id};
-            log.debug("{} -- {}", Arrays.toString(params), sql);
-            var entity = jdbc.queryForObject(sql,
-                    new BeanPropertyRowMapper<>(ProductEntity.class),
-                    params);
-            if (entity == null) {
-                return Optional.empty();
-            }
-            return Optional.of(productMapper.toProduct(entity));
-        } catch (Exception e) {
-            var msg = "Failed to update product with id -- %s -- %s -- %s".formatted(id, fieldName, data);
-            log.error(msg, e);
-            throw new RuntimeException(msg);
+        final String sql = """
+                UPDATE product
+                SET
+                %s = ?,
+                updated = ?
+                WHERE id = ?
+                RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                """.formatted(fieldName);
+        var params = new Object[]{data, Timestamp.from(Instant.now()), id};
+        log.debug("{} -- {}", Arrays.toString(params), sql);
+        var result = jdbc.query(sql,
+                new BeanPropertyRowMapper<>(ProductEntity.class),
+                params);
+        if (CollectionUtils.isEmpty(result)) {
+            return Optional.empty();
         }
+        return Optional.of(productMapper.toProduct(result.getFirst()));
     }
 }

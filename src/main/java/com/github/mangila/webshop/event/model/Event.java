@@ -1,5 +1,7 @@
 package com.github.mangila.webshop.event.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.time.LocalDateTime;
 
 public class Event {
@@ -9,8 +11,19 @@ public class Event {
     private String type;
     private String aggregateId;
     private String data;
-    private String metadata;
     private LocalDateTime created;
+
+    public static Event from(EventTopic eventTopic,
+                             String aggregateId,
+                             String eventType,
+                             JsonNode data) {
+        var event = new Event();
+        event.setAggregateId(aggregateId);
+        event.setTopic(eventTopic.toString());
+        event.setType(eventType);
+        event.setData(data.toString());
+        return event;
+    }
 
     public Long getId() {
         return id;
@@ -60,14 +73,6 @@ public class Event {
         this.created = created;
     }
 
-    public String getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(String metadata) {
-        this.metadata = metadata;
-    }
-
     @Override
     public String toString() {
         return "Event{" +
@@ -76,7 +81,6 @@ public class Event {
                 ", type='" + type + '\'' +
                 ", aggregateId='" + aggregateId + '\'' +
                 ", data='" + data + '\'' +
-                ", metadata='" + metadata + '\'' +
                 ", created=" + created +
                 '}';
     }
