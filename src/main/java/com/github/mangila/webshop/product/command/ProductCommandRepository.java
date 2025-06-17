@@ -5,7 +5,6 @@ import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -56,7 +55,7 @@ public class ProductCommandRepository {
         };
         log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
-                new BeanPropertyRowMapper<>(ProductEntity.class),
+                productMapper.getRowMapper(),
                 params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
@@ -72,7 +71,7 @@ public class ProductCommandRepository {
                 """;
         log.debug("{} -- {}", id, sql);
         var result = jdbc.query(sql,
-                new BeanPropertyRowMapper<>(ProductEntity.class),
+                productMapper.getRowMapper(),
                 id);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
@@ -93,7 +92,7 @@ public class ProductCommandRepository {
         var params = new Object[]{data, Timestamp.from(Instant.now()), id};
         log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
-                new BeanPropertyRowMapper<>(ProductEntity.class),
+                productMapper.getRowMapper(),
                 params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();

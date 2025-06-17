@@ -2,10 +2,8 @@ package com.github.mangila.webshop.product.query;
 
 import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.ProductEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -41,7 +39,7 @@ public class ProductQueryRepository {
                 """;
         log.debug("{} -- {}", id, sql);
         var result = jdbc.query(sql,
-                new BeanPropertyRowMapper<>(ProductEntity.class),
+                productMapper.getRowMapper(),
                 id);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();

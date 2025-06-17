@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.event.command;
 
 import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -16,9 +16,12 @@ public class EventCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(EventCommandRepository.class);
 
+    private final EventMapper eventMapper;
     private final JdbcTemplate jdbc;
 
-    public EventCommandRepository(JdbcTemplate jdbc) {
+    public EventCommandRepository(EventMapper eventMapper,
+                                  JdbcTemplate jdbc) {
+        this.eventMapper = eventMapper;
         this.jdbc = jdbc;
     }
 
@@ -36,7 +39,7 @@ public class EventCommandRepository {
         };
         log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
-                new BeanPropertyRowMapper<>(Event.class),
+                eventMapper.getRowMapper(),
                 params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();

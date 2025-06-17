@@ -3,7 +3,7 @@ package com.github.mangila.webshop.event.command;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventTopic;
-import com.github.mangila.webshop.event.model.exception.EventEmitException;
+import com.github.mangila.webshop.event.model.EventEmitException;
 import org.springframework.stereotype.Service;
 
 @Service

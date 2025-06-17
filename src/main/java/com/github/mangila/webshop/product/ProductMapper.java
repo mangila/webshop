@@ -5,6 +5,7 @@ import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductDto;
 import com.github.mangila.webshop.product.model.ProductEntity;
 import com.github.mangila.webshop.product.model.ProductMutate;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -14,9 +15,11 @@ import java.util.Objects;
 public class ProductMapper {
 
     private final JsonMapper jsonMapper;
+    private final BeanPropertyRowMapper<ProductEntity> rowMapper;
 
     public ProductMapper(JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
+        this.rowMapper = new BeanPropertyRowMapper<>(ProductEntity.class);
     }
 
     public Product toProduct(ProductMutate mutate) {
@@ -70,6 +73,10 @@ public class ProductMapper {
                 product.getUpdated().toString(),
                 product.getExtensions().toString()
         );
+    }
+
+    public BeanPropertyRowMapper<ProductEntity> getRowMapper() {
+        return rowMapper;
     }
 
 }
