@@ -21,8 +21,9 @@ public class EventController {
     public List<Event> replay(
             @Argument("topic") String topic,
             @Argument("aggregateId") String aggregateId,
-            @Argument("offset") Long offset) {
-        return eventQueryService.replay(topic,aggregateId,offset);
+            @Argument("offset") Long offset,
+            @Argument("limit") Integer limit) {
+        return eventQueryService.replay(topic, aggregateId, offset, limit);
     }
 
 }

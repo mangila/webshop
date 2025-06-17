@@ -14,10 +14,13 @@ public class EventQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public List<Event> replay(String topic, String aggregateId, Long offset) {
+    public List<Event> replay(String topic, String aggregateId, Long offset, Integer limit) {
         if (offset == null) {
             offset = 1L;
         }
-        return queryRepository.replay(topic, aggregateId, offset);
+        if (limit == null) {
+            limit = 100;
+        }
+        return queryRepository.replay(topic, aggregateId, offset, limit);
     }
 }

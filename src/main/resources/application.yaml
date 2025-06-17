@@ -8,7 +8,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/webshop"
     driver-class-name: org.postgresql.Driver
     hikari:
+      pool-name: "webshop-hikari-pool"
       maximum-pool-size: 10
+      minimum-idle: 5
   sql:
     init:
       mode: always

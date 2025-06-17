@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
 
 @Repository
 public class ProductCommandRepository {
@@ -23,32 +24,32 @@ public class ProductCommandRepository {
     }
 
     public Product upsertProduct(Product p) {
-        final String sql = """
-                INSERT INTO product (id, name, description, price, image_url, category, extensions)
-                VALUES (?, ?, ?, ?, ?, ?, ?::jsonb)
-                ON CONFLICT (id)
-                DO UPDATE SET
-                id = EXCLUDED.id,
-                name = EXCLUDED.name,
-                description = EXCLUDED.description,
-                price = EXCLUDED.price,
-                image_url = EXCLUDED.image_url,
-                category = EXCLUDED.category,
-                updated = CURRENT_TIMESTAMP,
-                extensions = EXCLUDED.extensions
-                RETURNING id, name, description, price, image_url, category, created, updated, extensions
-                """;
-        log.debug("{} -- {}", p, sql);
-        var params = new Object[]{
-                p.getId(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                p.getImageUrl(),
-                p.getCategory(),
-                p.getExtensions() != null ? p.getExtensions() : JsonUtils.EMPTY_JSON
-        };
         try {
+            final String sql = """
+                    INSERT INTO product (id, name, description, price, image_url, category, extensions)
+                    VALUES (?, ?, ?, ?, ?, ?, ?::jsonb)
+                    ON CONFLICT (id)
+                    DO UPDATE SET
+                    id = EXCLUDED.id,
+                    name = EXCLUDED.name,
+                    description = EXCLUDED.description,
+                    price = EXCLUDED.price,
+                    image_url = EXCLUDED.image_url,
+                    category = EXCLUDED.category,
+                    updated = CURRENT_TIMESTAMP,
+                    extensions = EXCLUDED.extensions
+                    RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                    """;
+            var params = new Object[]{
+                    p.getId(),
+                    p.getName(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getImageUrl(),
+                    p.getCategory(),
+                    p.getExtensions() != null ? p.getExtensions() : JsonUtils.EMPTY_JSON
+            };
+            log.debug("{} -- {}", Arrays.toString(params), sql);
             return jdbc.queryForObject(sql,
                     new BeanPropertyRowMapper<>(Product.class),
                     params);
@@ -74,21 +75,20 @@ public class ProductCommandRepository {
     }
 
     public Product updateOneField(String id, String fieldName, Object data) {
-        final String sql = """
-                UPDATE product
-                SET
-                %s = ?,
-                updated = ?
-                WHERE id = ?
-                RETURNING id, name, description, price, image_url, category, created, updated, extensions
-                """.formatted(fieldName);
-        log.debug("{} -- {} -- {}", id, data, sql);
         try {
+            final String sql = """
+                    UPDATE product
+                    SET
+                    %s = ?,
+                    updated = ?
+                    WHERE id = ?
+                    RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                    """.formatted(fieldName);
+            var params = new Object[]{data, Timestamp.from(Instant.now()), id};
+            log.debug("{} -- {}", Arrays.toString(params), sql);
             return jdbc.queryForObject(sql,
                     new BeanPropertyRowMapper<>(Product.class),
-                    data,
-                    Timestamp.from(Instant.now()),
-                    id);
+                    params);
         } catch (Exception e) {
             var msg = "Failed to update product with id -- %s -- %s -- %s".formatted(id, fieldName, data);
             log.error(msg, e);

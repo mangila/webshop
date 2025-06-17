@@ -19,7 +19,15 @@ public class ProductQueryRepository {
 
     public Product queryById(String id) {
         final String sql = """
-                SELECT id, name, description, price, image_url, category, created, updated, extensions
+                SELECT id,
+                       name,
+                       description,
+                       price,
+                       image_url,
+                       category,
+                       created,
+                       updated,
+                       extensions
                 FROM product WHERE id = ?
                 """;
         log.debug("{} -- {}", id, sql);

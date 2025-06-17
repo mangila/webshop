@@ -52,7 +52,6 @@ public class ProductCommandService {
                 result,
                 JsonUtils.EMPTY_JSON
         );
-        log.debug("Product upserted -- {} -- {}", result, event);
         return result;
     }
 
@@ -68,7 +67,6 @@ public class ProductCommandService {
                 result,
                 JsonUtils.EMPTY_JSON
         );
-        log.debug("Product deleted -- {} -- {}", result, event);
         return result;
     }
 
@@ -85,7 +83,6 @@ public class ProductCommandService {
                 update,
                 JsonUtils.EMPTY_JSON
         );
-        log.debug("Product price updated -- {} -- {}", update, event);
         return update;
     }
 }

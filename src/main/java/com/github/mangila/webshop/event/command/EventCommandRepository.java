@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+
 @Repository
 public class EventCommandRepository {
 
@@ -24,7 +26,6 @@ public class EventCommandRepository {
                 VALUES (?, ?, ?, ?::jsonb, ?::jsonb)
                 RETURNING id, type, aggregate_id, topic, data, created, metadata
                 """;
-        log.debug("{} -- {}", event, sql);
         try {
             var params = new Object[]{
                     event.getType(),
@@ -33,6 +34,7 @@ public class EventCommandRepository {
                     event.getData(),
                     event.getMetadata()
             };
+            log.debug("{} -- {}", Arrays.toString(params), sql);
             return jdbc.queryForObject(sql,
                     new BeanPropertyRowMapper<>(Event.class),
                     params);
