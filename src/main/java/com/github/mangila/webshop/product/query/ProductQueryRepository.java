@@ -1,23 +1,31 @@
 package com.github.mangila.webshop.product.query;
 
+import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.model.Product;
+import com.github.mangila.webshop.product.model.ProductEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class ProductQueryRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductQueryRepository.class);
+
+    private final ProductMapper productMapper;
     private final JdbcTemplate jdbc;
 
-    public ProductQueryRepository(JdbcTemplate jdbc) {
+    public ProductQueryRepository(ProductMapper productMapper,
+                                  JdbcTemplate jdbc) {
+        this.productMapper = productMapper;
         this.jdbc = jdbc;
     }
 
-    public Product queryById(String id) {
+    public Optional<Product> queryById(String id) {
         final String sql = """
                 SELECT id,
                        name,
@@ -31,12 +39,13 @@ public class ProductQueryRepository {
                 FROM product WHERE id = ?
                 """;
         log.debug("{} -- {}", id, sql);
-        try {
-            return jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
-        } catch (Exception e) {
-            var msg = "Failed to query product with id -- %s".formatted(id);
-            log.error(msg, e);
-            throw new RuntimeException(msg);
+        var result = jdbc.query(sql,
+                new BeanPropertyRowMapper<>(ProductEntity.class),
+                id);
+        if (result.isEmpty()) {
+            return Optional.empty();
         }
+        var product = productMapper.toProduct(result.getFirst());
+        return Optional.of(product);
     }
 }

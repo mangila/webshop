@@ -1,12 +1,12 @@
 extend type Mutation {
     mutateProduct(
         command: ProductCommand!,
-        input: MutateProduct!
+        mutate: ProductMutate!
     ): Product
 }
 
 extend type Query {
-    queryProductById(input: ID!): Product
+    queryProductById(id: ID!): Product
 }
 
 type Product {
@@ -27,7 +27,7 @@ enum ProductCommand {
     DELETE_PRODUCT
 }
 
-input MutateProduct {
+input ProductMutate {
     id: ID
     name: String
     description: String

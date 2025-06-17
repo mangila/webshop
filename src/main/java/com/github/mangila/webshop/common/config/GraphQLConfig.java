@@ -5,6 +5,8 @@ import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.DataFetchingEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
@@ -13,6 +15,8 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 @Configuration
 public class GraphQLConfig extends DataFetcherExceptionResolverAdapter {
+
+    private static final Logger log = LoggerFactory.getLogger(GraphQLConfig.class);
 
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
@@ -23,12 +27,16 @@ public class GraphQLConfig extends DataFetcherExceptionResolverAdapter {
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
+        log.error("ERR", ex);
         if (ex instanceof RuntimeException e) {
             return GraphqlErrorBuilder.newError(env)
                     .message(e.getMessage())
                     .errorType(ErrorType.BAD_REQUEST)
                     .build();
         }
-        return super.resolveToSingleError(ex, env);
+        return GraphQLError.newError()
+                .message("Internal Error")
+                .errorType(ErrorType.INTERNAL_ERROR)
+                .build();
     }
 }

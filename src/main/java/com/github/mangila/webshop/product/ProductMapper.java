@@ -1,0 +1,75 @@
+package com.github.mangila.webshop.product;
+
+import com.github.mangila.webshop.common.util.JsonMapper;
+import com.github.mangila.webshop.product.model.Product;
+import com.github.mangila.webshop.product.model.ProductDto;
+import com.github.mangila.webshop.product.model.ProductEntity;
+import com.github.mangila.webshop.product.model.ProductMutate;
+import org.springframework.stereotype.Component;
+
+import java.net.URI;
+import java.util.Objects;
+
+@Component
+public class ProductMapper {
+
+    private final JsonMapper jsonMapper;
+
+    public ProductMapper(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
+    }
+
+    public Product toProduct(ProductMutate mutate) {
+        var product = new Product();
+        product.setId(mutate.id());
+        product.setName(mutate.name());
+        product.setDescription(mutate.description());
+        product.setPrice(mutate.price());
+        var imageUrl = Objects.requireNonNullElse(mutate.imageUrl(), "");
+        product.setImageUrl(URI.create(imageUrl));
+        product.setCategory(mutate.category());
+        product.setExtensions(jsonMapper.toJsonNode(mutate.extensions()));
+        return product;
+    }
+
+    public Product toProduct(ProductEntity entity) {
+        var product = new Product();
+        product.setId(entity.getId());
+        product.setName(entity.getName());
+        product.setDescription(entity.getDescription());
+        product.setPrice(entity.getPrice());
+        product.setImageUrl(URI.create(entity.getImageUrl()));
+        product.setCategory(entity.getCategory());
+        product.setCreated(entity.getCreated().toInstant());
+        product.setUpdated(entity.getUpdated().toInstant());
+        product.setExtensions(jsonMapper.toJsonNode(entity.getExtensions()));
+        return product;
+    }
+
+    public ProductEntity toEntity(Product product) {
+        var entity = new ProductEntity();
+        entity.setId(product.getId());
+        entity.setName(product.getName());
+        entity.setDescription(product.getDescription());
+        entity.setPrice(product.getPrice());
+        entity.setImageUrl(product.getImageUrl().toString());
+        entity.setCategory(product.getCategory());
+        entity.setExtensions(product.getExtensions().toString());
+        return entity;
+    }
+
+    public ProductDto toDto(Product product) {
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getImageUrl().toString(),
+                product.getCategory(),
+                product.getCreated().toString(),
+                product.getUpdated().toString(),
+                product.getExtensions().toString()
+        );
+    }
+
+}

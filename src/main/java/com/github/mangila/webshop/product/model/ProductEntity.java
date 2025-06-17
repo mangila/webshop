@@ -1,22 +1,19 @@
 package com.github.mangila.webshop.product.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.math.BigDecimal;
-import java.net.URI;
-import java.time.Instant;
+import java.sql.Timestamp;
 
-public class Product {
+public class ProductEntity {
 
     private String id;
     private String name;
     private String description;
     private BigDecimal price;
-    private URI imageUrl;
+    private String imageUrl;
     private String category;
-    private Instant created;
-    private Instant updated;
-    private JsonNode extensions;
+    private Timestamp created;
+    private Timestamp updated;
+    private String extensions;
 
     public String getId() {
         return id;
@@ -50,11 +47,11 @@ public class Product {
         this.price = price;
     }
 
-    public URI getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(URI imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -66,27 +63,42 @@ public class Product {
         this.category = category;
     }
 
-    public Instant getCreated() {
-        return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
-    }
-
-    public Instant getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Instant updated) {
-        this.updated = updated;
-    }
-
-    public JsonNode getExtensions() {
+    public String getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(JsonNode extensions) {
+    public void setExtensions(String extensions) {
         this.extensions = extensions;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Timestamp updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", category='" + category + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", extensions='" + extensions + '\'' +
+                '}';
     }
 }
