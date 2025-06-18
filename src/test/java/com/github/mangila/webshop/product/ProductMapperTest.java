@@ -23,7 +23,7 @@ class ProductMapperTest {
 
     @Test
     @DisplayName("Should accept ProductMutate with all null fields")
-    void shouldNotThrowExceptionWhenProductMutateFieldsIsNull() {
+    void shouldAcceptProductMutateWithAllNullFields() {
         var mutate = new ProductMutate(null,
                 null,
                 null,
@@ -39,7 +39,7 @@ class ProductMapperTest {
 
     @Test
     @DisplayName("Should throw NPE when mapping null ProductMutate to Product")
-    void shouldThrowExceptionWhenFromProductMutateToProductIsNull() {
+    void shouldThrowNPEWhenMappingNullProductMutateToProduct() {
         assertThatThrownBy(() -> mapper.toProduct((ProductMutate) null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("ProductMutate must not be null");
@@ -47,7 +47,7 @@ class ProductMapperTest {
 
     @Test
     @DisplayName("Should throw NPE when mapping null ProductEntity to Product")
-    void shouldThrowExceptionWhenFromProductEntityToProductIsNull() {
+    void shouldThrowNPEWhenMappingNullProductEntityToProduct() {
         assertThatThrownBy(() -> mapper.toProduct((ProductEntity) null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("ProductEntity must not be null");
@@ -55,7 +55,7 @@ class ProductMapperTest {
 
     @Test
     @DisplayName("Should throw NPE when mapping null Product to ProductEntity")
-    void shouldThrowExceptionWhenFromProductToProductEntityIsNull() {
+    void shouldThrowNPEWhenMappingNullProductToProductEntity() {
         assertThatThrownBy(() -> mapper.toEntity((Product) null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("Product must not be null");
@@ -63,7 +63,7 @@ class ProductMapperTest {
 
     @Test
     @DisplayName("Should throw NPE when mapping null Product to ProductDTO")
-    void shouldThrowExceptionWhenFromProductToDtoIsNull() {
+    void shouldThrowNPEWhenMappingNullProductToProductDTO() {
         assertThatThrownBy(() -> mapper.toDto((Product) null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("Product must not be null");
