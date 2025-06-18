@@ -9,28 +9,22 @@ extend type Query {
 type Product {
     id: ID
     name: String
-    description: String
     price: Float
-    imageUrl: String
-    category: String
     created: String
     updated: String
-    extensions: JSON
+    attributes: JSON
 }
 
-enum Command {
+enum ProductCommandType {
     UPSERT_PRODUCT,
     UPDATE_PRODUCT_PRICE,
     DELETE_PRODUCT
 }
 
 input ProductCommand {
-    type: Command!
+    type: ProductCommandType!
     id: ID
     name: String
-    description: String
     price: Float
-    imageUrl: String
-    category: String
-    extensions: JSON
+    attributes: JSON
 }

@@ -30,28 +30,21 @@ public class ProductCommandRepository {
 
     public Optional<Product> upsertProduct(ProductEntity p) {
         final String sql = """
-                INSERT INTO product (id, name, description, price, image_url, category, extensions)
-                VALUES (?, ?, ?, ?, ?, ?, ?::jsonb)
+                INSERT INTO product (id, name, price, attributes)
+                VALUES (?, ?, ?, ?::jsonb)
                 ON CONFLICT (id)
                 DO UPDATE SET
                 id = EXCLUDED.id,
                 name = EXCLUDED.name,
-                description = EXCLUDED.description,
                 price = EXCLUDED.price,
-                image_url = EXCLUDED.image_url,
-                category = EXCLUDED.category,
-                updated = CURRENT_TIMESTAMP,
-                extensions = EXCLUDED.extensions
-                RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                attributes = EXCLUDED.attributes
+                RETURNING id, name, price, created, updated, attributes
                 """;
         var params = new Object[]{
-                p.getId(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                p.getImageUrl(),
-                p.getCategory(),
-                p.getExtensions(),
+                p.id(),
+                p.name(),
+                p.price(),
+                p.attributes(),
         };
         log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
@@ -67,7 +60,7 @@ public class ProductCommandRepository {
     public Optional<Product> deleteProductById(String id) {
         final String sql = """
                 DELETE FROM product WHERE id = ?
-                RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                RETURNING id, name, price, created, updated, attributes
                 """;
         log.debug("{} -- {}", id, sql);
         var result = jdbc.query(sql,
@@ -87,7 +80,7 @@ public class ProductCommandRepository {
                 %s = ?,
                 updated = ?
                 WHERE id = ?
-                RETURNING id, name, description, price, image_url, category, created, updated, extensions
+                RETURNING id, name, price, created, updated, attributes
                 """.formatted(fieldName);
         var params = new Object[]{data, Timestamp.from(Instant.now()), id};
         log.debug("{} -- {}", Arrays.toString(params), sql);

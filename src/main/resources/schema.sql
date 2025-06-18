@@ -14,21 +14,17 @@ CREATE TABLE event
 
 CREATE TABLE product
 (
-    id          VARCHAR(255) PRIMARY KEY,
-    name        VARCHAR(255)   NOT NULL,
-    description TEXT,
-    price       DECIMAL(10, 2) NOT NULL,
-    image_url   VARCHAR(255),
-    category    VARCHAR(100),
-    created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    extensions  JSONB     DEFAULT '{}'::jsonb
+    id         VARCHAR(255) PRIMARY KEY,
+    name       VARCHAR(255)   NOT NULL,
+    price      DECIMAL(10, 2) NOT NULL,
+    created    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    attributes JSONB     DEFAULT '{}'::jsonb
 );
 
 CREATE TABLE inventory
 (
     product_id VARCHAR(255) PRIMARY KEY,
     quantity   BIGINT NOT NULL DEFAULT 0,
-    updated    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
-    extensions JSONB           DEFAULT '{}'::jsonb
+    updated    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
 );

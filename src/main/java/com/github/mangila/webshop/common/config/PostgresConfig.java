@@ -35,12 +35,35 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
+        log.info("Creating Postgres trigger new_inventory_after_product_insert() on event table");
         jdbc.execute("""
                 DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON event;
                 CREATE TRIGGER new_inventory_after_product_insert
                 AFTER INSERT ON product
                 FOR EACH ROW
                 EXECUTE FUNCTION new_inventory_after_product_insert();
+                """);
+    }
+
+    public void updateUpdatedColumn() {
+        log.info("Creating Postgres function update_updated_column()");
+        jdbc.execute("""
+                DROP FUNCTION IF EXISTS update_updated_column();
+                CREATE OR REPLACE FUNCTION update_updated_column()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                   NEW.updated = CURRENT_TIMESTAMP;
+                   RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                """);
+        log.info("Creating Postgres trigger trigger_update_timestamp() on product table");
+        jdbc.execute("""
+                DROP TRIGGER IF EXISTS trigger_update_timestamp ON product;
+                CREATE TRIGGER trigger_update_timestamp
+                BEFORE UPDATE ON product
+                FOR EACH ROW
+                EXECUTE FUNCTION update_updated_column();
                 """);
     }
 }

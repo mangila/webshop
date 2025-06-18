@@ -28,13 +28,10 @@ public class ProductQueryRepository {
         final String sql = """
                 SELECT id,
                        name,
-                       description,
                        price,
-                       image_url,
-                       category,
                        created,
                        updated,
-                       extensions
+                       attributes
                 FROM product WHERE id = ?
                 """;
         log.debug("{} -- {}", id, sql);

@@ -30,11 +30,8 @@ public class ProductValidator {
                 var l = List.of(
                         validatorService.validateField(command, "id"),
                         validatorService.validateField(command, "name"),
-                        validatorService.validateField(command, "description"),
                         validatorService.validateField(command, "price"),
-                        validatorService.validateField(command, "imageUrl"),
-                        validatorService.validateField(command, "category"),
-                        validatorService.validateField(command, "extensions")
+                        validatorService.validateField(command, "attributes")
                 );
                 yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
             }
@@ -59,4 +56,3 @@ public class ProductValidator {
         }
     }
 }
-
