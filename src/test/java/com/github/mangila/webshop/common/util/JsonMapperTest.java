@@ -50,14 +50,13 @@ class JsonMapperTest {
     }
 
     @Test
-    @DisplayName("Should return false when String is Blank and Empty")
+    @DisplayName("Should return false when String is Blank")
     void shouldReturnFalseWhenStringIsBlank() {
-        assertThat(jsonMapper.isValid(" ")).isFalse();
         assertThat(jsonMapper.isValid(" ")).isFalse();
     }
 
     @Test
-    @DisplayName("Should return false when String is empty")
+    @DisplayName("Should return false when String is Empty")
     void shouldReturnFalseWhenStringIsEmpty() {
         assertThat(jsonMapper.isValid("")).isFalse();
     }
