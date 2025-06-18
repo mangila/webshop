@@ -1,0 +1,25 @@
+package com.github.mangila.webshop.common.util;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class ValidatorService {
+
+    private final Validator validator;
+
+    public ValidatorService(Validator validator) {
+        this.validator = validator;
+    }
+
+    public <T> Set<String> validateField(T object, String fieldName) {
+        return validator.validateProperty(object, fieldName)
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet());
+    }
+}

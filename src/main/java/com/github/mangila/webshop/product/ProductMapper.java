@@ -5,6 +5,7 @@ import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductDto;
 import com.github.mangila.webshop.product.model.ProductEntity;
 import com.github.mangila.webshop.product.model.ProductMutate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
 
@@ -22,28 +23,29 @@ public class ProductMapper {
         this.rowMapper = new BeanPropertyRowMapper<>(ProductEntity.class);
     }
 
-    public Product toProduct(ProductMutate mutate) {
-        Objects.requireNonNull(mutate, "ProductMutate must not be null");
+    @NotNull
+    public Product toProduct(@NotNull ProductMutate mutate) {
         var product = new Product();
         product.setId(mutate.id());
         product.setName(mutate.name());
         product.setDescription(mutate.description());
         product.setPrice(mutate.price());
-        var imageUrl = Objects.requireNonNullElse(mutate.imageUrl(), "");
+        String imageUrl = Objects.requireNonNullElse(mutate.imageUrl(), "");
         product.setImageUrl(URI.create(imageUrl));
         product.setCategory(mutate.category());
         product.setExtensions(jsonMapper.toJsonNode(mutate.extensions()));
         return product;
     }
 
-    public Product toProduct(ProductEntity entity) {
-        Objects.requireNonNull(entity, "ProductEntity must not be null");
+    @NotNull
+    public Product toProduct(@NotNull ProductEntity entity) {
         var product = new Product();
         product.setId(entity.getId());
         product.setName(entity.getName());
         product.setDescription(entity.getDescription());
         product.setPrice(entity.getPrice());
-        product.setImageUrl(URI.create(entity.getImageUrl()));
+        String imageUrl = Objects.requireNonNullElse(entity.getImageUrl(), "");
+        product.setImageUrl(URI.create(imageUrl));
         product.setCategory(entity.getCategory());
         product.setCreated(entity.getCreated().toInstant());
         product.setUpdated(entity.getUpdated().toInstant());
@@ -51,8 +53,8 @@ public class ProductMapper {
         return product;
     }
 
-    public ProductEntity toEntity(Product product) {
-        Objects.requireNonNull(product, "Product must not be null");
+    @NotNull
+    public ProductEntity toEntity(@NotNull Product product) {
         var entity = new ProductEntity();
         entity.setId(product.getId());
         entity.setName(product.getName());
@@ -64,8 +66,8 @@ public class ProductMapper {
         return entity;
     }
 
-    public ProductDto toDto(Product product) {
-        Objects.requireNonNull(product, "Product must not be null");
+    @NotNull
+    public ProductDto toDto(@NotNull Product product) {
         return new ProductDto(
                 product.getId(),
                 product.getName(),

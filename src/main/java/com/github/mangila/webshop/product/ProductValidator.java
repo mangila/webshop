@@ -1,43 +1,50 @@
 package com.github.mangila.webshop.product;
 
-import com.github.mangila.webshop.product.model.Product;
+import com.github.mangila.webshop.common.util.ValidationException;
+import com.github.mangila.webshop.common.util.ValidatorService;
 import com.github.mangila.webshop.product.model.ProductCommandType;
+import com.github.mangila.webshop.product.model.ProductMutate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductValidator {
 
-    public void validateByCommand(ProductCommandType command, Product product) {
-        ensureProduct(product);
-        switch (command) {
+    private final ValidatorService validatorService;
+
+    public ProductValidator(ValidatorService validatorService) {
+        this.validatorService = validatorService;
+    }
+
+    public void validateByCommand(@NotNull ProductCommandType command, @NotNull ProductMutate productMutate) {
+        Set<String> errors = switch (command) {
             case UPSERT_PRODUCT -> {
-                ensureProductId(product);
-                ensureProductName(product);
-                ensureProductPrice(product);
+                var l = List.of(
+                        validatorService.validateField(productMutate, "id"),
+                        validatorService.validateField(productMutate, "name"),
+                        validatorService.validateField(productMutate, "price")
+                );
+                yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
             }
-            case DELETE_PRODUCT -> ensureProductId(product);
-            case UPDATE_PRODUCT_PRICE -> ensureProductPrice(product);
+            case DELETE_PRODUCT -> validatorService.validateField(productMutate, "id");
+            case UPDATE_PRODUCT_PRICE -> {
+                var l = List.of(
+                        validatorService.validateField(productMutate, "id"),
+                        validatorService.validateField(productMutate, "price")
+                );
+                yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
+            }
             case null -> throw new NullPointerException("command must not be null");
-            default -> throw new IllegalArgumentException("command not supported:");
+            default -> throw new IllegalArgumentException("command not supported:" + command);
+        };
+        if (!errors.isEmpty()) {
+            throw new ValidationException(String.format("%s: %s", command, errors));
         }
-    }
-
-    private static void ensureProductPrice(Product product) {
-        Objects.requireNonNull(product.getPrice(), "price must not be null");
-    }
-
-    private static void ensureProductName(Product product) {
-        Objects.requireNonNull(product.getName(), "name must not be null");
-    }
-
-    private static void ensureProductId(Product product) {
-        Objects.requireNonNull(product.getId(), "id must not be null");
-    }
-
-    private static void ensureProduct(Product product) {
-        Objects.requireNonNull(product, "product must not be null");
     }
 }
 

@@ -24,48 +24,42 @@ class ProductMapperTest {
     @Test
     @DisplayName("Should accept ProductMutate with all null fields")
     void shouldAcceptProductMutateWithAllNullFields() {
-        var mutate = new ProductMutate(null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+        var emptyMutate = ProductMutate.EMPTY;
         assertThatCode(() -> {
-            var product = mapper.toProduct(mutate);
+            var product = mapper.toProduct(emptyMutate);
             assertThat(product).isNotNull();
         }).doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("Should throw NPE when mapping null ProductMutate to Product")
-    void shouldThrowNPEWhenMappingNullProductMutateToProduct() {
+    @DisplayName("Should throw IAE when mapping null ProductMutate to Product")
+    void shouldThrowIAEWhenMappingNullProductMutateToProduct() {
         assertThatThrownBy(() -> mapper.toProduct((ProductMutate) null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("ProductMutate must not be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Argument for @NotNull parameter 'mutate'");
     }
 
     @Test
-    @DisplayName("Should throw NPE when mapping null ProductEntity to Product")
-    void shouldThrowNPEWhenMappingNullProductEntityToProduct() {
+    @DisplayName("Should throw IAE when mapping null ProductEntity to Product")
+    void shouldThrowIAEWhenMappingNullProductEntityToProduct() {
         assertThatThrownBy(() -> mapper.toProduct((ProductEntity) null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("ProductEntity must not be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Argument for @NotNull parameter 'entity'");
     }
 
     @Test
-    @DisplayName("Should throw NPE when mapping null Product to ProductEntity")
-    void shouldThrowNPEWhenMappingNullProductToProductEntity() {
+    @DisplayName("Should throw IAE when mapping null Product to ProductEntity")
+    void shouldThrowIAEWhenMappingNullProductToProductEntity() {
         assertThatThrownBy(() -> mapper.toEntity((Product) null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("Product must not be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Argument for @NotNull parameter 'product'");
     }
 
     @Test
-    @DisplayName("Should throw NPE when mapping null Product to ProductDTO")
-    void shouldThrowNPEWhenMappingNullProductToProductDTO() {
+    @DisplayName("Should throw IAE when mapping null Product to ProductDTO")
+    void shouldThrowIAEWhenMappingNullProductToProductDTO() {
         assertThatThrownBy(() -> mapper.toDto((Product) null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("Product must not be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Argument for @NotNull parameter 'product'");
     }
 }

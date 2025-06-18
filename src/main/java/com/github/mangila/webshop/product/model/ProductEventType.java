@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product;
+package com.github.mangila.webshop.product.model;
 
 public enum ProductEventType {
     PRODUCT_UPSERTED,

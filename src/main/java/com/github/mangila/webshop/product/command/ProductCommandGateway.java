@@ -10,12 +10,13 @@ import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductCommandType;
 import com.github.mangila.webshop.product.model.ProductMutate;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.github.mangila.webshop.product.ProductEventType.*;
+import static com.github.mangila.webshop.product.model.ProductEventType.*;
 
 @Service
 public class ProductCommandGateway {
@@ -41,10 +42,10 @@ public class ProductCommandGateway {
     }
 
     @Transactional
-    public Product processCommand(ProductCommandType command, ProductMutate mutate) {
+    public Product processCommand(@NotNull ProductCommandType command, @NotNull ProductMutate mutate) {
         log.info("Processing command -- {} -- {}", command, mutate);
+        validator.validateByCommand(command, mutate);
         Product product = productMapper.toProduct(mutate);
-        validator.validateByCommand(command, product);
         var pair = switch (command) {
             case UPSERT_PRODUCT -> Pair.of(PRODUCT_UPSERTED, productCommandService.upsert(product));
             case DELETE_PRODUCT -> Pair.of(PRODUCT_DELETED, productCommandService.delete(product));

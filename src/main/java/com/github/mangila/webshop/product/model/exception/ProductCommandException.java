@@ -5,6 +5,6 @@ import com.github.mangila.webshop.product.model.ProductCommandType;
 public class ProductCommandException extends RuntimeException {
 
     public ProductCommandException(ProductCommandType commandType, String message) {
-        super(String.format("%s -- %s", commandType, message));
+        super(String.format("Failed Command: %s -- %s", commandType, message));
     }
 }
