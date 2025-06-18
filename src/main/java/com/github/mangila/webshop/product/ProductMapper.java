@@ -23,6 +23,7 @@ public class ProductMapper {
     }
 
     public Product toProduct(ProductMutate mutate) {
+        Objects.requireNonNull(mutate, "ProductMutate must not be null");
         var product = new Product();
         product.setId(mutate.id());
         product.setName(mutate.name());
@@ -36,6 +37,7 @@ public class ProductMapper {
     }
 
     public Product toProduct(ProductEntity entity) {
+        Objects.requireNonNull(entity, "ProductEntity must not be null");
         var product = new Product();
         product.setId(entity.getId());
         product.setName(entity.getName());
@@ -50,6 +52,7 @@ public class ProductMapper {
     }
 
     public ProductEntity toEntity(Product product) {
+        Objects.requireNonNull(product, "Product must not be null");
         var entity = new ProductEntity();
         entity.setId(product.getId());
         entity.setName(product.getName());
@@ -62,6 +65,7 @@ public class ProductMapper {
     }
 
     public ProductDto toDto(Product product) {
+        Objects.requireNonNull(product, "Product must not be null");
         return new ProductDto(
                 product.getId(),
                 product.getName(),
