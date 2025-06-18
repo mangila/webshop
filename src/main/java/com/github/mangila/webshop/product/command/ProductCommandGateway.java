@@ -4,7 +4,6 @@ import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.event.command.EventCommandService;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventTopic;
-import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductCommandType;
@@ -22,18 +21,15 @@ public class ProductCommandGateway {
     private static final Logger log = LoggerFactory.getLogger(ProductCommandGateway.class);
 
     private final JsonMapper jsonMapper;
-    private final ProductMapper productMapper;
     private final ProductValidator validator;
     private final ProductCommandService productCommandService;
     private final EventCommandService eventCommandService;
 
     public ProductCommandGateway(JsonMapper jsonMapper,
-                                 ProductMapper productMapper,
                                  ProductValidator validator,
                                  ProductCommandService productCommandService,
                                  EventCommandService eventCommandService) {
         this.jsonMapper = jsonMapper;
-        this.productMapper = productMapper;
         this.validator = validator;
         this.productCommandService = productCommandService;
         this.eventCommandService = eventCommandService;
