@@ -1,14 +1,15 @@
 package com.github.mangila.webshop.event.command;
 
 import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventEntity;
 import com.github.mangila.webshop.event.model.EventMapper;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Repository
@@ -25,25 +26,25 @@ public class EventCommandRepository {
         this.jdbc = jdbc;
     }
 
-    public Optional<Event> emit(Event event) {
+    public Optional<Event> emit(@NotNull EventEntity entity) {
         final String sql = """
                 INSERT INTO event (type, aggregate_id, topic, data)
                 VALUES (?, ?, ?, ?::jsonb)
                 RETURNING id, type, aggregate_id, topic, data, created
                 """;
         var params = new Object[]{
-                event.getType(),
-                event.getAggregateId(),
-                event.getTopic(),
-                event.getData()
+                entity.type(),
+                entity.aggregateId(),
+                entity.topic(),
+                entity.data()
         };
-        log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
                 eventMapper.getRowMapper(),
                 params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
-        return Optional.of(result.getFirst());
+        var event = eventMapper.toEvent(result.getFirst());
+        return Optional.of(event);
     }
 }

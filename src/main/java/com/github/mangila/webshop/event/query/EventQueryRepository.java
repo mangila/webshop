@@ -1,13 +1,13 @@
 package com.github.mangila.webshop.event.query;
 
 import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventEntity;
 import com.github.mangila.webshop.event.model.EventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -36,9 +36,11 @@ public class EventQueryRepository {
                          ORDER BY id
                          LIMIT ?
                 """;
-        log.info("{} -- {}", Arrays.toString(params), sql);
-        return jdbc.query(sql,
+        List<EventEntity> entities = jdbc.query(sql,
                 eventMapper.getRowMapper(),
                 params);
+        return entities.stream()
+                .map(eventMapper::toEvent)
+                .toList();
     }
 }

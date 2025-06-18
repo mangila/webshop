@@ -1,8 +1,11 @@
 package com.github.mangila.webshop.product.command;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.event.command.EventCommandService;
 import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventCommand;
+import com.github.mangila.webshop.event.model.EventCommandType;
 import com.github.mangila.webshop.event.model.EventTopic;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
@@ -47,11 +50,15 @@ public class ProductCommandGateway {
             default -> throw new IllegalArgumentException("Unknown command type: " + command);
         };
         ProductEventType eventType = ProductEventType.from(type);
+        JsonNode eventData = jsonMapper.toJsonNode(product);
         Event event = eventCommandService.emit(
-                EventTopic.PRODUCT,
-                product.id(),
-                eventType.toString(),
-                jsonMapper.toJsonNode(product)
+                new EventCommand(
+                        EventCommandType.EMIT_EVENT,
+                        EventTopic.PRODUCT.toString(),
+                        eventType.toString(),
+                        product.id(),
+                        eventData.toString()
+                )
         );
         log.info("Processed command -- {} -- {} -- {}", type, product, event);
         return product;

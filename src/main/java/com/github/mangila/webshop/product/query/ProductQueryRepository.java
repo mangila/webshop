@@ -34,7 +34,6 @@ public class ProductQueryRepository {
                        attributes
                 FROM product WHERE id = ?
                 """;
-        log.debug("{} -- {}", id, sql);
         var result = jdbc.query(sql,
                 productMapper.getRowMapper(),
                 id);

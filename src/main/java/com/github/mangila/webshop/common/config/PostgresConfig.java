@@ -20,6 +20,7 @@ public class PostgresConfig {
     @PostConstruct
     public void init() {
         newInventoryAfterProductInsert();
+        updateUpdatedColumn();
         log.info("Postgres function/trigger configuration complete");
     }
 
@@ -35,9 +36,9 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-        log.info("Creating Postgres trigger new_inventory_after_product_insert() on event table");
+        log.info("Creating Postgres trigger new_inventory_after_product_insert() on product table");
         jdbc.execute("""
-                DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON event;
+                DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON product;
                 CREATE TRIGGER new_inventory_after_product_insert
                 AFTER INSERT ON product
                 FOR EACH ROW

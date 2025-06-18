@@ -11,7 +11,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Optional;
 
 @Repository
@@ -46,7 +45,6 @@ public class ProductCommandRepository {
                 p.price(),
                 p.attributes(),
         };
-        log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
                 productMapper.getRowMapper(),
                 params);
@@ -62,7 +60,6 @@ public class ProductCommandRepository {
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes
                 """;
-        log.debug("{} -- {}", id, sql);
         var result = jdbc.query(sql,
                 productMapper.getRowMapper(),
                 id);
@@ -83,13 +80,13 @@ public class ProductCommandRepository {
                 RETURNING id, name, price, created, updated, attributes
                 """.formatted(fieldName);
         var params = new Object[]{data, Timestamp.from(Instant.now()), id};
-        log.debug("{} -- {}", Arrays.toString(params), sql);
         var result = jdbc.query(sql,
                 productMapper.getRowMapper(),
                 params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
-        return Optional.of(productMapper.toProduct(result.getFirst()));
+        var product = productMapper.toProduct(result.getFirst());
+        return Optional.of(product);
     }
 }

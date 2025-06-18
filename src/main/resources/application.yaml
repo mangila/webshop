@@ -33,3 +33,11 @@ spring:
       enabled: true
       skip:
         in-tests: true
+# Logging properties
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core:
+            JdbcTemplate: DEBUG
