@@ -9,6 +9,7 @@ import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductCommandType;
+import com.github.mangila.webshop.product.model.ProductEventType;
 import com.github.mangila.webshop.product.model.ProductMutate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -45,17 +46,16 @@ public class ProductCommandGateway {
     public Product processCommand(@NotNull ProductCommandType command, @NotNull ProductMutate mutate) {
         log.info("Processing command -- {} -- {}", command, mutate);
         validator.validateByCommand(command, mutate);
-        Product product = productMapper.toProduct(mutate);
         var pair = switch (command) {
-            case UPSERT_PRODUCT -> Pair.of(PRODUCT_UPSERTED, productCommandService.upsert(product));
-            case DELETE_PRODUCT -> Pair.of(PRODUCT_DELETED, productCommandService.delete(product));
+            case UPSERT_PRODUCT -> Pair.of(PRODUCT_UPSERTED, productCommandService.upsert(mutate));
+            case DELETE_PRODUCT -> Pair.of(PRODUCT_DELETED, productCommandService.delete(mutate));
             case UPDATE_PRODUCT_PRICE ->
-                    Pair.of(PRODUCT_PRICE_UPDATED, productCommandService.updateProductPrice(product));
+                    Pair.of(PRODUCT_PRICE_UPDATED, productCommandService.updateProductPrice(mutate));
             case null -> throw new IllegalArgumentException("Null command type");
             default -> throw new IllegalArgumentException("Unknown command type: " + command);
         };
-        var eventType = pair.first();
-        product = pair.second();
+        ProductEventType eventType = pair.first();
+        Product product = pair.second();
         Event event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 product.getId(),

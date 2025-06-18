@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.common.util;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 

@@ -23,20 +23,6 @@ public class ProductMapper {
     }
 
     @NotNull
-    public Product toProduct(@NotNull ProductMutate mutate) {
-        var product = new Product();
-        product.setId(mutate.id());
-        product.setName(mutate.name());
-        product.setDescription(mutate.description());
-        product.setPrice(mutate.price());
-        String imageUrl = Objects.requireNonNullElse(mutate.imageUrl(), "");
-        product.setImageUrl(URI.create(imageUrl));
-        product.setCategory(mutate.category());
-        product.setExtensions(jsonMapper.toJsonNode(mutate.extensions()));
-        return product;
-    }
-
-    @NotNull
     public Product toProduct(@NotNull ProductEntity entity) {
         var product = new Product();
         product.setId(entity.getId());
@@ -53,15 +39,15 @@ public class ProductMapper {
     }
 
     @NotNull
-    public ProductEntity toEntity(@NotNull Product product) {
+    public ProductEntity toEntity(@NotNull ProductMutate mutate) {
         var entity = new ProductEntity();
-        entity.setId(product.getId());
-        entity.setName(product.getName());
-        entity.setDescription(product.getDescription());
-        entity.setPrice(product.getPrice());
-        entity.setImageUrl(product.getImageUrl().toString());
-        entity.setCategory(product.getCategory());
-        entity.setExtensions(product.getExtensions().toString());
+        entity.setId(mutate.id());
+        entity.setName(mutate.name());
+        entity.setDescription(mutate.description());
+        entity.setPrice(mutate.price());
+        entity.setImageUrl(mutate.imageUrl());
+        entity.setCategory(mutate.category());
+        entity.setExtensions(mutate.extensions());
         return entity;
     }
 
