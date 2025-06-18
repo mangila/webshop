@@ -8,7 +8,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
-public record ProductMutate(
+public record ProductCommand(
+        @NotNull(message = "Command type must not be null")
+        ProductCommandType type,
         @NotNull(message = "id must not be null")
         @AlphaNumeric(allowNull = false)
         @Size(min = 1, max = 36)
@@ -35,5 +37,5 @@ public record ProductMutate(
         @Json
         String extensions
 ) {
-    public static final ProductMutate EMPTY = new ProductMutate(null, null, null, null, null, null, null);
+    public static final ProductCommand EMPTY = new ProductCommand(null, null, null, null, null, null, null, null);
 }

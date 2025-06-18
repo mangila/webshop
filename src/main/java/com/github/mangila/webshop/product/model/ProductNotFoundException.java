@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.model.exception;
+package com.github.mangila.webshop.product.model;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(String id) {

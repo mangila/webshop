@@ -1,13 +1,12 @@
 package com.github.mangila.webshop.product;
 
-import com.github.mangila.webshop.product.model.exception.ProductCommandException;
-import com.github.mangila.webshop.product.model.exception.ProductNotFoundException;
+import com.github.mangila.webshop.product.model.ProductCommandException;
+import com.github.mangila.webshop.product.model.ProductNotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.graphql.execution.ErrorType;

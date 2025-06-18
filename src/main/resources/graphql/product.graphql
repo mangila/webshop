@@ -1,8 +1,5 @@
 extend type Mutation {
-    mutateProduct(
-        command: ProductCommand!,
-        mutate: ProductMutate!
-    ): Product
+    mutateProduct(command: ProductCommand!): Product
 }
 
 extend type Query {
@@ -21,13 +18,14 @@ type Product {
     extensions: JSON
 }
 
-enum ProductCommand {
+enum Command {
     UPSERT_PRODUCT,
     UPDATE_PRODUCT_PRICE,
     DELETE_PRODUCT
 }
 
-input ProductMutate {
+input ProductCommand {
+    type: Command!
     id: ID
     name: String
     description: String

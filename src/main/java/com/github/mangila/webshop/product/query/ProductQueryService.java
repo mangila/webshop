@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.query;
 
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.exception.ProductNotFoundException;
+import com.github.mangila.webshop.product.model.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

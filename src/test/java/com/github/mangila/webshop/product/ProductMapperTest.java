@@ -3,7 +3,7 @@ package com.github.mangila.webshop.product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.product.model.ProductEntity;
-import com.github.mangila.webshop.product.model.ProductMutate;
+import com.github.mangila.webshop.product.model.ProductCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ class ProductMapperTest {
     @Test
     @DisplayName("Should throw IAE when mapping null Product to ProductEntity")
     void shouldThrowIAEWhenMappingNullProductToProductEntity() {
-        assertThatThrownBy(() -> mapper.toEntity((ProductMutate) null))
+        assertThatThrownBy(() -> mapper.toEntity((ProductCommand) null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Argument for @NotNull parameter 'mutate'");
+                .hasMessageContaining("Argument for @NotNull parameter 'command'");
     }
 }

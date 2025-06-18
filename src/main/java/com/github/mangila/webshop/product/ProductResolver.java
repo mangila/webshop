@@ -1,9 +1,8 @@
 package com.github.mangila.webshop.product;
 
 import com.github.mangila.webshop.product.command.ProductCommandGateway;
+import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.ProductCommandType;
-import com.github.mangila.webshop.product.model.ProductMutate;
 import com.github.mangila.webshop.product.query.ProductQueryService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -29,9 +28,7 @@ public class ProductResolver extends DataFetcherExceptionResolverAdapter {
     }
 
     @MutationMapping
-    public Product mutateProduct(
-            @Argument("command") ProductCommandType command,
-            @Argument("mutate") ProductMutate productMutate) {
-        return productCommandGateway.processCommand(command, productMutate);
+    public Product mutateProduct(@Argument("command") ProductCommand command) {
+        return productCommandGateway.processCommand(command);
     }
 }

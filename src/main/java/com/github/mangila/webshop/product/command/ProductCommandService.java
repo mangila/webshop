@@ -2,9 +2,9 @@ package com.github.mangila.webshop.product.command;
 
 import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.model.Product;
+import com.github.mangila.webshop.product.model.ProductCommand;
+import com.github.mangila.webshop.product.model.ProductCommandException;
 import com.github.mangila.webshop.product.model.ProductEntity;
-import com.github.mangila.webshop.product.model.ProductMutate;
-import com.github.mangila.webshop.product.model.exception.ProductCommandException;
 import org.springframework.stereotype.Service;
 
 import static com.github.mangila.webshop.product.model.ProductCommandType.*;
@@ -21,7 +21,7 @@ public class ProductCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Product updateProductPrice(ProductMutate mutate) {
+    public Product updateProductPrice(ProductCommand mutate) {
         var id = mutate.id();
         String fieldName = "price";
         var price = mutate.price();
@@ -29,13 +29,13 @@ public class ProductCommandService {
                 .orElseThrow(() -> new ProductCommandException(UPDATE_PRODUCT_PRICE, id));
     }
 
-    public Product upsert(ProductMutate mutate) {
+    public Product upsert(ProductCommand mutate) {
         ProductEntity entity = productMapper.toEntity(mutate);
         return commandRepository.upsertProduct(entity)
                 .orElseThrow(() -> new ProductCommandException(UPSERT_PRODUCT, mutate.id()));
     }
 
-    public Product delete(ProductMutate mutate) {
+    public Product delete(ProductCommand mutate) {
         var id = mutate.id();
         return commandRepository.deleteProductById(id)
                 .orElseThrow(() -> new ProductCommandException(DELETE_PRODUCT, id));

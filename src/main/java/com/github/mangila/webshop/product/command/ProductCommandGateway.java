@@ -6,9 +6,8 @@ import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventTopic;
 import com.github.mangila.webshop.product.ProductValidator;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.ProductCommandType;
+import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.ProductEventType;
-import com.github.mangila.webshop.product.model.ProductMutate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,24 +35,25 @@ public class ProductCommandGateway {
     }
 
     @Transactional
-    public Product processCommand(@NotNull ProductCommandType command, @NotNull ProductMutate mutate) {
-        log.info("Processing command -- {} -- {}", command, mutate);
-        validator.validateByCommand(command, mutate);
-        Product product = switch (command) {
-            case UPSERT_PRODUCT -> productCommandService.upsert(mutate);
-            case DELETE_PRODUCT -> productCommandService.delete(mutate);
-            case UPDATE_PRODUCT_PRICE -> productCommandService.updateProductPrice(mutate);
+    public Product processCommand(@NotNull ProductCommand command) {
+        log.info("Processing command -- {}", command);
+        var type = command.type();
+        validator.validateByCommand(command);
+        Product product = switch (type) {
+            case UPSERT_PRODUCT -> productCommandService.upsert(command);
+            case DELETE_PRODUCT -> productCommandService.delete(command);
+            case UPDATE_PRODUCT_PRICE -> productCommandService.updateProductPrice(command);
             case null -> throw new IllegalArgumentException("Null command type");
             default -> throw new IllegalArgumentException("Unknown command type: " + command);
         };
-        ProductEventType eventType = ProductEventType.from(command);
+        ProductEventType eventType = ProductEventType.from(type);
         Event event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 product.getId(),
                 eventType.toString(),
                 jsonMapper.toJsonNode(product)
         );
-        log.info("Processed command -- {} -- {} -- {}", command, product, event);
+        log.info("Processed command -- {} -- {} -- {}", type, product, event);
         return product;
     }
 }

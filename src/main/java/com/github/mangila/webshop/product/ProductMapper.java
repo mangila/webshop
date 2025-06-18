@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.product;
 
 import com.github.mangila.webshop.common.util.JsonMapper;
+import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEntity;
-import com.github.mangila.webshop.product.model.ProductMutate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
@@ -39,15 +39,15 @@ public class ProductMapper {
     }
 
     @NotNull
-    public ProductEntity toEntity(@NotNull ProductMutate mutate) {
+    public ProductEntity toEntity(@NotNull ProductCommand command) {
         var entity = new ProductEntity();
-        entity.setId(mutate.id());
-        entity.setName(mutate.name());
-        entity.setDescription(mutate.description());
-        entity.setPrice(mutate.price());
-        entity.setImageUrl(mutate.imageUrl());
-        entity.setCategory(mutate.category());
-        entity.setExtensions(mutate.extensions());
+        entity.setId(command.id());
+        entity.setName(command.name());
+        entity.setDescription(command.description());
+        entity.setPrice(command.price());
+        entity.setImageUrl(command.imageUrl());
+        entity.setCategory(command.category());
+        entity.setExtensions(command.extensions());
         return entity;
     }
 

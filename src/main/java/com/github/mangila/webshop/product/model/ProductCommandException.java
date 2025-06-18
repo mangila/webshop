@@ -1,6 +1,4 @@
-package com.github.mangila.webshop.product.model.exception;
-
-import com.github.mangila.webshop.product.model.ProductCommandType;
+package com.github.mangila.webshop.product.model;
 
 public class ProductCommandException extends RuntimeException {
 
