@@ -4,19 +4,20 @@ import com.github.mangila.webshop.common.util.annotation.AlphaNumeric;
 import com.github.mangila.webshop.common.util.annotation.Json;
 import com.github.mangila.webshop.common.util.annotation.Uri;
 import jakarta.validation.constraints.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
 public record ProductMutate(
         @NotNull(message = "id must not be null")
-        @AlphaNumeric
+        @AlphaNumeric(allowNull = false)
         @Size(min = 1, max = 36)
         String id,
         @NotNull(message = "name must not be null")
-        @AlphaNumeric
+        @AlphaNumeric(allowNull = false)
         @Size(min = 1, max = 255)
         String name,
-        @NotNull(message = "description must not be null")
+        @Nullable
         @Size(min = 1, max = 255)
         String description,
         @NotNull(message = "Price is required")
@@ -24,13 +25,13 @@ public record ProductMutate(
         @DecimalMax(value = "99999.99", message = "Price must not exceed 99,999.99")
         @Digits(integer = 7, fraction = 2, message = "Price format is invalid (up to 7 digits and 2 decimal places)")
         BigDecimal price,
-        @NotNull(message = "imageUrl must not be null")
+        @Nullable
         @Uri
         String imageUrl,
-        @NotNull(message = "category must not be null")
+        @Nullable
         @AlphaNumeric
         String category,
-        @NotNull(message = "extensions must not be null")
+        @Nullable
         @Json
         String extensions
 ) {

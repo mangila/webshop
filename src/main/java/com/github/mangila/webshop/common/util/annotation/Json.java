@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = JsonValidator.class)
 @Documented
 public @interface Json {
-    String message() default "Value must be alphanumeric (letters and digits)";
+    String message() default "Not valid JSON";
 
     boolean allowNull() default true;
 

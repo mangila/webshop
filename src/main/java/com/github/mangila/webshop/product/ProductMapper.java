@@ -2,7 +2,6 @@ package com.github.mangila.webshop.product;
 
 import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.model.ProductDto;
 import com.github.mangila.webshop.product.model.ProductEntity;
 import com.github.mangila.webshop.product.model.ProductMutate;
 import org.jetbrains.annotations.NotNull;
@@ -64,21 +63,6 @@ public class ProductMapper {
         entity.setCategory(product.getCategory());
         entity.setExtensions(product.getExtensions().toString());
         return entity;
-    }
-
-    @NotNull
-    public ProductDto toDto(@NotNull Product product) {
-        return new ProductDto(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getImageUrl().toString(),
-                product.getCategory(),
-                product.getCreated().toString(),
-                product.getUpdated().toString(),
-                product.getExtensions().toString()
-        );
     }
 
     public BeanPropertyRowMapper<ProductEntity> getRowMapper() {

@@ -19,7 +19,7 @@ public class ValidatorService {
     public <T> Set<String> validateField(T object, String fieldName) {
         return validator.validateProperty(object, fieldName)
                 .stream()
-                .map(ConstraintViolation::getMessage)
+                .map(err -> String.format("%s: %s -- %s", fieldName, err.getMessage(), err.getInvalidValue()))
                 .collect(Collectors.toSet());
     }
 }

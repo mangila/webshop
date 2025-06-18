@@ -54,12 +54,4 @@ class ProductMapperTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Argument for @NotNull parameter 'product'");
     }
-
-    @Test
-    @DisplayName("Should throw IAE when mapping null Product to ProductDTO")
-    void shouldThrowIAEWhenMappingNullProductToProductDTO() {
-        assertThatThrownBy(() -> mapper.toDto((Product) null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Argument for @NotNull parameter 'product'");
-    }
 }
