@@ -48,7 +48,10 @@ public class ProductCommandGateway {
         var pair = switch (command) {
             case UPSERT_PRODUCT -> Pair.of(PRODUCT_UPSERTED, productCommandService.upsert(product));
             case DELETE_PRODUCT -> Pair.of(PRODUCT_DELETED, productCommandService.delete(product));
-            case UPDATE_PRODUCT_PRICE -> Pair.of(PRODUCT_PRICE_UPDATED, productCommandService.updateProductPrice(product));
+            case UPDATE_PRODUCT_PRICE ->
+                    Pair.of(PRODUCT_PRICE_UPDATED, productCommandService.updateProductPrice(product));
+            case null -> throw new IllegalArgumentException("Null command type");
+            default -> throw new IllegalArgumentException("Unknown command type: " + command);
         };
         var eventType = pair.first();
         product = pair.second();

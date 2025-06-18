@@ -19,8 +19,8 @@ public class ProductValidator {
             }
             case DELETE_PRODUCT -> ensureProductId(product);
             case UPDATE_PRODUCT_PRICE -> ensureProductPrice(product);
-            case null -> throw new IllegalStateException("command must not be null");
-            default -> throw new IllegalStateException("command not supported:");
+            case null -> throw new NullPointerException("command must not be null");
+            default -> throw new IllegalArgumentException("command not supported:");
         }
     }
 

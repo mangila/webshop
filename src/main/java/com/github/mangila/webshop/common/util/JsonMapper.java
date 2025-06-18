@@ -17,38 +17,10 @@ public class JsonMapper {
         this.objectMapper = objectMapper;
     }
 
-    public JsonNode emptyJsonNode() {
-        return objectMapper.createObjectNode();
-    }
-
-    public JsonNode toJsonNode(String json) {
-        try {
-            return objectMapper.readTree(json);
-        } catch (Exception e) {
-            log.error("Failed to parse json: {}", json, e);
-            return emptyJsonNode();
-        }
-    }
-
     public JsonNode toJsonNode(Object object) {
+        if (object == null || object == "null") {
+            return objectMapper.createObjectNode();
+        }
         return objectMapper.valueToTree(object);
-    }
-
-    public String serialize(Object object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (Exception e) {
-            log.error("Failed to serialize object: {}", object, e);
-            return null;
-        }
-    }
-
-    public <T> T deserialize(String json, Class<T> clazz) {
-        try {
-            return objectMapper.readValue(json, clazz);
-        } catch (Exception e) {
-            log.error("Failed to parse json: {}", json, e);
-            return null;
-        }
     }
 }
