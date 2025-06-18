@@ -22,7 +22,9 @@ public class ProductValidator {
         this.validatorService = validatorService;
     }
 
-    public void validateByCommand(@NotNull ProductCommand command) {
+    public void validate(@NotNull ProductCommand command) {
+        log.info("Validating command -- {}", command);
+        validatorService.validateField(command, "type");
         Set<String> errors = switch (command.type()) {
             case UPSERT_PRODUCT -> {
                 var l = List.of(

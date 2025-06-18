@@ -37,8 +37,8 @@ public class ProductCommandGateway {
     @Transactional
     public Product processCommand(@NotNull ProductCommand command) {
         log.info("Processing command -- {}", command);
+        validator.validate(command);
         var type = command.type();
-        validator.validateByCommand(command);
         Product product = switch (type) {
             case UPSERT_PRODUCT -> productCommandService.upsert(command);
             case DELETE_PRODUCT -> productCommandService.delete(command);
@@ -49,7 +49,7 @@ public class ProductCommandGateway {
         ProductEventType eventType = ProductEventType.from(type);
         Event event = eventCommandService.emit(
                 EventTopic.PRODUCT,
-                product.getId(),
+                product.id(),
                 eventType.toString(),
                 jsonMapper.toJsonNode(product)
         );

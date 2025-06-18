@@ -19,7 +19,7 @@ class ProductValidatorTest {
 
     @Test
     void shouldThrowExceptionWhenProductIsNull() {
-        assertThatThrownBy(() -> validator.validateByCommand(null))
+        assertThatThrownBy(() -> validator.validate(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Argument for @NotNull parameter 'command'");
     }

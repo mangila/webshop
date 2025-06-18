@@ -6,87 +6,16 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
 
-public class Product {
-
-    private String id;
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private URI imageUrl;
-    private String category;
-    private Instant created;
-    private Instant updated;
-    private JsonNode extensions;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public URI getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(URI imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Instant getCreated() {
-        return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
-    }
-
-    public Instant getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Instant updated) {
-        this.updated = updated;
-    }
-
-    public JsonNode getExtensions() {
-        return extensions;
-    }
-
-    public void setExtensions(JsonNode extensions) {
-        this.extensions = extensions;
-    }
+public record Product(
+    String id,
+    String name,
+    String description,
+    BigDecimal price,
+    URI imageUrl,
+    String category,
+    Instant created,
+    Instant updated,
+    JsonNode extensions
+) {
+    public static final Product EMPTY = new Product(null, null, null, null, null, null, null, null, null);
 }

@@ -24,18 +24,18 @@ public class ProductMapper {
 
     @NotNull
     public Product toProduct(@NotNull ProductEntity entity) {
-        var product = new Product();
-        product.setId(entity.getId());
-        product.setName(entity.getName());
-        product.setDescription(entity.getDescription());
-        product.setPrice(entity.getPrice());
         String imageUrl = Objects.requireNonNullElse(entity.getImageUrl(), "");
-        product.setImageUrl(URI.create(imageUrl));
-        product.setCategory(entity.getCategory());
-        product.setCreated(entity.getCreated().toInstant());
-        product.setUpdated(entity.getUpdated().toInstant());
-        product.setExtensions(jsonMapper.toJsonNode(entity.getExtensions()));
-        return product;
+        return new Product(
+            entity.getId(),
+            entity.getName(),
+            entity.getDescription(),
+            entity.getPrice(),
+            URI.create(imageUrl),
+            entity.getCategory(),
+            entity.getCreated().toInstant(),
+            entity.getUpdated().toInstant(),
+            jsonMapper.toJsonNode(entity.getExtensions())
+        );
     }
 
     @NotNull
