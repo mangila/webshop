@@ -9,10 +9,17 @@ public class AlphaNumericValidator implements ConstraintValidator<AlphaNumeric, 
 
     private static final Pattern ALPHA_NUMERIC = Pattern.compile("^[a-zA-Z0-9\\s]+$");
 
+    private boolean allowNull;
+
+    @Override
+    public void initialize(AlphaNumeric constraintAnnotation) {
+        this.allowNull = constraintAnnotation.allowNull();
+    }
+
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true;
+            return allowNull;
         }
         return ALPHA_NUMERIC.matcher(value).matches();
     }

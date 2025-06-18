@@ -14,6 +14,8 @@ public @interface Uri {
 
     String protocol() default "https";
 
+    boolean allowNull() default true;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

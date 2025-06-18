@@ -12,6 +12,8 @@ import java.lang.annotation.*;
 public @interface Json {
     String message() default "Value must be alphanumeric (letters and digits)";
 
+    boolean allowNull() default true;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

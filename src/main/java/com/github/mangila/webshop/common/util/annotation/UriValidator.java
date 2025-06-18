@@ -8,16 +8,18 @@ import java.net.URI;
 public class UriValidator implements ConstraintValidator<Uri, String> {
 
     private String protocol;
+    private boolean allowNull;
 
     @Override
     public void initialize(Uri constraintAnnotation) {
         this.protocol = constraintAnnotation.protocol();
+        this.allowNull = constraintAnnotation.allowNull();
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true;
+            return allowNull;
         }
         if (!value.startsWith(protocol)) {
             return false;
