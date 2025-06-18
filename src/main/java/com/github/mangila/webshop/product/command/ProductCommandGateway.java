@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.product.command;
 
 import com.github.mangila.webshop.common.util.JsonMapper;
-import com.github.mangila.webshop.common.util.Pair;
 import com.github.mangila.webshop.event.command.EventCommandService;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventTopic;
@@ -16,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.github.mangila.webshop.product.model.ProductEventType.*;
 
 @Service
 public class ProductCommandGateway {
@@ -46,16 +43,14 @@ public class ProductCommandGateway {
     public Product processCommand(@NotNull ProductCommandType command, @NotNull ProductMutate mutate) {
         log.info("Processing command -- {} -- {}", command, mutate);
         validator.validateByCommand(command, mutate);
-        var pair = switch (command) {
-            case UPSERT_PRODUCT -> Pair.of(PRODUCT_UPSERTED, productCommandService.upsert(mutate));
-            case DELETE_PRODUCT -> Pair.of(PRODUCT_DELETED, productCommandService.delete(mutate));
-            case UPDATE_PRODUCT_PRICE ->
-                    Pair.of(PRODUCT_PRICE_UPDATED, productCommandService.updateProductPrice(mutate));
+        Product product = switch (command) {
+            case UPSERT_PRODUCT -> productCommandService.upsert(mutate);
+            case DELETE_PRODUCT -> productCommandService.delete(mutate);
+            case UPDATE_PRODUCT_PRICE -> productCommandService.updateProductPrice(mutate);
             case null -> throw new IllegalArgumentException("Null command type");
             default -> throw new IllegalArgumentException("Unknown command type: " + command);
         };
-        ProductEventType eventType = pair.first();
-        Product product = pair.second();
+        ProductEventType eventType = ProductEventType.from(command);
         Event event = eventCommandService.emit(
                 EventTopic.PRODUCT,
                 product.getId(),
