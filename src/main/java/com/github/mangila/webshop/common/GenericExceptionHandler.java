@@ -30,7 +30,7 @@ public class GenericExceptionHandler {
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Validation Failed");
-        problem.setDetail("Input validation failed for the request.");
+        problem.setDetail("Input validation failed for the request");
         var errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
