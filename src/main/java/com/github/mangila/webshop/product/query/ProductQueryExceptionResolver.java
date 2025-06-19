@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product;
+package com.github.mangila.webshop.product.query;
 
 import com.github.mangila.webshop.product.model.ProductNotFoundException;
 import graphql.GraphQLError;

@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.product;
+package com.github.mangila.webshop.product.query;
 
+import com.github.mangila.webshop.product.ProductServiceGateway;
 import com.github.mangila.webshop.product.model.Product;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;

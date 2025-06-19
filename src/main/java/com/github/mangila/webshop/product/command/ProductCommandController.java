@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.product;
+package com.github.mangila.webshop.product.command;
 
+import com.github.mangila.webshop.product.ProductServiceGateway;
 import com.github.mangila.webshop.product.command.model.ProductDeleteCommand;
 import com.github.mangila.webshop.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.product.model.Product;
