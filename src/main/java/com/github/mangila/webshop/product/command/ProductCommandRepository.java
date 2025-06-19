@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Optional;
 
 @Repository
@@ -27,7 +25,7 @@ public class ProductCommandRepository {
         this.jdbc = jdbc;
     }
 
-    public Optional<Product> upsertProduct(ProductEntity p) {
+    public Optional<Product> upsertProduct(ProductEntity entity) {
         final String sql = """
                 INSERT INTO product (id, name, price, attributes)
                 VALUES (?, ?, ?, ?::jsonb)
@@ -40,14 +38,12 @@ public class ProductCommandRepository {
                 RETURNING id, name, price, created, updated, attributes
                 """;
         var params = new Object[]{
-                p.id(),
-                p.name(),
-                p.price(),
-                p.attributes(),
+                entity.id(),
+                entity.name(),
+                entity.price(),
+                entity.attributes(),
         };
-        var result = jdbc.query(sql,
-                productMapper.getRowMapper(),
-                params);
+        var result = jdbc.query(sql, productMapper.getRowMapper(), params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
@@ -55,14 +51,14 @@ public class ProductCommandRepository {
         return Optional.of(product);
     }
 
-    public Optional<Product> deleteProductById(String id) {
+    public Optional<Product> deleteProductById(ProductEntity entity) {
         final String sql = """
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes
                 """;
         var result = jdbc.query(sql,
                 productMapper.getRowMapper(),
-                id);
+                entity.id());
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
@@ -70,19 +66,16 @@ public class ProductCommandRepository {
         return Optional.of(product);
     }
 
-    public Optional<Product> updateOneField(String id, String fieldName, Object data) {
+    public Optional<Product> updateOneField(ProductEntity entity,
+                                            String fieldName) {
         final String sql = """
                 UPDATE product
-                SET
-                %s = ?,
-                updated = ?
+                SET %s = ?,
                 WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes
                 """.formatted(fieldName);
-        var params = new Object[]{data, Timestamp.from(Instant.now()), id};
-        var result = jdbc.query(sql,
-                productMapper.getRowMapper(),
-                params);
+        var params = new Object[]{entity.price(), entity.id()};
+        var result = jdbc.query(sql, productMapper.getRowMapper(), params);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }

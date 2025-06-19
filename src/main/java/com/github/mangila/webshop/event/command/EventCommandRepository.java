@@ -3,7 +3,6 @@ package com.github.mangila.webshop.event.command;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventEntity;
 import com.github.mangila.webshop.event.model.EventMapper;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,7 +25,7 @@ public class EventCommandRepository {
         this.jdbc = jdbc;
     }
 
-    public Optional<Event> emit(@NotNull EventEntity entity) {
+    public Optional<Event> emit(EventEntity entity) {
         final String sql = """
                 INSERT INTO event (type, aggregate_id, topic, data)
                 VALUES (?, ?, ?, ?::jsonb)

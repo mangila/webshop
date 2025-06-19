@@ -3,10 +3,10 @@ package com.github.mangila.webshop.product;
 import com.github.mangila.webshop.common.util.ValidationException;
 import com.github.mangila.webshop.common.util.ValidatorService;
 import com.github.mangila.webshop.product.model.ProductCommand;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -22,9 +22,9 @@ public class ProductValidator {
         this.validatorService = validatorService;
     }
 
-    public void validate(@NotNull ProductCommand command) {
-        log.info("Validating command -- {}", command);
-        validatorService.validateField(command, "type");
+    public void validate(ProductCommand command) {
+        log.debug("Validating command -- {}", command);
+        validatorService.ensureValidateField(command, "type");
         Set<String> errors = switch (command.type()) {
             case UPSERT_PRODUCT -> {
                 var l = List.of(
@@ -51,7 +51,7 @@ public class ProductValidator {
             case null -> throw new NullPointerException("command must not be null");
             default -> throw new IllegalArgumentException("command not supported:" + command);
         };
-        if (!errors.isEmpty()) {
+        if (!CollectionUtils.isEmpty(errors)) {
             throw new ValidationException(String.format("%s: %s", command, errors));
         }
     }

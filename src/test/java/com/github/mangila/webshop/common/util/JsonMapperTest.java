@@ -2,10 +2,17 @@ package com.github.mangila.webshop.common.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,48 +29,61 @@ class JsonMapperTest {
     void shouldReturnEmptyJsonNodeWhenObjectIsNull() {
         JsonNode node = jsonMapper.toJsonNode((Object) null);
         assertThat(node.isEmpty()).isTrue();
+        assertThat(node).isInstanceOf(ObjectNode.class);
     }
 
-    @Test
-    @DisplayName("Should return empty JsonNode when String is 'null' and null")
-    void shouldReturnEmptyJsonNodeWhenStringIsNull() {
-        JsonNode node = jsonMapper.toJsonNode("null");
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "  "})
+    @DisplayName("Should return empty JsonNode for null, empty or blank strings")
+    void shouldReturnEmptyJsonNodeForInvalidStrings(String input) {
+        JsonNode node = jsonMapper.toJsonNode(input);
         assertThat(node.isEmpty()).isTrue();
-        node = jsonMapper.toJsonNode((String) null);
-        assertThat(node.isEmpty()).isTrue();
+        assertThat(node).isInstanceOf(ObjectNode.class);
     }
 
     @Test
-    @DisplayName("Should return empty JsonNode when String is Blank and Empty")
-    void shouldReturnEmptyJsonNodeWhenStringIsBlank() {
-        JsonNode node = jsonMapper.toJsonNode(" ");
-        assertThat(node.isEmpty()).isTrue();
-        node = jsonMapper.toJsonNode("");
-        assertThat(node.isEmpty()).isTrue();
+    @DisplayName("Should convert valid JSON string to JsonNode")
+    void shouldConvertValidJsonStringToJsonNode() {
+        String json = "{\"name\":\"test\",\"value\":123}";
+        JsonNode node = jsonMapper.toJsonNode(json);
+
+        assertThat(node.isEmpty()).isFalse();
+        assertThat(node.get("name").asText()).isEqualTo("test");
+        assertThat(node.get("value").asInt()).isEqualTo(123);
     }
 
     @Test
-    @DisplayName("Should return false when String is null")
-    void shouldReturnFalseWhenStringIsNull() {
-        assertThat(jsonMapper.isValid(null))
-                .isFalse();
+    @DisplayName("Should convert object to JsonNode")
+    void shouldConvertObjectToJsonNode() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "test");
+        map.put("value", 123);
+
+        JsonNode node = jsonMapper.toJsonNode(map);
+
+        assertThat(node.isEmpty()).isFalse();
+        assertThat(node.get("name").asText()).isEqualTo("test");
+        assertThat(node.get("value").asInt()).isEqualTo(123);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "  ", "{NOT JSON}", "invalid"})
+    @DisplayName("Should return false for invalid JSON strings")
+    void shouldReturnFalseForInvalidJsonStrings(String input) {
+        assertThat(jsonMapper.isValid(input)).isFalse();
     }
 
     @Test
-    @DisplayName("Should return false when String is Blank")
-    void shouldReturnFalseWhenStringIsBlank() {
-        assertThat(jsonMapper.isValid(" ")).isFalse();
+    @DisplayName("Should return true for valid JSON object")
+    void shouldReturnTrueForValidJsonObject() {
+        assertThat(jsonMapper.isValid("{\"name\":\"test\"}")).isTrue();
     }
 
     @Test
-    @DisplayName("Should return false when String is Empty")
-    void shouldReturnFalseWhenStringIsEmpty() {
-        assertThat(jsonMapper.isValid("")).isFalse();
-    }
-
-    @Test
-    @DisplayName("Should return false when String is not JSON")
-    void shouldReturnFalseWhenStringIsNotJson() {
-        assertThat(jsonMapper.isValid("{NOT JSON}")).isFalse();
+    @DisplayName("Should return false for JSON array (not object)")
+    void shouldReturnFalseForJsonArray() {
+        assertThat(jsonMapper.isValid("[1,2,3]")).isFalse();
     }
 }

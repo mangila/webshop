@@ -1,34 +1,28 @@
 package com.github.mangila.webshop.product;
 
-import com.github.mangila.webshop.product.command.ProductCommandGateway;
-import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.Product;
-import com.github.mangila.webshop.product.query.ProductQueryService;
+import com.github.mangila.webshop.product.model.ProductCommand;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ProductResolver extends DataFetcherExceptionResolverAdapter {
+public class ProductResolver {
 
-    private final ProductQueryService productQueryService;
-    private final ProductCommandGateway productCommandGateway;
+    private final ProductServiceGateway productServiceGateway;
 
-    public ProductResolver(ProductQueryService productQueryService,
-                           ProductCommandGateway productCommandGateway) {
-        this.productQueryService = productQueryService;
-        this.productCommandGateway = productCommandGateway;
+    public ProductResolver(ProductServiceGateway productServiceGateway) {
+        this.productServiceGateway = productServiceGateway;
     }
 
     @QueryMapping
     public Product queryProductById(@Argument("id") String id) {
-        return productQueryService.queryById(id);
+        return productServiceGateway.queryById(id);
     }
 
     @MutationMapping
     public Product mutateProduct(@Argument("command") ProductCommand command) {
-        return productCommandGateway.processCommand(command);
+        return productServiceGateway.processCommand(command);
     }
 }

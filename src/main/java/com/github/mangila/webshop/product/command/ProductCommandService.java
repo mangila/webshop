@@ -21,23 +21,21 @@ public class ProductCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Product updateProductPrice(ProductCommand mutate) {
-        var id = mutate.id();
-        String fieldName = "price";
-        var price = mutate.price();
-        return commandRepository.updateOneField(id, fieldName, price)
-                .orElseThrow(() -> new ProductCommandException(UPDATE_PRODUCT_PRICE, id));
+    public Product updateProductPrice(ProductCommand command) {
+        ProductEntity entity = productMapper.toEntity(command);
+        return commandRepository.updateOneField(entity, "price")
+                .orElseThrow(() -> new ProductCommandException(UPDATE_PRODUCT_PRICE, entity.id()));
     }
 
-    public Product upsert(ProductCommand mutate) {
-        ProductEntity entity = productMapper.toEntity(mutate);
+    public Product upsert(ProductCommand command) {
+        ProductEntity entity = productMapper.toEntity(command);
         return commandRepository.upsertProduct(entity)
-                .orElseThrow(() -> new ProductCommandException(UPSERT_PRODUCT, mutate.id()));
+                .orElseThrow(() -> new ProductCommandException(UPSERT_PRODUCT, entity.id()));
     }
 
-    public Product delete(ProductCommand mutate) {
-        var id = mutate.id();
-        return commandRepository.deleteProductById(id)
-                .orElseThrow(() -> new ProductCommandException(DELETE_PRODUCT, id));
+    public Product delete(ProductCommand command) {
+        ProductEntity entity = productMapper.toEntity(command);
+        return commandRepository.deleteProductById(entity)
+                .orElseThrow(() -> new ProductCommandException(DELETE_PRODUCT, entity.id()));
     }
 }

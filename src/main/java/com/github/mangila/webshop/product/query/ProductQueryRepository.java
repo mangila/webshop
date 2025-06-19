@@ -34,9 +34,7 @@ public class ProductQueryRepository {
                        attributes
                 FROM product WHERE id = ?
                 """;
-        var result = jdbc.query(sql,
-                productMapper.getRowMapper(),
-                id);
+        var result = jdbc.query(sql, productMapper.getRowMapper(), id);
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }

@@ -36,9 +36,11 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-        log.info("Creating Postgres trigger new_inventory_after_product_insert() on product table");
+        log.info("Creating Postgres trigger new_inventory_after_product_insert on product table");
         jdbc.execute("""
                 DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON product;
+                """);
+        jdbc.execute("""
                 CREATE TRIGGER new_inventory_after_product_insert
                 AFTER INSERT ON product
                 FOR EACH ROW
@@ -49,7 +51,9 @@ public class PostgresConfig {
     public void updateUpdatedColumn() {
         log.info("Creating Postgres function update_updated_column()");
         jdbc.execute("""
-                DROP FUNCTION IF EXISTS update_updated_column();
+                 DROP FUNCTION IF EXISTS update_updated_column();
+                """);
+        jdbc.execute("""
                 CREATE OR REPLACE FUNCTION update_updated_column()
                 RETURNS TRIGGER AS $$
                 BEGIN
@@ -58,10 +62,12 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-        log.info("Creating Postgres trigger trigger_update_timestamp() on product table");
+        log.info("Creating Postgres trigger update_updated_column_product on product table");
         jdbc.execute("""
-                DROP TRIGGER IF EXISTS trigger_update_timestamp ON product;
-                CREATE TRIGGER trigger_update_timestamp
+                DROP TRIGGER IF EXISTS update_updated_column_product ON product;
+                """);
+        jdbc.execute("""
+                CREATE TRIGGER update_updated_column_product
                 BEFORE UPDATE ON product
                 FOR EACH ROW
                 EXECUTE FUNCTION update_updated_column();

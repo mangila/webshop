@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.event.command;
 
 import com.github.mangila.webshop.event.model.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +15,7 @@ public class EventCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Event emit(@NotNull EventCommand command) {
+    public Event emit(EventCommand command) {
         EventEntity entity = eventMapper.toEntity(command);
         return commandRepository.emit(entity)
                 .orElseThrow(() -> new EventEmitException(command.toString()));

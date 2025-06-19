@@ -14,7 +14,10 @@ public class EventQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public List<Event> replay(String topic, String aggregateId, Long offset, Integer limit) {
+    public List<Event> replay(String topic,
+                              String aggregateId,
+                              Long offset,
+                              Integer limit) {
         if (offset == null) {
             offset = 1L;
         }

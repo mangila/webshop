@@ -4,7 +4,6 @@ import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.ProductEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +18,7 @@ public class ProductMapper {
         this.rowMapper = new DataClassRowMapper<>(ProductEntity.class);
     }
 
-    @NotNull
-    public Product toProduct(@NotNull ProductEntity entity) {
+    public Product toProduct(ProductEntity entity) {
         return new Product(
                 entity.id(),
                 entity.name(),
@@ -31,8 +29,7 @@ public class ProductMapper {
         );
     }
 
-    @NotNull
-    public ProductEntity toEntity(@NotNull ProductCommand command) {
+    public ProductEntity toEntity(ProductCommand command) {
         return new ProductEntity(
                 command.id(),
                 command.name(),

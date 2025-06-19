@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.event;
 
 import com.github.mangila.webshop.event.model.Event;
-import com.github.mangila.webshop.event.query.EventQueryService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -9,12 +8,12 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 @Controller
-public class EventController {
+public class EventResolver {
 
-    private final EventQueryService eventQueryService;
+    private final EventServiceGateway eventServiceGateway;
 
-    public EventController(EventQueryService eventQueryService) {
-        this.eventQueryService = eventQueryService;
+    public EventResolver(EventServiceGateway eventServiceGateway) {
+        this.eventServiceGateway = eventServiceGateway;
     }
 
     @QueryMapping
@@ -23,7 +22,7 @@ public class EventController {
             @Argument("aggregateId") String aggregateId,
             @Argument("offset") Long offset,
             @Argument("limit") Integer limit) {
-        return eventQueryService.replay(topic, aggregateId, offset, limit);
+        return eventServiceGateway.replay(topic, aggregateId, offset, limit);
     }
 
 }

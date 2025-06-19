@@ -3,7 +3,6 @@ package com.github.mangila.webshop.product.model;
 import com.github.mangila.webshop.common.util.annotation.AlphaNumeric;
 import com.github.mangila.webshop.common.util.annotation.Json;
 import jakarta.validation.constraints.*;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
@@ -23,7 +22,6 @@ public record ProductCommand(
         @DecimalMax(value = "99999.99", message = "Price must not exceed 99,999.99")
         @Digits(integer = 7, fraction = 2, message = "Price format is invalid (up to 7 digits and 2 decimal places)")
         BigDecimal price,
-        @Nullable
         @Json
         String attributes
 ) {
