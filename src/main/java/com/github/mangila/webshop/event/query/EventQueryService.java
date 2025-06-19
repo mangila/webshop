@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.event.query;
 
 import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.query.model.EventQueryReplay;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,16 +15,7 @@ public class EventQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public List<Event> replay(String topic,
-                              String aggregateId,
-                              Long offset,
-                              Integer limit) {
-        if (offset == null) {
-            offset = 1L;
-        }
-        if (limit == null) {
-            limit = 100;
-        }
-        return queryRepository.replay(topic, aggregateId, offset, limit);
+    public List<Event> replay(EventQueryReplay replay) {
+        return queryRepository.replay(replay);
     }
 }

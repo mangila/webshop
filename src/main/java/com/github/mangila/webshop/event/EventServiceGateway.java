@@ -5,6 +5,7 @@ import com.github.mangila.webshop.event.command.EventCommandService;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventTopic;
 import com.github.mangila.webshop.event.query.EventQueryService;
+import com.github.mangila.webshop.event.query.model.EventQueryReplay;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +22,6 @@ public class EventServiceGateway {
         this.queryService = queryService;
     }
 
-    public List<Event> replay(String topic,
-                              String aggregateId,
-                              Long offset,
-                              Integer limit) {
-        return queryService.replay(topic, aggregateId, offset, limit);
-    }
-
     public Event emit(EventTopic topic,
                       String aggregateId,
                       String eventType,
@@ -38,5 +32,9 @@ public class EventServiceGateway {
                 eventType,
                 eventData
         );
+    }
+
+    public List<Event> replay(EventQueryReplay replay) {
+        return queryService.replay(replay);
     }
 }

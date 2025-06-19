@@ -1,10 +1,12 @@
 extend type Query {
-    replay (
-        topic: String!
-        aggregateId: String!
-        offset: BigInteger
-        limit: Int
-    ): [Event]
+    replay (input: EventQueryReplay): [Event]
+}
+
+input EventQueryReplay {
+    topic: String!
+    aggregateId: String!
+    offset: BigInteger
+    limit: Int
 }
 
 type Event {

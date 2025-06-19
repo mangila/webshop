@@ -3,7 +3,7 @@ package com.github.mangila.webshop.event.query;
 import com.github.mangila.webshop.event.EventRepositoryUtil;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventEntity;
-import org.jetbrains.annotations.NotNull;
+import com.github.mangila.webshop.event.query.model.EventQueryReplay;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,15 +21,12 @@ public class EventQueryRepository {
         this.repositoryUtil = repositoryUtil;
     }
 
-    public List<Event> replay(@NotNull String topic,
-                              @NotNull String aggregateId,
-                              long offset,
-                              int limit) {
+    public List<Event> replay(EventQueryReplay replay) {
         var params = new Object[]{
-                topic,
-                aggregateId,
-                offset,
-                limit};
+                replay.topic(),
+                replay.aggregateId(),
+                replay.offset(),
+                replay.limit()};
         final String sql = """
                 SELECT id, type, aggregate_id, topic, data, created
                          FROM event
