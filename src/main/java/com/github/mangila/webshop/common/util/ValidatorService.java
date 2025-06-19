@@ -19,14 +19,18 @@ public class ValidatorService {
     public <T> Set<String> validateField(T object, String fieldName) {
         return validator.validateProperty(object, fieldName)
                 .stream()
-                .map(err -> String.format("%s: %s -- %s", fieldName, err.getMessage(), err.getInvalidValue()))
+                .map(err -> String.format("%s: %s -- %s", fieldName,
+                        err.getMessage(),
+                        err.getInvalidValue()))
                 .collect(Collectors.toSet());
     }
 
     public <T> void ensureValidateField(T object, String fieldName) {
         Set<String> errors = validator.validateProperty(object, fieldName)
                 .stream()
-                .map(err -> String.format("%s: %s -- %s", fieldName, err.getMessage(), err.getInvalidValue()))
+                .map(err -> String.format("%s: %s -- %s", fieldName,
+                        err.getMessage(),
+                        err.getInvalidValue()))
                 .collect(Collectors.toSet());
         if (!CollectionUtils.isEmpty(errors)) {
             throw new ValidationException(String.join(", ", errors));

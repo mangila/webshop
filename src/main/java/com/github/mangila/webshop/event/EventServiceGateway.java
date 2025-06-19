@@ -12,11 +12,14 @@ import java.util.List;
 @Service
 public class EventServiceGateway {
 
+    private final EventValidator validator;
     private final EventQueryService queryService;
     private final EventCommandGateway eventCommandGateway;
 
-    public EventServiceGateway(EventQueryService queryService,
+    public EventServiceGateway(EventValidator validator,
+                               EventQueryService queryService,
                                EventCommandGateway eventCommandGateway) {
+        this.validator = validator;
         this.queryService = queryService;
         this.eventCommandGateway = eventCommandGateway;
     }
@@ -24,6 +27,7 @@ public class EventServiceGateway {
 
     @Transactional
     public Event processCommand(EventCommand command) {
+        validator.validate(command);
         return eventCommandGateway.processCommand(command);
     }
 
