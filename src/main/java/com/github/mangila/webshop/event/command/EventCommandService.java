@@ -2,7 +2,6 @@ package com.github.mangila.webshop.event.command;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.event.model.Event;
-import com.github.mangila.webshop.event.model.EventEmitException;
 import com.github.mangila.webshop.event.model.EventEntity;
 import com.github.mangila.webshop.event.model.EventTopic;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class EventCommandService {
                       String eventType,
                       JsonNode eventData) {
         EventEntity entity = EventEntity.from(topic, aggregateId, eventType, eventData);
-        return commandRepository.emit(entity)
-                .orElseThrow(() -> new EventEmitException(aggregateId));
+        return commandRepository.emit(entity).orElseThrow();
     }
 }
