@@ -3,6 +3,7 @@ package com.github.mangila.webshop.common;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -19,6 +20,12 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
+        if (ex instanceof ConstraintViolationException e) {
+            return GraphqlErrorBuilder.newError(env)
+                    .errorType(ErrorType.NOT_FOUND)
+                    .message(e.getMessage())
+                    .build();
+        }
         log.error("ERR", ex);
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.INTERNAL_ERROR)
