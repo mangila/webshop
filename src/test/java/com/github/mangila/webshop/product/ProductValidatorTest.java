@@ -1,7 +1,10 @@
 package com.github.mangila.webshop.product;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mangila.webshop.common.util.JsonMapper;
 import com.github.mangila.webshop.common.util.ValidationException;
 import com.github.mangila.webshop.common.util.ValidatorService;
+import com.github.mangila.webshop.common.util.annotation.JsonValidator;
 import com.github.mangila.webshop.product.model.ProductCommand;
 import com.github.mangila.webshop.product.model.ProductCommandType;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +15,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -20,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
         ProductValidator.class,
         ValidatorService.class,
         LocalValidatorFactoryBean.class,
-        com.github.mangila.webshop.common.util.JsonMapper.class,
-        com.github.mangila.webshop.common.util.annotation.JsonValidator.class,
-        com.fasterxml.jackson.databind.ObjectMapper.class})
+        JsonMapper.class,
+        JsonValidator.class,
+        ObjectMapper.class})
 class ProductValidatorTest {
 
     @Autowired
@@ -33,19 +35,19 @@ class ProductValidatorTest {
     void shouldThrowExceptionWhenProductCommandIsNull() {
         assertThatThrownBy(() -> validator.validate(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("The object to be validated must not be null");
+                .hasMessageContaining("command must not be null or empty");
     }
 
     @Test
-    @DisplayName("Should throw NullPointerException when ProductCommand type is null")
+    @DisplayName("Should throw ValidationException when ProductCommand type is null")
     void shouldThrowNullPointerExceptionWhenCommandTypeIsNull() {
         ProductCommand command = new ProductCommand(
                 null, "id123", "Test Product", new BigDecimal("99.99"), "{}"
         );
 
         assertThatThrownBy(() -> validator.validate(command))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("command must not be null");
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Command type must not be null -- null");
     }
 
     // This test is removed because we can't easily test the default case with the current enum values

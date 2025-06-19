@@ -3,6 +3,7 @@ package com.github.mangila.webshop.product;
 import com.github.mangila.webshop.common.util.ValidationException;
 import com.github.mangila.webshop.common.util.ValidatorService;
 import com.github.mangila.webshop.product.model.ProductCommand;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,33 +31,32 @@ public class ProductValidator {
         }
         validatorService.ensureValidateField(command, "type");
         Set<String> errors = switch (command.type()) {
-            case UPSERT_PRODUCT -> {
-                var l = List.of(
-                        validatorService.validateField(command, "id"),
-                        validatorService.validateField(command, "name"),
-                        validatorService.validateField(command, "price"),
-                        validatorService.validateField(command, "attributes")
-                );
-                yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
-            }
-            case DELETE_PRODUCT -> {
-                var l = List.of(
-                        validatorService.validateField(command, "id")
-                );
-                yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
-            }
-            case UPDATE_PRODUCT_PRICE -> {
-                var l = List.of(
-                        validatorService.validateField(command, "id"),
-                        validatorService.validateField(command, "price")
-                );
-                yield l.stream().flatMap(Set::stream).collect(Collectors.toSet());
-            }
+            case UPSERT_PRODUCT -> validateUpsertProduct(command);
+            case DELETE_PRODUCT -> validateDeleteProduct(command);
+            case UPDATE_PRODUCT_PRICE -> validateUpdateProductPrice(command);
             case null -> throw new NullPointerException("command must not be null");
             default -> throw new IllegalArgumentException("command not supported:" + command);
         };
         if (!CollectionUtils.isEmpty(errors)) {
             throw new ValidationException(String.format("%s: %s", command, errors));
         }
+    }
+
+    private Set<String> validateUpsertProduct(ProductCommand command) {
+        return validatorService.validateFields(command,
+                "id",
+                "name",
+                "price",
+                "attributes");
+    }
+
+    private Set<String> validateDeleteProduct(ProductCommand command) {
+        return validatorService.validateField(command, "id");
+    }
+
+    private Set<String> validateUpdateProductPrice(ProductCommand command) {
+        return validatorService.validateFields(command,
+                "id",
+                "price");
     }
 }
