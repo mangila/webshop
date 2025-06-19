@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.event;
+package com.github.mangila.webshop.event.query;
 
+import com.github.mangila.webshop.event.EventServiceGateway;
 import com.github.mangila.webshop.event.model.Event;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
