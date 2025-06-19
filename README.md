@@ -1,6 +1,6 @@
 # webshop
 
-- Mock webshop with Spring Boot, PostgresSQL.
+- Mock webshop with Spring Boot, PostgresSQL and React Vite as frontend
 - Following a hybrid CQRS (Command Query Responsibility Segregation) and Event Sourcing architecture (with Postgres used
   as Event Store)
 - Graphql for Queries and REST for Commands — purely experimental
