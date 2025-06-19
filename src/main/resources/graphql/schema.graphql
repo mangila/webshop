@@ -1,13 +1,8 @@
 schema {
     query: Query
-    mutation: Mutation
 }
 
 type Query {
-    _empty: String
-}
-
-type Mutation {
     _empty: String
 }
 

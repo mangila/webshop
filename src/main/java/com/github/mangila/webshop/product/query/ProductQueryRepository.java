@@ -1,26 +1,23 @@
 package com.github.mangila.webshop.product.query;
 
-import com.github.mangila.webshop.product.ProductMapper;
 import com.github.mangila.webshop.product.model.Product;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mangila.webshop.product.model.ProductEntity;
+import com.github.mangila.webshop.product.util.ProductRepositoryUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ProductQueryRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductQueryRepository.class);
-
-    private final ProductMapper productMapper;
     private final JdbcTemplate jdbc;
+    private final ProductRepositoryUtil repositoryUtil;
 
-    public ProductQueryRepository(ProductMapper productMapper,
-                                  JdbcTemplate jdbc) {
-        this.productMapper = productMapper;
+    public ProductQueryRepository(JdbcTemplate jdbc,
+                                  ProductRepositoryUtil repositoryUtil) {
+        this.repositoryUtil = repositoryUtil;
         this.jdbc = jdbc;
     }
 
@@ -34,11 +31,7 @@ public class ProductQueryRepository {
                        attributes
                 FROM product WHERE id = ?
                 """;
-        var result = jdbc.query(sql, productMapper.getRowMapper(), id);
-        if (CollectionUtils.isEmpty(result)) {
-            return Optional.empty();
-        }
-        var product = productMapper.toProduct(result.getFirst());
-        return Optional.of(product);
+        List<ProductEntity> result = jdbc.query(sql, repositoryUtil.productEntityRowMapper(), id);
+        return repositoryUtil.extractOneResult(result);
     }
 }

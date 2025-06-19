@@ -8,11 +8,11 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 @Controller
-public class EventResolver {
+public class EventQueryResolver {
 
     private final EventServiceGateway eventServiceGateway;
 
-    public EventResolver(EventServiceGateway eventServiceGateway) {
+    public EventQueryResolver(EventServiceGateway eventServiceGateway) {
         this.eventServiceGateway = eventServiceGateway;
     }
 

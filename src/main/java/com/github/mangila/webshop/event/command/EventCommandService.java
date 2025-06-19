@@ -1,23 +1,27 @@
 package com.github.mangila.webshop.event.command;
 
-import com.github.mangila.webshop.event.model.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.event.model.Event;
+import com.github.mangila.webshop.event.model.EventEmitException;
+import com.github.mangila.webshop.event.model.EventEntity;
+import com.github.mangila.webshop.event.model.EventTopic;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EventCommandService {
 
-    private final EventMapper eventMapper;
     private final EventCommandRepository commandRepository;
 
-    public EventCommandService(EventMapper eventMapper,
-                               EventCommandRepository commandRepository) {
-        this.eventMapper = eventMapper;
+    public EventCommandService(EventCommandRepository commandRepository) {
         this.commandRepository = commandRepository;
     }
 
-    public Event emit(EventCommand command) {
-        EventEntity entity = eventMapper.toEntity(command);
+    public Event emit(EventTopic topic,
+                      String aggregateId,
+                      String eventType,
+                      JsonNode eventData) {
+        EventEntity entity = EventEntity.from(topic, aggregateId, eventType, eventData);
         return commandRepository.emit(entity)
-                .orElseThrow(() -> new EventEmitException(command.toString()));
+                .orElseThrow(() -> new EventEmitException(aggregateId));
     }
 }

@@ -2,15 +2,6 @@ extend type Query {
     queryInventoryById (input: ID!): Inventory
 }
 
-extend type Mutation {
-    mutateQuantity(input: MutateQuantity): Inventory
-}
-
-input MutateQuantity {
-    productId: ID!
-    quantity: Int!
-}
-
 type Inventory {
     productId: ID
     quantity: Int

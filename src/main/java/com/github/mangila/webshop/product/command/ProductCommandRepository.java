@@ -1,31 +1,29 @@
 package com.github.mangila.webshop.product.command;
 
-import com.github.mangila.webshop.product.ProductMapper;
+import com.github.mangila.webshop.product.command.model.ProductDeleteCommand;
+import com.github.mangila.webshop.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.product.model.Product;
 import com.github.mangila.webshop.product.model.ProductEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mangila.webshop.product.util.ProductRepositoryUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ProductCommandRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductCommandRepository.class);
-
-    private final ProductMapper productMapper;
     private final JdbcTemplate jdbc;
+    private final ProductRepositoryUtil repositoryUtil;
 
-    public ProductCommandRepository(ProductMapper productMapper,
-                                    JdbcTemplate jdbc) {
-        this.productMapper = productMapper;
+    public ProductCommandRepository(JdbcTemplate jdbc,
+                                    ProductRepositoryUtil repositoryUtil) {
+        this.repositoryUtil = repositoryUtil;
         this.jdbc = jdbc;
     }
 
-    public Optional<Product> upsertProduct(ProductEntity entity) {
+    public Optional<Product> upsert(ProductUpsertCommand command) {
         final String sql = """
                 INSERT INTO product (id, name, price, attributes)
                 VALUES (?, ?, ?, ?::jsonb)
@@ -38,48 +36,21 @@ public class ProductCommandRepository {
                 RETURNING id, name, price, created, updated, attributes
                 """;
         var params = new Object[]{
-                entity.id(),
-                entity.name(),
-                entity.price(),
-                entity.attributes(),
+                command.id(),
+                command.name(),
+                command.price(),
+                command.attributes(),
         };
-        var result = jdbc.query(sql, productMapper.getRowMapper(), params);
-        if (CollectionUtils.isEmpty(result)) {
-            return Optional.empty();
-        }
-        var product = productMapper.toProduct(result.getFirst());
-        return Optional.of(product);
+        List<ProductEntity> result = jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params);
+        return repositoryUtil.extractOneResult(result);
     }
 
-    public Optional<Product> deleteProductById(ProductEntity entity) {
+    public Optional<Product> delete(ProductDeleteCommand command) {
         final String sql = """
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes
                 """;
-        var result = jdbc.query(sql,
-                productMapper.getRowMapper(),
-                entity.id());
-        if (CollectionUtils.isEmpty(result)) {
-            return Optional.empty();
-        }
-        var product = productMapper.toProduct(result.getFirst());
-        return Optional.of(product);
-    }
-
-    public Optional<Product> updateOneField(ProductEntity entity,
-                                            String fieldName) {
-        final String sql = """
-                UPDATE product
-                SET %s = ?,
-                WHERE id = ?
-                RETURNING id, name, price, created, updated, attributes
-                """.formatted(fieldName);
-        var params = new Object[]{entity.price(), entity.id()};
-        var result = jdbc.query(sql, productMapper.getRowMapper(), params);
-        if (CollectionUtils.isEmpty(result)) {
-            return Optional.empty();
-        }
-        var product = productMapper.toProduct(result.getFirst());
-        return Optional.of(product);
+        List<ProductEntity> result = jdbc.query(sql, repositoryUtil.productEntityRowMapper(), command.id());
+        return repositoryUtil.extractOneResult(result);
     }
 }

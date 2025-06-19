@@ -1,7 +1,3 @@
-extend type Mutation {
-    mutateProduct(command: ProductCommand!): Product
-}
-
 extend type Query {
     queryProductById(id: ID!): Product
 }
@@ -12,19 +8,5 @@ type Product {
     price: Float
     created: String
     updated: String
-    attributes: JSON
-}
-
-enum ProductCommandType {
-    UPSERT_PRODUCT,
-    UPDATE_PRODUCT_PRICE,
-    DELETE_PRODUCT
-}
-
-input ProductCommand {
-    type: ProductCommandType!
-    id: ID
-    name: String
-    price: Float
     attributes: JSON
 }

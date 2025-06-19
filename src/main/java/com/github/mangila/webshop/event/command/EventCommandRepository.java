@@ -1,28 +1,24 @@
 package com.github.mangila.webshop.event.command;
 
+import com.github.mangila.webshop.event.EventRepositoryUtil;
 import com.github.mangila.webshop.event.model.Event;
 import com.github.mangila.webshop.event.model.EventEntity;
-import com.github.mangila.webshop.event.model.EventMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class EventCommandRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(EventCommandRepository.class);
-
-    private final EventMapper eventMapper;
     private final JdbcTemplate jdbc;
+    private final EventRepositoryUtil repositoryUtil;
 
-    public EventCommandRepository(EventMapper eventMapper,
-                                  JdbcTemplate jdbc) {
-        this.eventMapper = eventMapper;
+    public EventCommandRepository(JdbcTemplate jdbc,
+                                  EventRepositoryUtil repositoryUtil) {
         this.jdbc = jdbc;
+        this.repositoryUtil = repositoryUtil;
     }
 
     public Optional<Event> emit(EventEntity entity) {
@@ -37,13 +33,9 @@ public class EventCommandRepository {
                 entity.topic(),
                 entity.data()
         };
-        var result = jdbc.query(sql,
-                eventMapper.getRowMapper(),
+        List<EventEntity> result = jdbc.query(sql,
+                repositoryUtil.eventEntityRowMapper(),
                 params);
-        if (CollectionUtils.isEmpty(result)) {
-            return Optional.empty();
-        }
-        var event = eventMapper.toEvent(result.getFirst());
-        return Optional.of(event);
+        return repositoryUtil.extractOneResult(result);
     }
 }
