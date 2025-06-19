@@ -26,4 +26,8 @@ public record ProductCommand(
         String attributes
 ) {
     public static final ProductCommand EMPTY = new ProductCommand(null, null, null, null, null);
+
+    public boolean isEmpty() {
+        return this.equals(EMPTY);
+    }
 }

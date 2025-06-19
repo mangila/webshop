@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class ProductValidator {
 
     private static final Logger log = LoggerFactory.getLogger(ProductValidator.class);
+
     private final ValidatorService validatorService;
 
     public ProductValidator(ValidatorService validatorService) {
@@ -24,6 +25,9 @@ public class ProductValidator {
 
     public void validate(ProductCommand command) {
         log.debug("Validating command -- {}", command);
+        if (command == null || command.isEmpty()) {
+            throw new IllegalArgumentException("command must not be null or empty");
+        }
         validatorService.ensureValidateField(command, "type");
         Set<String> errors = switch (command.type()) {
             case UPSERT_PRODUCT -> {
