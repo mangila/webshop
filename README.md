@@ -1,5 +1,9 @@
 # webshop
 
+- Mock webshop with Spring Boot, PostgresSQL.
+- Following a hybrid CQRS (Command Query Responsibility Segregation) and Event Sourcing architecture (with Postgres used
+  as Event Store)
+
 *** This is not a prod-friendly app, just mock services and made-up Payment Providers & Delivery Providers  ***
 
 Spring Boot Enterprisy Implementation as a Webshop
