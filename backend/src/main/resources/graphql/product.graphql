@@ -1,0 +1,16 @@
+extend type Query {
+    queryProductById(input: ProductQueryById):Product
+}
+
+input ProductQueryById {
+    id: ID!
+}
+
+type Product {
+    id: ID
+    name: String
+    price: Float
+    created: String
+    updated: String
+    attributes: JSON
+}

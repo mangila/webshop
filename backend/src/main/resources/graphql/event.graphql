@@ -1,0 +1,19 @@
+extend type Query {
+    replay (input: EventQueryReplay): [Event]
+}
+
+input EventQueryReplay {
+    topic: String!
+    aggregateId: String!
+    offset: BigInteger = 1
+    limit: Int = 100
+}
+
+type Event {
+    id: ID
+    topic: String
+    type: String
+    aggregateId: String
+    data: JSON
+    created: String
+}
