@@ -24,7 +24,6 @@ public class ProductCommandController {
 
     @DeleteMapping("command/delete")
     public ResponseEntity<Product> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
-        return ResponseEntity.accepted()
-                .body(productServiceGateway.delete(command));
+        return ResponseEntity.ok(productServiceGateway.delete(command));
     }
 }
