@@ -4,6 +4,7 @@ import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCom
 import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,18 @@ public class ProductCommandController {
         this.productServiceGateway = productServiceGateway;
     }
 
-    @PostMapping("upsert")
+    @PostMapping(
+            value = "upsert",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> upsertProduct(@Valid @RequestBody ProductUpsertCommand command) {
         return ResponseEntity.ok(productServiceGateway.upsert(command));
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping(
+            value = "delete",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
         return ResponseEntity.ok(productServiceGateway.delete(command));
     }

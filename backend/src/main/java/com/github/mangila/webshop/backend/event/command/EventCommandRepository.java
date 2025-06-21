@@ -1,12 +1,13 @@
 package com.github.mangila.webshop.backend.event.command;
 
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
 import com.github.mangila.webshop.backend.event.EventRepositoryUtil;
 import com.github.mangila.webshop.backend.event.model.Event;
 import com.github.mangila.webshop.backend.event.model.EventEntity;
+import io.vavr.control.Try;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,9 +34,8 @@ public class EventCommandRepository {
                 entity.eventTopic().name(),
                 entity.data()
         };
-        List<EventEntity> result = jdbc.query(sql,
-                repositoryUtil.eventEntityRowMapper(),
-                params);
-        return repositoryUtil.extractOneResult(result);
+        return Try.of(() -> jdbc.query(sql, repositoryUtil.eventEntityRowMapper(), params))
+                .map(repositoryUtil::extractOneResult)
+                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("emit Event", params, throwable));
     }
 }

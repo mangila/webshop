@@ -20,6 +20,7 @@ public class EventCommandService {
                       String eventType,
                       JsonNode eventData) {
         EventEntity entity = EventEntity.from(eventTopic, aggregateId, eventType, eventData);
-        return commandRepository.emit(entity).orElseThrow();
+        return commandRepository.emit(entity)
+                .orElseThrow();
     }
 }

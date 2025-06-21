@@ -1,5 +1,7 @@
 package com.github.mangila.webshop.backend.common;
 
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
+import com.github.mangila.webshop.backend.common.util.exception.RequestedResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,14 +16,14 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class GenericExceptionHandler {
+public class GenericExceptionController {
 
-    private static final Logger log = LoggerFactory.getLogger(GenericExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(GenericExceptionController.class);
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex, WebRequest request) {
         var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        problem.setTitle("Resource not found");
+        problem.setTitle("Path/Resource not found");
         problem.setDetail(ex.getMessage());
         return problem;
     }
@@ -40,21 +42,29 @@ public class GenericExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ProblemDetail handleRuntimeException(RuntimeException ex, WebRequest request) {
+    @ExceptionHandler(RequestedResourceNotFoundException.class)
+    public ProblemDetail handleRequestedResourceNotFoundException(RequestedResourceNotFoundException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Requested resource not found");
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(DatabaseOperationFailedException.class)
+    public ProblemDetail handleDatabaseOperationFailedException(DatabaseOperationFailedException ex, WebRequest request) {
         log.error("ERR", ex);
-        return ProblemDetail.forStatusAndDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Something went wrong"
-        );
+        var problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problem.setTitle("Database operation failed");
+        problem.setDetail("INTERNAL_SERVER_ERROR");
+        return problem;
     }
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex, WebRequest request) {
         log.error("ERR", ex);
-        return ProblemDetail.forStatusAndDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Something went wrong"
-        );
+        var problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problem.setTitle("INTERNAL_SERVER_ERROR");
+        problem.setDetail("Something went wrong");
+        return problem;
     }
 }

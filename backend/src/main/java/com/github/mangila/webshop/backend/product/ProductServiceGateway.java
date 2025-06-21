@@ -11,7 +11,6 @@ import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.model.ProductEventType;
 import com.github.mangila.webshop.backend.product.query.ProductQueryService;
 import com.github.mangila.webshop.backend.product.query.model.ProductQueryById;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

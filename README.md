@@ -15,7 +15,7 @@ Spring Boot Enterprisy Implementation as a Webshop
 ### Dev stuffs
 
 - /graphiql -- for graphql query requests
-- /swagger-ui —- for swagger command requests
+- /swagger-ui -- for swagger command requests
 
 ### What this project does
 

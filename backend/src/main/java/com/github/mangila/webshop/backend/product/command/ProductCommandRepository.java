@@ -1,14 +1,14 @@
 package com.github.mangila.webshop.backend.product.command;
 
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
-import com.github.mangila.webshop.backend.product.model.ProductEntity;
 import com.github.mangila.webshop.backend.product.util.ProductRepositoryUtil;
+import io.vavr.control.Try;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,14 +35,15 @@ public class ProductCommandRepository {
                 attributes = EXCLUDED.attributes
                 RETURNING id, name, price, created, updated, attributes
                 """;
-        var params = new Object[]{
+        final Object[] params = new Object[]{
                 command.id(),
                 command.name(),
                 command.price(),
                 command.attributes(),
         };
-        List<ProductEntity> result = jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params);
-        return repositoryUtil.extractOneResult(result);
+        return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
+                .map(repositoryUtil::extractOneResult)
+                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("upsert Product", params, throwable));
     }
 
     public Optional<Product> delete(ProductDeleteCommand command) {
@@ -50,7 +51,9 @@ public class ProductCommandRepository {
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes
                 """;
-        List<ProductEntity> result = jdbc.query(sql, repositoryUtil.productEntityRowMapper(), command.id());
-        return repositoryUtil.extractOneResult(result);
+        final Object[] params = new Object[]{command.id()};
+        return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
+                .map(repositoryUtil::extractOneResult)
+                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("delete Product", params, throwable));
     }
 }
