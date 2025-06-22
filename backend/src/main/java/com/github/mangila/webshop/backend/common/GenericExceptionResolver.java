@@ -9,7 +9,6 @@ import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
@@ -17,7 +16,7 @@ import org.springframework.graphql.execution.ErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,11 +65,11 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     }
 
     private GraphQLError handleBindException(BindException be, DataFetchingEnvironment env) {
-        Map<String, Object> errs = be.getAllErrors()
+        Map<String, Object> errs = be.getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
-                        ObjectError::getObjectName,
-                        DefaultMessageSourceResolvable::getDefaultMessage
+                        FieldError::getField,
+                        fieldError -> fieldError.getField() + "." + fieldError.getRejectedValue()
                 ));
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.BAD_REQUEST)
