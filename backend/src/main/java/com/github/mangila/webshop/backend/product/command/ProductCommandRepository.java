@@ -53,6 +53,7 @@ public class ProductCommandRepository {
     }
 
     public Optional<Product> delete(ProductDeleteCommand command) {
+        // language=Sql
         final String sql = """
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes

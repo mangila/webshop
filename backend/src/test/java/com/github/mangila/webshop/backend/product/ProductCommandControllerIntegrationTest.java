@@ -33,6 +33,7 @@ class ProductCommandControllerIntegrationTest {
                 "testproduct1",
                 "Test Product 1",
                 new BigDecimal("19.99"),
+                // language=JSON
                 "{\"color\":\"red\",\"size\":\"medium\"}"
         );
 
@@ -63,6 +64,7 @@ class ProductCommandControllerIntegrationTest {
                 "testproduct2",
                 "Test Product 2",
                 new BigDecimal("29.99"),
+                // language=JSON
                 "{\"color\":\"blue\",\"size\":\"large\"}"
         );
 
@@ -80,6 +82,7 @@ class ProductCommandControllerIntegrationTest {
                 "testproduct2",
                 "Updated Test Product 2",
                 new BigDecimal("39.99"),
+                // language=JSON
                 "{\"color\":\"green\",\"size\":\"small\"}"
         );
 
@@ -110,6 +113,7 @@ class ProductCommandControllerIntegrationTest {
                 "testproduct3",
                 "Test Product 3",
                 new BigDecimal("49.99"),
+                // language=JSON
                 "{\"color\":\"yellow\",\"size\":\"xlarge\"}"
         );
 

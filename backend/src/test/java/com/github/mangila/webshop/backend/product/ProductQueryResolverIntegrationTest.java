@@ -33,6 +33,7 @@ class ProductQueryResolverIntegrationTest {
     private static final String PRODUCT_ID = "testgraphqlproduct";
     private static final String PRODUCT_NAME = "Test GraphQL Product";
     private static final BigDecimal PRODUCT_PRICE = new BigDecimal("59.99");
+    // language=JSON
     private static final String PRODUCT_ATTRIBUTES = "{\"color\":\"purple\",\"size\":\"medium\"}";
 
     @BeforeEach
