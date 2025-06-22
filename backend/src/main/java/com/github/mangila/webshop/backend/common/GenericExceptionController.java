@@ -1,7 +1,8 @@
 package com.github.mangila.webshop.backend.common;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
-import com.github.mangila.webshop.backend.common.util.exception.RequestedResourceNotFoundException;
+import com.github.mangila.webshop.backend.common.util.exception.CommandException;
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
+import com.github.mangila.webshop.backend.common.util.exception.QueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -42,20 +45,39 @@ public class GenericExceptionController {
         return problem;
     }
 
-    @ExceptionHandler(RequestedResourceNotFoundException.class)
-    public ProblemDetail handleRequestedResourceNotFoundException(RequestedResourceNotFoundException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        problem.setTitle("Requested resource not found");
+    @ExceptionHandler(QueryException.class)
+    public ProblemDetail handleQueryException(QueryException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
+        problem.setTitle("Query Error");
         problem.setDetail(ex.getMessage());
+        problem.setProperties(
+                Map.of("resource", ex.getResource().getSimpleName(),
+                        "query", ex.getQuery().getSimpleName())
+        );
         return problem;
     }
 
-    @ExceptionHandler(DatabaseOperationFailedException.class)
-    public ProblemDetail handleDatabaseOperationFailedException(DatabaseOperationFailedException ex, WebRequest request) {
+    @ExceptionHandler(CommandException.class)
+    public ProblemDetail handleCommandException(CommandException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
+        problem.setTitle("Command Error");
+        problem.setDetail(ex.getMessage());
+        problem.setProperties(
+                Map.of("resource", ex.getResource().getSimpleName(),
+                        "command", ex.getCommand().getSimpleName())
+        );
+        return problem;
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ProblemDetail handleDatabaseException(DatabaseException ex, WebRequest request) {
         log.error("ERR", ex);
-        var problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
         problem.setTitle("Database operation failed");
-        problem.setDetail("INTERNAL_SERVER_ERROR");
+        problem.setDetail(Arrays.toString(ex.getParams()));
+        problem.setProperties(
+                Map.of("resource", ex.getResource().getSimpleName())
+        );
         return problem;
     }
 

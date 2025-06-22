@@ -1,8 +1,8 @@
 extend type Query {
-    queryProductById(input: ProductQueryById):Product
+    findProductById(input: ProductByIdQuery):Product
 }
 
-input ProductQueryById {
+input ProductByIdQuery {
     id: ID!
 }
 

@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.backend.event.query;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
 import com.github.mangila.webshop.backend.event.EventRepositoryUtil;
 import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.query.model.EventQueryReplay;
+import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;
 import io.vavr.control.Try;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,7 +22,7 @@ public class EventQueryRepository {
         this.repositoryUtil = repositoryUtil;
     }
 
-    public List<Event> replay(EventQueryReplay replay) {
+    public List<Event> replay(EventReplayQuery replay) {
         final String sql = """
                 SELECT id, type, aggregate_id, topic, data, created
                          FROM event
@@ -36,7 +36,13 @@ public class EventQueryRepository {
                 replay.offset(),
                 replay.limit()};
         return Try.of(() -> jdbc.query(sql, repositoryUtil.eventEntityRowMapper(), params))
-                .map(repositoryUtil::extractMany)
-                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("replay Event", params, throwable));
+                .map(repositoryUtil::findMany)
+                .getOrElseThrow(cause -> new DatabaseException(
+                        Event.class,
+                        "Replay Events failed",
+                        sql,
+                        params,
+                        cause
+                ));
     }
 }

@@ -25,7 +25,7 @@ public class EventRepositoryUtil {
         return eventEntityRowMapper;
     }
 
-    public Optional<Event> extractOneResult(List<EventEntity> entities) {
+    public Optional<Event> findOne(List<EventEntity> entities) {
         if (CollectionUtils.isEmpty(entities)) {
             return Optional.empty();
         }
@@ -34,7 +34,7 @@ public class EventRepositoryUtil {
         return Optional.of(event);
     }
 
-    public List<Event> extractMany(List<EventEntity> entities) {
+    public List<Event> findMany(List<EventEntity> entities) {
         return entities.stream()
                 .map(entity -> Event.from(entity, jsonMapper))
                 .toList();

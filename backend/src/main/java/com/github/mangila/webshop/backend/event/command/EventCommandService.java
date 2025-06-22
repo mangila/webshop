@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.backend.event.command;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.backend.common.util.exception.CommandException;
+import com.github.mangila.webshop.backend.event.command.model.EventEmitCommand;
 import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.model.EventEntity;
-import com.github.mangila.webshop.backend.event.model.EventTopic;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,12 +15,13 @@ public class EventCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Event emit(EventTopic eventTopic,
-                      String aggregateId,
-                      String eventType,
-                      JsonNode eventData) {
-        EventEntity entity = EventEntity.from(eventTopic, aggregateId, eventType, eventData);
-        return commandRepository.emit(entity)
-                .orElseThrow();
+    public Event emit(EventEmitCommand command) {
+        return commandRepository.emit(command)
+                .orElseThrow(() -> new CommandException(
+                        command.getClass(),
+                        Event.class,
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Emit Event failed"
+                ));
     }
 }

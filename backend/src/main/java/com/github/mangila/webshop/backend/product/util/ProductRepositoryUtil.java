@@ -26,7 +26,7 @@ public class ProductRepositoryUtil {
         return productEntityRowMapper;
     }
 
-    public Optional<Product> extractOneResult(List<ProductEntity> result) {
+    public Optional<Product> findOne(List<ProductEntity> result) {
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }

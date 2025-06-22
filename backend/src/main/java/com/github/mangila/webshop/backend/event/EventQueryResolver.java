@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.event;
 
 import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.query.model.EventQueryReplay;
+import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -19,7 +19,7 @@ public class EventQueryResolver {
     }
 
     @QueryMapping
-    public List<Event> replay(@Argument("input") @Valid EventQueryReplay replay) {
+    public List<Event> replay(@Argument("input") @Valid EventReplayQuery replay) {
         return eventServiceGateway.replay(replay);
     }
 

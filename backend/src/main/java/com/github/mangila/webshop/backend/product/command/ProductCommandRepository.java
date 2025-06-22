@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.product.command;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseOperationFailedException;
+import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
@@ -42,8 +42,14 @@ public class ProductCommandRepository {
                 command.attributes(),
         };
         return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
-                .map(repositoryUtil::extractOneResult)
-                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("upsert Product", params, throwable));
+                .map(repositoryUtil::findOne)
+                .getOrElseThrow(cause -> new DatabaseException(
+                        Product.class,
+                        "Upsert failed",
+                        sql,
+                        params,
+                        cause
+                ));
     }
 
     public Optional<Product> delete(ProductDeleteCommand command) {
@@ -53,7 +59,13 @@ public class ProductCommandRepository {
                 """;
         final Object[] params = new Object[]{command.id()};
         return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
-                .map(repositoryUtil::extractOneResult)
-                .getOrElseThrow(throwable -> new DatabaseOperationFailedException("delete Product", params, throwable));
+                .map(repositoryUtil::findOne)
+                .getOrElseThrow(cause -> new DatabaseException(
+                        Product.class,
+                        "Delete failed",
+                        sql,
+                        params,
+                        cause
+                ));
     }
 }

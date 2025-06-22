@@ -10,7 +10,7 @@ import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCom
 import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.model.ProductEventType;
 import com.github.mangila.webshop.backend.product.query.ProductQueryService;
-import com.github.mangila.webshop.backend.product.query.model.ProductQueryById;
+import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,8 +36,8 @@ public class ProductServiceGateway {
         this.queryService = queryService;
     }
 
-    public Product queryById(ProductQueryById query) {
-        return queryService.queryById(query);
+    public Product findById(ProductByIdQuery query) {
+        return queryService.findById(query);
     }
 
     @Transactional

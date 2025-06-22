@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.event.query;
 
 import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.query.model.EventQueryReplay;
+import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class EventQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public List<Event> replay(EventQueryReplay replay) {
+    public List<Event> replay(EventReplayQuery replay) {
         return queryRepository.replay(replay);
     }
 }

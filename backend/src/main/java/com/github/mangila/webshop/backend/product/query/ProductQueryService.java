@@ -1,8 +1,9 @@
 package com.github.mangila.webshop.backend.product.query;
 
-import com.github.mangila.webshop.backend.common.util.exception.RequestedResourceNotFoundException;
+import com.github.mangila.webshop.backend.common.util.exception.QueryException;
 import com.github.mangila.webshop.backend.product.model.Product;
-import com.github.mangila.webshop.backend.product.query.model.ProductQueryById;
+import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,10 +15,12 @@ public class ProductQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public Product queryById(ProductQueryById query) {
-        var result = queryRepository.queryById(query);
-        return result.orElseThrow(() -> new RequestedResourceNotFoundException(
+    public Product findById(ProductByIdQuery query) {
+        var result = queryRepository.findById(query);
+        return result.orElseThrow(() -> new QueryException(
+                query.getClass(),
                 Product.class,
+                HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", query.id())));
     }
 }
