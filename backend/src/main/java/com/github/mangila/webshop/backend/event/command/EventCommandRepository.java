@@ -23,12 +23,13 @@ public class EventCommandRepository {
     }
 
     public Optional<Event> emit(EventEmitCommand command) {
+        // language=PostgreSQL
         final String sql = """
                 INSERT INTO event (type, aggregate_id, topic, data)
                 VALUES (?, ?, ?, ?::jsonb)
                 RETURNING id, type, aggregate_id, topic, data, created
                 """;
-        var params = new Object[]{
+        final Object[] params = new Object[]{
                 command.eventType(),
                 command.aggregateId(),
                 command.eventTopic().name(),

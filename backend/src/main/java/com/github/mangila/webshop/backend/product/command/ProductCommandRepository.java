@@ -24,6 +24,7 @@ public class ProductCommandRepository {
     }
 
     public Optional<Product> upsert(ProductUpsertCommand command) {
+        // language=PostgreSQL
         final String sql = """
                 INSERT INTO product (id, name, price, attributes)
                 VALUES (?, ?, ?, ?::jsonb)
@@ -53,7 +54,7 @@ public class ProductCommandRepository {
     }
 
     public Optional<Product> delete(ProductDeleteCommand command) {
-        // language=Sql
+        // language=PostgreSQL
         final String sql = """
                 DELETE FROM product WHERE id = ?
                 RETURNING id, name, price, created, updated, attributes

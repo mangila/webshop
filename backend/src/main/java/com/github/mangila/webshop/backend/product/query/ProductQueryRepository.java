@@ -23,6 +23,7 @@ public class ProductQueryRepository {
     }
 
     public Optional<Product> findById(ProductByIdQuery query) {
+        // language=PostgreSQL
         final String sql = """
                 SELECT id,
                        name,
