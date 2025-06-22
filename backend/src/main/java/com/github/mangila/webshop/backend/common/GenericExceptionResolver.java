@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                 .message("Database operation failed")
                 .extensions(Map.of(
                         "resource", dbe.getResource().getSimpleName(),
-                        "params", dbe.getParams()))
+                        "params", Arrays.toString(dbe.getParams())))
                 .build();
     }
 

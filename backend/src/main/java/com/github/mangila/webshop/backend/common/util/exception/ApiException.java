@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.backend.common.util.exception;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 
 public class ApiException extends RuntimeException {
@@ -9,8 +8,8 @@ public class ApiException extends RuntimeException {
     private final HttpStatus httpStatus;
     private final String message;
 
-    public ApiException(@NotNull Class<?> resource,
-                        @NotNull HttpStatus httpStatus,
+    public ApiException(Class<?> resource,
+                        HttpStatus httpStatus,
                         String message) {
         this.resource = resource;
         this.httpStatus = httpStatus;
