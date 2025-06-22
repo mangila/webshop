@@ -179,6 +179,18 @@
                                     <artifactId>nullaway</artifactId>
                                     <version>0.12.7</version>
                                 </path>
+                                <!-- https://mvnrepository.com/artifact/tech.picnic.error-prone-support/error-prone-contrib -->
+                                <path>
+                                    <groupId>tech.picnic.error-prone-support</groupId>
+                                    <artifactId>error-prone-contrib</artifactId>
+                                    <version>0.23.0</version>
+                                </path>
+                                <!-- https://mvnrepository.com/artifact/tech.picnic.error-prone-support/refaster-runner -->
+                                <path>
+                                    <groupId>tech.picnic.error-prone-support</groupId>
+                                    <artifactId>refaster-runner</artifactId>
+                                    <version>0.23.0</version>
+                                </path>
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>

@@ -32,7 +32,7 @@ public class EventCommandRepository {
                 command.eventType(),
                 command.aggregateId(),
                 command.eventTopic().name(),
-                command.eventData()
+                command.eventData().toString()
         };
         return Try.of(() -> jdbc.query(sql, repositoryUtil.eventEntityRowMapper(), params))
                 .map(repositoryUtil::findOne)

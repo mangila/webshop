@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public record EventEntity(
         Long id,
-        EventTopic eventTopic,
+        EventTopic topic,
         String type,
         String aggregateId,
         String data,

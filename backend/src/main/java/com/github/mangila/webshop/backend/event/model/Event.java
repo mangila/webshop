@@ -18,7 +18,7 @@ public record Event(
     public static Event from(EventEntity entity, JsonMapper jsonMapper) {
         return new Event(
                 entity.id(),
-                entity.eventTopic(),
+                entity.topic(),
                 entity.type(),
                 entity.aggregateId(),
                 jsonMapper.toJsonNode(entity.data()),

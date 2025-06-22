@@ -1,46 +1,34 @@
 package com.github.mangila.webshop.backend.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
 import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.execution.ErrorType;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.math.BigDecimal;
 
-@SpringBootTest(classes = com.github.mangila.webshop.backend.Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @AutoConfigureGraphQlTester
 @Import(TestcontainersConfiguration.class)
 class ProductQueryResolverIntegrationTest {
-
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-    }
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private static final String PRODUCT_ID = "testgraphqlproduct";
     private static final String PRODUCT_NAME = "Test GraphQL Product";
@@ -65,7 +53,8 @@ class ProductQueryResolverIntegrationTest {
     }
 
     @Test
-    void findProductById_shouldReturnProduct() {
+    @DisplayName("Should return product when finding by valid ID")
+    void shouldReturnProductWhenFindingByValidId() {
         // language=GraphQL
         String query = """
                 query {
@@ -92,7 +81,8 @@ class ProductQueryResolverIntegrationTest {
     }
 
     @Test
-    void findProductById_withNonExistentId_shouldReturnNull() {
+    @DisplayName("Should return error when finding product with non-existent ID")
+    void shouldReturnErrorWhenFindingProductWithNonExistentId() {
         // language=GraphQL
         String query = """
                 query {
@@ -106,7 +96,9 @@ class ProductQueryResolverIntegrationTest {
 
         graphQlTester.document(query)
                 .execute()
-                .path("findProductById")
-                .valueIsNull();
+                .errors()
+                .expect(err -> err.getErrorType().equals(ErrorType.BAD_REQUEST))
+                .expect(err -> err.getMessage().equals("Validation error"))
+                .verify();
     }
 }

@@ -4,6 +4,7 @@ import com.github.mangila.webshop.backend.TestcontainersConfiguration;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -25,7 +26,8 @@ class ProductCommandControllerIntegrationTest {
     private WebTestClient webTestClient;
 
     @Test
-    void upsertProduct_shouldCreateNewProduct() {
+    @DisplayName("Should create a new product when upsert command is executed")
+    void shouldCreateNewProductWhenUpsertCommandIsExecuted() {
         // Given
         ProductUpsertCommand command = new ProductUpsertCommand(
                 "testproduct1",
@@ -53,7 +55,8 @@ class ProductCommandControllerIntegrationTest {
     }
 
     @Test
-    void upsertProduct_shouldUpdateExistingProduct() {
+    @DisplayName("Should update an existing product when upsert command is executed")
+    void shouldUpdateExistingProductWhenUpsertCommandIsExecuted() {
         // Given
         ProductUpsertCommand createCommand = new ProductUpsertCommand(
                 "testproduct2",
@@ -96,7 +99,8 @@ class ProductCommandControllerIntegrationTest {
     }
 
     @Test
-    void deleteProduct_shouldDeleteExistingProduct() {
+    @DisplayName("Should delete an existing product when delete command is executed")
+    void shouldDeleteExistingProductWhenDeleteCommandIsExecuted() {
         // Given
         ProductUpsertCommand createCommand = new ProductUpsertCommand(
                 "testproduct3",
