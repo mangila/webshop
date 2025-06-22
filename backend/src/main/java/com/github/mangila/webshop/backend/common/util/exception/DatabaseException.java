@@ -13,7 +13,7 @@ public class DatabaseException extends ApiException {
                              String sql,
                              Object[] params,
                              Throwable cause) {
-        super(resource, HttpStatus.INTERNAL_SERVER_ERROR, message);
+        super(message, resource, HttpStatus.INTERNAL_SERVER_ERROR);
         this.sql = sql;
         this.params = params;
         this.cause = cause;

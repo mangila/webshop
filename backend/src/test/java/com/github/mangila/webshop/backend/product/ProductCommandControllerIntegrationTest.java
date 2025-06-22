@@ -41,7 +41,8 @@ class ProductCommandControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(command)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .isOk()
                 .expectBody(Product.class)
                 .returnResult()
                 .getResponseBody();
@@ -66,11 +67,13 @@ class ProductCommandControllerIntegrationTest {
         );
 
         // Create the product first
-        webTestClient.post().uri("/api/v1/product/command/upsert")
+        webTestClient.post()
+                .uri("/api/v1/product/command/upsert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createCommand)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
 
         // Update command
         ProductUpsertCommand updateCommand = new ProductUpsertCommand(
@@ -85,7 +88,8 @@ class ProductCommandControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateCommand)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .isOk()
                 .expectBody(Product.class)
                 .returnResult()
                 .getResponseBody();

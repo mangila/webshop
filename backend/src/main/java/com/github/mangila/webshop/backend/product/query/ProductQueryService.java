@@ -18,9 +18,9 @@ public class ProductQueryService {
     public Product findById(ProductByIdQuery query) {
         var result = queryRepository.findById(query);
         return result.orElseThrow(() -> new QueryException(
+                String.format("id not found: '%s'", query.id()),
                 query.getClass(),
                 Product.class,
-                HttpStatus.NOT_FOUND,
-                String.format("id not found: '%s'", query.id())));
+                HttpStatus.NOT_FOUND));
     }
 }

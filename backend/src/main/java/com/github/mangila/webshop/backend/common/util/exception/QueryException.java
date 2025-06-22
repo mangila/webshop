@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 
 public class QueryException extends ApiException {
 
-    private final Class<?> query;
+    private final Class<? extends Record> query;
 
-    public QueryException(Class<?> query,
+    public QueryException(String message,
+                          Class<? extends Record> query,
                           Class<?> resource,
-                          HttpStatus httpStatus,
-                          String message) {
-        super(resource, httpStatus, message);
+                          HttpStatus httpStatus) {
+        super(message, resource, httpStatus);
         this.query = query;
     }
 

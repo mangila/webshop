@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 
 public class CommandException extends ApiException {
 
-    private final Class<?> command;
+    private final Class<? extends Record> command;
 
-    public CommandException(Class<?> command,
+    public CommandException(Class<? extends Record> command,
                             Class<?> resource,
                             HttpStatus httpStatus,
                             String message) {
-        super(resource, httpStatus, message);
+        super(message, resource, httpStatus);
         this.command = command;
     }
 
