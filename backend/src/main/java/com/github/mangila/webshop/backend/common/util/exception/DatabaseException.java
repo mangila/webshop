@@ -1,5 +1,7 @@
 package com.github.mangila.webshop.backend.common.util.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class DatabaseException extends ApiException {
 
     private final String sql;
@@ -8,8 +10,9 @@ public class DatabaseException extends ApiException {
     public DatabaseException(Class<?> resource,
                              String message,
                              String sql,
-                             Object[] params) {
-        super(message, resource);
+                             Object[] params,
+                             Throwable cause) {
+        super(message, resource, HttpStatus.INTERNAL_SERVER_ERROR, cause);
         this.sql = sql;
         this.params = params;
     }

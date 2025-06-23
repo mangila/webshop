@@ -41,7 +41,8 @@ public class EventCommandRepository {
                         Event.class,
                         "Emit Event failed",
                         sql,
-                        params
+                        params,
+                        cause
                 ));
     }
 }
