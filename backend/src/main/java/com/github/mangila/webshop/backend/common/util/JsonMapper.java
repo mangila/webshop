@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.backend.common.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.backend.common.util.exception.ApiException;
@@ -41,36 +40,18 @@ public class JsonMapper {
     }
 
     private JsonNode readTree(Object object) {
-        try {
-            JsonNode jsonNode = tryReadTree(object);
-            if (jsonNode.isNull()) {
-                return objectMapper.createObjectNode();
-            }
-            return jsonNode;
-        } catch (Exception e) {
-            log.error("Error parsing object: {}", object, e);
-            var message = e.getMessage();
-            var cause = e.getCause();
-            throw new ApiException(message, JsonMapper.class, HttpStatus.CONFLICT, cause);
-        }
+        return Try.of(() -> {
+                    JsonNode jsonNode = objectMapper.valueToTree(object);
+                    if (jsonNode.isNull()) {
+                        return objectMapper.createObjectNode();
+                    }
+                    return jsonNode;
+                })
+                .getOrElseThrow(() -> new ApiException("Error parsing object: " + object, JsonMapper.class, HttpStatus.CONFLICT));
     }
 
     private JsonNode readTree(String json) {
-        try {
-            return tryReadTree(json);
-        } catch (Exception e) {
-            log.error("Error parsing json: {}", json, e);
-            var message = e.getMessage();
-            var cause = e.getCause();
-            throw new ApiException(message, JsonMapper.class, HttpStatus.CONFLICT, cause);
-        }
-    }
-
-    private JsonNode tryReadTree(Object object) {
-        return objectMapper.valueToTree(object);
-    }
-
-    private JsonNode tryReadTree(String json) throws JsonProcessingException {
-        return objectMapper.readTree(json);
+        return Try.of(() -> objectMapper.readTree(json))
+                .getOrElseThrow(() -> new ApiException("Error parsing json: " + json, JsonMapper.class, HttpStatus.CONFLICT));
     }
 }
