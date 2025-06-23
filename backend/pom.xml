@@ -136,7 +136,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>error-prone-with-nullaway</id>
+                        <id>error-prone-with-nullaway-and-picnic-extensions</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
