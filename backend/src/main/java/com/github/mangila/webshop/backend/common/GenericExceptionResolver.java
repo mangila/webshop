@@ -46,7 +46,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
         };
     }
 
-
     private GraphQLError handleDatabaseException(DatabaseException dbe, DataFetchingEnvironment env) {
         log.error("ERR", dbe);
         return GraphqlErrorBuilder.newError(env)

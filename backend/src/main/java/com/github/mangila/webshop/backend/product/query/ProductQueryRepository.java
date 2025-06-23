@@ -40,8 +40,7 @@ public class ProductQueryRepository {
                         Product.class,
                         "Query by id failed",
                         sql,
-                        params,
-                        cause
+                        params
                 ));
     }
 }

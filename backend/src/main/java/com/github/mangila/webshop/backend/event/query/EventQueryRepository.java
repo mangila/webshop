@@ -41,8 +41,7 @@ public class EventQueryRepository {
                         Event.class,
                         "Replay Events failed",
                         sql,
-                        params,
-                        cause
+                        params
                 ));
     }
 }

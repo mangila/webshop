@@ -1,9 +1,13 @@
 package com.github.mangila.webshop.backend.common.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mangila.webshop.backend.common.util.exception.ApiException;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,36 +30,47 @@ public class JsonMapper {
     }
 
     public boolean isValid(String json) {
-        try {
-            JsonNode node = objectMapper.readTree(json);
-            return node.isObject();
-        } catch (Exception e) {
-            return false;
-        }
+        return Try.of(() -> {
+                    JsonNode node = readTree(json);
+                    return node.isObject();
+                })
+                .getOrElse(() -> {
+                    log.error("Invalid json: {}", json);
+                    return Boolean.FALSE;
+                });
     }
 
     private JsonNode readTree(Object object) {
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(object);
+            JsonNode jsonNode = tryReadTree(object);
             if (jsonNode.isNull()) {
                 return objectMapper.createObjectNode();
             }
             return jsonNode;
         } catch (Exception e) {
-            log.error("Error converting object to json: {}", object, e);
-            return objectMapper.createObjectNode();
+            log.error("Error parsing object: {}", object, e);
+            var message = e.getMessage();
+            var cause = e.getCause();
+            throw new ApiException(message, JsonMapper.class, HttpStatus.CONFLICT, cause);
         }
     }
 
     private JsonNode readTree(String json) {
         try {
-            if (!isValid(json)) {
-                return objectMapper.createObjectNode();
-            }
-            return objectMapper.readTree(json);
+            return tryReadTree(json);
         } catch (Exception e) {
-            log.error("Error converting json to object: {}", json, e);
-            return objectMapper.createObjectNode();
+            log.error("Error parsing json: {}", json, e);
+            var message = e.getMessage();
+            var cause = e.getCause();
+            throw new ApiException(message, JsonMapper.class, HttpStatus.CONFLICT, cause);
         }
+    }
+
+    private JsonNode tryReadTree(Object object) {
+        return objectMapper.valueToTree(object);
+    }
+
+    private JsonNode tryReadTree(String json) throws JsonProcessingException {
+        return objectMapper.readTree(json);
     }
 }

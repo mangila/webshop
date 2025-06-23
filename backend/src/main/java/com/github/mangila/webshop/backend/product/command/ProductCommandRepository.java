@@ -48,8 +48,7 @@ public class ProductCommandRepository {
                         Product.class,
                         "Upsert failed",
                         sql,
-                        params,
-                        cause
+                        params
                 ));
     }
 
@@ -66,8 +65,7 @@ public class ProductCommandRepository {
                         Product.class,
                         "Delete failed",
                         sql,
-                        params,
-                        cause
+                        params
                 ));
     }
 }

@@ -1,20 +1,30 @@
 package com.github.mangila.webshop.backend.common.util.exception;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 
 public class ApiException extends RuntimeException {
 
-    private final String message;
     private final Class<?> resource;
     private final HttpStatus httpStatus;
 
     public ApiException(String message,
                         Class<?> resource,
-                        HttpStatus httpStatus) {
-        super(message);
-        this.message = message;
+                        HttpStatus httpStatus,
+                        @Nullable Throwable cause) {
+        super(message, cause);
         this.resource = resource;
         this.httpStatus = httpStatus;
+    }
+
+    public ApiException(String message,
+                        Class<?> resource,
+                        HttpStatus httpStatus) {
+        this(message, resource, httpStatus, null);
+    }
+
+    public ApiException(String message, Class<?> resource) {
+        this(message, resource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public Class<?> getResource() {
@@ -23,10 +33,5 @@ public class ApiException extends RuntimeException {
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
     }
 }
