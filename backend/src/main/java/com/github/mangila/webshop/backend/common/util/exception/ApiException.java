@@ -23,10 +23,6 @@ public class ApiException extends RuntimeException {
         this(message, resource, httpStatus, null);
     }
 
-    public ApiException(String message, Class<?> resource) {
-        this(message, resource, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     public Class<?> getResource() {
         return resource;
     }
