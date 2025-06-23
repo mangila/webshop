@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class AlphaNumericValidator implements ConstraintValidator<AlphaNumeric, String> {
 
-    private static final Pattern ALPHA_NUMERIC = Pattern.compile("^[a-zA-Z0-9\\s]+$");
+    private static final Pattern ALPHA_NUMERIC = Pattern.compile("^[a-zA-Z0-9\\s-]+$");
 
     private boolean allowNull;
 
