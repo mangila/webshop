@@ -3,6 +3,7 @@ package com.github.mangila.webshop.backend.common.util.annotation;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +22,7 @@ public class JsonValidator implements ConstraintValidator<Json, String> {
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(@Nullable String value, ConstraintValidatorContext context) {
         if (value == null) {
             return allowNull;
         }
