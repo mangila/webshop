@@ -82,8 +82,8 @@ class ProductQueryResolverIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return error when finding product with non-existent ID")
-    void shouldReturnErrorWhenFindingProductWithNonExistentId() {
+    @DisplayName("Should return NOT_FOUND error when finding product with non-existent ID")
+    void shouldReturnNotFoundErrorWhenFindingProductWithNonExistentId() {
         // language=GraphQL
         String query = """
                 query {
@@ -98,8 +98,8 @@ class ProductQueryResolverIntegrationTest {
         graphQlTester.document(query)
                 .execute()
                 .errors()
-                .expect(err -> err.getErrorType().equals(ErrorType.BAD_REQUEST))
-                .expect(err -> err.getMessage().equals("Validation error"))
+                .expect(err -> err.getErrorType().equals(ErrorType.NOT_FOUND))
+                .expect(err -> err.getMessage().equals("id not found: 'non-existent-id'"))
                 .verify();
     }
 }
