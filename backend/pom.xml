@@ -160,6 +160,7 @@
                                 <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
                                 <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
                             </compilerArgs>
+                            <failOnWarning>true</failOnWarning>
                             <annotationProcessorPaths>
                                 <path>
                                     <!-- https://mvnrepository.com/artifact/com.google.errorprone/error_prone_core -->
