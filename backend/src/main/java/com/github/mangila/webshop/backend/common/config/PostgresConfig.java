@@ -75,7 +75,7 @@ public class PostgresConfig {
         // language=PostgreSQL
         jdbc.execute("""
                 CREATE TRIGGER update_updated_column_product
-                BEFORE UPDATE ON product
+                AFTER UPDATE ON product
                 FOR EACH ROW
                 EXECUTE FUNCTION update_updated_column();
                 """);
