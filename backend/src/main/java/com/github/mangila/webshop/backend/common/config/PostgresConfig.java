@@ -26,6 +26,7 @@ public class PostgresConfig {
 
     private void newInventoryAfterProductInsert() {
         log.info("Creating Postgres function new_inventory_after_product_insert()");
+        // language=PostgreSQL
         jdbc.execute("""
                 DROP FUNCTION IF EXISTS new_inventory_after_product_insert();
                 CREATE OR REPLACE FUNCTION new_inventory_after_product_insert() RETURNS TRIGGER AS $$
@@ -37,9 +38,11 @@ public class PostgresConfig {
                 $$ LANGUAGE plpgsql;
                 """);
         log.info("Creating Postgres trigger new_inventory_after_product_insert on product table");
+        // language=PostgreSQL
         jdbc.execute("""
                 DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON product;
                 """);
+        // language=PostgreSQL
         jdbc.execute("""
                 CREATE TRIGGER new_inventory_after_product_insert
                 AFTER INSERT ON product
@@ -50,9 +53,11 @@ public class PostgresConfig {
 
     public void updateUpdatedColumn() {
         log.info("Creating Postgres function update_updated_column()");
+        // language=PostgreSQL
         jdbc.execute("""
                  DROP FUNCTION IF EXISTS update_updated_column();
                 """);
+        // language=PostgreSQL
         jdbc.execute("""
                 CREATE OR REPLACE FUNCTION update_updated_column()
                 RETURNS TRIGGER AS $$
@@ -63,9 +68,11 @@ public class PostgresConfig {
                 $$ LANGUAGE plpgsql;
                 """);
         log.info("Creating Postgres trigger update_updated_column_product on product table");
+        // language=PostgreSQL
         jdbc.execute("""
                 DROP TRIGGER IF EXISTS update_updated_column_product ON product;
                 """);
+        // language=PostgreSQL
         jdbc.execute("""
                 CREATE TRIGGER update_updated_column_product
                 BEFORE UPDATE ON product

@@ -23,6 +23,7 @@ public class EventQueryRepository {
     }
 
     public List<Event> replay(EventReplayQuery replay) {
+        // language=PostgreSQL
         final String sql = """
                 SELECT id, type, aggregate_id, topic, data, created
                          FROM event

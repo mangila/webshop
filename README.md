@@ -14,8 +14,9 @@ Spring Boot Enterprisy Implementation as a Webshop
 
 ### Dev stuffs
 
-- /graphiql -- for graphql query requests
-- /swagger-ui -- for swagger command requests
+- codecentric admin server - localhost:8081
+- localhost:8080/graphiql -- for graphql query requests
+- localhost:8080/swagger-ui -- for swagger command requests
 
 ### What this project does
 
