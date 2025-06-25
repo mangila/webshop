@@ -40,6 +40,8 @@ spring:
       file: "./backend/compose.yaml"
 # Logging properties
 logging:
+  file:
+    name: "webshop.log"
   level:
     org:
       springframework:
