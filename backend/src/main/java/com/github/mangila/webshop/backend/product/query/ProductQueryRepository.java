@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.product.query;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
+import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
 import com.github.mangila.webshop.backend.product.util.ProductRepositoryUtil;

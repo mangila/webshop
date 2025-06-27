@@ -2,7 +2,7 @@ package com.github.mangila.webshop.backend.common.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mangila.webshop.backend.common.util.exception.ApiException;
+import com.github.mangila.webshop.backend.common.exception.ApiException;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

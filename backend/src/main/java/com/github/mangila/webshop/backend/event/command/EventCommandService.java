@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.event.command;
 
-import com.github.mangila.webshop.backend.common.util.exception.CommandException;
+import com.github.mangila.webshop.backend.common.exception.CommandException;
 import com.github.mangila.webshop.backend.event.command.model.EventEmitCommand;
 import com.github.mangila.webshop.backend.event.model.Event;
 import org.springframework.http.HttpStatus;

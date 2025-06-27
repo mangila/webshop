@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.event.query;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
+import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.event.EventRepositoryUtil;
 import com.github.mangila.webshop.backend.event.model.Event;
 import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;

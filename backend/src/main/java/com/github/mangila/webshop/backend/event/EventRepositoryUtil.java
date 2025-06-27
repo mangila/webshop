@@ -14,10 +14,14 @@ import java.util.Optional;
 public class EventRepositoryUtil {
 
     private final JsonMapper jsonMapper;
+    private final EventTypeRegistry eventTypeRegistry;
     private final DataClassRowMapper<EventEntity> eventEntityRowMapper;
 
-    public EventRepositoryUtil(JsonMapper jsonMapper, DataClassRowMapper<EventEntity> eventEntityRowMapper) {
+    public EventRepositoryUtil(JsonMapper jsonMapper,
+                               EventTypeRegistry eventTypeRegistry,
+                               DataClassRowMapper<EventEntity> eventEntityRowMapper) {
         this.jsonMapper = jsonMapper;
+        this.eventTypeRegistry = eventTypeRegistry;
         this.eventEntityRowMapper = eventEntityRowMapper;
     }
 
@@ -30,13 +34,13 @@ public class EventRepositoryUtil {
             return Optional.empty();
         }
         EventEntity entity = entities.getFirst();
-        Event event = Event.from(entity, jsonMapper);
+        Event event = Event.from(entity, eventTypeRegistry, jsonMapper);
         return Optional.of(event);
     }
 
     public List<Event> findMany(List<EventEntity> entities) {
         return entities.stream()
-                .map(entity -> Event.from(entity, jsonMapper))
+                .map(entity -> Event.from(entity, eventTypeRegistry, jsonMapper))
                 .toList();
     }
 }

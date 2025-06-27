@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.util.annotation;
+package com.github.mangila.webshop.backend.common.annotation;
 
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import jakarta.validation.ConstraintValidator;

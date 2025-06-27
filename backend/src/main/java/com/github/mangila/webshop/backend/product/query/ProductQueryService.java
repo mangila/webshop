@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.product.query;
 
-import com.github.mangila.webshop.backend.common.util.exception.QueryException;
+import com.github.mangila.webshop.backend.common.exception.QueryException;
 import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
 import org.springframework.http.HttpStatus;

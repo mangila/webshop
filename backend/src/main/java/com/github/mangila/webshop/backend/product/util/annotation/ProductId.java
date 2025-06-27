@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.product.util.annotation;
 
-import com.github.mangila.webshop.backend.common.util.annotation.AlphaNumeric;
+import com.github.mangila.webshop.backend.common.annotation.AlphaNumeric;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;

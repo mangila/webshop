@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.util.exception;
+package com.github.mangila.webshop.backend.common.exception;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;

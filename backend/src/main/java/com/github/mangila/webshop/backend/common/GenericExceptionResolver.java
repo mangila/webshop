@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.backend.common;
 
-import com.github.mangila.webshop.backend.common.util.exception.CommandException;
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
-import com.github.mangila.webshop.backend.common.util.exception.QueryException;
+import com.github.mangila.webshop.backend.common.exception.CommandException;
+import com.github.mangila.webshop.backend.common.exception.DatabaseException;
+import com.github.mangila.webshop.backend.common.exception.QueryException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;

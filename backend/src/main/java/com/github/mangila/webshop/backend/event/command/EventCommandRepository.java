@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.event.command;
 
-import com.github.mangila.webshop.backend.common.util.exception.DatabaseException;
+import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.event.EventRepositoryUtil;
 import com.github.mangila.webshop.backend.event.command.model.EventEmitCommand;
 import com.github.mangila.webshop.backend.event.model.Event;
@@ -30,7 +30,7 @@ public class EventCommandRepository {
                 RETURNING id, type, aggregate_id, topic, data, created
                 """;
         final Object[] params = new Object[]{
-                command.eventType(),
+                command.eventType().type(),
                 command.aggregateId(),
                 command.eventTopic().name(),
                 command.eventData().toString()

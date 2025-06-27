@@ -46,7 +46,7 @@ public class ProductServiceGateway {
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
                 product.id(),
-                ProductEventType.PRODUCT_UPSERTED.toString(),
+                ProductEventType.PRODUCT_UPSERTED,
                 jsonMapper.toJsonNode(product)
         );
         log.info("{} -- {} -- {}", event.type(), product, event);
@@ -59,7 +59,7 @@ public class ProductServiceGateway {
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
                 product.id(),
-                ProductEventType.PRODUCT_DELETED.toString(),
+                ProductEventType.PRODUCT_DELETED,
                 jsonMapper.toJsonNode(product)
         );
         log.info("{} -- {} -- {}", event.type(), product, event);
