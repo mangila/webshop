@@ -19,17 +19,20 @@ public class PostgresConfig {
 
     @PostConstruct
     public void init() {
-        newInventoryAfterProductInsert();
-        updateUpdatedColumn();
+        createTriggerNewProductInventory();
+        createFunctionUpdateUpdatedColumn();
         log.info("Postgres function/trigger configuration complete");
     }
 
-    private void newInventoryAfterProductInsert() {
-        log.info("Creating Postgres function new_inventory_after_product_insert()");
+    private void createTriggerNewProductInventory() {
+        log.info("Creating Postgres function trgfn_inventory_insert() and trfn_inventory_delete()");
         // language=PostgreSQL
         jdbc.execute("""
-                DROP FUNCTION IF EXISTS new_inventory_after_product_insert();
-                CREATE OR REPLACE FUNCTION new_inventory_after_product_insert() RETURNS TRIGGER AS $$
+                DROP FUNCTION IF EXISTS trgfn_inventory_insert();
+                """);
+        // language=PostgreSQL
+        jdbc.execute("""
+                CREATE OR REPLACE FUNCTION trgfn_inventory_insert() RETURNS TRIGGER AS $$
                 BEGIN
                 INSERT INTO inventory (product_id)
                      VALUES (NEW.id);
@@ -37,29 +40,49 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-        log.info("Creating Postgres trigger new_inventory_after_product_insert on product table");
         // language=PostgreSQL
         jdbc.execute("""
-                DROP TRIGGER IF EXISTS new_inventory_after_product_insert ON product;
+                DROP TRIGGER IF EXISTS trg_product_after_insert ON product;
                 """);
         // language=PostgreSQL
         jdbc.execute("""
-                CREATE TRIGGER new_inventory_after_product_insert
+                CREATE TRIGGER trg_product_after_insert_01
                 AFTER INSERT ON product
                 FOR EACH ROW
-                EXECUTE FUNCTION new_inventory_after_product_insert();
+                EXECUTE FUNCTION trgfn_inventory_insert();
+                """);
+        // language=PostgreSQL
+        jdbc.execute("""
+                 DROP FUNCTION IF EXISTS trfn_inventory_delete();
+                """);
+        // language=PostgreSQL
+        jdbc.execute("""
+                CREATE OR REPLACE FUNCTION trfn_inventory_delete()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    DELETE FROM inventory WHERE product_id = OLD.id;
+                    RETURN OLD;
+                END;
+                $$ LANGUAGE plpgsql;
+                """);
+        // language=PostgreSQL
+        jdbc.execute("""
+                CREATE TRIGGER trg_product_after_delete_01
+                AFTER DELETE ON product
+                FOR EACH ROW
+                EXECUTE FUNCTION trfn_inventory_delete();
                 """);
     }
 
-    public void updateUpdatedColumn() {
-        log.info("Creating Postgres function update_updated_column()");
+    public void createFunctionUpdateUpdatedColumn() {
+        log.info("Creating Postgres function trgfn_update_updated_column() and trigger trg_product_after_update_01 on product table");
         // language=PostgreSQL
         jdbc.execute("""
-                 DROP FUNCTION IF EXISTS update_updated_column();
+                 DROP FUNCTION IF EXISTS trgfn_update_updated_column();
                 """);
         // language=PostgreSQL
         jdbc.execute("""
-                CREATE OR REPLACE FUNCTION update_updated_column()
+                CREATE OR REPLACE FUNCTION trgfn_update_updated_column()
                 RETURNS TRIGGER AS $$
                 BEGIN
                    NEW.updated = CURRENT_TIMESTAMP;
@@ -67,17 +90,16 @@ public class PostgresConfig {
                 END;
                 $$ LANGUAGE plpgsql;
                 """);
-        log.info("Creating Postgres trigger update_updated_column_product on product table");
         // language=PostgreSQL
         jdbc.execute("""
-                DROP TRIGGER IF EXISTS update_updated_column_product ON product;
+                DROP TRIGGER IF EXISTS trg_product_after_update_01 ON product;
                 """);
         // language=PostgreSQL
         jdbc.execute("""
-                CREATE TRIGGER update_updated_column_product
+                CREATE TRIGGER trg_product_after_update_01
                 AFTER UPDATE ON product
                 FOR EACH ROW
-                EXECUTE FUNCTION update_updated_column();
+                EXECUTE FUNCTION trgfn_update_updated_column();
                 """);
     }
 }

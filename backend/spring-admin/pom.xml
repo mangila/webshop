@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.github.mangila.webshop</groupId>
-    <artifactId>admin</artifactId>
+    <artifactId>spring-admin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>admin</name>
     <description>admin</description>

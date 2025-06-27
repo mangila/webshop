@@ -2,7 +2,7 @@ package com.github.mangila.webshop.backend.product.command;
 
 import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.util.ProductRepositoryUtil;
 import io.vavr.control.Try;
@@ -23,11 +23,13 @@ public class ProductCommandRepository {
         this.jdbc = jdbc;
     }
 
-    public Optional<Product> insert(ProductInsertCommand command) {
+    public Optional<Product> upsert(ProductUpsertCommand command) {
         // language=PostgreSQL
         final String sql = """
                 INSERT INTO product (id, name, price, attributes)
                 VALUES (?, ?, ?, ?::jsonb)
+                ON CONFLICT (id)
+                DO UPDATE SET name = EXCLUDED.name, price = EXCLUDED.price, attributes = EXCLUDED.attributes
                 RETURNING id, name, price, created, updated, attributes
                 """;
         final Object[] params = new Object[]{
@@ -40,7 +42,7 @@ public class ProductCommandRepository {
                 .map(repositoryUtil::findOne)
                 .getOrElseThrow(cause -> new DatabaseException(
                         Product.class,
-                        "Insert failed",
+                        "Upsert failed",
                         sql,
                         params,
                         cause

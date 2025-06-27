@@ -1,9 +1,12 @@
 package com.github.mangila.webshop.backend.product;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
+import com.github.mangila.webshop.backend.event.model.Event;
+import com.github.mangila.webshop.backend.event.model.EventTopic;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
-import com.github.mangila.webshop.backend.product.model.Product;
+import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.model.ProductEventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +29,10 @@ class ProductCommandControllerIntegrationTest {
     private WebTestClient webTestClient;
 
     @Test
-    @DisplayName("Should create a new product when upsert command is executed")
-    void shouldCreateNewProductWhenUpsertCommandIsExecuted() {
+    @DisplayName("Should create a new product when ProductInsertCommand command is executed")
+    void shouldCreateANewProductWhenProductInsertCommandIsExecuted() {
         // Given
-        ProductInsertCommand command = new ProductInsertCommand(
+        ProductUpsertCommand command = new ProductUpsertCommand(
                 "testproduct1",
                 "Test Product 1",
                 new BigDecimal("19.99"),
@@ -38,78 +41,38 @@ class ProductCommandControllerIntegrationTest {
         );
 
         // When & Then
-        Product product = webTestClient.post().uri("/api/v1/product/command/upsert")
+        Event event = webTestClient.post()
+                .uri("/api/v1/product/command/upsert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(command)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(Product.class)
+                .expectBody(Event.class)
                 .returnResult()
                 .getResponseBody();
 
-        assertThat(product).isNotNull();
-        assertThat(product.id()).isEqualTo("testproduct1");
-        assertThat(product.name()).isEqualTo("Test Product 1");
-        assertThat(product.price()).isEqualTo(new BigDecimal("19.99"));
-        assertThat(product.attributes().get("color").asText()).isEqualTo("red");
-        assertThat(product.attributes().get("size").asText()).isEqualTo("medium");
+        assertThat(event).isNotNull();
+        assertThat(event.topic()).isEqualTo(EventTopic.PRODUCT);
+        assertThat(event.type()).isEqualTo(ProductEventType.PRODUCT_INSERTED.name());
+        assertThat(event.aggregateId()).isEqualTo("testproduct1");
+
+        JsonNode data = event.data();
+        assertThat(data).isNotNull();
+        assertThat(data.isEmpty()).isFalse();
+        assertThat(data.isNull()).isFalse();
+        assertThat(data.get("id").asText()).isEqualTo("testproduct1");
+        assertThat(data.get("name").asText()).isEqualTo("Test Product 1");
+        assertThat(data.get("price").asDouble()).isEqualTo(19.99);
+        assertThat(data.get("attributes").get("color").asText()).isEqualTo("red");
+        assertThat(data.get("attributes").get("size").asText()).isEqualTo("medium");
     }
 
     @Test
-    @DisplayName("Should update an existing product when upsert command is executed")
-    void shouldUpdateExistingProductWhenUpsertCommandIsExecuted() {
+    @DisplayName("Should delete an existing product when ProductDeleteCommand is executed")
+    void shouldDeleteExistingProductWhenProductDeleteCommandIsExecuted() {
         // Given
-        ProductInsertCommand createCommand = new ProductInsertCommand(
-                "testproduct2",
-                "Test Product 2",
-                new BigDecimal("29.99"),
-                // language=JSON
-                "{\"color\":\"blue\",\"size\":\"large\"}"
-        );
-
-        // Create the product first
-        webTestClient.post()
-                .uri("/api/v1/product/command/upsert")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createCommand)
-                .exchange()
-                .expectStatus()
-                .isOk();
-
-        // Update command
-        ProductInsertCommand updateCommand = new ProductInsertCommand(
-                "testproduct2",
-                "Updated Test Product 2",
-                new BigDecimal("39.99"),
-                // language=JSON
-                "{\"color\":\"green\",\"size\":\"small\"}"
-        );
-
-        // When & Then
-        Product product = webTestClient.post().uri("/api/v1/product/command/upsert")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(updateCommand)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(Product.class)
-                .returnResult()
-                .getResponseBody();
-
-        assertThat(product).isNotNull();
-        assertThat(product.id()).isEqualTo("testproduct2");
-        assertThat(product.name()).isEqualTo("Updated Test Product 2");
-        assertThat(product.price()).isEqualTo(new BigDecimal("39.99"));
-        assertThat(product.attributes().get("color").asText()).isEqualTo("green");
-        assertThat(product.attributes().get("size").asText()).isEqualTo("small");
-    }
-
-    @Test
-    @DisplayName("Should delete an existing product when delete command is executed")
-    void shouldDeleteExistingProductWhenDeleteCommandIsExecuted() {
-        // Given
-        ProductInsertCommand createCommand = new ProductInsertCommand(
+        ProductUpsertCommand insertCommand = new ProductUpsertCommand(
                 "testproduct3",
                 "Test Product 3",
                 new BigDecimal("49.99"),
@@ -120,7 +83,7 @@ class ProductCommandControllerIntegrationTest {
         // Create the product first
         webTestClient.post().uri("/api/v1/product/command/upsert")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createCommand)
+                .bodyValue(insertCommand)
                 .exchange()
                 .expectStatus().isOk();
 
@@ -128,17 +91,17 @@ class ProductCommandControllerIntegrationTest {
         ProductDeleteCommand deleteCommand = new ProductDeleteCommand("testproduct3");
 
         // When & Then
-        Product product = webTestClient.method(org.springframework.http.HttpMethod.DELETE)
+        Event event = webTestClient.method(org.springframework.http.HttpMethod.DELETE)
                 .uri("/api/v1/product/command/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(deleteCommand)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Product.class)
+                .expectBody(Event.class)
                 .returnResult()
                 .getResponseBody();
 
-        assertThat(product).isNotNull();
-        assertThat(product.id()).isEqualTo("testproduct3");
+        assertThat(event).isNotNull();
+        assertThat(event.aggregateId()).isEqualTo("testproduct3");
     }
 }

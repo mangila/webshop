@@ -7,7 +7,7 @@ import com.github.mangila.webshop.backend.product.util.annotation.ProductPrice;
 
 import java.math.BigDecimal;
 
-public record ProductInsertCommand(
+public record ProductUpsertCommand(
         @ProductId
         String id,
         @ProductName

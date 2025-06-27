@@ -30,7 +30,7 @@ public class EventCommandRepository {
                 RETURNING id, type, aggregate_id, topic, data, created
                 """;
         final Object[] params = new Object[]{
-                command.eventType().type(),
+                command.eventType(),
                 command.aggregateId(),
                 command.eventTopic().name(),
                 command.eventData().toString()

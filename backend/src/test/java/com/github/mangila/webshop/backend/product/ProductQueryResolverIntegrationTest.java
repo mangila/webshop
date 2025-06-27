@@ -1,8 +1,10 @@
 package com.github.mangila.webshop.backend.product;
 
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
-import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,15 +40,26 @@ class ProductQueryResolverIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Create a test product to query
-        ProductInsertCommand command = new ProductInsertCommand(
+        ProductUpsertCommand command = new ProductUpsertCommand(
                 PRODUCT_ID,
                 PRODUCT_NAME,
                 PRODUCT_PRICE,
                 PRODUCT_ATTRIBUTES
         );
 
-        webTestClient.post().uri("/api/v1/product/command/upsert")
+        webTestClient.post()
+                .uri("/api/v1/product/command/upsert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(command)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @AfterEach
+    void tearDown() {
+        ProductDeleteCommand command = new ProductDeleteCommand(PRODUCT_ID);
+        webTestClient.method(org.springframework.http.HttpMethod.DELETE)
+                .uri("/api/v1/product/command/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(command)
                 .exchange()
