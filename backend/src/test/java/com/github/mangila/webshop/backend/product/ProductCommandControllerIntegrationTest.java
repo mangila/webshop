@@ -2,7 +2,7 @@ package com.github.mangila.webshop.backend.product;
 
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ProductCommandControllerIntegrationTest {
     @DisplayName("Should create a new product when upsert command is executed")
     void shouldCreateNewProductWhenUpsertCommandIsExecuted() {
         // Given
-        ProductUpsertCommand command = new ProductUpsertCommand(
+        ProductInsertCommand command = new ProductInsertCommand(
                 "testproduct1",
                 "Test Product 1",
                 new BigDecimal("19.99"),
@@ -60,7 +60,7 @@ class ProductCommandControllerIntegrationTest {
     @DisplayName("Should update an existing product when upsert command is executed")
     void shouldUpdateExistingProductWhenUpsertCommandIsExecuted() {
         // Given
-        ProductUpsertCommand createCommand = new ProductUpsertCommand(
+        ProductInsertCommand createCommand = new ProductInsertCommand(
                 "testproduct2",
                 "Test Product 2",
                 new BigDecimal("29.99"),
@@ -78,7 +78,7 @@ class ProductCommandControllerIntegrationTest {
                 .isOk();
 
         // Update command
-        ProductUpsertCommand updateCommand = new ProductUpsertCommand(
+        ProductInsertCommand updateCommand = new ProductInsertCommand(
                 "testproduct2",
                 "Updated Test Product 2",
                 new BigDecimal("39.99"),
@@ -109,7 +109,7 @@ class ProductCommandControllerIntegrationTest {
     @DisplayName("Should delete an existing product when delete command is executed")
     void shouldDeleteExistingProductWhenDeleteCommandIsExecuted() {
         // Given
-        ProductUpsertCommand createCommand = new ProductUpsertCommand(
+        ProductInsertCommand createCommand = new ProductInsertCommand(
                 "testproduct3",
                 "Test Product 3",
                 new BigDecimal("49.99"),

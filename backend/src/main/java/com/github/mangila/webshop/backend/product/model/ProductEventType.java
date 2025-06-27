@@ -5,7 +5,7 @@ import com.github.mangila.webshop.backend.event.model.EventType;
 
 public enum ProductEventType implements EventType {
 
-    PRODUCT_UPSERTED,
+    PRODUCT_INSERTED,
     PRODUCT_PRICE_UPDATED,
     PRODUCT_DELETED;
 

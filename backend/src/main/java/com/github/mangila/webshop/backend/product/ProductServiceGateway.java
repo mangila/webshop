@@ -6,7 +6,7 @@ import com.github.mangila.webshop.backend.event.model.Event;
 import com.github.mangila.webshop.backend.event.model.EventTopic;
 import com.github.mangila.webshop.backend.product.command.ProductCommandService;
 import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import com.github.mangila.webshop.backend.product.model.ProductEventType;
 import com.github.mangila.webshop.backend.product.query.ProductQueryService;
@@ -41,20 +41,20 @@ public class ProductServiceGateway {
     }
 
     @Transactional
-    public Product upsert(ProductUpsertCommand command) {
-        Product product = commandService.upsert(command);
+    public Event insert(ProductInsertCommand command) {
+        Product product = commandService.insert(command);
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
                 product.id(),
-                ProductEventType.PRODUCT_UPSERTED,
+                ProductEventType.PRODUCT_INSERTED,
                 jsonMapper.toJsonNode(product)
         );
         log.info("{} -- {} -- {}", event.type(), product, event);
-        return product;
+        return event;
     }
 
     @Transactional
-    public Product delete(ProductDeleteCommand command) {
+    public Event delete(ProductDeleteCommand command) {
         Product product = commandService.delete(command);
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
@@ -63,6 +63,6 @@ public class ProductServiceGateway {
                 jsonMapper.toJsonNode(product)
         );
         log.info("{} -- {} -- {}", event.type(), product, event);
-        return product;
+        return event;
     }
 }

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.product;
 
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.command.model.ProductInsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class ProductQueryResolverIntegrationTest {
     @BeforeEach
     void setUp() {
         // Create a test product to query
-        ProductUpsertCommand command = new ProductUpsertCommand(
+        ProductInsertCommand command = new ProductInsertCommand(
                 PRODUCT_ID,
                 PRODUCT_NAME,
                 PRODUCT_PRICE,
