@@ -40,7 +40,7 @@ public class ProductCommandRepository {
                 command.id(),
                 command.name(),
                 command.price(),
-                command.attributes(),
+                command.attributes()
         };
         return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
                 .map(repositoryUtil::findOne)
