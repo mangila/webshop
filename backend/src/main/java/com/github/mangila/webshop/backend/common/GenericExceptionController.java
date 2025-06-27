@@ -40,7 +40,9 @@ public class GenericExceptionController {
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField,
-                        fieldError -> String.format("%s: %s", fieldError.getRejectedValue(), fieldError.getDefaultMessage())));
+                        fe -> String.join(":",
+                                fe.getDefaultMessage(),
+                                fe.getRejectedValue().toString())));
         problem.setProperty("errors", errors);
         return problem;
     }

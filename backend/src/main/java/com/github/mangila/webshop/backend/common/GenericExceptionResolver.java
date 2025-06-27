@@ -69,7 +69,9 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fieldError -> fieldError.getField() + "." + fieldError.getRejectedValue()
+                        fe -> String.join(":",
+                                fe.getDefaultMessage(),
+                                fe.getRejectedValue().toString())
                 ));
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.BAD_REQUEST)
