@@ -4,6 +4,7 @@ spring:
     admin:
       client:
         url: "http://localhost:8081"
+        enabled: true
   application:
     name: "webshop"
   datasource:
@@ -49,7 +50,7 @@ logging:
           core:
             JdbcTemplate: DEBUG
     web: debug
-# Swagger
+# SpringDoc
 springdoc:
   show-actuator: true
 # Actuator

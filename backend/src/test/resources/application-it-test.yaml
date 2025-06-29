@@ -1,0 +1,15 @@
+# Spring Properties
+spring:
+  boot:
+    admin:
+      client:
+        enabled: false
+# Logging properties
+logging:
+  file:
+    name:
+    path:
+# SpringDoc
+springdoc:
+  api-docs:
+    enabled: false
