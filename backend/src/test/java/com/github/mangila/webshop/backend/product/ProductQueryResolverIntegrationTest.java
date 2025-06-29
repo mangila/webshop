@@ -1,8 +1,6 @@
 package com.github.mangila.webshop.backend.product;
 
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
-import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
 import com.github.mangila.webshop.backend.product.model.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +16,7 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.math.BigDecimal;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -28,47 +26,37 @@ class ProductQueryResolverIntegrationTest {
 
     @Autowired
     private GraphQlTester graphQlTester;
-
     @Autowired
     private WebTestClient webTestClient;
 
-    private static final String PRODUCT_ID = "testgraphqlproduct";
-    private static final String PRODUCT_NAME = "Test GraphQL Product";
-    private static final BigDecimal PRODUCT_PRICE = new BigDecimal("59.99");
-    // language=JSON
-    private static final String PRODUCT_ATTRIBUTES = "{\"color\":\"purple\",\"size\":\"medium\"}";
-
     @BeforeEach
-    void setUp() {
-        ProductUpsertCommand command = new ProductUpsertCommand(
-                PRODUCT_ID,
-                PRODUCT_NAME,
-                PRODUCT_PRICE,
-                PRODUCT_ATTRIBUTES
-        );
-
+    void beforeEach() {
         webTestClient.post()
-                .uri("/api/v1/product/command/upsert")
+                .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_UPSERT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(command)
+                .bodyValue(ProductTestUtil.dummyProductUpsertCommand())
                 .exchange()
-                .expectStatus().isOk();
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus().isOk()
+                .expectBody();
     }
 
     @AfterEach
-    void tearDown() {
-        ProductDeleteCommand command = new ProductDeleteCommand(PRODUCT_ID);
+    void afterEach() {
         webTestClient.method(org.springframework.http.HttpMethod.DELETE)
-                .uri("/api/v1/product/command/delete")
+                .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_DELETE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(command)
+                .bodyValue(ProductTestUtil.dummyProductDeleteCommand())
                 .exchange()
-                .expectStatus().isOk();
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus().isOk()
+                .expectBody();
     }
 
     @Test
     @DisplayName("Should return product when finding by valid ID")
     void shouldReturnProductWhenFindingByValidId() {
+        var id = ProductTestUtil.dummyProductId();
         // language=GraphQL
         String query = """
                 query {
@@ -79,18 +67,18 @@ class ProductQueryResolverIntegrationTest {
                     attributes
                   }
                 }
-                """.formatted(PRODUCT_ID);
+                """.formatted(id);
 
         graphQlTester.document(query)
                 .execute()
                 .path("findProductById")
                 .entity(Product.class)
                 .satisfies(product -> {
-                    assert product.id().equals(PRODUCT_ID);
-                    assert product.name().equals(PRODUCT_NAME);
-                    assert product.price().equals(PRODUCT_PRICE);
-                    assert product.attributes().get("color").asText().equals("purple");
-                    assert product.attributes().get("size").asText().equals("medium");
+                    assertThat(product.id()).isEqualTo(id);
+                    assertThat(product.name()).isEqualTo(ProductTestUtil.dummyProductName());
+                    assertThat(product.price()).isEqualTo(ProductTestUtil.dummyProductPrice());
+                    assertThat(product.attributes()).isNotNull();
+                    assertThat(product.attributes().toString()).isEqualTo(ProductTestUtil.dummyProductAttributes());
                 });
     }
 

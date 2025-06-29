@@ -46,7 +46,7 @@ public class ProductServiceGateway {
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
                 product.id(),
-                ProductEventType.PRODUCT_INSERTED.name(),
+                ProductEventType.PRODUCT_UPSERTED.name(),
                 jsonMapper.toJsonNode(product)
         );
         log.info("{} -- {} -- {}", event.type(), product, event);
