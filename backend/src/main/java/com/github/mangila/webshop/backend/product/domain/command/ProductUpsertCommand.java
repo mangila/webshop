@@ -1,9 +1,9 @@
-package com.github.mangila.webshop.backend.product.command.model;
+package com.github.mangila.webshop.backend.product.domain.command;
 
 import com.github.mangila.webshop.backend.common.annotation.Json;
-import com.github.mangila.webshop.backend.product.util.annotation.ProductId;
-import com.github.mangila.webshop.backend.product.util.annotation.ProductName;
-import com.github.mangila.webshop.backend.product.util.annotation.ProductPrice;
+import com.github.mangila.webshop.backend.product.domain.util.ProductId;
+import com.github.mangila.webshop.backend.product.domain.util.ProductName;
+import com.github.mangila.webshop.backend.product.domain.util.ProductPrice;
 
 import java.math.BigDecimal;
 

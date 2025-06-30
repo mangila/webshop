@@ -1,9 +1,8 @@
-package com.github.mangila.webshop.backend.product.query;
+package com.github.mangila.webshop.backend.product.infrastructure;
 
 import com.github.mangila.webshop.backend.common.exception.DatabaseException;
-import com.github.mangila.webshop.backend.product.model.Product;
-import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
-import com.github.mangila.webshop.backend.product.util.ProductRepositoryUtil;
+import com.github.mangila.webshop.backend.product.domain.ProductDomain;
+import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
 import io.vavr.control.Try;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,7 +21,7 @@ public class ProductQueryRepository {
         this.jdbc = jdbc;
     }
 
-    public Optional<Product> findById(ProductByIdQuery query) {
+    public Optional<ProductDomain> findById(ProductByIdQuery query) {
         // language=PostgreSQL
         final String sql = """
                 SELECT id,
@@ -37,7 +36,7 @@ public class ProductQueryRepository {
         return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
                 .map(repositoryUtil::findOne)
                 .getOrElseThrow(cause -> new DatabaseException(
-                        Product.class,
+                        ProductDomain.class,
                         "Query by id failed",
                         sql,
                         params,

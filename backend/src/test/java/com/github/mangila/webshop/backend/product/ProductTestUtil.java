@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.product;
 
-import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductUpsertCommand;
 
 import java.math.BigDecimal;
 

@@ -1,6 +1,6 @@
-package com.github.mangila.webshop.backend.product;
+package com.github.mangila.webshop.backend.product.config;
 
-import com.github.mangila.webshop.backend.product.model.ProductEntity;
+import com.github.mangila.webshop.backend.product.domain.ProductEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.DataClassRowMapper;

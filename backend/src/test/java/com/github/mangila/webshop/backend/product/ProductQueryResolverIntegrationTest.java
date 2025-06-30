@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.product;
 
 import com.github.mangila.webshop.backend.TestcontainersConfiguration;
-import com.github.mangila.webshop.backend.product.model.Product;
+import com.github.mangila.webshop.backend.product.domain.ProductDomain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +74,7 @@ class ProductQueryResolverIntegrationTest {
         graphQlTester.document(query)
                 .execute()
                 .path("findProductById")
-                .entity(Product.class)
+                .entity(ProductDomain.class)
                 .satisfies(product -> {
                     assertThat(product.id()).isEqualTo(id);
                     assertThat(product.name()).isEqualTo(ProductTestUtil.dummyProductName());

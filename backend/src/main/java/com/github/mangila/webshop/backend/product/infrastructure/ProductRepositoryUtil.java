@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.backend.product.util;
+package com.github.mangila.webshop.backend.product.infrastructure;
 
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
-import com.github.mangila.webshop.backend.product.model.Product;
-import com.github.mangila.webshop.backend.product.model.ProductEntity;
+import com.github.mangila.webshop.backend.product.domain.ProductDomain;
+import com.github.mangila.webshop.backend.product.domain.ProductEntity;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -26,12 +26,12 @@ public class ProductRepositoryUtil {
         return productEntityRowMapper;
     }
 
-    public Optional<Product> findOne(List<ProductEntity> result) {
+    public Optional<ProductDomain> findOne(List<ProductEntity> result) {
         if (CollectionUtils.isEmpty(result)) {
             return Optional.empty();
         }
         ProductEntity entity = result.getFirst();
-        Product product = Product.from(entity, jsonMapper);
+        ProductDomain product = ProductDomain.from(entity, jsonMapper);
         return Optional.of(product);
     }
 }

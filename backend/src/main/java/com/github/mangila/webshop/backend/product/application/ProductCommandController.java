@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.backend.product;
+package com.github.mangila.webshop.backend.product.application;
 
 import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.product.command.model.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.command.model.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductUpsertCommand;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

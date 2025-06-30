@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.product.util.annotation;
+package com.github.mangila.webshop.backend.product.domain.util;
 
 import com.github.mangila.webshop.backend.common.annotation.AlphaNumeric;
 import jakarta.validation.Constraint;
@@ -12,11 +12,11 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {}) // No custom validator needed
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@NotNull(message = "name must not be null")
+@NotNull(message = "id must not be null")
 @AlphaNumeric(allowNull = false)
-@Size(min = 1, max = 255)
-public @interface ProductName {
-    String message() default "Invalid product Name";
+@Size(min = 1, max = 36)
+public @interface ProductId {
+    String message() default "Invalid product ID";
 
     Class<?>[] groups() default {};
 

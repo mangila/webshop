@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.backend.product;
+package com.github.mangila.webshop.backend.product.application;
 
-import com.github.mangila.webshop.backend.product.model.Product;
-import com.github.mangila.webshop.backend.product.query.model.ProductByIdQuery;
+import com.github.mangila.webshop.backend.product.domain.ProductDomain;
+import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -17,7 +17,7 @@ public class ProductQueryResolver {
     }
 
     @QueryMapping
-    public Product findProductById(@Argument("input") @Valid ProductByIdQuery query) {
+    public ProductDomain findProductById(@Argument("input") @Valid ProductByIdQuery query) {
         return productServiceGateway.findById(query);
     }
 }

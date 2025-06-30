@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.product.model;
+package com.github.mangila.webshop.backend.product.domain;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -11,5 +11,4 @@ public record ProductEntity(
         Timestamp updated,
         String attributes
 ) {
-    public static final ProductEntity EMPTY = new ProductEntity(null, null, null, null, null, null);
 }

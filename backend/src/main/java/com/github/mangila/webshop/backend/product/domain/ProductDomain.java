@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.product.model;
+package com.github.mangila.webshop.backend.product.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
@@ -6,7 +6,7 @@ import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record Product(
+public record ProductDomain(
         String id,
         String name,
         BigDecimal price,
@@ -14,10 +14,9 @@ public record Product(
         Instant updated,
         JsonNode attributes
 ) {
-    public static final Product EMPTY = new Product(null, null, null, null, null, null);
 
-    public static Product from(ProductEntity entity, JsonMapper jsonMapper) {
-        return new Product(
+    public static ProductDomain from(ProductEntity entity, JsonMapper jsonMapper) {
+        return new ProductDomain(
                 entity.id(),
                 entity.name(),
                 entity.price(),
