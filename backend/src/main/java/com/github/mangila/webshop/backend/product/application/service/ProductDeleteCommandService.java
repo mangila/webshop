@@ -2,12 +2,12 @@ package com.github.mangila.webshop.backend.product.application.service;
 
 import com.github.mangila.webshop.backend.common.exception.CommandException;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
-import com.github.mangila.webshop.backend.event.EventServiceGateway;
-import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.model.EventTopic;
-import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.domain.ProductDomain;
+import com.github.mangila.webshop.backend.event.application.EventServiceGateway;
+import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.event.domain.model.EventTopic;
 import com.github.mangila.webshop.backend.product.domain.ProductEventType;
+import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.product.infrastructure.ProductCommandRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +34,19 @@ public class ProductDeleteCommandService {
 
     @Transactional
     public Event execute(ProductDeleteCommand command) {
-        var product = commandRepository.delete(command).orElseThrow(() -> new CommandException(
+        Product product = commandRepository.findById(command.id()).orElseThrow(() -> new CommandException(
                 command.getClass(),
-                ProductDomain.class,
+                Product.class,
                 HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", command.id())));
+        commandRepository.delete(product);
         Event event = eventServiceGateway.emit(
                 EventTopic.PRODUCT,
-                product.id(),
                 ProductEventType.PRODUCT_DELETED.name(),
-                jsonMapper.toJsonNode(product)
+                product.id(),
+                product.toJsonData(jsonMapper)
         );
-        log.info("{} -- {} -- {}", event.type(), product, event);
+        log.info("{} -- {} -- {}", event.getEventType(), product, event);
         return event;
     }
 }

@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.backend.product.application.service;
 
 import com.github.mangila.webshop.backend.common.exception.QueryException;
-import com.github.mangila.webshop.backend.product.domain.ProductDomain;
-import com.github.mangila.webshop.backend.product.infrastructure.ProductQueryRepository;
+import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
+import com.github.mangila.webshop.backend.product.infrastructure.ProductQueryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ public class ProductQueryService {
         this.queryRepository = queryRepository;
     }
 
-    public ProductDomain findById(ProductByIdQuery query) {
-        var result = queryRepository.findById(query);
+    public Product findById(ProductByIdQuery query) {
+        var result = queryRepository.findById(query.id());
         return result.orElseThrow(() -> new QueryException(
                 String.format("id not found: '%s'", query.id()),
                 query.getClass(),
-                ProductDomain.class,
+                Product.class,
                 HttpStatus.NOT_FOUND));
     }
 }

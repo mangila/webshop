@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.backend.product.application;
 
-import com.github.mangila.webshop.backend.event.model.Event;
+import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
-import com.github.mangila.webshop.backend.product.domain.command.ProductUpsertCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ public class ProductCommandController {
     }
 
     @PostMapping(
-            value = "upsert",
+            value = "insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Event> upsertProduct(@Valid @RequestBody ProductUpsertCommand command) {
-        return ResponseEntity.ok(productServiceGateway.upsert(command));
+    public ResponseEntity<Event> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
+        return ResponseEntity.ok(productServiceGateway.insert(command));
     }
 
     @DeleteMapping(

@@ -7,6 +7,12 @@ spring:
         enabled: true
   application:
     name: "webshop"
+  jpa:
+    properties:
+      hibernate.hibernate.generate_statistics: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
   datasource:
     username: "my_user"
     password: "secret"
@@ -44,12 +50,8 @@ logging:
   file:
     name: "webshop.log"
   level:
-    org:
-      springframework:
-        jdbc:
-          core:
-            JdbcTemplate: DEBUG
     web: debug
+    sql: debug
 # SpringDoc
 springdoc:
   show-actuator: true

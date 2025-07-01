@@ -1,46 +1,10 @@
 package com.github.mangila.webshop.backend.product.infrastructure;
 
-import com.github.mangila.webshop.backend.common.exception.DatabaseException;
-import com.github.mangila.webshop.backend.product.domain.ProductDomain;
-import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
-import io.vavr.control.Try;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
+import com.github.mangila.webshop.backend.product.domain.model.Product;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public class ProductQueryRepository {
-
-    private final JdbcTemplate jdbc;
-    private final ProductRepositoryUtil repositoryUtil;
-
-    public ProductQueryRepository(JdbcTemplate jdbc,
-                                  ProductRepositoryUtil repositoryUtil) {
-        this.repositoryUtil = repositoryUtil;
-        this.jdbc = jdbc;
-    }
-
-    public Optional<ProductDomain> findById(ProductByIdQuery query) {
-        // language=PostgreSQL
-        final String sql = """
-                SELECT id,
-                       name,
-                       price,
-                       created,
-                       updated,
-                       attributes
-                FROM product WHERE id = ?
-                """;
-        final Object[] params = new Object[]{query.id()};
-        return Try.of(() -> jdbc.query(sql, repositoryUtil.productEntityRowMapper(), params))
-                .map(repositoryUtil::findOne)
-                .getOrElseThrow(cause -> new DatabaseException(
-                        ProductDomain.class,
-                        "Query by id failed",
-                        sql,
-                        params,
-                        cause
-                ));
-    }
+public interface ProductQueryRepository extends ListCrudRepository<Product, ApplicationUuid> {
 }

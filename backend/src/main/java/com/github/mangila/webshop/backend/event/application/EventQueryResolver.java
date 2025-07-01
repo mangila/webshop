@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.backend.event;
+package com.github.mangila.webshop.backend.event.application;
 
-import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;
+import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;

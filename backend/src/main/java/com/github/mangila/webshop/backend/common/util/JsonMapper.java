@@ -19,24 +19,13 @@ public class JsonMapper {
     public JsonMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-
+    
     public JsonNode toJsonNode(Object object) {
         return readTree(object);
     }
 
     public JsonNode toJsonNode(String json) {
         return readTree(json);
-    }
-
-    public boolean isValid(String json) {
-        return Try.of(() -> {
-                    JsonNode node = readTree(json);
-                    return node.isObject();
-                })
-                .getOrElse(() -> {
-                    log.error("Invalid json: {}", json);
-                    return Boolean.FALSE;
-                });
     }
 
     private JsonNode readTree(Object object) {

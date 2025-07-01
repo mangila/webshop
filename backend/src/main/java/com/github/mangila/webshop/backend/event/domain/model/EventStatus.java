@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.event.model;
+package com.github.mangila.webshop.backend.event.domain.model;
 
 public enum EventStatus {
     PENDING,

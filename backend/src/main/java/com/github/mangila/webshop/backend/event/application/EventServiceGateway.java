@@ -1,12 +1,12 @@
-package com.github.mangila.webshop.backend.event;
+package com.github.mangila.webshop.backend.event.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.backend.event.command.EventCommandService;
-import com.github.mangila.webshop.backend.event.command.model.EventEmitCommand;
-import com.github.mangila.webshop.backend.event.model.Event;
-import com.github.mangila.webshop.backend.event.model.EventTopic;
-import com.github.mangila.webshop.backend.event.query.EventQueryService;
-import com.github.mangila.webshop.backend.event.query.model.EventReplayQuery;
+import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
+import com.github.mangila.webshop.backend.event.domain.command.EventEmitCommand;
+import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.event.domain.model.EventTopic;
+import com.github.mangila.webshop.backend.event.domain.model.EventType;
+import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,13 +24,13 @@ public class EventServiceGateway {
     }
 
     public Event emit(EventTopic topic,
-                      String aggregateId,
                       String eventType,
+                      ApplicationUuid aggregateId,
                       JsonNode eventData) {
         return commandService.emit(new EventEmitCommand(
                 topic,
+                new EventType(eventType),
                 aggregateId,
-                eventType,
                 eventData
         ));
     }
