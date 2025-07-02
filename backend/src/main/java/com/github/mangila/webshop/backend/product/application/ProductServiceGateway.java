@@ -2,12 +2,12 @@ package com.github.mangila.webshop.backend.product.application;
 
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.product.application.service.ProductDeleteCommandService;
-import com.github.mangila.webshop.backend.product.application.service.ProductQueryService;
 import com.github.mangila.webshop.backend.product.application.service.ProductInsertCommandService;
-import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
-import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
+import com.github.mangila.webshop.backend.product.application.service.ProductQueryService;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
+import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,15 +29,15 @@ public class ProductServiceGateway {
         this.insertCommandService = insertCommandService;
     }
 
-    public Product findById(ProductByIdQuery query) {
+    public Product routeFindById(ProductByIdQuery query) {
         return queryService.findById(query);
     }
 
-    public Event insert(ProductInsertCommand command) {
+    public Event routeInsert(ProductInsertCommand command) {
         return insertCommandService.execute(command);
     }
 
-    public Event delete(ProductDeleteCommand command) {
+    public Event routeDelete(ProductDeleteCommand command) {
         return deleteCommandService.execute(command);
     }
 }

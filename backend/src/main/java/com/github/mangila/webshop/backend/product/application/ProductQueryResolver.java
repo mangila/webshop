@@ -18,6 +18,6 @@ public class ProductQueryResolver {
 
     @QueryMapping
     public Product findProductById(@Argument("input") @Valid ProductByIdQuery query) {
-        return productServiceGateway.findById(query);
+        return productServiceGateway.routeFindById(query);
     }
 }
