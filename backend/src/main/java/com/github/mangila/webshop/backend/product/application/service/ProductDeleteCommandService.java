@@ -43,7 +43,7 @@ public class ProductDeleteCommandService {
         Event event = eventServiceGateway.routePublish(
                 ProductTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_DELETED.name(),
-                product.id(),
+                product.id().value(),
                 product.toJsonNode(jsonMapper)
         );
         log.info("{} -- {} -- {}", event.getType(), product, event);

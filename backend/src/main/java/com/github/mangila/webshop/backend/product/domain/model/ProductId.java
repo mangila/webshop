@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.model;
+package com.github.mangila.webshop.backend.product.domain.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
@@ -8,10 +8,5 @@ import java.util.UUID;
 
 @Embeddable
 @NullMarked
-public record ApplicationUuid(@NotNull UUID value) {
-
-    public ApplicationUuid() {
-        this(UUID.randomUUID());
-    }
+public record ProductId(@NotNull UUID value) {
 }
-

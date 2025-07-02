@@ -1,10 +1,11 @@
 package com.github.mangila.webshop.backend.event.domain.query;
 
-import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
+
+import java.util.UUID;
 
 public record EventReplayQuery(
         String topic,
-        ApplicationUuid aggregateId,
+        UUID aggregateId,
         long offset,
         int limit
 ) {

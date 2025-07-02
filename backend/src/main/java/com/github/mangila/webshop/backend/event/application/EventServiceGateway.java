@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.backend.event.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EventServiceGateway {
@@ -22,7 +22,7 @@ public class EventServiceGateway {
 
     public Event routePublish(String topic,
                               String eventType,
-                              ApplicationUuid aggregateId,
+                              UUID aggregateId,
                               JsonNode payload) {
         return publisher.publish(topic, eventType, aggregateId, payload);
     }

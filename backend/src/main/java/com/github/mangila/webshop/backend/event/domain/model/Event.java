@@ -2,7 +2,6 @@
 package com.github.mangila.webshop.backend.event.domain.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -10,12 +9,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "event")
 @EntityListeners(AuditingEntityListener.class)
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,11 +22,8 @@ public class Event {
     private String topic;
     @Column(nullable = false)
     private String type;
-    @Embedded
-    @AttributeOverride(
-            name = "value",
-            column = @Column(name = "aggregate_id", nullable = false))
-    private ApplicationUuid aggregateId;
+    @Column(nullable = false, name = "aggregate_id")
+    private UUID aggregateId;
     @Type(JsonBinaryType.class)
     @Column(name = "payload",
             columnDefinition = "jsonb",
@@ -39,11 +35,11 @@ public class Event {
     protected Event() {
     }
 
-    public Event(String topic, String type, ApplicationUuid aggregateId, JsonNode payload) {
+    public Event(String topic, String type, UUID aggregateId, JsonNode payload) {
         this(null, topic, type, aggregateId, payload, null);
     }
 
-    private Event(Long id, String topic, String type, ApplicationUuid aggregateId, JsonNode payload, Instant created) {
+    private Event(Long id, String topic, String type, UUID aggregateId, JsonNode payload, Instant created) {
         this.id = id;
         this.topic = topic;
         this.type = type;
@@ -64,7 +60,7 @@ public class Event {
         return type;
     }
 
-    public ApplicationUuid getAggregateId() {
+    public UUID getAggregateId() {
         return aggregateId;
     }
 
@@ -88,7 +84,7 @@ public class Event {
         this.type = eventType;
     }
 
-    public void setAggregateId(ApplicationUuid aggregateId) {
+    public void setAggregateId(UUID aggregateId) {
         this.aggregateId = aggregateId;
     }
 

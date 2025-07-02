@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.backend.product.domain.query;
 
-import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
+import com.github.mangila.webshop.backend.product.domain.model.ProductId;
 
-public record ProductByIdQuery(ApplicationUuid id) {
+public record ProductByIdQuery(ProductId id) {
 }
+

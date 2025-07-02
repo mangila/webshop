@@ -2,12 +2,13 @@ package com.github.mangila.webshop.backend.event.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.common.exception.ApiException;
-import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.infrastructure.EventCommandRepository;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @NullMarked
 @Service
@@ -28,7 +29,7 @@ public class EventPublishService {
     public Event publish(
             String topic,
             String eventType,
-            ApplicationUuid aggregateId,
+            UUID aggregateId,
             JsonNode payload
     ) {
         if (!topicRegistry.isRegistered(topic)) {

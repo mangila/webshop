@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest
 @AutoConfigureWebTestClient
 @Import(TestcontainersConfiguration.class)
-class ProductCommandControllerTest {
+class ProductCommandControllerIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -23,7 +23,7 @@ class ProductCommandControllerTest {
     @DisplayName("Insert one product and delete it afterwards")
     void insertAndDeleteProduct() {
         webTestClient.post()
-                .uri("/products")
+                .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .exchange()
                 .expectStatus().isOk();
     }

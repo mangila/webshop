@@ -1,17 +1,27 @@
 package com.github.mangila.webshop.backend.event.application;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class DefaultEventTopicRegistry implements EventRegistry {
 
+    private final Map<String, String> registry;
+
+    public DefaultEventTopicRegistry(@Qualifier("eventTopicRegistryMap") Map<String, String> registry) {
+        this.registry = registry;
+    }
+
     @Override
     public boolean isRegistered(String key) {
-        return false;
+        return registry.containsKey(key);
     }
 
     @Override
     public void register(String key, String value) {
-
+        registry.put(key, value);
     }
 }
