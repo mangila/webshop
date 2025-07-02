@@ -44,11 +44,12 @@ public class InventoryEventPoller {
     @Transactional
     @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
     public void pollForNewProducts() {
+        var consumerId = InventoryConfig.INVENTORY_NEW_PRODUCT_PROPS.consumer();
         EventSubscriber subscriber = eventServiceGateway.subscriber()
-                .findById(new EventSubscriberByIdQuery(InventoryConfig.INVENTORY_NEW_PRODUCT_PROPS.consumer()))
-                .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class));
+                .findById(new EventSubscriberByIdQuery(consumerId))
+                .orElseThrow(() -> new ApiException(String.format("No subscriber with id: '%s'", consumerId), Event.class));
         List<Event> pendingEvents = eventServiceGateway.subscriber()
-                .findEventsByTopicAndTypeAndOffset(new EventFindByTopicAndTypeAndOffsetQuery(
+                .findEventsByTopicAndTypeAndOffset(EventFindByTopicAndTypeAndOffsetQuery.from(
                         subscriber.getTopic(),
                         subscriber.getType(),
                         subscriber.getLatestOffset(),
@@ -69,15 +70,14 @@ public class InventoryEventPoller {
                 .saveMany(inventoryInsertCommands)
                 .stream()
                 .peek(inventory -> log.debug("Saved inventory {}", inventory))
-                .map(inventory -> new EventPublishCommand(
-                        InventoryEventTopicType.INVENTORY.name(),
+                .map(inventory -> EventPublishCommand.from(InventoryEventTopicType.INVENTORY.name(),
                         InventoryEventType.INVENTORY_CREATE_NEW.name(),
                         inventory.getId().value(),
                         jsonMapper.toJsonNode(inventory)))
                 .peek(command -> log.debug("Created EventPublishCommand {}", command))
                 .toList();
         eventServiceGateway.publisher()
-                .saveMany(eventPublishCommands)
+                .publishMany(eventPublishCommands)
                 .stream()
                 .peek(event -> log.debug("Published event {}", event))
                 .toList();

@@ -41,8 +41,8 @@ public class ProductInsertCommandService {
     public Event execute(ProductInsertCommand command) {
         UUID uuid = uuidGenerator.generate(command.getClass().getSimpleName());
         Product product = repositoryGateway.command().save(Product.from(uuid, command));
-        Event event = eventServiceGateway.publisher().save(
-                new EventPublishCommand(
+        Event event = eventServiceGateway.publisher().publish(
+                EventPublishCommand.from(
                         ProductEventTopicType.PRODUCT.name(),
                         ProductEventType.PRODUCT_CREATE_NEW.name(),
                         product.getId().value(),

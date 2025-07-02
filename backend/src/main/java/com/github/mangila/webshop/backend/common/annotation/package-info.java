@@ -1,7 +1,6 @@
 /**
- * Custom annotations and their validators
+ * Custom annotations used across the application.
+ * This package provides validation annotations and their implementations.
  */
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.github.mangila.webshop.backend.common.annotation;
-
-import org.jspecify.annotations.NullMarked;

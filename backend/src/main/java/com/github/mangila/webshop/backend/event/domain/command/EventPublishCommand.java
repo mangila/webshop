@@ -10,4 +10,9 @@ public record EventPublishCommand(
         UUID aggregateId,
         JsonNode payload
 ) {
+
+    public static EventPublishCommand from(String topic, String eventType, UUID aggregateId, JsonNode payload) {
+        return new EventPublishCommand(topic, eventType, aggregateId, payload);
+    }
+
 }

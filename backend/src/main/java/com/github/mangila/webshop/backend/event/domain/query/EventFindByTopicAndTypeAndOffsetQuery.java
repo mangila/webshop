@@ -6,4 +6,10 @@ public record EventFindByTopicAndTypeAndOffsetQuery(
         long offset,
         int limit
 ) {
+    public static EventFindByTopicAndTypeAndOffsetQuery from(String topic,
+                                                             String type,
+                                                             Long latestOffset,
+                                                             int limit) {
+        return new EventFindByTopicAndTypeAndOffsetQuery(topic, type, latestOffset, limit);
+    }
 }

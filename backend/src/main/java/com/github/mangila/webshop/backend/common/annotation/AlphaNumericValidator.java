@@ -2,7 +2,6 @@ package com.github.mangila.webshop.backend.common.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.jspecify.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
@@ -18,7 +17,7 @@ public class AlphaNumericValidator implements ConstraintValidator<AlphaNumeric, 
     }
 
     @Override
-    public boolean isValid(@Nullable String value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
             return allowNull;
         }

@@ -19,13 +19,9 @@ public class JsonMapper {
     public JsonMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-    
+
     public JsonNode toJsonNode(Object object) {
         return readTree(object);
-    }
-
-    public JsonNode toJsonNode(String json) {
-        return readTree(json);
     }
 
     private JsonNode readTree(Object object) {
@@ -37,10 +33,5 @@ public class JsonMapper {
                     return jsonNode;
                 })
                 .getOrElseThrow(() -> new ApiException("Error parsing object: " + object, JsonMapper.class, HttpStatus.CONFLICT));
-    }
-
-    private JsonNode readTree(String json) {
-        return Try.of(() -> objectMapper.readTree(json))
-                .getOrElseThrow(() -> new ApiException("Error parsing json: " + json, JsonMapper.class, HttpStatus.CONFLICT));
     }
 }

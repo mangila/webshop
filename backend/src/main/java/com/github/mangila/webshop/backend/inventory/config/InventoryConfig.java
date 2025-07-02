@@ -2,6 +2,7 @@ package com.github.mangila.webshop.backend.inventory.config;
 
 import com.github.mangila.webshop.backend.event.application.gateway.EventRegistryGateway;
 import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
+import com.github.mangila.webshop.backend.event.domain.command.EventSubscribeCommand;
 import com.github.mangila.webshop.backend.event.domain.common.EventSubscriberProperties;
 import com.github.mangila.webshop.backend.event.domain.model.EventSubscriber;
 import com.github.mangila.webshop.backend.inventory.domain.event.InventoryEventTopicType;
@@ -64,7 +65,7 @@ public class InventoryConfig {
     public void onApplicationReady() {
         EventSubscriber consumer = eventServiceGateway
                 .subscriber()
-                .save(INVENTORY_NEW_PRODUCT_PROPS.toCommand());
+                .subscribe(EventSubscribeCommand.from(INVENTORY_NEW_PRODUCT_PROPS));
         log.info("Subscribed to {} on topic {} for event {}",
                 consumer.getConsumer(),
                 consumer.getTopic(),

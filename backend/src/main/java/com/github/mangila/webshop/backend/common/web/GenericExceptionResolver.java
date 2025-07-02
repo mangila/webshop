@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common;
+package com.github.mangila.webshop.backend.common.web;
 
 import com.github.mangila.webshop.backend.common.exception.ApiException;
 import com.github.mangila.webshop.backend.common.exception.CommandException;

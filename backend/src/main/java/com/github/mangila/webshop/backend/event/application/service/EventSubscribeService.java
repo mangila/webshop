@@ -26,7 +26,7 @@ public class EventSubscribeService {
         this.eventRepositoryGateway = eventRepositoryGateway;
     }
 
-    public EventSubscriber save(EventSubscribeCommand command) {
+    public EventSubscriber subscribe(EventSubscribeCommand command) {
         var topic = command.topic();
         var type = command.type();
         if (!eventRegistryGateway.eventTopicRegistry().isRegistered(topic)) {
@@ -36,15 +36,15 @@ public class EventSubscribeService {
             throw new ApiException(String.format("EventType is not registered: '%s'", type), Event.class, HttpStatus.CONFLICT);
         }
         EventSubscriber c = EventSubscriber.from(command);
-        return eventRepositoryGateway.subscriber().save(c);
+        return eventRepositoryGateway.subscriberCommand().save(c);
     }
 
     public Optional<EventSubscriber> findById(EventSubscriberByIdQuery query) {
-        return eventRepositoryGateway.subscriber().findById(query.id());
+        return eventRepositoryGateway.subscriberQuery().findById(query.id());
     }
 
     public List<Event> findEventsByTopicAndTypeAndOffset(EventFindByTopicAndTypeAndOffsetQuery query) {
-        return eventRepositoryGateway.query().findEventsByTopicAndTypeAndOffset(query);
+        return eventRepositoryGateway.eventQuery().findEventsByTopicAndTypeAndOffset(query);
     }
 
     public void acknowledge(EventSubscriber subscriber, List<Event> events) {
@@ -53,6 +53,6 @@ public class EventSubscribeService {
                 .max()
                 .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class));
         subscriber.setLatestOffset(max);
-        eventRepositoryGateway.subscriber().save(subscriber);
+        eventRepositoryGateway.subscriberCommand().save(subscriber);
     }
 }

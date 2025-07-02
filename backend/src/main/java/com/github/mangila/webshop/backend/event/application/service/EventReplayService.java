@@ -16,7 +16,7 @@ public class EventReplayService {
         this.repositoryGateway = repositoryGateway;
     }
 
-    public List<Event> execute(EventReplayQuery replay) {
-        return repositoryGateway.query().replay(replay);
+    public List<Event> replay(EventReplayQuery replay) {
+        return repositoryGateway.eventQuery().replay(replay);
     }
 }

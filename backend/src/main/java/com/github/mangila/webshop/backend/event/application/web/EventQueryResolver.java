@@ -21,7 +21,7 @@ public class EventQueryResolver {
 
     @QueryMapping
     public List<Event> replay(@Argument("input") @Valid EventReplayQuery replay) {
-        return eventServiceGateway.replayer().execute(replay);
+        return eventServiceGateway.replayer().replay(replay);
     }
 
 }

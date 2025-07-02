@@ -41,8 +41,8 @@ public class ProductDeleteCommandService {
                 HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", command.id())));
         repositoryGateway.command().delete(product);
-        Event event = eventGateway.publisher().save(
-                new EventPublishCommand(
+        Event event = eventGateway.publisher().publish(
+                EventPublishCommand.from(
                         ProductEventTopicType.PRODUCT.name(),
                         ProductEventType.PRODUCT_DELETED.name(),
                         product.getId().value(),

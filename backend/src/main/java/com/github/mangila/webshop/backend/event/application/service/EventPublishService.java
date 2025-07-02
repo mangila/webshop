@@ -5,13 +5,10 @@ import com.github.mangila.webshop.backend.event.application.gateway.EventRegistr
 import com.github.mangila.webshop.backend.event.application.gateway.EventRepositoryGateway;
 import com.github.mangila.webshop.backend.event.domain.command.EventPublishCommand;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
-import org.jspecify.annotations.NullMarked;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-@NullMarked
 @Service
 public class EventPublishService {
 
@@ -24,15 +21,15 @@ public class EventPublishService {
         this.repositoryGateway = repositoryGateway;
     }
 
-    public Event save(EventPublishCommand command) {
-        return repositoryGateway.command().save(tryGetEvent(command));
+    public Event publish(EventPublishCommand command) {
+        return repositoryGateway.eventCommand().save(tryGetEvent(command));
     }
 
-    public List<Event> saveMany(List<EventPublishCommand> commands) {
+    public List<Event> publishMany(List<EventPublishCommand> commands) {
         var events = commands.stream()
                 .map(this::tryGetEvent)
                 .toList();
-        return repositoryGateway.command().saveAll(events);
+        return repositoryGateway.eventCommand().saveAll(events);
     }
 
     private Event tryGetEvent(EventPublishCommand command) {
