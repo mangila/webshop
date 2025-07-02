@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.backend.uuid.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Immutable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "uuid_record")
+@Immutable
 @EntityListeners(AuditingEntityListener.class)
 public class UuidRecord {
 
@@ -41,5 +43,17 @@ public class UuidRecord {
 
     public String getIntent() {
         return intent;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public void setIntent(String intent) {
+        this.intent = intent;
     }
 }
