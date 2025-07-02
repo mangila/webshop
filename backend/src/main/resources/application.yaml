@@ -14,14 +14,14 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
-    username: "my_user"
-    password: "secret"
-    url: "jdbc:postgresql://localhost:5432/webshop"
-    driver-class-name: org.postgresql.Driver
     hikari:
+      jdbc-url: "jdbc:postgresql://localhost:5432/webshop"
+      username: "my_user"
+      password: "secret"
       pool-name: "webshop-hikari-pool"
       maximum-pool-size: 10
       minimum-idle: 5
+      driver-class-name: org.postgresql.Driver
   sql:
     init:
       mode: always
@@ -50,7 +50,6 @@ logging:
   file:
     name: "webshop.log"
   level:
-    web: debug
     sql: debug
 # SpringDoc
 springdoc:
@@ -65,5 +64,7 @@ management:
       exposure:
         include: "*"
   endpoint:
+    metrics:
+      access: unrestricted
     shutdown:
       access: unrestricted
