@@ -44,7 +44,7 @@ public class EventSubscribeService {
     }
 
     public List<Event> findEventsByTopicAndTypeAndOffset(EventFindByTopicAndTypeAndOffsetQuery query) {
-        return eventRepositoryGateway.query().consume(query);
+        return eventRepositoryGateway.query().findEventsByTopicAndTypeAndOffset(query);
     }
 
     public void acknowledge(EventSubscriber subscriber, List<Event> events) {

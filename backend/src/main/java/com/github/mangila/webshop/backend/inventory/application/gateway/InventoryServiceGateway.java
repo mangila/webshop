@@ -7,16 +7,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class InventoryServiceGateway {
 
-    private final InventoryInsertCommandService command;
+    private final InventoryInsertCommandService insert;
     private final InventoryQueryService query;
 
-    public InventoryServiceGateway(InventoryInsertCommandService command, InventoryQueryService query) {
-        this.command = command;
+    public InventoryServiceGateway(InventoryInsertCommandService insert, InventoryQueryService query) {
+        this.insert = insert;
         this.query = query;
     }
 
-    public InventoryInsertCommandService command() {
-        return command;
+    public InventoryInsertCommandService insert() {
+        return insert;
     }
 
     public InventoryQueryService query() {

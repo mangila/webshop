@@ -31,5 +31,5 @@ public interface EventQueryRepository extends JpaRepository<Event, Long> {
                 ORDER BY e.id
                 LIMIT :#{#query.limit()}
             """)
-    List<Event> consume(@Param("query") EventFindByTopicAndTypeAndOffsetQuery query);
+    List<Event> findEventsByTopicAndTypeAndOffset(@Param("query") EventFindByTopicAndTypeAndOffsetQuery query);
 }

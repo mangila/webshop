@@ -17,5 +17,6 @@ public record InventoryQuantity(
         @DecimalMax(value = "99999.99", message = "Quantity must not exceed 99,999.99")
         @Digits(integer = 5, fraction = 2, message = "Quantity format is invalid (up to 5 digits and 2 decimal places)")
         BigDecimal value) {
+    public static final InventoryQuantity DEFAULT = new InventoryQuantity(BigDecimal.ZERO);
 }
 

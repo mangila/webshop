@@ -5,6 +5,8 @@ import com.github.mangila.webshop.backend.inventory.domain.command.InventoryInse
 import com.github.mangila.webshop.backend.inventory.domain.model.Inventory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InventoryInsertCommandService {
 
@@ -14,7 +16,14 @@ public class InventoryInsertCommandService {
         this.gateway = gateway;
     }
 
-    public Inventory execute(InventoryInsertCommand command) {
+    public Inventory save(InventoryInsertCommand command) {
         return gateway.command().save(Inventory.from(command));
+    }
+
+    public List<Inventory> saveMany(List<InventoryInsertCommand> commands) {
+        var inventories = commands.stream()
+                .map(Inventory::from)
+                .toList();
+        return gateway.command().saveAll(inventories);
     }
 }

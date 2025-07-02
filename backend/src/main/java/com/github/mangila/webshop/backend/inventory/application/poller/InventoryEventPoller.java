@@ -9,7 +9,6 @@ import com.github.mangila.webshop.backend.inventory.application.gateway.Inventor
 import com.github.mangila.webshop.backend.inventory.config.InventoryConfig;
 import com.github.mangila.webshop.backend.inventory.domain.command.InventoryInsertCommand;
 import com.github.mangila.webshop.backend.inventory.domain.model.InventoryId;
-import com.github.mangila.webshop.backend.inventory.domain.model.InventoryQuantity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -53,14 +51,15 @@ public class InventoryEventPoller {
             return;
         }
         log.debug("Found {} events for consumer {}", pendingEvents.size(), subscriber.getConsumer());
-        pendingEvents.forEach(event -> {
-            log.info("Processing event {}", event);
-            inventoryServiceGateway.command().execute(new InventoryInsertCommand(
-                    new InventoryId(event.getAggregateId()),
-                    new InventoryQuantity(new BigDecimal(0))
-            ));
-        });
-        eventServiceGateway.subscriber()
-                .acknowledge(subscriber, pendingEvents);
+        var inventories = pendingEvents.stream()
+                .peek(event -> log.debug("Processing event {}", event))
+                .map(Event::getAggregateId)
+                .map(InventoryId::new)
+                .map(InventoryInsertCommand::from)
+                .toList();
+        inventoryServiceGateway.insert().saveMany(inventories);
+        eventServiceGateway.subscriber().acknowledge(subscriber, pendingEvents);
     }
+
+
 }
