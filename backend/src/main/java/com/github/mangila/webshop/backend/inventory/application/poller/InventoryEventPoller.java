@@ -43,7 +43,7 @@ public class InventoryEventPoller {
 
     @Transactional
     @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
-    public void pollForNewProductInsertedEvents() {
+    public void pollForNewProducts() {
         EventSubscriber subscriber = eventServiceGateway.subscriber()
                 .findById(new EventSubscriberByIdQuery(InventoryConfig.INVENTORY_NEW_PRODUCT_PROPS.consumer()))
                 .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class));
