@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -21,48 +19,36 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventTopic topic;
-
+    private String topic;
+    @Column(nullable = false)
+    private String type;
     @Embedded
-    @AttributeOverride(name = "value",
-            column = @Column(
-                    name = "event_type",
-                    nullable = false))
-    private EventType eventType;
-
-    @Embedded
-    @AttributeOverride(name = "value",
-            column = @Column(
-                    name = "aggregate_id",
-                    nullable = false))
+    @AttributeOverride(
+            name = "value",
+            column = @Column(name = "aggregate_id", nullable = false))
     private ApplicationUuid aggregateId;
-
     @Type(JsonBinaryType.class)
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "event_data",
+    @Column(name = "payload",
             columnDefinition = "jsonb",
             nullable = false)
-    private JsonNode eventData;
-
+    private JsonNode payload;
     @CreatedDate
     private Instant created;
 
     protected Event() {
     }
 
-    public Event(EventTopic topic, EventType eventType, ApplicationUuid aggregateId, JsonNode eventData) {
-        this(null, topic, eventType, aggregateId, eventData, null);
+    public Event(String topic, String type, ApplicationUuid aggregateId, JsonNode payload) {
+        this(null, topic, type, aggregateId, payload, null);
     }
 
-    private Event(Long id, EventTopic topic, EventType eventType, ApplicationUuid aggregateId, JsonNode eventData, Instant created) {
+    private Event(Long id, String topic, String type, ApplicationUuid aggregateId, JsonNode payload, Instant created) {
         this.id = id;
         this.topic = topic;
-        this.eventType = eventType;
+        this.type = type;
         this.aggregateId = aggregateId;
-        this.eventData = eventData;
+        this.payload = payload;
         this.created = created;
     }
 
@@ -70,20 +56,20 @@ public class Event {
         return id;
     }
 
-    public EventTopic getTopic() {
+    public String getTopic() {
         return topic;
     }
 
-    public EventType getEventType() {
-        return eventType;
+    public String getType() {
+        return type;
     }
 
     public ApplicationUuid getAggregateId() {
         return aggregateId;
     }
 
-    public JsonNode getEventData() {
-        return eventData;
+    public JsonNode getPayload() {
+        return payload;
     }
 
     public Instant getCreated() {
@@ -94,20 +80,20 @@ public class Event {
         this.id = id;
     }
 
-    public void setTopic(EventTopic topic) {
+    public void setTopic(String topic) {
         this.topic = topic;
     }
 
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
+    public void setType(String eventType) {
+        this.type = eventType;
     }
 
     public void setAggregateId(ApplicationUuid aggregateId) {
         this.aggregateId = aggregateId;
     }
 
-    public void setEventData(JsonNode eventData) {
-        this.eventData = eventData;
+    public void setPayload(JsonNode eventData) {
+        this.payload = eventData;
     }
 
     public void setCreated(Instant created) {

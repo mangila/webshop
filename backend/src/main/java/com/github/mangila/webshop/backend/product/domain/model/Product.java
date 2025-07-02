@@ -3,11 +3,10 @@ package com.github.mangila.webshop.backend.product.domain.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
+import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,7 +43,6 @@ public class Product {
     private Instant updated;
 
     @Type(JsonBinaryType.class)
-    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "attributes",
             columnDefinition = "jsonb",
             nullable = false)
@@ -53,7 +51,11 @@ public class Product {
     protected Product() {
     }
 
-    public Product(ApplicationUuid id, ProductName name, ProductPrice price, Instant created, Instant updated, JsonNode attributes) {
+    public Product(ProductName name, ProductPrice price, JsonNode attributes) {
+        this(new ApplicationUuid(), name, price, null, null, attributes);
+    }
+
+    private Product(ApplicationUuid id, ProductName name, ProductPrice price, Instant created, Instant updated, JsonNode attributes) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -62,7 +64,11 @@ public class Product {
         this.attributes = attributes;
     }
 
-    public JsonNode toJsonData(JsonMapper jsonMapper) {
+    public static Product from(ProductInsertCommand command) {
+        return new Product(command.name(), command.price(), command.attributes());
+    }
+
+    public JsonNode toJsonNode(JsonMapper jsonMapper) {
         return jsonMapper.toJsonNode(this);
     }
 

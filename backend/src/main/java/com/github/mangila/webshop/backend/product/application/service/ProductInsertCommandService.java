@@ -3,9 +3,9 @@ package com.github.mangila.webshop.backend.product.application.service;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import com.github.mangila.webshop.backend.event.application.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
-import com.github.mangila.webshop.backend.event.domain.model.EventTopic;
-import com.github.mangila.webshop.backend.product.domain.ProductEventType;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
+import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
+import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.product.infrastructure.ProductCommandRepository;
 import org.slf4j.Logger;
@@ -32,14 +32,14 @@ public class ProductInsertCommandService {
 
     @Transactional
     public Event execute(ProductInsertCommand command) {
-        Product product = commandRepository.save(command.toProduct());
-        Event event = eventServiceGateway.emit(
-                EventTopic.PRODUCT,
+        Product product = commandRepository.save(Product.from(command));
+        Event event = eventServiceGateway.routePublish(
+                ProductTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_UPSERTED.name(),
                 product.id(),
-                product.toJsonData(jsonMapper)
+                product.toJsonNode(jsonMapper)
         );
-        log.info("{} -- {} -- {}", event.getEventType(), product, event);
+        log.info("{} -- {} -- {}", event.getType(), product, event);
         return event;
     }
 }

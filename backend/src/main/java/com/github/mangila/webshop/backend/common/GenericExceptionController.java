@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.common;
 
+import com.github.mangila.webshop.backend.common.exception.ApiException;
 import com.github.mangila.webshop.backend.common.exception.CommandException;
-import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.common.exception.QueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -71,15 +70,12 @@ public class GenericExceptionController {
         return problem;
     }
 
-    @ExceptionHandler(DatabaseException.class)
-    public ProblemDetail handleDatabaseException(DatabaseException ex, WebRequest request) {
-        log.error("ERR", ex);
+    @ExceptionHandler(ApiException.class)
+    public ProblemDetail handleApiException(ApiException ex, WebRequest request) {
         var problem = ProblemDetail.forStatus(ex.getHttpStatus());
-        problem.setTitle("Database operation failed");
-        problem.setDetail(Arrays.toString(ex.getParams()));
-        problem.setProperties(
-                Map.of("resource", ex.getResource().getSimpleName())
-        );
+        problem.setTitle("Api Error");
+        problem.setDetail(ex.getMessage());
+        problem.setProperties(Map.of("resource", ex.getResource().getSimpleName()));
         return problem;
     }
 

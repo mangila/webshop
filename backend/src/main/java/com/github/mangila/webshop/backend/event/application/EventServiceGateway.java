@@ -2,10 +2,7 @@ package com.github.mangila.webshop.backend.event.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.backend.common.model.ApplicationUuid;
-import com.github.mangila.webshop.backend.event.domain.command.EventEmitCommand;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
-import com.github.mangila.webshop.backend.event.domain.model.EventTopic;
-import com.github.mangila.webshop.backend.event.domain.model.EventType;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +11,23 @@ import java.util.List;
 @Service
 public class EventServiceGateway {
 
-    private final EventQueryService queryService;
-    private final EventCommandService commandService;
+    private final EventReplayService replayer;
+    private final EventPublishService publisher;
 
-    public EventServiceGateway(EventQueryService queryService,
-                               EventCommandService commandService) {
-        this.commandService = commandService;
-        this.queryService = queryService;
+    public EventServiceGateway(EventReplayService replayer,
+                               EventPublishService publisher) {
+        this.publisher = publisher;
+        this.replayer = replayer;
     }
 
-    public Event emit(EventTopic topic,
-                      String eventType,
-                      ApplicationUuid aggregateId,
-                      JsonNode eventData) {
-        return commandService.emit(new EventEmitCommand(
-                topic,
-                new EventType(eventType),
-                aggregateId,
-                eventData
-        ));
+    public Event routePublish(String topic,
+                              String eventType,
+                              ApplicationUuid aggregateId,
+                              JsonNode payload) {
+        return publisher.publish(topic, eventType, aggregateId, payload);
     }
 
-    public List<Event> replay(EventReplayQuery replay) {
-        return queryService.replay(replay);
+    public List<Event> routeReplay(EventReplayQuery replay) {
+        return replayer.replay(replay);
     }
 }

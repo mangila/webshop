@@ -4,9 +4,9 @@ import com.github.mangila.webshop.backend.common.exception.CommandException;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import com.github.mangila.webshop.backend.event.application.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
-import com.github.mangila.webshop.backend.event.domain.model.EventTopic;
-import com.github.mangila.webshop.backend.product.domain.ProductEventType;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
+import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
+import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.product.infrastructure.ProductCommandRepository;
 import org.slf4j.Logger;
@@ -40,13 +40,13 @@ public class ProductDeleteCommandService {
                 HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", command.id())));
         commandRepository.delete(product);
-        Event event = eventServiceGateway.emit(
-                EventTopic.PRODUCT,
+        Event event = eventServiceGateway.routePublish(
+                ProductTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_DELETED.name(),
                 product.id(),
-                product.toJsonData(jsonMapper)
+                product.toJsonNode(jsonMapper)
         );
-        log.info("{} -- {} -- {}", event.getEventType(), product, event);
+        log.info("{} -- {} -- {}", event.getType(), product, event);
         return event;
     }
 }

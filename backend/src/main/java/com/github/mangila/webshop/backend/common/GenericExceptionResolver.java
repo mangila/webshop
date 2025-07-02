@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.backend.common;
 
 import com.github.mangila.webshop.backend.common.exception.CommandException;
-import com.github.mangila.webshop.backend.common.exception.DatabaseException;
 import com.github.mangila.webshop.backend.common.exception.QueryException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,7 +33,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
             case QueryException qe -> handleQueryException(qe, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
-            case DatabaseException dbe -> handleDatabaseException(dbe, env);
             default -> {
                 log.error("ERR", ex);
                 yield GraphqlErrorBuilder.newError(env)
@@ -44,17 +41,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                         .build();
             }
         };
-    }
-
-    private GraphQLError handleDatabaseException(DatabaseException dbe, DataFetchingEnvironment env) {
-        log.error("ERR", dbe);
-        return GraphqlErrorBuilder.newError(env)
-                .errorType(ErrorType.INTERNAL_ERROR)
-                .message("Database operation failed")
-                .extensions(Map.of(
-                        "resource", dbe.getResource().getSimpleName(),
-                        "params", Arrays.toString(dbe.getParams())))
-                .build();
     }
 
     private GraphQLError handleConstraintViolationException(ConstraintViolationException cve, DataFetchingEnvironment env) {
