@@ -41,8 +41,8 @@ public class InventoryEventPoller {
         this.eventServiceGateway = eventServiceGateway;
     }
 
-    @Transactional
     @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
+    @Transactional
     public void pollForNewProducts() {
         var consumerId = InventoryConfig.INVENTORY_NEW_PRODUCT_PROPS.consumer();
         EventSubscriber subscriber = eventServiceGateway.subscriber()
