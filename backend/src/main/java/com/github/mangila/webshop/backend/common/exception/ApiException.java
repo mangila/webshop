@@ -19,14 +19,18 @@ public class ApiException extends RuntimeException {
 
     public ApiException(String message,
                         Class<?> resource,
-                        HttpStatus httpStatus) {
-        this(message, resource, httpStatus, null);
+                        Throwable cause) {
+        this(message, resource, HttpStatus.INTERNAL_SERVER_ERROR, cause);
     }
 
     public ApiException(String message,
                         Class<?> resource,
-                        Throwable cause) {
-        this(message, resource, HttpStatus.INTERNAL_SERVER_ERROR, cause);
+                        HttpStatus httpStatus) {
+        this(message, resource, httpStatus, null);
+    }
+
+    public ApiException(String message, Class<?> resource) {
+        this(message, resource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public Class<?> getResource() {

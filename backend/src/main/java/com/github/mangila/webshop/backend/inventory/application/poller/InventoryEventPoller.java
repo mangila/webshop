@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.backend.inventory.application.poller;
 
+import com.github.mangila.webshop.backend.common.exception.ApiException;
 import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.model.EventSubscriber;
@@ -11,6 +12,7 @@ import com.github.mangila.webshop.backend.inventory.domain.command.InventoryInse
 import com.github.mangila.webshop.backend.inventory.domain.model.InventoryId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +40,7 @@ public class InventoryEventPoller {
     public void pollForNewProductInsertedEvents() {
         EventSubscriber subscriber = eventServiceGateway.subscriber()
                 .findById(new EventSubscriberByIdQuery(InventoryConfig.INVENTORY_NEW_PRODUCT_PROPS.consumer()))
-                .orElseThrow();
+                .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class));
         List<Event> pendingEvents = eventServiceGateway.subscriber()
                 .findEventsByTopicAndTypeAndOffset(new EventFindByTopicAndTypeAndOffsetQuery(
                         subscriber.getTopic(),
@@ -60,6 +62,4 @@ public class InventoryEventPoller {
         inventoryServiceGateway.insert().saveMany(inventories);
         eventServiceGateway.subscriber().acknowledge(subscriber, pendingEvents);
     }
-
-
 }

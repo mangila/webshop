@@ -51,7 +51,7 @@ public class EventSubscribeService {
         long max = events.stream()
                 .mapToLong(Event::getId)
                 .max()
-                .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class, HttpStatus.CONFLICT));
+                .orElseThrow(() -> new ApiException("No events to acknowledge", Event.class));
         subscriber.setLatestOffset(max);
         eventRepositoryGateway.subscriber().save(subscriber);
     }
