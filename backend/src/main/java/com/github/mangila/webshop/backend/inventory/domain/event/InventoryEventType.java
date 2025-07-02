@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.inventory.domain.event;
 
 public enum InventoryEventType {
-    CREATE_NEW,
+    INVENTORY_CREATE_NEW,
     UPDATED,
     DELETED,
     QUANTITY_INCREASED,

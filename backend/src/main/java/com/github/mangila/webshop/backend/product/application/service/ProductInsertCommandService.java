@@ -2,6 +2,7 @@ package com.github.mangila.webshop.backend.product.application.service;
 
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
+import com.github.mangila.webshop.backend.event.domain.command.EventPublishCommand;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
@@ -40,11 +41,12 @@ public class ProductInsertCommandService {
     public Event execute(ProductInsertCommand command) {
         UUID uuid = uuidGenerator.generate(command.getClass().getSimpleName());
         Product product = repositoryGateway.command().save(Product.from(uuid, command));
-        Event event = eventServiceGateway.publisher().execute(
-                ProductEventTopicType.PRODUCT.name(),
-                ProductEventType.PRODUCT_INSERTED.name(),
-                product.getId().value(),
-                product.toJsonNode(jsonMapper)
+        Event event = eventServiceGateway.publisher().save(
+                new EventPublishCommand(
+                        ProductEventTopicType.PRODUCT.name(),
+                        ProductEventType.PRODUCT_CREATE_NEW.name(),
+                        product.getId().value(),
+                        product.toJsonNode(jsonMapper))
         );
         log.info("{} -- {} -- {}", event.getType(), product, event);
         return event;

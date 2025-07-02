@@ -1,7 +1,9 @@
 package com.github.mangila.webshop.backend.inventory.application.poller;
 
 import com.github.mangila.webshop.backend.common.exception.ApiException;
+import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
+import com.github.mangila.webshop.backend.event.domain.command.EventPublishCommand;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.model.EventSubscriber;
 import com.github.mangila.webshop.backend.event.domain.query.EventFindByTopicAndTypeAndOffsetQuery;
@@ -9,10 +11,11 @@ import com.github.mangila.webshop.backend.event.domain.query.EventSubscriberById
 import com.github.mangila.webshop.backend.inventory.application.gateway.InventoryServiceGateway;
 import com.github.mangila.webshop.backend.inventory.config.InventoryConfig;
 import com.github.mangila.webshop.backend.inventory.domain.command.InventoryInsertCommand;
+import com.github.mangila.webshop.backend.inventory.domain.event.InventoryEventTopicType;
+import com.github.mangila.webshop.backend.inventory.domain.event.InventoryEventType;
 import com.github.mangila.webshop.backend.inventory.domain.model.InventoryId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +29,14 @@ public class InventoryEventPoller {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryEventPoller.class);
 
+    private final JsonMapper jsonMapper;
     private final InventoryServiceGateway inventoryServiceGateway;
     private final EventServiceGateway eventServiceGateway;
 
-    public InventoryEventPoller(InventoryServiceGateway inventoryServiceGateway,
+    public InventoryEventPoller(JsonMapper jsonMapper,
+                                InventoryServiceGateway inventoryServiceGateway,
                                 EventServiceGateway eventServiceGateway) {
+        this.jsonMapper = jsonMapper;
         this.inventoryServiceGateway = inventoryServiceGateway;
         this.eventServiceGateway = eventServiceGateway;
     }
@@ -53,13 +59,28 @@ public class InventoryEventPoller {
             return;
         }
         log.debug("Found {} events for consumer {}", pendingEvents.size(), subscriber.getConsumer());
-        var inventories = pendingEvents.stream()
-                .peek(event -> log.debug("Processing event {}", event))
+        var inventoryInsertCommands = pendingEvents.stream()
+                .peek(event -> log.debug("Processing pending event {}", event))
                 .map(Event::getAggregateId)
                 .map(InventoryId::new)
                 .map(InventoryInsertCommand::from)
                 .toList();
-        inventoryServiceGateway.insert().saveMany(inventories);
+        var eventPublishCommands = inventoryServiceGateway.insert()
+                .saveMany(inventoryInsertCommands)
+                .stream()
+                .peek(inventory -> log.debug("Saved inventory {}", inventory))
+                .map(inventory -> new EventPublishCommand(
+                        InventoryEventTopicType.INVENTORY.name(),
+                        InventoryEventType.INVENTORY_CREATE_NEW.name(),
+                        inventory.getId().value(),
+                        jsonMapper.toJsonNode(inventory)))
+                .peek(command -> log.debug("Created EventPublishCommand {}", command))
+                .toList();
+        eventServiceGateway.publisher()
+                .saveMany(eventPublishCommands)
+                .stream()
+                .peek(event -> log.debug("Published event {}", event))
+                .toList();
         eventServiceGateway.subscriber().acknowledge(subscriber, pendingEvents);
     }
 }
