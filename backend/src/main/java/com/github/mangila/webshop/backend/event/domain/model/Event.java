@@ -4,6 +4,7 @@ package com.github.mangila.webshop.backend.event.domain.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "event")
+@Immutable
 @EntityListeners(AuditingEntityListener.class)
 public class Event {
     @Id
@@ -35,10 +37,6 @@ public class Event {
     protected Event() {
     }
 
-    public Event(String topic, String type, UUID aggregateId, JsonNode payload) {
-        this(null, topic, type, aggregateId, payload, null);
-    }
-
     private Event(Long id, String topic, String type, UUID aggregateId, JsonNode payload, Instant created) {
         this.id = id;
         this.topic = topic;
@@ -46,6 +44,14 @@ public class Event {
         this.aggregateId = aggregateId;
         this.payload = payload;
         this.created = created;
+    }
+
+    private Event(String topic, String type, UUID aggregateId, JsonNode payload) {
+        this(null, topic, type, aggregateId, payload, null);
+    }
+
+    public static Event from(String topic, String type, UUID aggregateId, JsonNode payload) {
+        return new Event(topic, type, aggregateId, payload);
     }
 
     public Long getId() {

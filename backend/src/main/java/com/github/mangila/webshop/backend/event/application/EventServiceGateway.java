@@ -20,14 +20,14 @@ public class EventServiceGateway {
         this.replayer = replayer;
     }
 
-    public Event routePublish(String topic,
-                              String eventType,
-                              UUID aggregateId,
-                              JsonNode payload) {
+    public Event publish(String topic,
+                         String eventType,
+                         UUID aggregateId,
+                         JsonNode payload) {
         return publisher.publish(topic, eventType, aggregateId, payload);
     }
 
-    public List<Event> routeReplay(EventReplayQuery replay) {
+    public List<Event> replay(EventReplayQuery replay) {
         return replayer.replay(replay);
     }
 }

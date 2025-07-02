@@ -29,15 +29,15 @@ public class ProductServiceGateway {
         this.insertCommandService = insertCommandService;
     }
 
-    public Product routeFindById(ProductByIdQuery query) {
+    public Product findById(ProductByIdQuery query) {
         return queryService.findById(query);
     }
 
-    public Event routeInsert(ProductInsertCommand command) {
+    public Event insert(ProductInsertCommand command) {
         return insertCommandService.execute(command);
     }
 
-    public Event routeDelete(ProductDeleteCommand command) {
+    public Event delete(ProductDeleteCommand command) {
         return deleteCommandService.execute(command);
     }
 }

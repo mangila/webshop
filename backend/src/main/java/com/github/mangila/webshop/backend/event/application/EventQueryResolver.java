@@ -20,7 +20,7 @@ public class EventQueryResolver {
 
     @QueryMapping
     public List<Event> replay(@Argument("input") @Valid EventReplayQuery replay) {
-        return eventServiceGateway.routeReplay(replay);
+        return eventServiceGateway.replay(replay);
     }
 
 }

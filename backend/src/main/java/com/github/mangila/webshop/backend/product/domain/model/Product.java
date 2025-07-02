@@ -60,7 +60,7 @@ public class Product {
         this.attributes = attributes;
     }
 
-    public Product(ProductId id, ProductName name, ProductPrice price, JsonNode attributes) {
+    private Product(ProductId id, ProductName name, ProductPrice price, JsonNode attributes) {
         this(id, name, price, null, null, attributes);
     }
 
@@ -77,28 +77,52 @@ public class Product {
         return jsonMapper.toJsonNode(this);
     }
 
-    public ProductId id() {
+    public ProductId getId() {
         return id;
     }
 
-    public ProductName name() {
+    public void setId(ProductId id) {
+        this.id = id;
+    }
+
+    public ProductName getName() {
         return name;
     }
 
-    public ProductPrice price() {
+    public void setName(ProductName name) {
+        this.name = name;
+    }
+
+    public ProductPrice getPrice() {
         return price;
     }
 
-    public Instant created() {
+    public void setPrice(ProductPrice price) {
+        this.price = price;
+    }
+
+    public Instant getCreated() {
         return created;
     }
 
-    public Instant updated() {
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public Instant getUpdated() {
         return updated;
     }
 
-    public JsonNode attributes() {
+    public void setUpdated(Instant updated) {
+        this.updated = updated;
+    }
+
+    public JsonNode getAttributes() {
         return attributes;
+    }
+
+    public void setAttributes(JsonNode attributes) {
+        this.attributes = attributes;
     }
 }
 

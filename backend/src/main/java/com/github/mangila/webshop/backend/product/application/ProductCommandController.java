@@ -23,13 +23,13 @@ public class ProductCommandController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Event> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
-        return ResponseEntity.ok(productServiceGateway.routeInsert(command));
+        return ResponseEntity.ok(productServiceGateway.insert(command));
     }
 
     @DeleteMapping(
             value = "delete",
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Event> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
-        return ResponseEntity.ok(productServiceGateway.routeDelete(command));
+        return ResponseEntity.ok(productServiceGateway.delete(command));
     }
 }

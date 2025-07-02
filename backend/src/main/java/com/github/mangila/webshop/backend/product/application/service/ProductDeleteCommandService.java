@@ -4,11 +4,11 @@ import com.github.mangila.webshop.backend.common.exception.CommandException;
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
 import com.github.mangila.webshop.backend.event.application.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.product.application.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
 import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
-import com.github.mangila.webshop.backend.product.infrastructure.ProductCommandRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,30 +20,30 @@ public class ProductDeleteCommandService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductDeleteCommandService.class);
 
-    private final EventServiceGateway eventServiceGateway;
-    private final ProductCommandRepository commandRepository;
+    private final EventServiceGateway eventGateway;
+    private final ProductRepositoryGateway repositoryGateway;
     private final JsonMapper jsonMapper;
 
-    public ProductDeleteCommandService(EventServiceGateway eventServiceGateway,
-                                       ProductCommandRepository commandRepository,
+    public ProductDeleteCommandService(EventServiceGateway eventGateway,
+                                       ProductRepositoryGateway repositoryGateway,
                                        JsonMapper jsonMapper) {
-        this.eventServiceGateway = eventServiceGateway;
-        this.commandRepository = commandRepository;
+        this.eventGateway = eventGateway;
+        this.repositoryGateway = repositoryGateway;
         this.jsonMapper = jsonMapper;
     }
 
     @Transactional
     public Event execute(ProductDeleteCommand command) {
-        Product product = commandRepository.findById(command.id()).orElseThrow(() -> new CommandException(
+        Product product = repositoryGateway.findById(command.id()).orElseThrow(() -> new CommandException(
                 command.getClass(),
                 Product.class,
                 HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", command.id())));
-        commandRepository.delete(product);
-        Event event = eventServiceGateway.routePublish(
+        repositoryGateway.delete(product);
+        Event event = eventGateway.publish(
                 ProductTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_DELETED.name(),
-                product.id().value(),
+                product.getId().value(),
                 product.toJsonNode(jsonMapper)
         );
         log.info("{} -- {} -- {}", event.getType(), product, event);
