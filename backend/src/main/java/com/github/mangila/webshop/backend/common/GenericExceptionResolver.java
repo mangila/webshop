@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.backend.common;
 
+import com.github.mangila.webshop.backend.common.exception.ApiException;
 import com.github.mangila.webshop.backend.common.exception.CommandException;
 import com.github.mangila.webshop.backend.common.exception.QueryException;
 import graphql.GraphQLError;
@@ -31,6 +32,7 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
         return switch (ex) {
             case CommandException ce -> handleCommandException(ce, env);
             case QueryException qe -> handleQueryException(qe, env);
+            case ApiException ae -> handleApiException(ae, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
             default -> {
@@ -41,6 +43,18 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                         .build();
             }
         };
+    }
+
+    private GraphQLError handleApiException(ApiException ex, DataFetchingEnvironment env) {
+        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
+        if (ex.getHttpStatus().isSameCodeAs(HttpStatus.NOT_FOUND)) {
+            graphqlErrorType = ErrorType.NOT_FOUND;
+        }
+        return GraphqlErrorBuilder.newError(env)
+                .errorType(graphqlErrorType)
+                .message(ex.getMessage())
+                .extensions(Map.of("resource", ex.getResource().getSimpleName()))
+                .build();
     }
 
     private GraphQLError handleConstraintViolationException(ConstraintViolationException cve, DataFetchingEnvironment env) {
