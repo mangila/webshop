@@ -1,12 +1,11 @@
 package com.github.mangila.webshop.backend.product.config;
 
-import com.github.mangila.webshop.backend.event.application.EventRegistry;
+import com.github.mangila.webshop.backend.event.application.gateway.EventRegistryGateway;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
 import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.EnumSet;
@@ -17,13 +16,10 @@ public class ProductConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductConfig.class);
 
-    private final EventRegistry eventTypeRegistry;
-    private final EventRegistry eventTopicRegistry;
+    private final EventRegistryGateway eventRegistryGateway;
 
-    public ProductConfig(@Qualifier("defaultEventTypeRegistry") EventRegistry eventTypeRegistry,
-                         @Qualifier("defaultEventTopicRegistry") EventRegistry eventTopicRegistry) {
-        this.eventTypeRegistry = eventTypeRegistry;
-        this.eventTopicRegistry = eventTopicRegistry;
+    public ProductConfig(EventRegistryGateway eventRegistryGateway) {
+        this.eventRegistryGateway = eventRegistryGateway;
     }
 
     @PostConstruct
@@ -36,7 +32,7 @@ public class ProductConfig {
                         ProductEventType::name))
                 .forEach((key, value) -> {
                     log.info("Registering event type: {}", key);
-                    eventTypeRegistry.register(key, value);
+                    eventRegistryGateway.registerEventType(key, value);
                 });
     }
 
@@ -50,7 +46,7 @@ public class ProductConfig {
                         ProductTopicType::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    eventTopicRegistry.register(key, value);
+                    eventRegistryGateway.registerEventTopic(key, value);
                 });
     }
 }

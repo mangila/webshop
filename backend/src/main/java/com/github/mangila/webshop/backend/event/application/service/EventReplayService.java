@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.backend.event.application;
+package com.github.mangila.webshop.backend.event.application.service;
 
+import com.github.mangila.webshop.backend.event.application.gateway.EventRepositoryGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import org.springframework.stereotype.Service;

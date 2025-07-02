@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.event.application;
+package com.github.mangila.webshop.backend.event.application.registry;
 
 public interface EventRegistry {
 

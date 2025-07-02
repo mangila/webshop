@@ -1,6 +1,8 @@
-package com.github.mangila.webshop.backend.event.application;
+package com.github.mangila.webshop.backend.event.application.gateway;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.backend.event.application.service.EventPublishService;
+import com.github.mangila.webshop.backend.event.application.service.EventReplayService;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import org.springframework.stereotype.Service;

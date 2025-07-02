@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.backend.event.application;
+package com.github.mangila.webshop.backend.event.application.web;
 
+import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import jakarta.validation.Valid;

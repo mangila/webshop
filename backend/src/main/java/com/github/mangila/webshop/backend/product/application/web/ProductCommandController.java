@@ -1,6 +1,7 @@
-package com.github.mangila.webshop.backend.product.application;
+package com.github.mangila.webshop.backend.product.application.web;
 
 import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import jakarta.validation.Valid;

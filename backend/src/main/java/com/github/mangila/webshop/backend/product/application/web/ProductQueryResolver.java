@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.backend.product.application;
+package com.github.mangila.webshop.backend.product.application.web;
 
+import com.github.mangila.webshop.backend.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.product.domain.query.ProductByIdQuery;
 import jakarta.validation.Valid;

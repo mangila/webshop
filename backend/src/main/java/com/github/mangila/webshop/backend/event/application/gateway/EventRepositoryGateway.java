@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.event.application;
+package com.github.mangila.webshop.backend.event.application.gateway;
 
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;

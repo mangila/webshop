@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.backend.product.application.service;
 
 import com.github.mangila.webshop.backend.common.util.JsonMapper;
-import com.github.mangila.webshop.backend.event.application.EventServiceGateway;
+import com.github.mangila.webshop.backend.event.application.gateway.EventServiceGateway;
 import com.github.mangila.webshop.backend.event.domain.model.Event;
-import com.github.mangila.webshop.backend.product.application.ProductRepositoryGateway;
+import com.github.mangila.webshop.backend.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
 import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;

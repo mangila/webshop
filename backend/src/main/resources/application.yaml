@@ -9,7 +9,7 @@ spring:
     name: "webshop"
   jpa:
     properties:
-      hibernate.hibernate.generate_statistics: true
+      hibernate.generate_statistics: true
     show-sql: true
     hibernate:
       ddl-auto: create-drop
