@@ -24,18 +24,19 @@ public class EventPublishService {
         this.repositoryGateway = repositoryGateway;
     }
 
-    public Event publish(
+    public Event execute(
             String topic,
             String eventType,
             UUID aggregateId,
             JsonNode payload
     ) {
-        if (!registryGateway.hasRegisteredTopic(topic)) {
-            throw new ApiException(String.format("Topic is not registered - '%s'", topic), Event.class, HttpStatus.CONFLICT);
+        if (!registryGateway.eventTopicRegistry().isRegistered(topic)) {
+            throw new ApiException(String.format("Topic is not registered: '%s'", topic), Event.class, HttpStatus.CONFLICT);
         }
-        if (!registryGateway.hasRegisteredEvent(eventType)) {
-            throw new ApiException(String.format("Event type is not registered - '%s'", eventType), Event.class, HttpStatus.CONFLICT);
+        if (!registryGateway.eventTypeRegistry().isRegistered(eventType)) {
+            throw new ApiException(String.format("EventType is not registered: '%s'", eventType), Event.class, HttpStatus.CONFLICT);
         }
-        return repositoryGateway.save(Event.from(topic, eventType, aggregateId, payload));
+        Event event = Event.from(topic, eventType, aggregateId, payload);
+        return repositoryGateway.command().save(event);
     }
 }

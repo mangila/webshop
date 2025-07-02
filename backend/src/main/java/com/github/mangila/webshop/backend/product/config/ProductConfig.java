@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.backend.product.config;
 
 import com.github.mangila.webshop.backend.event.application.gateway.EventRegistryGateway;
+import com.github.mangila.webshop.backend.product.domain.event.ProductEventTopicType;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
-import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class ProductConfig {
     }
 
     @PostConstruct
-    public void registerEventTypes() {
+    public void registerProductEventTypes() {
         log.debug("Registering event types for product domain");
         EnumSet.allOf(ProductEventType.class)
                 .stream()
@@ -32,21 +32,21 @@ public class ProductConfig {
                         ProductEventType::name))
                 .forEach((key, value) -> {
                     log.info("Registering event type: {}", key);
-                    eventRegistryGateway.registerEventType(key, value);
+                    eventRegistryGateway.eventTypeRegistry().register(key, value);
                 });
     }
 
     @PostConstruct
-    public void registerTopicTypes() {
+    public void registerProductEventTopicTypes() {
         log.debug("Registering event topics for product domain");
-        EnumSet.allOf(ProductTopicType.class)
+        EnumSet.allOf(ProductEventTopicType.class)
                 .stream()
                 .collect(Collectors.toMap(
-                        ProductTopicType::name,
-                        ProductTopicType::name))
+                        ProductEventTopicType::name,
+                        ProductEventTopicType::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    eventRegistryGateway.registerEventTopic(key, value);
+                    eventRegistryGateway.eventTopicRegistry().register(key, value);
                 });
     }
 }

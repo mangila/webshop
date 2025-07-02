@@ -7,7 +7,7 @@ import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
-import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
+import com.github.mangila.webshop.backend.product.domain.event.ProductEventTopicType;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +34,14 @@ public class ProductDeleteCommandService {
 
     @Transactional
     public Event execute(ProductDeleteCommand command) {
-        Product product = repositoryGateway.findById(command.id()).orElseThrow(() -> new CommandException(
+        Product product = repositoryGateway.query().findById(command.id()).orElseThrow(() -> new CommandException(
                 command.getClass(),
                 Product.class,
                 HttpStatus.NOT_FOUND,
                 String.format("id not found: '%s'", command.id())));
-        repositoryGateway.delete(product);
-        Event event = eventGateway.publish(
-                ProductTopicType.PRODUCT.name(),
+        repositoryGateway.command().delete(product);
+        Event event = eventGateway.publisher().execute(
+                ProductEventTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_DELETED.name(),
                 product.getId().value(),
                 product.toJsonNode(jsonMapper)

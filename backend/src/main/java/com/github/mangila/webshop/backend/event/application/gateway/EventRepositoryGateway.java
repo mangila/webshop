@@ -1,29 +1,34 @@
 package com.github.mangila.webshop.backend.event.application.gateway;
 
-import com.github.mangila.webshop.backend.event.domain.model.Event;
-import com.github.mangila.webshop.backend.event.domain.query.EventReplayQuery;
 import com.github.mangila.webshop.backend.event.infrastructure.EventCommandRepository;
 import com.github.mangila.webshop.backend.event.infrastructure.EventQueryRepository;
+import com.github.mangila.webshop.backend.event.infrastructure.EventSubscriberRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventRepositoryGateway {
 
     private final EventCommandRepository eventCommandRepository;
     private final EventQueryRepository eventQueryRepository;
+    private final EventSubscriberRepository eventSubscriberRepository;
 
-    public EventRepositoryGateway(EventCommandRepository eventCommandRepository, EventQueryRepository eventQueryRepository) {
+    public EventRepositoryGateway(EventCommandRepository eventCommandRepository,
+                                  EventQueryRepository eventQueryRepository,
+                                  EventSubscriberRepository eventSubscriberRepository) {
         this.eventCommandRepository = eventCommandRepository;
         this.eventQueryRepository = eventQueryRepository;
+        this.eventSubscriberRepository = eventSubscriberRepository;
     }
 
-    public List<Event> replay(EventReplayQuery replay) {
-        return eventQueryRepository.replay(replay);
+    public EventCommandRepository command() {
+        return eventCommandRepository;
     }
 
-    public Event save(Event event) {
-        return eventCommandRepository.save(event);
+    public EventQueryRepository query() {
+        return eventQueryRepository;
+    }
+
+    public EventSubscriberRepository subscriber() {
+        return eventSubscriberRepository;
     }
 }

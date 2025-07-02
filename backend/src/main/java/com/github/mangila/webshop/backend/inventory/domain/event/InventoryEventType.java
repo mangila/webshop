@@ -1,8 +1,5 @@
-package com.github.mangila.webshop.backend.inventory.model;
+package com.github.mangila.webshop.backend.inventory.domain.event;
 
-/**
- * Enum representing the types of events that can occur for Inventory entities.
- */
 public enum InventoryEventType {
     CREATE_NEW,
     UPDATED,

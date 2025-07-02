@@ -17,7 +17,7 @@ public class ProductQueryService {
     }
 
     public Product findById(ProductByIdQuery query) {
-        var result = repositoryGateway.findById(query.id());
+        var result = repositoryGateway.query().findById(query.id());
         return result.orElseThrow(() -> new QueryException(
                 String.format("id not found: '%s'", query.id()),
                 query.getClass(),

@@ -5,8 +5,8 @@ import com.github.mangila.webshop.backend.event.application.gateway.EventService
 import com.github.mangila.webshop.backend.event.domain.model.Event;
 import com.github.mangila.webshop.backend.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
+import com.github.mangila.webshop.backend.product.domain.event.ProductEventTopicType;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEventType;
-import com.github.mangila.webshop.backend.product.domain.event.ProductTopicType;
 import com.github.mangila.webshop.backend.product.domain.model.Product;
 import com.github.mangila.webshop.backend.uuid.application.UuidGeneratorService;
 import org.slf4j.Logger;
@@ -39,9 +39,9 @@ public class ProductInsertCommandService {
     @Transactional
     public Event execute(ProductInsertCommand command) {
         UUID uuid = uuidGenerator.generate(command.getClass().getSimpleName());
-        Product product = repositoryGateway.save(Product.from(uuid, command));
-        Event event = eventServiceGateway.publish(
-                ProductTopicType.PRODUCT.name(),
+        Product product = repositoryGateway.command().save(Product.from(uuid, command));
+        Event event = eventServiceGateway.publisher().execute(
+                ProductEventTopicType.PRODUCT.name(),
                 ProductEventType.PRODUCT_INSERTED.name(),
                 product.getId().value(),
                 product.toJsonNode(jsonMapper)

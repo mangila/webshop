@@ -36,6 +36,14 @@ public class Product {
             column = @Column(name = "price", nullable = false))
     private ProductPrice price;
 
+    @Type(JsonBinaryType.class)
+    @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
+    private JsonNode attributes;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unit", nullable = false)
+    private ProductUnit unit;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant created;
@@ -44,24 +52,31 @@ public class Product {
     @Column(nullable = false)
     private Instant updated;
 
-    @Type(JsonBinaryType.class)
-    @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
-    private JsonNode attributes;
-
     protected Product() {
     }
 
-    private Product(ProductId id, ProductName name, ProductPrice price, Instant created, Instant updated, JsonNode attributes) {
+    private Product(ProductId id,
+                    ProductName name,
+                    ProductPrice price,
+                    JsonNode attributes,
+                    ProductUnit unit,
+                    Instant created,
+                    Instant updated) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.attributes = attributes;
+        this.unit = unit;
         this.created = created;
         this.updated = updated;
-        this.attributes = attributes;
     }
 
-    private Product(ProductId id, ProductName name, ProductPrice price, JsonNode attributes) {
-        this(id, name, price, null, null, attributes);
+    private Product(ProductId id,
+                    ProductName name,
+                    ProductPrice price,
+                    JsonNode attributes,
+                    ProductUnit unit) {
+        this(id, name, price, attributes, unit, null, null);
     }
 
     public static Product from(UUID uuid, ProductInsertCommand command) {
@@ -69,7 +84,8 @@ public class Product {
                 new ProductId(uuid),
                 command.name(),
                 command.price(),
-                command.attributes()
+                command.attributes(),
+                command.unit()
         );
     }
 
@@ -101,6 +117,22 @@ public class Product {
         this.price = price;
     }
 
+    public JsonNode getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(JsonNode attributes) {
+        this.attributes = attributes;
+    }
+
+    public ProductUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(ProductUnit unit) {
+        this.unit = unit;
+    }
+
     public Instant getCreated() {
         return created;
     }
@@ -115,14 +147,6 @@ public class Product {
 
     public void setUpdated(Instant updated) {
         this.updated = updated;
-    }
-
-    public JsonNode getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(JsonNode attributes) {
-        this.attributes = attributes;
     }
 }
 

@@ -15,6 +15,6 @@ public record ProductPrice(
         @NotNull(message = "Price is required")
         @DecimalMin(value = "0.01", message = "Price must be at least 0.01")
         @DecimalMax(value = "99999.99", message = "Price must not exceed 99,999.99")
-        @Digits(integer = 7, fraction = 2, message = "Price format is invalid (up to 7 digits and 2 decimal places)")
+        @Digits(integer = 5, fraction = 2, message = "Price format is invalid (up to 5 digits and 2 decimal places)")
         BigDecimal value) {
 }

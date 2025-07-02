@@ -16,19 +16,12 @@ public class EventRegistryGateway {
         this.eventTopicRegistry = eventTopicRegistry;
     }
 
-    public void registerEventType(String key, String value) {
-        eventTypeRegistry.register(key, value);
+    public EventRegistry eventTypeRegistry() {
+        return eventTypeRegistry;
     }
 
-    public void registerEventTopic(String key, String value) {
-        eventTopicRegistry.register(key, value);
+    public EventRegistry eventTopicRegistry() {
+        return eventTopicRegistry;
     }
 
-    public boolean hasRegisteredEvent(String key) {
-        return eventTypeRegistry.isRegistered(key);
-    }
-
-    public boolean hasRegisteredTopic(String key) {
-        return eventTopicRegistry.isRegistered(key);
-    }
 }
