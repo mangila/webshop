@@ -1,9 +1,22 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:17.5-alpine'
     environment:
       - 'POSTGRES_DB=webshop'
-      - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=my_user'
+      - 'POSTGRES_PASSWORD=secret'
     ports:
       - '5432:5432'
+  rabbitmq:
+    image: 'rabbitmq:4.1.1-management'
+    environment:
+      - 'RABBITMQ_DEFAULT_USER=my_user'
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+    ports:
+      - '5672:5672'    # AMQP
+      - '15672:15672'  # Management UI
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3

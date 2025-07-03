@@ -22,7 +22,7 @@ public class InventoryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryConfig.class);
 
-    public static final EventSubscriberProperties INVENTORY_NEW_PRODUCT_PROPS = new EventSubscriberProperties("inventory-new-product-id", "PRODUCT", "PRODUCT_INSERTED");
+    public static final EventSubscriberProperties INVENTORY_NEW_PRODUCT_PROPS = new EventSubscriberProperties("inventory-new-product-id", "PRODUCT", "PRODUCT_CREATE_NEW");
 
     private final EventRegistryGateway eventRegistryGateway;
     private final EventServiceGateway eventServiceGateway;
