@@ -1,22 +1,26 @@
-# webshop
-
-- Mock webshop with Spring Boot, PostgresSQL and React Vite as Webshop UI and React Vite as Admin UI
-- Following a hybrid CQRS (Command Query Responsibility Segregation), Event Sourcing architecture (with Postgres used
-  as Event Store) DDD(Domain Driven Design) pattern
-- Graphql for Queries and REST for Commands — purely experimental
-
 *** This is not a prod-friendly app, just mock services and made-up Payment Providers & Delivery Providers  ***
-
-Spring Boot—Enterprise Implementation as a Webshop
-(Mostly want to play around with JSONB Column in Postgres and Event Sourcing)
-
 *** Only for Educational purposes ***
 
-### Dev stuffs
+# webshop
 
-- codecentric admin server - localhost:8081
-- localhost:8080/graphiql -- for graphql query requests
-- localhost:8080/swagger-ui -- for swagger command requests
+Mock webshop with Spring Boot, RabbitMQ and PostgresSQL and React Vite as Webshop UI and React Vite as Admin UI
+
+## backend 
+
+Spring Boot web app
+
+Postgres is used as a database, RabbitMQ as a message broker
+
+- CQRS (Command Query Responsibility Segregation)
+  - GraphQL is used for Queries and REST for Commands
+- Outbox pattern
+- DDD (Domain Driven Design)
+- Event Sourcing (ish)
+
+### Dev Stuffs
+- codecentric admin server
+- graphiql
+- swagger
 
 ### What this project does
 

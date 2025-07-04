@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.backend.product.application.web;
 
-import com.github.mangila.webshop.backend.event.domain.model.Event;
+import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEvent;
 import com.github.mangila.webshop.backend.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
@@ -23,14 +23,14 @@ public class ProductCommandController {
             value = "insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Event> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
-        return ResponseEntity.ok(productServiceGateway.insert().execute(command));
+    public ResponseEntity<OutboxEvent> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
+        return ResponseEntity.ok(productServiceGateway.command().insert(command));
     }
 
     @DeleteMapping(
             value = "delete",
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Event> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
-        return ResponseEntity.ok(productServiceGateway.delete().execute(command));
+    public ResponseEntity<OutboxEvent> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
+        return ResponseEntity.ok(productServiceGateway.command().delete(command));
     }
 }

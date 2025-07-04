@@ -26,6 +26,12 @@ spring:
     init:
       mode: always
       platform: postgres
+  rabbitmq:
+    stream:
+      host: localhost
+      port: 5552
+      username: "my_user"
+      password: "secret"
   graphql:
     graphiql:
       enabled: true
