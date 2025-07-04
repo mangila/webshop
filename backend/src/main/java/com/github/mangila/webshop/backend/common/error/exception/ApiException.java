@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.domain.exception;
+package com.github.mangila.webshop.backend.common.error.exception;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;

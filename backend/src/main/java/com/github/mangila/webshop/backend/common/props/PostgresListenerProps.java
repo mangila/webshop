@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.domain.props;
+package com.github.mangila.webshop.backend.common.props;
 
 public record PostgresListenerProps(
         String tableName,

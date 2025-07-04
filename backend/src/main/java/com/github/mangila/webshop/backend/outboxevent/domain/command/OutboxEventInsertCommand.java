@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.outboxevent.domain;
+package com.github.mangila.webshop.backend.outboxevent.domain.command;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

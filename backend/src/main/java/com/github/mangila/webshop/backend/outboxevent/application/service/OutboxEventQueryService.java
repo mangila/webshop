@@ -1,10 +1,10 @@
 package com.github.mangila.webshop.backend.outboxevent.application.service;
 
-import com.github.mangila.webshop.backend.common.domain.exception.QueryException;
+import com.github.mangila.webshop.backend.common.error.exception.QueryException;
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventRepositoryGateway;
 import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEvent;
-import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEventFindByIdQuery;
-import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEventReplayQuery;
+import com.github.mangila.webshop.backend.outboxevent.domain.query.OutboxEventFindByIdQuery;
+import com.github.mangila.webshop.backend.outboxevent.domain.query.OutboxEventReplayQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

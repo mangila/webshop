@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.outboxevent.domain;
+package com.github.mangila.webshop.backend.outboxevent.domain.query;
 
 
 import java.util.UUID;

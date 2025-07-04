@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.outboxevent.application.web;
 
 import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEvent;
-import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEventReplayQuery;
+import com.github.mangila.webshop.backend.outboxevent.domain.query.OutboxEventReplayQuery;
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventServiceGateway;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;

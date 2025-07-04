@@ -2,9 +2,8 @@ package com.github.mangila.webshop.backend.outboxevent.application.service;
 
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventRegistryGateway;
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventRepositoryGateway;
-import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventServiceGateway;
-import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEventInsertCommand;
 import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEvent;
+import com.github.mangila.webshop.backend.outboxevent.domain.command.OutboxEventInsertCommand;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +19,11 @@ public class OutboxEventCommandService {
 
     public OutboxEvent insert(OutboxEventInsertCommand command) {
         return outboxEventRepositoryGateway.command().save(tryCreateEvent(command));
+    }
+
+    public void markAsPublished(OutboxEvent outboxEvent) {
+        outboxEvent.setPublished(Boolean.TRUE);
+        outboxEventRepositoryGateway.command().save(outboxEvent);
     }
 
     private OutboxEvent tryCreateEvent(OutboxEventInsertCommand command) {

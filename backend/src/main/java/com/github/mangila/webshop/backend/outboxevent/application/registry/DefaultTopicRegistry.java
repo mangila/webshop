@@ -3,6 +3,7 @@ package com.github.mangila.webshop.backend.outboxevent.application.registry;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,5 +23,12 @@ public class DefaultTopicRegistry implements EventRegistry {
     @Override
     public void register(String key, String value) {
         registry.put(key, value);
+    }
+
+    @Override
+    public List<String> values() {
+        return registry.values()
+                .stream()
+                .toList();
     }
 }

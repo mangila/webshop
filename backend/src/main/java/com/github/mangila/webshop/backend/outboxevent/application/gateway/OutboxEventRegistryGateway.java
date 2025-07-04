@@ -1,7 +1,5 @@
 package com.github.mangila.webshop.backend.outboxevent.application.gateway;
 
-import com.github.mangila.webshop.backend.outboxevent.application.service.OutboxEventCommandService;
-import com.github.mangila.webshop.backend.outboxevent.application.service.OutboxEventQueryService;
 import com.github.mangila.webshop.backend.outboxevent.application.service.OutboxEventRegistryService;
 import org.springframework.stereotype.Service;
 

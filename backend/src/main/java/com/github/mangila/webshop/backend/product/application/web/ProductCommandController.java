@@ -29,7 +29,8 @@ public class ProductCommandController {
 
     @DeleteMapping(
             value = "delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OutboxEvent> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
         return ResponseEntity.ok(productServiceGateway.command().delete(command));
     }

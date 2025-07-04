@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.inventory.infrastructure.config;
 
-import com.github.mangila.webshop.backend.inventory.domain.event.InventoryTopic;
 import com.github.mangila.webshop.backend.inventory.domain.event.InventoryEvent;
+import com.github.mangila.webshop.backend.inventory.domain.event.InventoryTopic;
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventRegistryGateway;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -12,13 +12,13 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 @Configuration
-public class InventoryConfig {
+public class InventoryEventRegistryConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(InventoryConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(InventoryEventRegistryConfig.class);
 
     private final OutboxEventRegistryGateway outboxEventRegistryGateway;
 
-    public InventoryConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
+    public InventoryEventRegistryConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
         this.outboxEventRegistryGateway = outboxEventRegistryGateway;
     }
 

@@ -8,19 +8,19 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OutboxEventPostgresHandler {
+public class OutboxEventPostgresListenerHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OutboxEventPostgresHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(OutboxEventPostgresListenerHandler.class);
 
     private final OutboxEventPostgresListener outboxEventPostgresListener;
 
-    public OutboxEventPostgresHandler(OutboxEventPostgresListener outboxEventPostgresListener) {
+    public OutboxEventPostgresListenerHandler(OutboxEventPostgresListener outboxEventPostgresListener) {
         this.outboxEventPostgresListener = outboxEventPostgresListener;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void onReady() {
-        outboxEventPostgresListener.setUp(outboxEventPostgresListener.getProps());
+        outboxEventPostgresListener.setUp();
         outboxEventPostgresListener.listen();
     }
 

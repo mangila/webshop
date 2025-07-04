@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.backend.common.domain.annotation;
+package com.github.mangila.webshop.backend.common.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

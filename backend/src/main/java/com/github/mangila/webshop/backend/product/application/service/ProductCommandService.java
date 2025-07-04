@@ -1,10 +1,10 @@
 package com.github.mangila.webshop.backend.product.application.service;
 
-import com.github.mangila.webshop.backend.common.application.JsonMapper;
-import com.github.mangila.webshop.backend.common.domain.exception.CommandException;
+import com.github.mangila.webshop.backend.common.JsonMapper;
+import com.github.mangila.webshop.backend.common.error.exception.CommandException;
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventServiceGateway;
 import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEvent;
-import com.github.mangila.webshop.backend.outboxevent.domain.OutboxEventInsertCommand;
+import com.github.mangila.webshop.backend.outboxevent.domain.command.OutboxEventInsertCommand;
 import com.github.mangila.webshop.backend.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.backend.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;

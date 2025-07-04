@@ -2,9 +2,9 @@
 package com.github.mangila.webshop.backend.outboxevent.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.backend.outboxevent.domain.command.OutboxEventInsertCommand;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "outbox_event")
-@Immutable
 @EntityListeners(AuditingEntityListener.class)
 public class OutboxEvent implements Serializable {
 
@@ -23,25 +22,27 @@ public class OutboxEvent implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String topic;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String type;
 
-    @Column(nullable = false, name = "aggregate_id")
+    @Column(name = "aggregate_id", nullable = false, updatable = false)
     private UUID aggregateId;
 
     @Type(JsonBinaryType.class)
     @Column(name = "payload",
             columnDefinition = "jsonb",
-            nullable = false)
+            nullable = false,
+            updatable = false)
     private JsonNode payload;
 
     @Column(nullable = false)
     private boolean published;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Instant created;
 
     protected OutboxEvent() {

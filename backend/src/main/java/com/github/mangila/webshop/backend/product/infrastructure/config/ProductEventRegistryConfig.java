@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.backend.product.infrastructure.config;
 
 import com.github.mangila.webshop.backend.outboxevent.application.gateway.OutboxEventRegistryGateway;
-import com.github.mangila.webshop.backend.product.domain.event.ProductTopic;
 import com.github.mangila.webshop.backend.product.domain.event.ProductEvent;
+import com.github.mangila.webshop.backend.product.domain.event.ProductTopic;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +12,13 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 @Configuration
-public class ProductConfig {
+public class ProductEventRegistryConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductEventRegistryConfig.class);
 
     private final OutboxEventRegistryGateway outboxEventRegistryGateway;
 
-    public ProductConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
+    public ProductEventRegistryConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
         this.outboxEventRegistryGateway = outboxEventRegistryGateway;
     }
 

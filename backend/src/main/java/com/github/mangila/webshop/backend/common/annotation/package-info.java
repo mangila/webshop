@@ -3,4 +3,4 @@
  * This package provides validation annotations and their implementations.
  */
 @org.jspecify.annotations.NullMarked
-package com.github.mangila.webshop.backend.common.domain.annotation;
+package com.github.mangila.webshop.backend.common.annotation;

@@ -1,16 +1,14 @@
-package com.github.mangila.webshop.backend.common.application;
+package com.github.mangila.webshop.backend.common.error;
 
-import com.github.mangila.webshop.backend.common.domain.exception.ApiException;
-import com.github.mangila.webshop.backend.common.domain.exception.CommandException;
-import com.github.mangila.webshop.backend.common.domain.exception.QueryException;
+import com.github.mangila.webshop.backend.common.error.exception.ApiException;
+import com.github.mangila.webshop.backend.common.error.exception.CommandException;
+import com.github.mangila.webshop.backend.common.error.exception.QueryException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
 public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(GenericExceptionResolver.class);

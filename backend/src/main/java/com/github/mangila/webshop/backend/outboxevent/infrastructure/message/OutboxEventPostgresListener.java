@@ -1,23 +1,22 @@
 package com.github.mangila.webshop.backend.outboxevent.infrastructure.message;
 
-import com.github.mangila.webshop.backend.common.application.PostgresNotificationListener;
-import com.github.mangila.webshop.backend.common.domain.props.PostgresListenerProps;
+import com.github.mangila.webshop.backend.common.AbstractPostgresNotificationListener;
+import com.github.mangila.webshop.backend.common.SpringEventPublisher;
+import com.github.mangila.webshop.backend.common.props.PostgresListenerProps;
 import com.github.mangila.webshop.backend.outboxevent.domain.springevent.OutboxEventPostgresListenerFailedEvent;
 import com.github.mangila.webshop.backend.outboxevent.domain.springevent.OutboxEventPostgresNotification;
 import com.zaxxer.hikari.HikariConfig;
 import org.postgresql.PGNotification;
-import org.springframework.amqp.support.converter.SimpleMessageConverter;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OutboxEventPostgresListener extends PostgresNotificationListener {
+public class OutboxEventPostgresListener extends AbstractPostgresNotificationListener {
 
-    private final ApplicationEventPublisher publisher;
+    private final SpringEventPublisher publisher;
     private final JdbcTemplate jdbcTemplate;
 
-    public OutboxEventPostgresListener(ApplicationEventPublisher publisher,
+    public OutboxEventPostgresListener(SpringEventPublisher publisher,
                                        HikariConfig hikariConfig,
                                        JdbcTemplate jdbcTemplate) {
         super(hikariConfig);
@@ -27,12 +26,12 @@ public class OutboxEventPostgresListener extends PostgresNotificationListener {
 
     @Override
     public void onPgNotification(PGNotification pgNotification) {
-        publisher.publishEvent(new OutboxEventPostgresNotification(pgNotification));
+        publisher.publish(new OutboxEventPostgresNotification(pgNotification));
     }
 
     @Override
     public void onFailure(Throwable cause) {
-        publisher.publishEvent(new OutboxEventPostgresListenerFailedEvent(cause));
+        publisher.publish(new OutboxEventPostgresListenerFailedEvent(cause));
     }
 
     @Override
@@ -45,7 +44,8 @@ public class OutboxEventPostgresListener extends PostgresNotificationListener {
     }
 
     @Override
-    public void setUp(PostgresListenerProps props) {
+    public void setUp() {
+        var props = getProps();
         // language=PostgreSQL
         jdbcTemplate.execute("""
                 DROP FUNCTION IF EXISTS %s();

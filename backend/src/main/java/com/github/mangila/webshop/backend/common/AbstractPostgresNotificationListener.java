@@ -1,6 +1,6 @@
-package com.github.mangila.webshop.backend.common.application;
+package com.github.mangila.webshop.backend.common;
 
-import com.github.mangila.webshop.backend.common.domain.props.PostgresListenerProps;
+import com.github.mangila.webshop.backend.common.props.PostgresListenerProps;
 import com.zaxxer.hikari.HikariConfig;
 import io.vavr.control.Try;
 import org.postgresql.PGNotification;
@@ -11,23 +11,26 @@ import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.Assert;
 
-public abstract class PostgresNotificationListener {
+public abstract class AbstractPostgresNotificationListener {
 
-    private static final Logger log = LoggerFactory.getLogger(PostgresNotificationListener.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractPostgresNotificationListener.class);
 
     private final SingleConnectionDataSource dataSource;
     private final String channelName;
     private volatile boolean running = true;
 
-    public PostgresNotificationListener(HikariConfig hikariConfig) {
-        this.dataSource = new SingleConnectionDataSource(hikariConfig.getJdbcUrl(), hikariConfig.getUsername(), hikariConfig.getPassword(), true);
+    public AbstractPostgresNotificationListener(HikariConfig hikariConfig) {
+        Assert.notNull(hikariConfig, "HikariConfig must not be null");
+        Assert.notNull(getProps(), "PostgresListenerProps must not be null");
+        this.dataSource = new SingleConnectionDataSource(hikariConfig.getJdbcUrl(), hikariConfig.getUsername(), hikariConfig.getPassword(), Boolean.TRUE);
         this.channelName = getProps().channelName();
     }
 
     public abstract PostgresListenerProps getProps();
 
-    public abstract void setUp(PostgresListenerProps props);
+    public abstract void setUp();
 
     public abstract void onPgNotification(PGNotification pgNotification);
 
@@ -36,9 +39,9 @@ public abstract class PostgresNotificationListener {
     @Async
     public void listen() {
         log.info("Starting listener for channel {}", channelName);
-        running = true;
-        var template = new JdbcTemplate(dataSource);
         Try.of(() -> {
+                    running = true;
+                    var template = new JdbcTemplate(dataSource);
                     // language=PostgreSQL
                     template.execute("LISTEN %s".formatted(channelName));
                     int timeoutMillis = 300;
@@ -55,7 +58,7 @@ public abstract class PostgresNotificationListener {
                     return null;
                 })
                 .onFailure(this::onFailure)
-                .onSuccess(object -> onFailure(new IllegalStateException("Listener stopped for unknown reason")));
+                .onSuccess(__ -> onFailure(new IllegalStateException("Listener stopped for unknown reason")));
     }
 
     public void stop() {

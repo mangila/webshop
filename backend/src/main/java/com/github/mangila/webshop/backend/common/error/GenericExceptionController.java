@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.backend.common.application;
+package com.github.mangila.webshop.backend.common.error;
 
-import com.github.mangila.webshop.backend.common.domain.exception.ApiException;
-import com.github.mangila.webshop.backend.common.domain.exception.CommandException;
-import com.github.mangila.webshop.backend.common.domain.exception.QueryException;
+import com.github.mangila.webshop.backend.common.error.exception.ApiException;
+import com.github.mangila.webshop.backend.common.error.exception.CommandException;
+import com.github.mangila.webshop.backend.common.error.exception.QueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.backend.product.domain.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.backend.common.application.JsonMapper;
+import com.github.mangila.webshop.backend.common.JsonMapper;
 import com.github.mangila.webshop.backend.product.domain.command.ProductInsertCommand;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
