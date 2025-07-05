@@ -6,7 +6,7 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.domain.command.ProductDeleteCommand;
 import com.github.mangila.webshop.product.domain.model.ProductId;
-import com.github.mangila.webshop.shared.domain.uuid.application.UuidGeneratorService;
+import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

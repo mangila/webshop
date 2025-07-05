@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.inventory.infrastructure.config;
 
-import com.github.mangila.webshop.shared.infrastructure.RabbitMqConfig;
+import com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig;
 import com.github.mangila.webshop.outboxevent.application.gateway.OutboxEventRegistryGateway;
 import com.rabbitmq.stream.Environment;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;

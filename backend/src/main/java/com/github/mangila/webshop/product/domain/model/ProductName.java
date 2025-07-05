@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.domain.model;
 
-import com.github.mangila.webshop.shared.application.validation.AlphaNumeric;
+import com.github.mangila.webshop.shared.infrastructure.spring.validation.AlphaNumeric;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

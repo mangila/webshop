@@ -9,12 +9,16 @@ public class CqrsException extends RuntimeException {
     private final Class<?> domain;
 
     public CqrsException(String message,
-                         @Nullable Throwable cause,
                          CqrsOperation operation,
-                         Class<?> domain) {
+                         Class<?> domain,
+                         @Nullable Throwable cause) {
         super(message, cause);
         this.operation = operation;
         this.domain = domain;
+    }
+
+    public CqrsException(String message, CqrsOperation operation, Class<?> domain) {
+        this(message, operation, domain, null);
     }
 
     public CqrsOperation getOperation() {

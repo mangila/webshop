@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.inventory.infrastructure.message;
 
-import com.github.mangila.webshop.shared.application.json.JsonMapper;
-import com.github.mangila.webshop.shared.infrastructure.RabbitMqConfig;
+import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
+import com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig;
 import com.github.mangila.webshop.outboxevent.domain.OutboxEvent;
 import com.rabbitmq.stream.Message;
 import org.slf4j.Logger;

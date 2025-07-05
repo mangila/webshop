@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.product.application.service;
 
-import com.github.mangila.webshop.shared.domain.exception.QueryException;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.product.domain.model.Product;
 import com.github.mangila.webshop.product.domain.model.ProductId;

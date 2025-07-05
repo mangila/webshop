@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
-import com.github.mangila.webshop.shared.application.json.JsonMapper;
+import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.domain.exception.CommandException;
 import com.github.mangila.webshop.outboxevent.application.gateway.OutboxEventServiceGateway;
 import com.github.mangila.webshop.outboxevent.domain.OutboxEvent;
@@ -11,7 +11,7 @@ import com.github.mangila.webshop.product.domain.command.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.event.ProductTopic;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.product.domain.model.Product;
-import com.github.mangila.webshop.shared.domain.uuid.application.UuidGeneratorService;
+import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
