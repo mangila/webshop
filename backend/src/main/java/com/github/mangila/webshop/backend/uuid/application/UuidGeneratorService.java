@@ -19,4 +19,8 @@ public class UuidGeneratorService {
         var record = new UuidRecord(intent);
         return repository.save(record).getId();
     }
+
+    public boolean hasGenerated(UUID id) {
+        return repository.existsById(id);
+    }
 }

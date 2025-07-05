@@ -72,4 +72,9 @@ public class OutboxEventPostgresListener extends AbstractPostgresNotificationLis
                 EXECUTE FUNCTION %s();
                 """.formatted(props.triggerName(), props.tableName(), props.functionName()));
     }
+
+    @Override
+    public void destroy() {
+        stop();
+    }
 }

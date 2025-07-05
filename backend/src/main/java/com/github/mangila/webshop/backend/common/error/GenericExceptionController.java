@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,7 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GenericExceptionController {
@@ -30,6 +30,14 @@ public class GenericExceptionController {
         return problem;
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("HTTP Message Not Readable");
+        problem.setDetail("Bad format of the request body");
+        return problem;
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -38,10 +46,15 @@ public class GenericExceptionController {
         var errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .collect(Collectors.toMap(FieldError::getField,
-                        fe -> String.join(":",
-                                fe.getDefaultMessage(),
-                                fe.getRejectedValue().toString())));
+                .map(fieldError -> {
+                    if (fieldError.isBindingFailure()) {
+                        return fieldError.getField();
+                    }
+                    if (Objects.isNull(fieldError.getRejectedValue())) {
+                        return String.join(":", fieldError.getField(), fieldError.getDefaultMessage());
+                    }
+                    return String.join(":", fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue().toString());
+                }).toList();
         problem.setProperty("errors", errors);
         return problem;
     }
