@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.product.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -29,10 +28,6 @@ public class Product {
 
     public static Product from(UUID id, String name, BigDecimal price, JsonNode attributes, ProductUnit unit, Instant created, Instant updated) {
         return new Product(new ProductId(id), new ProductName(name), new ProductPrice(price), attributes, unit, created, updated);
-    }
-
-    public JsonNode toJsonNode(JsonMapper jsonMapper) {
-        return jsonMapper.toJsonNode(this);
     }
 
     public ProductId getId() {

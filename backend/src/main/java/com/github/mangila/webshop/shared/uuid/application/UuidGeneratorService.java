@@ -2,6 +2,7 @@ package com.github.mangila.webshop.shared.uuid.application;
 
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecord;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecordRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,9 +17,9 @@ public class UuidGeneratorService {
         this.repository = repository;
     }
 
-    public UUID generate(GenerateNewUuidIntent command) {
-        Assert.notNull(command, String.format("%s must not be null", GenerateNewUuidIntent.class.getSimpleName()));
-        var record = UuidRecord.create(command.value());
+    public UUID generate(GenerateNewUuidIntent intent) {
+        Assert.notNull(intent, "GenerateNewUuidIntent must not be null");
+        var record = UuidRecord.create(intent.value());
         return repository.save(record).getId();
     }
 

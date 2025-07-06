@@ -2,7 +2,7 @@ package com.github.mangila.webshop.shared.outbox.infrastructure.jpa;
 
 import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.outbox.domain.OutboxCommandRepository;
-import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
+import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.shared.outbox.domain.cqrs.OutboxInsert;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;

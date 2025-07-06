@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
+import com.github.mangila.webshop.product.application.cqrs.ProductIdCommand;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.event.ProductEvent;
@@ -7,7 +8,6 @@ import com.github.mangila.webshop.product.application.event.ProductTopic;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
 import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
@@ -49,43 +49,58 @@ public class ProductCommandService {
 
     @Transactional
     public ProductDto insert(ProductInsertCommand command) {
-        Product product = Stream.of(command)
-                .map(ProductInsertCommand::name)
-                .map(GenerateNewUuidIntent::new)
-                .map(uuidGenerator::generate)
+        UUID id = uuidGenerator.generate(
+                new GenerateNewUuidIntent("Create new Product")
+        );
+        ProductDto dto = Stream.of(id)
+                .peek(uuid -> log.debug("Insert product: {}", uuid))
                 .map(uuid -> productMapperGateway.command().toDomain(uuid, command))
                 .map(productRepositoryGateway.command()::insert)
+                .map(productMapperGateway.dto()::toDto)
                 .get();
-        OutboxDto outboxDto = outboxServiceGateway.command().insert(
-                OutboxInsertCommand.from(
-                        ProductTopic.PRODUCT,
-                        ProductEvent.PRODUCT_CREATE_NEW,
-                        product.getId().value(),
-                        product.toJsonNode(jsonMapper))
+        OutboxInsertCommand outboxInsertCommand = OutboxInsertCommand.from(
+                ProductTopic.PRODUCT,
+                ProductEvent.PRODUCT_CREATE_NEW,
+                dto.id(),
+                dto.toJsonNode(jsonMapper)
         );
-        log.info("{} -- {} -- {}", outboxDto.event(), product, outboxDto);
-        return productMapperGateway.dto().toDto(product);
+        OutboxDto outboxDto = outboxServiceGateway.command()
+                .insert(outboxInsertCommand);
+        log.debug("Created product with id: {} and event: {} in outbox with id: {}", dto.id(), ProductEvent.PRODUCT_CREATE_NEW, outboxDto.id());
+        return dto;
     }
 
     @Transactional
-    public ProductDto delete(UUID id) {
-        ProductId productId = new ProductId(id);
-        Product product = productRepositoryGateway.query()
-                .findById(productId)
-                .orElseThrow(() -> new CqrsException(
-                        String.format("value not found: '%s'", id),
-                        CqrsOperation.QUERY,
-                        Product.class
-                ));
-        productRepositoryGateway.command().deleteById(productId);
-        OutboxDto outboxDto = outboxServiceGateway.command().insert(
-                OutboxInsertCommand.from(
-                        ProductTopic.PRODUCT,
-                        ProductEvent.PRODUCT_DELETED,
-                        product.getId().value(),
-                        product.toJsonNode(jsonMapper))
+    public ProductDto delete(ProductIdCommand command) {
+        ProductDto dto = Stream.of(command)
+                .peek(c -> log.debug("Delete product: {}", c))
+                .map(productMapperGateway.command()::toDomain)
+                .map(productRepositoryGateway.query()::findById)
+                .map(product -> {
+                    if (product.isEmpty()) {
+                        throw new CqrsException(
+                                String.format("id not found: '%s'", command),
+                                CqrsOperation.QUERY,
+                                Product.class
+                        );
+                    }
+                    return product.get();
+                })
+                .map(product -> {
+                    productRepositoryGateway.command().deleteById(product.getId());
+                    return product;
+                })
+                .map(productMapperGateway.dto()::toDto)
+                .get();
+        OutboxInsertCommand outboxInsertCommand = OutboxInsertCommand.from(
+                ProductTopic.PRODUCT,
+                ProductEvent.PRODUCT_DELETED,
+                dto.id(),
+                dto.toJsonNode(jsonMapper)
         );
-        log.info("{} -- {} -- {}", outboxDto.event(), product, outboxDto);
-        return productMapperGateway.dto().toDto(product);
+        OutboxDto outboxDto = outboxServiceGateway.command()
+                .insert(outboxInsertCommand);
+        log.debug("Deleted product with id: {} and event: {} in outbox with id: {}", dto.id(), ProductEvent.PRODUCT_DELETED, outboxDto.id());
+        return dto;
     }
 }

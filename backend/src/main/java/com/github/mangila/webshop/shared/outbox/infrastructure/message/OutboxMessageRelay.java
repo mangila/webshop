@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
-import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
+import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq.OutboxRabbitProducer;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;

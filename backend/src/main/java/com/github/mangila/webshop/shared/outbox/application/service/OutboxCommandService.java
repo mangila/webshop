@@ -5,7 +5,7 @@ import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
-import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
+import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Service;
 

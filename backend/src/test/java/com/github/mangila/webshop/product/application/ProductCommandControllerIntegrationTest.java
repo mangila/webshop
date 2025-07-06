@@ -2,11 +2,10 @@ package com.github.mangila.webshop.product.application;
 
 import com.github.mangila.webshop.TestcontainersConfiguration;
 import com.github.mangila.webshop.product.ProductTestUtil;
-import com.github.mangila.webshop.product.application.cqrs.ProductByIdQuery;
+import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.domain.ProductId;
-import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class ProductCommandControllerIntegrationTest {
         UUID productId = dto.id();
 
         boolean exists = productServiceGateway.query()
-                .existsById(ProductId.from(productId));
+                .existsById(new ProductIdQuery(productId));
         assertThat(exists).isTrue();
 
         boolean hasGenerated = uuidGeneratorService.hasGenerated(productId);
@@ -67,13 +66,13 @@ class ProductCommandControllerIntegrationTest {
         webTestClient.method(HttpMethod.DELETE)
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_DELETE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new ProductByIdQuery(productId))
+                .bodyValue(new ProductIdQuery(productId))
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         exists = productServiceGateway.query()
-                .existsById(ProductId.from(productId));
+                .existsById(new ProductIdQuery(productId));
         assertThat(exists).isFalse();
     }
 }

@@ -2,13 +2,12 @@ package com.github.mangila.webshop.shared.outbox.application.service;
 
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
-import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxByIdQuery;
+import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdQuery;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
 import com.github.mangila.webshop.shared.outbox.domain.Outbox;
-import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +29,14 @@ public class OutboxQueryService {
         return List.of();
     }
 
-    public OutboxDto findById(OutboxByIdQuery query) {
+    public OutboxDto findById(OutboxIdQuery query) {
         return Stream.of(query)
-                .map(OutboxByIdQuery::id)
-                .map(OutboxId::new)
+                .map(mapper.query()::toDomain)
                 .map(repository.query()::findById)
                 .map(outbox -> {
                     if (outbox.isEmpty()) {
                         throw new CqrsException(
-                                String.format("value not found: '%s'", query.id()),
+                                String.format("id not found: '%s'", query.id()),
                                 CqrsOperation.QUERY,
                                 Outbox.class);
                     }

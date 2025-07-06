@@ -2,6 +2,7 @@
 package com.github.mangila.webshop.shared.outbox.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.shared.outbox.domain.primitive.*;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -9,14 +10,14 @@ import java.util.UUID;
 public class Outbox {
 
     private OutboxId id;
-    private String topic;
-    private String event;
-    private UUID aggregateId;
-    private JsonNode payload;
-    private boolean published;
-    private Instant created;
+    private OutboxTopic topic;
+    private OutboxEvent event;
+    private OutboxAggregateId aggregateId;
+    private OutboxPayload payload;
+    private OutboxPublished published;
+    private OutboxCreated created;
 
-    private Outbox(OutboxId id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
+    public Outbox(OutboxId id, OutboxTopic topic, OutboxEvent event, OutboxAggregateId aggregateId, OutboxPayload payload, OutboxPublished published, OutboxCreated created) {
         this.id = id;
         this.topic = topic;
         this.event = event;
@@ -27,62 +28,34 @@ public class Outbox {
     }
 
     public static Outbox from(Long id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant instant) {
-        return new Outbox(new OutboxId(id), topic, event, aggregateId, payload, published, instant);
+        return new Outbox(new OutboxId(id), new OutboxTopic(topic), new OutboxEvent(event), new OutboxAggregateId(aggregateId), new OutboxPayload(payload), new OutboxPublished(published), new OutboxCreated(instant));
     }
 
     public OutboxId getId() {
         return id;
     }
 
-    public void setId(OutboxId id) {
-        this.id = id;
-    }
-
-    public String getTopic() {
+    public OutboxTopic getTopic() {
         return topic;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getEvent() {
+    public OutboxEvent getEvent() {
         return event;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
-    }
-
-    public UUID getAggregateId() {
+    public OutboxAggregateId getAggregateId() {
         return aggregateId;
     }
 
-    public void setAggregateId(UUID aggregateId) {
-        this.aggregateId = aggregateId;
-    }
-
-    public JsonNode getPayload() {
+    public OutboxPayload getPayload() {
         return payload;
     }
 
-    public void setPayload(JsonNode payload) {
-        this.payload = payload;
-    }
-
-    public boolean isPublished() {
+    public OutboxPublished getPublished() {
         return published;
     }
 
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
-
-    public Instant getCreated() {
+    public OutboxCreated getCreated() {
         return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
     }
 }
