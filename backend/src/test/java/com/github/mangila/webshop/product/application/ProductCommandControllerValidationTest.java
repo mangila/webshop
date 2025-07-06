@@ -7,6 +7,8 @@ import com.github.mangila.webshop.product.application.web.ProductCommandControll
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoBean(types = ProductServiceGateway.class)
 class ProductCommandControllerValidationTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductCommandControllerValidationTest.class);
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +53,7 @@ class ProductCommandControllerValidationTest {
                 .expectBody(ProblemDetail.class)
                 .returnResult()
                 .getResponseBody();
+        log.info("Problem detail: {}", detail);
         assertThat(detail.getTitle())
                 .isEqualTo("HTTP Message Not Readable");
     }
@@ -73,6 +77,12 @@ class ProductCommandControllerValidationTest {
                         // language=JSON
                         """
                                    {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":"hej","unit":"KILOGRAM"}
+                                """
+                ),
+                createJsonTestCase("Attributes is null",
+                        // language=JSON
+                        """
+                                   {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":null,"unit":"KILOGRAM"}
                                 """
                 ),
                 createJsonTestCase("Attributes is invalid JSON object",
@@ -103,6 +113,7 @@ class ProductCommandControllerValidationTest {
                 .expectBody(ProblemDetail.class)
                 .returnResult()
                 .getResponseBody();
+        log.info("Problem detail: {}", detail);
         assertThat(detail.getTitle())
                 .isEqualTo("Validation Failed");
     }
