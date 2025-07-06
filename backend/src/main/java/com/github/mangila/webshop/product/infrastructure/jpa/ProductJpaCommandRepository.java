@@ -8,8 +8,6 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
 import com.github.mangila.webshop.product.infrastructure.event.ProductEvent;
 import com.github.mangila.webshop.product.infrastructure.event.ProductOutboxMapper;
 import com.github.mangila.webshop.product.infrastructure.event.ProductTopic;
-import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
-import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
