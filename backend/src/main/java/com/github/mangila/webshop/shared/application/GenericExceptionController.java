@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.shared.application;
 
+import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,14 @@ public class GenericExceptionController {
         problem.setTitle("Api Error");
         problem.setDetail(ex.getMessage());
         problem.setProperties(Map.of("operation", ex.getOperation().name()));
+        return problem;
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ProblemDetail handleApplicationException(ApplicationException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Api Error");
+        problem.setDetail(ex.getMessage());
         return problem;
     }
 
