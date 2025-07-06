@@ -4,14 +4,13 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.application.web.ProductCommandController;
-import com.github.mangila.webshop.product.domain.ProductName;
-import com.github.mangila.webshop.product.domain.ProductPrice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +19,8 @@ import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 import java.math.BigDecimal;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(ProductCommandController.class)
 @MockitoBean(types = ProductServiceGateway.class)
@@ -40,13 +41,17 @@ class ProductCommandControllerValidationTest {
     @ParameterizedTest(name = "Invalid product attributes: {0}")
     @MethodSource("invalidProductJsonTestCases")
     void testInvalidJson(InvalidProductJsonTestCase testCase) {
-        webTestClient.post()
+        ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testCase.json)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody();
+                .expectBody(ProblemDetail.class)
+                .returnResult()
+                .getResponseBody();
+        assertThat(detail.getTitle())
+                .isEqualTo("HTTP Message Not Readable");
     }
 
     record InvalidProductJsonTestCase(String description, String json) {
@@ -89,13 +94,17 @@ class ProductCommandControllerValidationTest {
     @ParameterizedTest(name = "Invalid product validation: {0}")
     @MethodSource("invalidProductTestCases")
     void testInvalidProductInsertCommands(InvalidProductTestCase testCase) {
-        webTestClient.post()
+        ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testCase.command)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody();
+                .expectBody(ProblemDetail.class)
+                .returnResult()
+                .getResponseBody();
+        assertThat(detail.getTitle())
+                .isEqualTo("Validation Failed");
     }
 
     record InvalidProductTestCase(String description, ProductInsertCommand command) {
