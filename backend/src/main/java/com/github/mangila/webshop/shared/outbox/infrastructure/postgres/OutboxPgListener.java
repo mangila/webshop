@@ -59,6 +59,7 @@ public class OutboxPgListener extends AbstractPgNotificationListener {
                 BEGIN
                     payload := json_build_object(
                         'id', NEW.id,
+                        'aggregateId', NEW.aggregate_id,
                         'topic', NEW.topic,
                         'event', NEW.event
                     );
