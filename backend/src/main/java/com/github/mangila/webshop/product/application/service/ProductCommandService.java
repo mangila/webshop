@@ -28,6 +28,7 @@ public class ProductCommandService {
     @Transactional
     public ProductDto insert(ProductInsertCommand command) {
         return Stream.of(command)
+                .peek(c -> log.debug("Insert product: {}", c))
                 .map(productMapperGateway.command()::toDomain)
                 .map(productRepositoryGateway.command()::insert)
                 .map(productMapperGateway.dto()::toDto)

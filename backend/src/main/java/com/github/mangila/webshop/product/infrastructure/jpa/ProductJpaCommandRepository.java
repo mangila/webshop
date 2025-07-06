@@ -79,11 +79,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     @Transactional
     @Override
     public void deleteById(ProductId productId) {
-        Product product = queryRepository.findById(productId)
-                .orElseThrow(() -> new CqrsException(String.format("id not found: %s",
-                        productId.value()),
-                        CqrsOperation.QUERY,
-                        Product.class));
+        Product product = queryRepository.findById(productId);
         repository.deleteById(productId.value());
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
