@@ -1,8 +1,6 @@
 package com.github.mangila.webshop.shared.application;
 
-import com.github.mangila.webshop.shared.domain.exception.WebException;
-import com.github.mangila.webshop.shared.domain.exception.CommandException;
-import com.github.mangila.webshop.shared.domain.exception.QueryException;
+import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -59,36 +57,12 @@ public class GenericExceptionController {
         return problem;
     }
 
-    @ExceptionHandler(QueryException.class)
-    public ProblemDetail handleQueryException(QueryException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
-        problem.setTitle("Query Error");
-        problem.setDetail(ex.getMessage());
-        problem.setProperties(
-                Map.of("resource", ex.getResource().getSimpleName(),
-                        "query", ex.getQuery().getSimpleName())
-        );
-        return problem;
-    }
-
-    @ExceptionHandler(CommandException.class)
-    public ProblemDetail handleCommandException(CommandException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
-        problem.setTitle("Command Error");
-        problem.setDetail(ex.getMessage());
-        problem.setProperties(
-                Map.of("resource", ex.getResource().getSimpleName(),
-                        "command", ex.getCommand().getSimpleName())
-        );
-        return problem;
-    }
-
-    @ExceptionHandler(WebException.class)
-    public ProblemDetail handleApiException(WebException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(ex.getHttpStatus());
+    @ExceptionHandler(CqrsException.class)
+    public ProblemDetail handleApiException(CqrsException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Api Error");
         problem.setDetail(ex.getMessage());
-        problem.setProperties(Map.of("resource", ex.getResource().getSimpleName()));
+        problem.setProperties(Map.of("operation", ex.getOperation().name()));
         return problem;
     }
 

@@ -2,10 +2,10 @@ package com.github.mangila.webshop.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.product.domain.command.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.model.ProductName;
-import com.github.mangila.webshop.product.domain.model.ProductPrice;
-import com.github.mangila.webshop.product.domain.model.ProductUnit;
+import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
+import com.github.mangila.webshop.product.domain.ProductName;
+import com.github.mangila.webshop.product.domain.ProductPrice;
+import com.github.mangila.webshop.product.domain.ProductUnit;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.math.BigDecimal;
@@ -18,20 +18,20 @@ public class ProductTestUtil {
 
     public static class TestProductInsertCommandBuilder {
 
-        private ProductName name = new ProductName("Test Product");
-        private ProductPrice price = new ProductPrice(new BigDecimal("19.99"));
+        private String name = "Test Product";
+        private BigDecimal price = new BigDecimal("19.99");
         private ObjectNode attributes = new ObjectMapper().createObjectNode();
         private ProductUnit unit = ProductUnit.PIECE;
 
         public TestProductInsertCommandBuilder() {
         }
 
-        public TestProductInsertCommandBuilder withName(ProductName name) {
+        public TestProductInsertCommandBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public TestProductInsertCommandBuilder withPrice(ProductPrice price) {
+        public TestProductInsertCommandBuilder withPrice(BigDecimal price) {
             this.price = price;
             return this;
         }
@@ -52,8 +52,8 @@ public class ProductTestUtil {
 
         public ProductInsertCommand buildDefault() {
             return new ProductInsertCommand(
-                    new ProductName("Test Product"),
-                    new ProductPrice(new BigDecimal("19.99")),
+                    "Test Product",
+                    new BigDecimal("19.99"),
                     new ObjectMapper().createObjectNode(),
                     ProductUnit.PIECE);
         }

@@ -2,7 +2,7 @@ package com.github.mangila.webshop.inventory.infrastructure.message;
 
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig;
-import com.github.mangila.webshop.outboxevent.domain.OutboxEvent;
+import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
 import com.rabbitmq.stream.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class InventoryRabbitMqConsumer {
             queues = RabbitMqConfig.OUTBOX_EVENT_PRODUCT_STREAM_KEY,
             containerFactory = "inventoryNewProductConsumer")
     void listen(Message message) {
-        OutboxEvent event = jsonMapper.toObject(message.getBodyAsBinary(), OutboxEvent.class);
+        OutboxMessage event = jsonMapper.toObject(message.getBodyAsBinary(), OutboxMessage.class);
         log.info("Consumed Message: {}", event);
     }
 }

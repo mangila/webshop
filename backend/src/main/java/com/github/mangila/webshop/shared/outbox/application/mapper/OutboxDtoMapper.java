@@ -9,7 +9,7 @@ public class OutboxDtoMapper {
 
     public OutboxDto toDto(Outbox domain) {
         return OutboxDto.from(
-                domain.getId(),
+                domain.getId().value(),
                 domain.getTopic(),
                 domain.getEvent(),
                 domain.getAggregateId(),

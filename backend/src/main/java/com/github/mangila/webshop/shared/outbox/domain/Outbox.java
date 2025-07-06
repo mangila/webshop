@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Outbox {
 
-    private Long id;
+    private OutboxId id;
     private String topic;
     private String event;
     private UUID aggregateId;
@@ -16,7 +16,7 @@ public class Outbox {
     private boolean published;
     private Instant created;
 
-    private Outbox(Long id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
+    private Outbox(OutboxId id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
         this.id = id;
         this.topic = topic;
         this.event = event;
@@ -27,14 +27,14 @@ public class Outbox {
     }
 
     public static Outbox from(Long id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant instant) {
-        return new Outbox(id, topic, event, aggregateId, payload, published, instant);
+        return new Outbox(new OutboxId(id), topic, event, aggregateId, payload, published, instant);
     }
 
-    public Long getId() {
+    public OutboxId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(OutboxId id) {
         this.id = id;
     }
 

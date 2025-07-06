@@ -7,8 +7,8 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
 //              SELECT e FROM OutboxEvent e
 //                WHERE e.topic = :#{#query.topic()}
 //                AND e.aggregateId = :#{#query.aggregateId()}
-//                AND e.id >= :#{#query.offset()}
-//                ORDER BY e.id
+//                AND e.value >= :#{#query.offset()}
+//                ORDER BY e.value
 //                LIMIT :#{#query.limit()}
 //            """)
 //    List<OutboxEvent> replay(@Param("query") EventReplayQuery query);

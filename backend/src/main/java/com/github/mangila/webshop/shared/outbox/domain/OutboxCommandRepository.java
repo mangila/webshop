@@ -4,7 +4,7 @@ import com.github.mangila.webshop.shared.outbox.domain.cqrs.OutboxInsert;
 
 public interface OutboxCommandRepository {
 
-    Outbox save(OutboxInsert command);
+    Outbox insert(OutboxInsert command);
 
-    void updateAsPublished(long id);
+    void updateAsPublished(OutboxId id);
 }

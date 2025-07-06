@@ -1,8 +1,7 @@
 package com.github.mangila.webshop.shared.application;
 
-import com.github.mangila.webshop.shared.domain.exception.WebException;
-import com.github.mangila.webshop.shared.domain.exception.CommandException;
-import com.github.mangila.webshop.shared.domain.exception.QueryException;
+import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
+import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -27,9 +26,8 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         return switch (ex) {
-            case CommandException ce -> handleCommandException(ce, env);
-            case QueryException qe -> handleQueryException(qe, env);
-            case WebException ae -> handleApiException(ae, env);
+            case ApplicationException ae -> handleApplicationException(ae, env);
+            case CqrsException ce -> handleCqrsException(ce, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
             default -> {
@@ -42,27 +40,32 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
         };
     }
 
-    private GraphQLError handleApiException(WebException ex, DataFetchingEnvironment env) {
+    private GraphQLError handleApplicationException(ApplicationException ex, DataFetchingEnvironment env) {
         ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
-        if (ex.getHttpStatus().isSameCodeAs(HttpStatus.NOT_FOUND)) {
-            graphqlErrorType = ErrorType.NOT_FOUND;
-        }
         return GraphqlErrorBuilder.newError(env)
                 .errorType(graphqlErrorType)
                 .message(ex.getMessage())
-                .extensions(Map.of("resource", ex.getResource().getSimpleName()))
                 .build();
     }
 
-    private GraphQLError handleConstraintViolationException(ConstraintViolationException cve, DataFetchingEnvironment env) {
+    private GraphQLError handleCqrsException(CqrsException ex, DataFetchingEnvironment env) {
+        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
+        return GraphqlErrorBuilder.newError(env)
+                .errorType(graphqlErrorType)
+                .message(ex.getMessage())
+                .extensions(Map.of("operation", ex.getOperation().name()))
+                .build();
+    }
+
+    private GraphQLError handleConstraintViolationException(ConstraintViolationException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.BAD_REQUEST)
                 .message("Validation error")
                 .build();
     }
 
-    private GraphQLError handleBindException(BindException be, DataFetchingEnvironment env) {
-        Map<String, Object> errs = be.getFieldErrors()
+    private GraphQLError handleBindException(BindException ex, DataFetchingEnvironment env) {
+        Map<String, Object> errs = ex.getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
@@ -74,36 +77,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                 .errorType(ErrorType.BAD_REQUEST)
                 .message("Bind error")
                 .extensions(errs)
-                .build();
-    }
-
-    private GraphQLError handleQueryException(QueryException ex, DataFetchingEnvironment env) {
-        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
-        if (ex.getHttpStatus().isSameCodeAs(HttpStatus.NOT_FOUND)) {
-            graphqlErrorType = ErrorType.NOT_FOUND;
-        }
-        return GraphqlErrorBuilder.newError(env)
-                .errorType(graphqlErrorType)
-                .message(ex.getMessage())
-                .extensions(Map.of(
-                        "resource", ex.getResource().getSimpleName(),
-                        "query", ex.getQuery().getSimpleName())
-                )
-                .build();
-    }
-
-    private GraphQLError handleCommandException(CommandException ex, DataFetchingEnvironment env) {
-        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
-        if (ex.getHttpStatus().isSameCodeAs(HttpStatus.NOT_FOUND)) {
-            graphqlErrorType = ErrorType.NOT_FOUND;
-        }
-        return GraphqlErrorBuilder.newError(env)
-                .errorType(graphqlErrorType)
-                .message(ex.getMessage())
-                .extensions(Map.of(
-                        "resource", ex.getResource().getSimpleName(),
-                        "command", ex.getCommand().getSimpleName())
-                )
                 .build();
     }
 }

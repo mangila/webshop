@@ -2,7 +2,7 @@ package com.github.mangila.webshop.inventory.infrastructure.config;
 
 import com.github.mangila.webshop.inventory.domain.event.InventoryEvent;
 import com.github.mangila.webshop.inventory.domain.event.InventoryTopic;
-import com.github.mangila.webshop.outboxevent.application.gateway.OutboxEventRegistryGateway;
+import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,10 @@ public class InventoryEventRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryEventRegistryConfig.class);
 
-    private final OutboxEventRegistryGateway outboxEventRegistryGateway;
+    private final OutboxRegistryGateway outboxRegistryGateway;
 
-    public InventoryEventRegistryConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
-        this.outboxEventRegistryGateway = outboxEventRegistryGateway;
+    public InventoryEventRegistryConfig(OutboxRegistryGateway outboxRegistryGateway) {
+        this.outboxRegistryGateway = outboxRegistryGateway;
     }
 
     @PostConstruct
@@ -32,7 +32,7 @@ public class InventoryEventRegistryConfig {
                         InventoryEvent::name))
                 .forEach((key, value) -> {
                     log.info("Registering event: {}", key);
-                    outboxEventRegistryGateway.registry().registerType(key, value);
+                    outboxRegistryGateway.registry().registerType(key, value);
                 });
     }
 
@@ -46,7 +46,7 @@ public class InventoryEventRegistryConfig {
                         InventoryTopic::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    outboxEventRegistryGateway.registry().registerTopic(key, value);
+                    outboxRegistryGateway.registry().registerTopic(key, value);
                 });
     }
 }

@@ -16,8 +16,8 @@ public class UuidGeneratorService {
         this.repository = repository;
     }
 
-    public UUID generate(GenerateNewUuidCommand command) {
-        Assert.notNull(command, String.format("%s must not be null", GenerateNewUuidCommand.class.getSimpleName()));
+    public UUID generate(GenerateNewUuidIntent command) {
+        Assert.notNull(command, String.format("%s must not be null", GenerateNewUuidIntent.class.getSimpleName()));
         var record = UuidRecord.create(command.value());
         return repository.save(record).getId();
     }

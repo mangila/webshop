@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.product.infrastructure.config;
 
-import com.github.mangila.webshop.outboxevent.application.gateway.OutboxEventRegistryGateway;
-import com.github.mangila.webshop.product.domain.event.ProductEvent;
-import com.github.mangila.webshop.product.domain.event.ProductTopic;
+import com.github.mangila.webshop.product.application.event.ProductEvent;
+import com.github.mangila.webshop.product.application.event.ProductTopic;
+import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,10 @@ public class ProductEventRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductEventRegistryConfig.class);
 
-    private final OutboxEventRegistryGateway outboxEventRegistryGateway;
+    private final OutboxRegistryGateway outboxRegistryGateway;
 
-    public ProductEventRegistryConfig(OutboxEventRegistryGateway outboxEventRegistryGateway) {
-        this.outboxEventRegistryGateway = outboxEventRegistryGateway;
+    public ProductEventRegistryConfig(OutboxRegistryGateway outboxRegistryGateway) {
+        this.outboxRegistryGateway = outboxRegistryGateway;
     }
 
     @PostConstruct
@@ -31,7 +31,7 @@ public class ProductEventRegistryConfig {
                         ProductEvent::name))
                 .forEach((key, value) -> {
                     log.info("Registering event: {}", key);
-                    outboxEventRegistryGateway.registry().registerType(key, value);
+                    outboxRegistryGateway.registry().registerType(key, value);
                 });
     }
 
@@ -44,7 +44,7 @@ public class ProductEventRegistryConfig {
                         ProductTopic::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    outboxEventRegistryGateway.registry().registerTopic(key, value);
+                    outboxRegistryGateway.registry().registerTopic(key, value);
                 });
     }
 }

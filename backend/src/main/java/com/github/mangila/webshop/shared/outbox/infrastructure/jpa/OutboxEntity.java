@@ -28,7 +28,10 @@ public class OutboxEntity {
     @Column(nullable = false, updatable = false)
     private String event;
 
-    @Column(name = "aggregate_id", nullable = false, updatable = false)
+    @Column(name = "aggregate_id",
+            columnDefinition = "uuid",
+            nullable = false,
+            updatable = false)
     private UUID aggregateId;
 
     @Type(JsonBinaryType.class)

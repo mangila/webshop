@@ -1,11 +1,11 @@
 package com.github.mangila.webshop.product.application;
 
 import com.github.mangila.webshop.product.ProductTestUtil;
+import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.application.web.ProductCommandController;
-import com.github.mangila.webshop.product.domain.command.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.model.ProductName;
-import com.github.mangila.webshop.product.domain.model.ProductPrice;
+import com.github.mangila.webshop.product.domain.ProductName;
+import com.github.mangila.webshop.product.domain.ProductPrice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -108,25 +108,23 @@ class ProductCommandControllerValidationTest {
     static Stream<InvalidProductTestCase> invalidProductTestCases() {
         return Stream.of(
                 createTestCase("Null product name",
-                        builder -> builder.withName(new ProductName(null))),
-                createTestCase("Null product name",
                         builder -> builder.withName(null)),
                 createTestCase("Empty product name",
-                        builder -> builder.withName(new ProductName(""))),
+                        builder -> builder.withName("")),
                 createTestCase("Null product price",
                         builder -> builder.withPrice(null)),
                 createTestCase("Negative product price",
-                        builder -> builder.withPrice(new ProductPrice(new BigDecimal("-1.00")))),
+                        builder -> builder.withPrice(new BigDecimal("-1.00"))),
                 createTestCase("Zero product price",
-                        builder -> builder.withPrice(new ProductPrice(BigDecimal.ZERO))),
+                        builder -> builder.withPrice(BigDecimal.ZERO)),
                 createTestCase("Null attributes",
                         builder -> builder.withAttributes(null)),
                 createTestCase("Null product unit",
                         builder -> builder.withUnit(null)),
                 createTestCase("Extremely long product name",
-                        builder -> builder.withName(new ProductName("a".repeat(256)))),
+                        builder -> builder.withName("a".repeat(256))),
                 createTestCase("Extremely high product price",
-                        builder -> builder.withPrice(new ProductPrice(new BigDecimal("99999999999999.99"))))
+                        builder -> builder.withPrice(new BigDecimal("99999999999999.99")))
         );
     }
 

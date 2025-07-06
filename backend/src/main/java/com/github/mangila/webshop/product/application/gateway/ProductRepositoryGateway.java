@@ -1,25 +1,26 @@
 package com.github.mangila.webshop.product.application.gateway;
 
-import com.github.mangila.webshop.product.infrastructure.ProductCommandRepository;
-import com.github.mangila.webshop.product.infrastructure.ProductQueryRepository;
+import com.github.mangila.webshop.product.domain.ProductCommandRepository;
+import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductRepositoryGateway {
 
-    private final ProductCommandRepository productCommandRepository;
-    private final ProductQueryRepository productQueryRepository;
+    private final ProductCommandRepository command;
+    private final ProductQueryRepository query;
 
-    public ProductRepositoryGateway(ProductCommandRepository productCommandRepository, ProductQueryRepository productQueryRepository) {
-        this.productCommandRepository = productCommandRepository;
-        this.productQueryRepository = productQueryRepository;
+    public ProductRepositoryGateway(ProductCommandRepository command,
+                                    ProductQueryRepository query) {
+        this.command = command;
+        this.query = query;
     }
 
     public ProductCommandRepository command() {
-        return productCommandRepository;
+        return command;
     }
 
     public ProductQueryRepository query() {
-        return productQueryRepository;
+        return query;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
+import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
 import com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq.OutboxRabbitProducer;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class OutboxMessageRelay {
                 .get();
         if (ok) {
             log.info("OutboxMessage sent to RabbitMQ: {}", message);
-            outboxServiceGateway.command().updateAsPublished(message.id());
+            outboxServiceGateway.command().updateAsPublished(new OutboxId(message.id()));
         } else {
             log.error("OutboxMessage failed to send to RabbitMQ: {}", message);
         }

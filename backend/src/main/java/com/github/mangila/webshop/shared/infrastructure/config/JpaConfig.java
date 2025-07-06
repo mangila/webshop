@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories(basePackages = "com.github.mangila.webshop.backend")
+@EnableJpaRepositories(basePackages = "com.github.mangila.webshop")
 public class JpaConfig {
 }

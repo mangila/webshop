@@ -60,9 +60,9 @@ public class OutboxPgListener extends AbstractPgNotificationListener {
                     payload := json_build_object(
                         'id', NEW.id,
                         'topic', NEW.topic,
-                        'event', NEW.event,
+                        'event', NEW.event
                     );
-                    PERFORM pg_notify('%s', payload::json);
+                    PERFORM pg_notify('%s', payload::text);
                     RETURN NEW;
                 END;
                 $$ LANGUAGE plpgsql;

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class UuidRecordEntity {
 
     @Id
-    @Column(nullable = false, columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @Column(nullable = false)

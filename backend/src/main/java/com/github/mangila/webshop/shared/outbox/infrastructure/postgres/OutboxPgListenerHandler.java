@@ -5,6 +5,7 @@ import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMes
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgListenerFailedEvent;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgNotification;
 import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessageRelay;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -29,17 +30,21 @@ public class OutboxPgListenerHandler {
         this.outboxPgListener = outboxPgListener;
     }
 
+    @PostConstruct
+    public void init() {
+        outboxPgListener.setUp();
+    }
+
     @Async
     @EventListener(ApplicationReadyEvent.class)
     public void onReady() {
-        outboxPgListener.setUp();
         outboxPgListener.start();
     }
 
     @Async
     @EventListener
-    public void onNotification(OutboxPgNotification event) {
-        String payload = event.notification().getParameter();
+    public void onNotification(OutboxPgNotification pgNotification) {
+        String payload = pgNotification.notification().getParameter();
         var message = jsonMapper.toObject(payload.getBytes(), OutboxMessage.class);
         outboxMessageRelay.publish(message);
     }

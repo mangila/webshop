@@ -4,8 +4,6 @@ import com.rabbitmq.stream.Address;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.EnvironmentBuilder;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,14 +39,12 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public RabbitStreamTemplate productStreamTemplate(Environment env,
-                                                      @Qualifier("outboxEventMessageConverter") MessageConverter messageConverter) {
+    public RabbitStreamTemplate productStreamTemplate(Environment env) {
         return new RabbitStreamTemplate(env, RabbitMqConfig.OUTBOX_EVENT_PRODUCT_STREAM_KEY);
     }
 
     @Bean
-    public RabbitStreamTemplate inventoryStreamTemplate(Environment env,
-                                                        @Qualifier("outboxEventMessageConverter") MessageConverter messageConverter) {
+    public RabbitStreamTemplate inventoryStreamTemplate(Environment env) {
         return new RabbitStreamTemplate(env, RabbitMqConfig.OUTBOX_EVENT_INVENTORY_STREAM_KEY);
     }
 }

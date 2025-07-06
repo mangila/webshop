@@ -1,11 +1,12 @@
 package com.github.mangila.webshop.product.application;
 
 import com.github.mangila.webshop.TestcontainersConfiguration;
-import com.github.mangila.webshop.outboxevent.domain.OutboxEvent;
 import com.github.mangila.webshop.product.ProductTestUtil;
+import com.github.mangila.webshop.product.application.cqrs.ProductByIdQuery;
+import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import com.github.mangila.webshop.product.domain.command.ProductDeleteCommand;
-import com.github.mangila.webshop.product.domain.model.ProductId;
+import com.github.mangila.webshop.product.domain.ProductId;
+import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,18 +44,18 @@ class ProductCommandControllerIntegrationTest {
     @Test
     @DisplayName("Insert one product and delete it")
     void insertAndDeleteProduct() {
-        OutboxEvent outboxEvent = webTestClient.post()
+        ProductDto dto = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(insertCommandBuilder.buildDefault())
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(OutboxEvent.class)
+                .expectBody(ProductDto.class)
                 .returnResult()
                 .getResponseBody();
 
-        UUID productId = outboxEvent.getAggregateId();
+        UUID productId = dto.id();
 
         boolean exists = productServiceGateway.query()
                 .existsById(ProductId.from(productId));
@@ -66,7 +67,7 @@ class ProductCommandControllerIntegrationTest {
         webTestClient.method(HttpMethod.DELETE)
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_DELETE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(ProductDeleteCommand.from(productId))
+                .bodyValue(new ProductByIdQuery(productId))
                 .exchange()
                 .expectStatus()
                 .isOk();

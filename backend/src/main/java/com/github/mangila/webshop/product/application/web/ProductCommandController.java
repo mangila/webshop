@@ -1,13 +1,14 @@
 package com.github.mangila.webshop.product.application.web;
 
-import com.github.mangila.webshop.outboxevent.domain.OutboxEvent;
+import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
+import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import com.github.mangila.webshop.product.domain.command.ProductDeleteCommand;
-import com.github.mangila.webshop.product.domain.command.ProductInsertCommand;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/product/command")
@@ -23,7 +24,7 @@ public class ProductCommandController {
             value = "insert",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OutboxEvent> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
+    public ResponseEntity<ProductDto> insertProduct(@Valid @RequestBody ProductInsertCommand command) {
         return ResponseEntity.ok(productServiceGateway.command().insert(command));
     }
 
@@ -31,7 +32,7 @@ public class ProductCommandController {
             value = "delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OutboxEvent> deleteProduct(@Valid @RequestBody ProductDeleteCommand command) {
-        return ResponseEntity.ok(productServiceGateway.command().delete(command));
+    public ResponseEntity<ProductDto> deleteProduct(@RequestBody UUID id) {
+        return ResponseEntity.ok(productServiceGateway.command().delete(id));
     }
 }

@@ -10,7 +10,8 @@ public class InventoryRepositoryGateway {
     private final InventoryCommandRepository command;
     private final InventoryQueryRepository query;
 
-    public InventoryRepositoryGateway(InventoryCommandRepository command, InventoryQueryRepository query) {
+    public InventoryRepositoryGateway(InventoryCommandRepository command,
+                                      InventoryQueryRepository query) {
         this.command = command;
         this.query = query;
     }

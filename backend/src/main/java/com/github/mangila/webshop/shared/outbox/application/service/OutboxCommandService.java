@@ -5,6 +5,7 @@ import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
+import com.github.mangila.webshop.shared.outbox.domain.OutboxId;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +24,18 @@ public class OutboxCommandService {
         this.registry = registry;
     }
 
-    public OutboxDto save(OutboxInsertCommand command) {
+    public OutboxDto insert(OutboxInsertCommand command) {
         String topic = command.topic();
         String type = command.event();
         registry.registry().ensureHasTopicAndTypeRegistered(topic, type);
         return Stream.of(command)
                 .map(mapper.command()::toDomain)
-                .map(repository.command()::save)
+                .map(repository.command()::insert)
                 .map(mapper.dto()::toDto)
                 .get();
     }
 
-    public void updateAsPublished(long id) {
+    public void updateAsPublished(OutboxId id) {
         repository.command().updateAsPublished(id);
     }
 }
