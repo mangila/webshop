@@ -15,7 +15,11 @@ Postgres is used as a database and RabbitMQ as a message broker
     - GraphQL is used for Queries and REST for Commands
 - Outbox pattern
 - DDD (Domain Driven Design)
+  - Application
+  - Domain
+  - Infrastructure
 - Event Sourcing (ish)
+  - Outbox table can be used for Replays
 
 ### Management/UI
 
@@ -23,6 +27,8 @@ Postgres is used as a database and RabbitMQ as a message broker
 - RabbitMQ management UI (:15672)
 - Graphiql (/graphiql)
 - Swagger (/swagger-ui/index.html)
+- Admin View
+- View
 
 ### What this project does
 
