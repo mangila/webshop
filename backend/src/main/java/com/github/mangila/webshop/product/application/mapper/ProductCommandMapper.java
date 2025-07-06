@@ -11,9 +11,8 @@ import java.util.UUID;
 @Component
 public class ProductCommandMapper {
 
-    public ProductInsert toDomain(UUID uuid, ProductInsertCommand command) {
+    public ProductInsert toDomain(ProductInsertCommand command) {
         return ProductInsert.from(
-                uuid,
                 command.name(),
                 command.price(),
                 command.attributes(),

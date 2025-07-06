@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.event;
+package com.github.mangila.webshop.product.infrastructure.event;
 
 public enum ProductEvent {
     PRODUCT_CREATE_NEW,

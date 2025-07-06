@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.config;
 
-import com.github.mangila.webshop.product.application.event.ProductEvent;
-import com.github.mangila.webshop.product.application.event.ProductTopic;
+import com.github.mangila.webshop.product.infrastructure.event.ProductEvent;
+import com.github.mangila.webshop.product.infrastructure.event.ProductTopic;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;

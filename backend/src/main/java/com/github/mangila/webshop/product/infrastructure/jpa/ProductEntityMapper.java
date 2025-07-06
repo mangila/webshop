@@ -6,13 +6,14 @@ import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Component
 public class ProductEntityMapper {
 
-    public ProductEntity toEntity(ProductInsert command) {
+    public ProductEntity toEntity(UUID id, ProductInsert command) {
         return ProductEntity.from(
-                command.id().value(),
+                id,
                 command.name().value(),
                 command.price().value(),
                 command.attributes(),

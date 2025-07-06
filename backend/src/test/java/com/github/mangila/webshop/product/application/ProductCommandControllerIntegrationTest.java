@@ -66,7 +66,7 @@ class ProductCommandControllerIntegrationTest {
                 .bodyValue(productIdQuery)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isNoContent();
 
         exists = productServiceGateway.query()
                 .existsById(productIdQuery);

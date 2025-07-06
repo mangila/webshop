@@ -34,7 +34,7 @@ public class ProductQueryService {
                 .map(product -> {
                     if (product.isEmpty()) {
                         throw new CqrsException(
-                                String.format("value not found: '%s'", query.value()),
+                                String.format("id not found: '%s'", query.value()),
                                 CqrsOperation.QUERY,
                                 Product.class
                         );
