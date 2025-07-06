@@ -5,7 +5,6 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,25 +51,25 @@ class ProductCommandControllerIntegrationTest {
                 .returnResult()
                 .getResponseBody();
 
-        UUID productId = dto.id();
+        ProductIdQuery productIdQuery = new ProductIdQuery(dto.id());
 
         boolean exists = productServiceGateway.query()
-                .existsById(new ProductIdQuery(productId));
+                .existsById(productIdQuery);
         assertThat(exists).isTrue();
 
-        boolean hasGenerated = uuidGeneratorService.hasGenerated(productId);
+        boolean hasGenerated = uuidGeneratorService.hasGenerated(productIdQuery.value());
         assertThat(hasGenerated).isTrue();
 
         webTestClient.method(HttpMethod.DELETE)
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_DELETE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new ProductIdQuery(productId))
+                .bodyValue(productIdQuery)
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         exists = productServiceGateway.query()
-                .existsById(new ProductIdQuery(productId));
+                .existsById(productIdQuery);
         assertThat(exists).isFalse();
     }
 }
