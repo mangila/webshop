@@ -10,7 +10,10 @@ import java.lang.annotation.*;
 
 @NotBlank
 @Size(min = 2, max = 100)
-@AlphaNumeric(message = "Product name must only contain alphanumeric characters")
+@AlphaNumeric(
+        withHyphen = true,
+        withSpace = true,
+        message = "Product name must only contain alphanumeric characters")
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})

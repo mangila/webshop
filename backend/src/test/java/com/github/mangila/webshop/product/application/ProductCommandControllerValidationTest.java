@@ -127,25 +127,31 @@ class ProductCommandControllerValidationTest {
 
     static Stream<InvalidProductTestCase> invalidProductTestCases() {
         return Stream.of(
+                // Product Name
                 createTestCase("Null product name",
                         builder -> builder.withName(null)),
                 createTestCase("Empty product name",
                         builder -> builder.withName("")),
+                createTestCase("Invalid Alphanumeric product name",
+                        builder -> builder.withName("ööö-product")),
+                createTestCase("Extremely long product name",
+                        builder -> builder.withName("a".repeat(256))),
+                // Product Price
                 createTestCase("Null product price",
                         builder -> builder.withPrice(null)),
                 createTestCase("Negative product price",
                         builder -> builder.withPrice(new BigDecimal("-1.00"))),
                 createTestCase("Zero product price",
                         builder -> builder.withPrice(BigDecimal.ZERO)),
+                createTestCase("Extremely high product price",
+                        builder -> builder.withPrice(new BigDecimal("99999999999999.99"))),
+                // Product Attributes
                 createTestCase("Null attributes",
                         builder -> builder.withAttributes(null)),
+                // Product Unit
                 createTestCase("Null product unit",
-                        builder -> builder.withUnit(null)),
-                createTestCase("Extremely long product name",
-                        builder -> builder.withName("a".repeat(256))),
-                createTestCase("Extremely high product price",
-                        builder -> builder.withPrice(new BigDecimal("99999999999999.99")))
-        );
+                        builder -> builder.withUnit(null))
+                );
     }
 
     private static InvalidProductTestCase createTestCase(String description, Consumer<ProductTestUtil.TestProductInsertCommandBuilder> customizer) {

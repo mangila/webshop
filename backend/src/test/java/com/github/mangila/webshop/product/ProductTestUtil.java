@@ -3,8 +3,6 @@ package com.github.mangila.webshop.product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.ProductName;
-import com.github.mangila.webshop.product.domain.ProductPrice;
 import com.github.mangila.webshop.product.domain.ProductUnit;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -18,10 +16,15 @@ public class ProductTestUtil {
 
     public static class TestProductInsertCommandBuilder {
 
-        private String name = "Test Product";
-        private BigDecimal price = new BigDecimal("19.99");
-        private ObjectNode attributes = new ObjectMapper().createObjectNode();
-        private ProductUnit unit = ProductUnit.PIECE;
+        final String defaultName = "Test Product XYZ-10";
+        final BigDecimal defaultPrice = new BigDecimal("19.99");
+        final ObjectNode defaultAttributes = new ObjectMapper().createObjectNode();
+        final ProductUnit defaultUnit = ProductUnit.PIECE;
+
+        private String name = defaultName;
+        private BigDecimal price = defaultPrice;
+        private ObjectNode attributes = defaultAttributes;
+        private ProductUnit unit = defaultUnit;
 
         public TestProductInsertCommandBuilder() {
         }
@@ -51,11 +54,7 @@ public class ProductTestUtil {
         }
 
         public ProductInsertCommand buildDefault() {
-            return new ProductInsertCommand(
-                    "Test Product",
-                    new BigDecimal("19.99"),
-                    new ObjectMapper().createObjectNode(),
-                    ProductUnit.PIECE);
+            return new ProductInsertCommand(defaultName, defaultPrice, defaultAttributes, defaultUnit);
         }
     }
 }

@@ -14,6 +14,10 @@ public @interface AlphaNumeric {
 
     boolean allowNull() default true;
 
+    boolean withHyphen() default false;
+
+    boolean withSpace() default false;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
