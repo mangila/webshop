@@ -4,11 +4,15 @@ import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
 public class ProductQueryService {
 
@@ -22,7 +26,8 @@ public class ProductQueryService {
         this.repository = repository;
     }
 
-    public ProductDto findById(ProductIdQuery query) {
+    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductQueryService"})
+    public ProductDto findById(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Find product by id: {}", q.value()))
                 .map(mapper.query()::toDomain)
@@ -31,7 +36,8 @@ public class ProductQueryService {
                 .get();
     }
 
-    public boolean existsById(ProductIdQuery query) {
+    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductQueryService"})
+    public boolean existsById(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Check if product exists by id: {}", q.value()))
                 .map(mapper.query()::toDomain)
