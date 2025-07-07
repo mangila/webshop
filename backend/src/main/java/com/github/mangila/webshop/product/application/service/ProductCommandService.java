@@ -29,8 +29,7 @@ public class ProductCommandService {
         this.productMapperGateway = productMapperGateway;
     }
 
-    @Observed(contextualName = "service",
-            lowCardinalityKeyValues = {"service", "ProductCommandService"})
+    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
     public ProductDto insert(@Valid ProductInsertCommand command) {
         return Stream.of(command)
@@ -41,6 +40,7 @@ public class ProductCommandService {
                 .get();
     }
 
+    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
     public void delete(@Valid ProductIdCommand command) {
         Stream.of(command)
