@@ -5,11 +5,7 @@ import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
-import com.github.mangila.webshop.product.infrastructure.event.ProductEvent;
 import com.github.mangila.webshop.product.infrastructure.event.ProductOutboxMapper;
-import com.github.mangila.webshop.product.infrastructure.event.ProductTopic;
-import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
-import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
 import com.github.mangila.webshop.shared.uuid.application.GenerateNewUuidIntent;
@@ -23,37 +19,38 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_CREATE_NEW;
+import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_DELETED;
+import static com.github.mangila.webshop.product.infrastructure.event.ProductTopic.PRODUCT;
+
+@Observed(contextualName = "repository", lowCardinalityKeyValues = {"repository", "ProductJpaCommandRepository"})
 @Repository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);
 
+    private final ProductEntityCommandRepository repository;
     private final ProductQueryRepository queryRepository;
-    private final UuidGeneratorService uuidGeneratorService;
-    private final JsonMapper jsonMapper;
-    private final OutboxServiceGateway outboxServiceGateway;
     private final ProductOutboxMapper outboxMapper;
     private final ProductEntityMapper entityMapper;
-    private final ProductEntityCommandRepository repository;
+    private final UuidGeneratorService uuidGeneratorService;
+    private final OutboxServiceGateway outboxServiceGateway;
 
-    public ProductJpaCommandRepository(ProductQueryRepository queryRepository,
-                                       UuidGeneratorService uuidGeneratorService,
-                                       JsonMapper jsonMapper,
-                                       OutboxServiceGateway outboxServiceGateway,
+    public ProductJpaCommandRepository(ProductEntityCommandRepository repository,
+                                       ProductQueryRepository queryRepository,
                                        ProductOutboxMapper outboxMapper,
                                        ProductEntityMapper entityMapper,
-                                       ProductEntityCommandRepository repository) {
+                                       UuidGeneratorService uuidGeneratorService,
+                                       OutboxServiceGateway outboxServiceGateway) {
+        this.repository = repository;
         this.queryRepository = queryRepository;
-        this.uuidGeneratorService = uuidGeneratorService;
-        this.jsonMapper = jsonMapper;
-        this.outboxServiceGateway = outboxServiceGateway;
         this.outboxMapper = outboxMapper;
         this.entityMapper = entityMapper;
-        this.repository = repository;
+        this.uuidGeneratorService = uuidGeneratorService;
+        this.outboxServiceGateway = outboxServiceGateway;
     }
 
-    @Observed(contextualName = "repository",
-            lowCardinalityKeyValues = {"repository", "ProductJpaCommandRepository"})
+
     @Transactional
     @Override
     public Product insert(ProductInsert command) {
@@ -65,15 +62,10 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
                 .get();
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
-                .map(dto -> OutboxInsertCommand.from(
-                        ProductTopic.PRODUCT,
-                        ProductEvent.PRODUCT_CREATE_NEW,
-                        dto.id(),
-                        dto.toJsonNode(jsonMapper)
-                ))
+                .map(dto -> outboxMapper.toCommand(PRODUCT, PRODUCT_CREATE_NEW, dto))
                 .map(outboxServiceGateway.command()::insert)
                 .get();
-        log.debug("Inserted product with id: {} and event: {} in outbox with id: {}", product.getId(), ProductEvent.PRODUCT_CREATE_NEW, outboxDto.id());
+        log.debug("Inserted product with id: {} and event: {} in outbox with id: {}", product.getId(), PRODUCT_CREATE_NEW, outboxDto.id());
         return product;
     }
 
@@ -84,14 +76,9 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
         repository.deleteById(productId.value());
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
-                .map(dto -> OutboxInsertCommand.from(
-                        ProductTopic.PRODUCT,
-                        ProductEvent.PRODUCT_DELETED,
-                        dto.id(),
-                        dto.toJsonNode(jsonMapper)
-                ))
+                .map(dto -> outboxMapper.toCommand(PRODUCT, PRODUCT_DELETED, dto))
                 .map(outboxServiceGateway.command()::insert)
                 .get();
-        log.debug("Deleted product with id: {} and event: {} in outbox with id: {}", product.getId(), ProductEvent.PRODUCT_DELETED, outboxDto.id());
+        log.debug("Deleted product with id: {} and event: {} in outbox with id: {}", product.getId(), PRODUCT_DELETED, outboxDto.id());
     }
 }

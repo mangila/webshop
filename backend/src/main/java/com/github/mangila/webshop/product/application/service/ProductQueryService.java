@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+@Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductQueryService"})
 @Validated
 @Service
 public class ProductQueryService {
@@ -26,7 +27,6 @@ public class ProductQueryService {
         this.repository = repository;
     }
 
-    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductQueryService"})
     public ProductDto findById(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Find product by id: {}", q.value()))
@@ -36,7 +36,6 @@ public class ProductQueryService {
                 .get();
     }
 
-    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductQueryService"})
     public boolean existsById(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Check if product exists by id: {}", q.value()))

@@ -2,12 +2,15 @@ package com.github.mangila.webshop.shared.uuid.infrastructure;
 
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecord;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecordRepository;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
+
+@Observed(contextualName = "repository", lowCardinalityKeyValues = {"repository", "UuidRecordJpaRepository"})
 @Repository
 public class UuidRecordJpaRepository implements UuidRecordRepository {
 

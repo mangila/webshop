@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+@Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
 @Validated
 @Service
 public class ProductCommandService {
@@ -29,7 +30,6 @@ public class ProductCommandService {
         this.productMapperGateway = productMapperGateway;
     }
 
-    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
     public ProductDto insert(@Valid ProductInsertCommand command) {
         return Stream.of(command)
@@ -40,7 +40,6 @@ public class ProductCommandService {
                 .get();
     }
 
-    @Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
     public void delete(@Valid ProductIdCommand command) {
         Stream.of(command)
