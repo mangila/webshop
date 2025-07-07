@@ -1,11 +1,12 @@
 package com.github.mangila.webshop.shared.outbox.application.service;
 
+import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
-import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +15,20 @@ public class OutboxCommandService {
 
     private final OutboxMapperGateway mapper;
     private final OutboxRepositoryGateway repository;
-    private final OutboxRegistryGateway registry;
+    private final DomainRegistryService domainRegistryService;
 
     public OutboxCommandService(OutboxMapperGateway mapper,
                                 OutboxRepositoryGateway repository,
-                                OutboxRegistryGateway registry) {
+                                DomainRegistryService domainRegistryService) {
         this.mapper = mapper;
         this.repository = repository;
-        this.registry = registry;
+        this.domainRegistryService = domainRegistryService;
     }
 
     public OutboxDto insert(OutboxInsertCommand command) {
         String topic = command.topic();
         String type = command.event();
-        registry.registry().ensureHasTopicAndTypeRegistered(topic, type);
+        domainRegistryService.ensureHasTopicAndTypeRegistered(topic, type);
         return Stream.of(command)
                 .map(mapper.command()::toDomain)
                 .map(repository.command()::insert)

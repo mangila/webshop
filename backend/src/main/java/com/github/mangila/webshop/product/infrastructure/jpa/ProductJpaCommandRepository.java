@@ -14,6 +14,7 @@ import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
 import com.github.mangila.webshop.shared.uuid.application.GenerateNewUuidIntent;
 import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,8 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
         this.repository = repository;
     }
 
+    @Observed(contextualName = "repository",
+            lowCardinalityKeyValues = {"repository", "ProductJpaCommandRepository"})
     @Transactional
     @Override
     public Product insert(ProductInsert command) {

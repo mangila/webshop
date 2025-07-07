@@ -2,7 +2,7 @@ package com.github.mangila.webshop.product.infrastructure.config;
 
 import com.github.mangila.webshop.product.infrastructure.event.ProductEvent;
 import com.github.mangila.webshop.product.infrastructure.event.ProductTopic;
-import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
+import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,10 @@ public class ProductEventRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductEventRegistryConfig.class);
 
-    private final OutboxRegistryGateway outboxRegistryGateway;
+    private final DomainRegistryService domainRegistryService;
 
-    public ProductEventRegistryConfig(OutboxRegistryGateway outboxRegistryGateway) {
-        this.outboxRegistryGateway = outboxRegistryGateway;
+    public ProductEventRegistryConfig(DomainRegistryService domainRegistryService) {
+        this.domainRegistryService = domainRegistryService;
     }
 
     @PostConstruct
@@ -31,7 +31,7 @@ public class ProductEventRegistryConfig {
                         ProductEvent::name))
                 .forEach((key, value) -> {
                     log.info("Registering event: {}", key);
-                    outboxRegistryGateway.registry().registerType(key, value);
+                    domainRegistryService.registerType(key, value);
                 });
     }
 
@@ -44,7 +44,7 @@ public class ProductEventRegistryConfig {
                         ProductTopic::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    outboxRegistryGateway.registry().registerTopic(key, value);
+                    domainRegistryService.registerTopic(key, value);
                 });
     }
 }

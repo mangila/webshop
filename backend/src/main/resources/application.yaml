@@ -1,12 +1,12 @@
 # Spring Properties
 spring:
+  application:
+    name: "webshop"
   boot:
     admin:
       client:
         url: "http://localhost:8081"
-        enabled: true
-  application:
-    name: "webshop"
+        enabled: false
   jpa:
     properties:
       hibernate.generate_statistics: true
@@ -14,10 +14,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
+    url: "jdbc:postgresql://localhost:5432/webshop"
+    username: "my_user"
+    password: "secret"
+    driver-class-name: org.postgresql.Driver
     hikari:
-      jdbc-url: "jdbc:postgresql://localhost:5432/webshop"
-      username: "my_user"
-      password: "secret"
       pool-name: "webshop-hikari-pool"
       maximum-pool-size: 10
       minimum-idle: 5
@@ -51,6 +52,7 @@ spring:
       skip:
         in-tests: true
       file: "./backend/compose.yaml"
+      lifecycle-management: start_only
 # Logging properties
 logging:
   file:
@@ -62,6 +64,10 @@ springdoc:
   show-actuator: true
 # Actuator
 management:
+  tracing:
+    sampling:
+      probability: 1
+    enabled: true
   info:
     env:
       enabled: true
@@ -74,3 +80,7 @@ management:
       access: unrestricted
     shutdown:
       access: unrestricted
+  zipkin:
+    tracing:
+      export:
+        enabled: true

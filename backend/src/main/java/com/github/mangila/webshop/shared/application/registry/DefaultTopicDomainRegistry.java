@@ -1,18 +1,18 @@
-package com.github.mangila.webshop.shared.outbox.infrastructure.registry;
+package com.github.mangila.webshop.shared.application.registry;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class DefaultTopicRegistry implements EventRegistry {
+public class DefaultTopicDomainRegistry implements DomainRegistry {
 
     private final Map<String, String> registry;
 
-    public DefaultTopicRegistry(@Qualifier("topicRegistryMap") Map<String, String> registry) {
-        this.registry = registry;
+    public DefaultTopicDomainRegistry() {
+        this.registry = new ConcurrentHashMap<>();
     }
 
     @Override

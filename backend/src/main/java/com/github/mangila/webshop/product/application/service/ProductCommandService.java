@@ -5,6 +5,7 @@ import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ public class ProductCommandService {
         this.productMapperGateway = productMapperGateway;
     }
 
+    @Observed(contextualName = "service",
+            lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
     public ProductDto insert(ProductInsertCommand command) {
         return Stream.of(command)

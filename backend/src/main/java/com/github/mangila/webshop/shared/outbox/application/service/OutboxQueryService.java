@@ -33,15 +33,6 @@ public class OutboxQueryService {
         return Stream.of(query)
                 .map(mapper.query()::toDomain)
                 .map(repository.query()::findById)
-                .map(outbox -> {
-                    if (outbox.isEmpty()) {
-                        throw new CqrsException(
-                                String.format("id not found: '%s'", query.id()),
-                                CqrsOperation.QUERY,
-                                Outbox.class);
-                    }
-                    return outbox.get();
-                })
                 .map(mapper.dto()::toDto)
                 .get();
     }

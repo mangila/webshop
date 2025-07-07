@@ -13,17 +13,24 @@ Postgres is used as a database and RabbitMQ as a message broker
 
 - CQRS (Command Query Responsibility Segregation)
     - GraphQL is used for Queries and REST for Commands
-- Outbox pattern
+- Outbox Transactional pattern
 - DDD (Domain Driven Design)
     - Application
     - Domain
     - Infrastructure
 - Event Sourcing (ish)
     - Outbox table can be used for Replays
+- Design for Observability
+    - Loki
+    - Zipkin
+    - Grafana
+- Design for Resilience
+- Design for Security
 
 ### Management/UI
 
 - Codecentric admin server (:8081)
+- Zipkin (:9411)
 - RabbitMQ management UI (:15672)
 - Graphiql (/graphiql)
 - Swagger (/swagger-ui/index.html)

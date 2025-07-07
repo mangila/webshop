@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.shared.infrastructure.postgres;
 
-import com.zaxxer.hikari.HikariConfig;
 import io.vavr.control.Try;
 import org.postgresql.PGNotification;
 import org.postgresql.jdbc.PgConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -20,10 +20,10 @@ public abstract class AbstractPgNotificationListener implements DisposableBean {
     private final SingleConnectionDataSource dataSource;
     private final String channelName;
 
-    public AbstractPgNotificationListener(HikariConfig hikariConfig) {
-        Assert.notNull(hikariConfig, "HikariConfig must not be null");
+    public AbstractPgNotificationListener(DataSourceProperties dataSourceProperties) {
+        Assert.notNull(dataSourceProperties, "DataSourceProperties must not be null");
         Assert.notNull(getProps(), "PostgresListenerProps must not be null");
-        this.dataSource = new SingleConnectionDataSource(hikariConfig.getJdbcUrl(), hikariConfig.getUsername(), hikariConfig.getPassword(), Boolean.TRUE);
+        this.dataSource = new SingleConnectionDataSource(dataSourceProperties.determineUrl(), dataSourceProperties.getUsername(), dataSourceProperties.getPassword(), Boolean.TRUE);
         this.channelName = getProps().channelName();
     }
 

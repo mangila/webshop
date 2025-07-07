@@ -1,4 +1,14 @@
 services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "9411:9411"
+    environment:
+      - 'STORAGE_TYPE=mem'
   postgres:
     image: 'postgres:17.5-alpine'
     environment:
@@ -12,7 +22,6 @@ services:
     environment:
       - 'RABBITMQ_DEFAULT_USER=my_user'
       - 'RABBITMQ_DEFAULT_PASS=secret'
-      - 'RABBITMQ_STREAM_ADVERTISED_HOST=localhost'
     ports:
       - '5672:5672'    # AMQP
       - '15672:15672'  # Management UI

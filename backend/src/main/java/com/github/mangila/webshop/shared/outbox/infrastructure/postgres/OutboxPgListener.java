@@ -5,8 +5,8 @@ import com.github.mangila.webshop.shared.infrastructure.postgres.PostgresListene
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgListenerFailedEvent;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgNotification;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.SpringEventPublisher;
-import com.zaxxer.hikari.HikariConfig;
 import org.postgresql.PGNotification;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,9 @@ public class OutboxPgListener extends AbstractPgNotificationListener {
     private final JdbcTemplate jdbcTemplate;
 
     public OutboxPgListener(SpringEventPublisher publisher,
-                            HikariConfig hikariConfig,
+                            DataSourceProperties dataSourceProperties,
                             JdbcTemplate jdbcTemplate) {
-        super(hikariConfig);
+        super(dataSourceProperties);
         this.publisher = publisher;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -37,10 +37,10 @@ public class OutboxPgListener extends AbstractPgNotificationListener {
     @Override
     public PostgresListenerProps getProps() {
         return new PostgresListenerProps(
-                "outbox_event",
-                "outbox_event_channel",
-                "pg_notify_outbox_event_channel",
-                "trg_outbox_event_insert_01");
+                "outbox",
+                "outbox_channel",
+                "pg_notify_outbox_channel",
+                "trg_outbox_insert_01");
     }
 
     @Override

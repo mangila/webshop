@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.shared.outbox.infrastructure.registry;
+package com.github.mangila.webshop.shared.application.registry;
 
 import java.util.List;
 
-public interface EventRegistry {
+public interface DomainRegistry {
 
     boolean isRegistered(String key);
 

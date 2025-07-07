@@ -1,10 +1,12 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
+import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
-import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
 import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
 import com.rabbitmq.stream.Message;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -19,15 +21,17 @@ import java.util.concurrent.CompletableFuture;
 public class OutboxRabbitProducer {
 
     private final JsonMapper jsonMapper;
-    private final OutboxRegistryGateway registryGateway;
+    private final DomainRegistryService domainRegistryService;
     private final Map<String, RabbitStreamTemplate> streamTemplates;
+    private final Tracer tracer;
 
     public OutboxRabbitProducer(JsonMapper jsonMapper,
-                                OutboxRegistryGateway outboxEventRegistryGateway,
+                                DomainRegistryService domainRegistryService,
                                 @Qualifier("productStreamTemplate") RabbitStreamTemplate productStreamTemplate,
-                                @Qualifier("inventoryStreamTemplate") RabbitStreamTemplate inventoryStreamTemplate) {
+                                @Qualifier("inventoryStreamTemplate") RabbitStreamTemplate inventoryStreamTemplate, Tracer tracer) {
         this.jsonMapper = jsonMapper;
-        this.registryGateway = outboxEventRegistryGateway;
+        this.domainRegistryService = domainRegistryService;
+        this.tracer = tracer;
         this.streamTemplates = Map.of(
                 "PRODUCT", productStreamTemplate,
                 "INVENTORY", inventoryStreamTemplate
@@ -36,8 +40,7 @@ public class OutboxRabbitProducer {
 
     @EventListener(ApplicationReadyEvent.class)
     public void verifyTopics() {
-        boolean containsAll = new HashSet<>(registryGateway.registry()
-                .topics())
+        boolean containsAll = new HashSet<>(domainRegistryService.topics())
                 .containsAll(streamTemplates.keySet());
         if (!containsAll) {
             throw new ApplicationException("OutboxEventRabbitMqProducer does not contain all topics");
@@ -48,6 +51,7 @@ public class OutboxRabbitProducer {
         var topic = outboxMessage.topic();
         var type = outboxMessage.event();
         var template = streamTemplates.get(topic);
+        template.setObservationEnabled(Boolean.TRUE);
         template.setProducerCustomizer((__, producerBuilder) -> {
             producerBuilder.filterValue(message -> message.getApplicationProperties()
                     .get(topic)
@@ -59,7 +63,13 @@ public class OutboxRabbitProducer {
                 .messageBuilder()
                 .addData(jsonMapper.toBytes(outboxMessage))
                 .build();
-        return template.send(message);
-    }
 
+        Span customSpan = tracer.nextSpan().name("custom.name").start();
+        try (Tracer.SpanInScope scope = tracer.withSpan(customSpan)) {
+            customSpan.tag("custom.tag", "value");
+            return template.send(message);
+        } finally {
+            customSpan.end();
+        }
+    }
 }

@@ -2,7 +2,7 @@ package com.github.mangila.webshop.inventory.infrastructure.config;
 
 import com.github.mangila.webshop.inventory.domain.event.InventoryEvent;
 import com.github.mangila.webshop.inventory.domain.event.InventoryTopic;
-import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRegistryGateway;
+import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,19 +12,19 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 @Configuration
-public class InventoryEventRegistryConfig {
+public class InventoryDomainRegistryConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(InventoryEventRegistryConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(InventoryDomainRegistryConfig.class);
 
-    private final OutboxRegistryGateway outboxRegistryGateway;
+    private final DomainRegistryService domainRegistryService;
 
-    public InventoryEventRegistryConfig(OutboxRegistryGateway outboxRegistryGateway) {
-        this.outboxRegistryGateway = outboxRegistryGateway;
+    public InventoryDomainRegistryConfig(DomainRegistryService domainRegistryService) {
+        this.domainRegistryService = domainRegistryService;
     }
 
     @PostConstruct
     public void registerInventoryEvent() {
-        log.debug("Registering event for inventory domain");
+        log.debug("Registering domain events for inventory domain");
         EnumSet.allOf(InventoryEvent.class)
                 .stream()
                 .collect(Collectors.toMap(
@@ -32,13 +32,13 @@ public class InventoryEventRegistryConfig {
                         InventoryEvent::name))
                 .forEach((key, value) -> {
                     log.info("Registering event: {}", key);
-                    outboxRegistryGateway.registry().registerType(key, value);
+                    domainRegistryService.registerType(key, value);
                 });
     }
 
     @PostConstruct
     public void registerInventoryTopic() {
-        log.debug("Registering topics for inventory domain");
+        log.debug("Registering domain topics for inventory domain");
         EnumSet.allOf(InventoryTopic.class)
                 .stream()
                 .collect(Collectors.toMap(
@@ -46,7 +46,7 @@ public class InventoryEventRegistryConfig {
                         InventoryTopic::name))
                 .forEach((key, value) -> {
                     log.info("Registering topic: {}", key);
-                    outboxRegistryGateway.registry().registerTopic(key, value);
+                    domainRegistryService.registerTopic(key, value);
                 });
     }
 }

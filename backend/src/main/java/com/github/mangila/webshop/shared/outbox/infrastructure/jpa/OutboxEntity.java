@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@Table(name = "outbox_event")
+@Table(name = "outbox")
 @EntityListeners(AuditingEntityListener.class)
 public class OutboxEntity {
 

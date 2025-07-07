@@ -3,4 +3,4 @@
  * This package provides registries for event topics and types.
  */
 @org.jspecify.annotations.NullMarked
-package com.github.mangila.webshop.shared.outbox.infrastructure.registry;
+package com.github.mangila.webshop.shared.application.registry;
