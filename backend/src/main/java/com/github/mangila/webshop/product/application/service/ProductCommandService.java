@@ -7,11 +7,14 @@ import com.github.mangila.webshop.product.application.gateway.ProductMapperGatew
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
 import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
 public class ProductCommandService {
 
@@ -29,7 +32,7 @@ public class ProductCommandService {
     @Observed(contextualName = "service",
             lowCardinalityKeyValues = {"service", "ProductCommandService"})
     @Transactional
-    public ProductDto insert(ProductInsertCommand command) {
+    public ProductDto insert(@Valid ProductInsertCommand command) {
         return Stream.of(command)
                 .peek(c -> log.debug("Insert product: {}", c))
                 .map(productMapperGateway.command()::toDomain)
@@ -39,7 +42,7 @@ public class ProductCommandService {
     }
 
     @Transactional
-    public void delete(ProductIdCommand command) {
+    public void delete(@Valid ProductIdCommand command) {
         Stream.of(command)
                 .peek(c -> log.debug("Delete product: {}", c))
                 .map(productMapperGateway.command()::toDomain)

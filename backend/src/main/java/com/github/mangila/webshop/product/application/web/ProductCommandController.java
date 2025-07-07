@@ -4,10 +4,7 @@ import com.github.mangila.webshop.product.application.cqrs.ProductIdCommand;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.aop.ObservedAspect;
 import jakarta.validation.Valid;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +31,7 @@ public class ProductCommandController {
             value = "delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductDto> deleteProduct(@RequestBody ProductIdCommand command) {
+    public ResponseEntity<ProductDto> deleteProduct(@Valid @RequestBody ProductIdCommand command) {
         productServiceGateway.command().delete(command);
         return ResponseEntity.noContent().build();
     }
