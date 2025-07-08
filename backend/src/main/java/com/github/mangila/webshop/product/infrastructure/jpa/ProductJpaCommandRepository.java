@@ -6,15 +6,14 @@ import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
 import com.github.mangila.webshop.product.infrastructure.event.ProductOutboxMapper;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
 import com.github.mangila.webshop.shared.uuid.application.GenerateNewUuidIntent;
 import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
-import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -23,8 +22,7 @@ import static com.github.mangila.webshop.product.infrastructure.event.ProductEve
 import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_DELETED;
 import static com.github.mangila.webshop.product.infrastructure.event.ProductTopic.PRODUCT;
 
-@Repository
-@Observed
+@ObservedRepository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);

@@ -5,6 +5,7 @@ import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import jakarta.validation.Valid;
@@ -15,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@Service
-@Observed
+@ObservedService
 public class ProductCommandService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductCommandService.class);
