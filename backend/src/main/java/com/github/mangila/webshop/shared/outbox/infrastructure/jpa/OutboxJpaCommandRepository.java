@@ -1,13 +1,14 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.jpa;
 
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
 import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.outbox.domain.OutboxCommandRepository;
-import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.shared.outbox.domain.cqrs.OutboxInsert;
+import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
 
-@Repository
+@ObservedRepository(name = "outboxJpaCommandRepository")
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
     private final OutboxEntityMapper mapper;

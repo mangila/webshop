@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-@Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "ProductCommandService"})
 @Validated
 @Service
+@Observed
 public class ProductCommandService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductCommandService.class);

@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "product")
 @EntityListeners(AuditingEntityListener.class)
-public class ProductEntity {
+public class ProductEntity implements Persistable<UUID> {
 
     @Id
     @Column(columnDefinition = "uuid")
@@ -47,6 +48,8 @@ public class ProductEntity {
     @Column(nullable = false)
     private @Nullable Instant updated;
 
+    private volatile boolean isNew = true;
+
     protected ProductEntity() {
     }
 
@@ -64,6 +67,15 @@ public class ProductEntity {
 
     public UUID getId() {
         return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean isNew) {
+        this.isNew = isNew;
     }
 
     public void setId(UUID id) {

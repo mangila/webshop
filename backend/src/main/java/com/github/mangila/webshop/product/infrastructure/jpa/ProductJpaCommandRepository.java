@@ -23,8 +23,8 @@ import static com.github.mangila.webshop.product.infrastructure.event.ProductEve
 import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_DELETED;
 import static com.github.mangila.webshop.product.infrastructure.event.ProductTopic.PRODUCT;
 
-@Observed(contextualName = "repository", lowCardinalityKeyValues = {"repository", "ProductJpaCommandRepository"})
 @Repository
+@Observed
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);
@@ -56,7 +56,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     public Product insert(ProductInsert command) {
         UUID id = uuidGeneratorService.generate(new GenerateNewUuidIntent("Create new Product"));
         Product product = Stream.of(id)
-                .map(uuid -> entityMapper.toEntity(id, command))
+                .map(_ -> entityMapper.toEntity(id, command))
                 .map(repository::save)
                 .map(entityMapper::toDomain)
                 .get();

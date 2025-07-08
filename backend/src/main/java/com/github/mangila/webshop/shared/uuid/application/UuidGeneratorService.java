@@ -1,17 +1,15 @@
 package com.github.mangila.webshop.shared.uuid.application;
 
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecord;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecordRepository;
-import io.micrometer.observation.annotation.Observed;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.UUID;
 
-@Observed(contextualName = "service", lowCardinalityKeyValues = {"service", "UuidGeneratorService"})
-@Service
+@ObservedService
 public class UuidGeneratorService {
 
     private final UuidRecordRepository repository;

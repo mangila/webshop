@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Table(name = "uuid_record")
 @Immutable
 @EntityListeners(AuditingEntityListener.class)
-public class UuidRecordEntity {
+public class UuidRecordEntity implements Persistable<UUID> {
 
     @Id
     @Column(columnDefinition = "uuid")
@@ -26,6 +27,8 @@ public class UuidRecordEntity {
     @CreatedDate
     @Column(nullable = false)
     private @Nullable Instant created;
+
+    private volatile boolean isNew = true;
 
     protected UuidRecordEntity() {
     }
@@ -41,6 +44,15 @@ public class UuidRecordEntity {
 
     public UUID getId() {
         return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean isNew) {
+        this.isNew = isNew;
     }
 
     public Optional<Instant> getCreated() {

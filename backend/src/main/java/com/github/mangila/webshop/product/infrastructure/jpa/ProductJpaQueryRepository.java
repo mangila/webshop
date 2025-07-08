@@ -5,9 +5,10 @@ import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
-import org.springframework.stereotype.Repository;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
+import io.micrometer.observation.annotation.Observed;
 
-@Repository
+@ObservedRepository
 public class ProductJpaQueryRepository implements ProductQueryRepository {
 
     private final ProductEntityMapper mapper;
@@ -19,6 +20,7 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
         this.repository = repository;
     }
 
+    @Observed
     @Override
     public Product findById(ProductId productId) {
         return repository.findById(productId.value())
@@ -30,6 +32,7 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
                 ));
     }
 
+    @Observed
     @Override
     public boolean existsById(ProductId productId) {
         return repository.existsById(productId.value());

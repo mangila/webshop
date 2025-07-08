@@ -1,17 +1,16 @@
 package com.github.mangila.webshop.shared.uuid.infrastructure;
 
+import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
+import com.github.mangila.webshop.shared.domain.exception.CqrsException;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecord;
 import com.github.mangila.webshop.shared.uuid.domain.UuidRecordRepository;
-import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
-@Observed(contextualName = "repository", lowCardinalityKeyValues = {"repository", "UuidRecordJpaRepository"})
-@Repository
+@ObservedRepository
 public class UuidRecordJpaRepository implements UuidRecordRepository {
 
     private final UuidRecordEntityRepository repository;
@@ -33,9 +32,12 @@ public class UuidRecordJpaRepository implements UuidRecordRepository {
     }
 
     @Override
-    public Optional<UuidRecord> findById(UUID id) {
+    public UuidRecord findById(UUID id) {
         var entity = repository.findById(id);
-        return entity.map(mapper::toDomain);
+        if (entity.isEmpty()) {
+            throw new CqrsException("UuidRecord not found for id: " + id, CqrsOperation.QUERY, UuidRecord.class);
+        }
+        return mapper.toDomain(entity.get());
     }
 
     @Override

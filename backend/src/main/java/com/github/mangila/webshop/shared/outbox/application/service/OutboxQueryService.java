@@ -1,19 +1,17 @@
 package com.github.mangila.webshop.shared.outbox.application.service;
 
-import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
-import com.github.mangila.webshop.shared.domain.exception.CqrsException;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdQuery;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
-import com.github.mangila.webshop.shared.outbox.domain.Outbox;
+import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@ObservedService
 public class OutboxQueryService {
 
     private final OutboxMapperGateway mapper;
@@ -25,10 +23,12 @@ public class OutboxQueryService {
         this.repository = repository;
     }
 
+    @Observed
     public List<OutboxDto> replay(OutboxReplayQuery query) {
         return List.of();
     }
 
+    @Observed
     public OutboxDto findById(OutboxIdQuery query) {
         return Stream.of(query)
                 .map(mapper.query()::toDomain)
