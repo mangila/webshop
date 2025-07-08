@@ -8,7 +8,7 @@ import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
 import org.springframework.data.jpa.repository.Modifying;
 
-@ObservedRepository(name = "outboxJpaCommandRepository")
+@ObservedRepository
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
     private final OutboxEntityMapper mapper;

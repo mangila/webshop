@@ -2,14 +2,16 @@ package com.github.mangila.webshop.shared.outbox.application.service;
 
 import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
+import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdCommand;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
-import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
-import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @ObservedService
 public class OutboxCommandService {
 
@@ -25,7 +27,7 @@ public class OutboxCommandService {
         this.domainRegistryService = domainRegistryService;
     }
 
-    public OutboxDto insert(OutboxInsertCommand command) {
+    public OutboxDto insert(@Valid OutboxInsertCommand command) {
         String topic = command.topic();
         String type = command.event();
         domainRegistryService.ensureHasTopicAndTypeRegistered(topic, type);
@@ -36,7 +38,8 @@ public class OutboxCommandService {
                 .get();
     }
 
-    public void updateAsPublished(OutboxId id) {
+    public void updateAsPublished(@Valid OutboxIdCommand command) {
+        var id = mapper.command().toDomain(command);
         repository.command().updateAsPublished(id);
     }
 }

@@ -8,7 +8,7 @@ import com.github.mangila.webshop.shared.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
 
-@ObservedRepository(tags = {"hej", "hej"})
+@ObservedRepository
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
     private final OutboxEntityMapper mapper;
