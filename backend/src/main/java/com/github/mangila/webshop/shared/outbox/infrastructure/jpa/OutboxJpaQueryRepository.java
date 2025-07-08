@@ -6,11 +6,9 @@ import com.github.mangila.webshop.shared.infrastructure.spring.annotation.Observ
 import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
-import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
-import org.springframework.stereotype.Repository;
 
-@ObservedRepository
+@ObservedRepository(tags = {"hej", "hej"})
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
     private final OutboxEntityMapper mapper;

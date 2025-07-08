@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,9 +35,10 @@ public class ObservedBeanAspect {
                     " || @within(com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository)")
     public Object observeAnnotation(ProceedingJoinPoint pjp) throws Throwable {
         Class<?> targetClass = pjp.getTarget().getClass();
-        var annotationData = processor.observations.get(targetClass);
+        var annotationData = processor.observedBeans.get(targetClass);
         var observation = Observation.createNotStarted(annotationData.name, registry)
                 .lowCardinalityKeyValues(annotationData.tags)
+                .lowCardinalityKeyValues(KeyValues.of("method", pjp.getSignature().getName()))
                 .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()))
                 .start();
         try (Observation.Scope scope = observation.openScope()) {
@@ -52,7 +54,7 @@ public class ObservedBeanAspect {
     @Component
     public static class ObservedBeanPostProcessor implements BeanPostProcessor {
 
-        private final Map<Class<?>, AnnotationData> observations = new HashMap<>();
+        private final Map<Class<?>, AnnotationData> observedBeans = new HashMap<>();
 
         @Override
         public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -61,23 +63,28 @@ public class ObservedBeanAspect {
                 String name = observedBean.name().isEmpty() ? beanName : observedBean.name();
                 String[] tags = observedBean.tags();
                 Class<?> clazz = AopUtils.getTargetClass(bean);
-                var metadata = createMetadata(name, tags);
-                observations.put(clazz, metadata);
+                var metadata = new AnnotationData(name, KeyValues.empty()
+                        .and(createTags(tags))
+                        .and(KeyValue.of("bean", beanName))
+                        .and(KeyValue.of("class", clazz.getSimpleName()))
+                );
+                observedBeans.put(clazz, metadata);
             }
             return bean;
         }
 
-        AnnotationData createMetadata(String name, String[] tags) {
+        private KeyValues createTags(String[] tags) {
             if (tags.length % 2 != 0) {
-                throw new IllegalArgumentException("lowCardinalityKeyValues Array must be in key value pairs");
+                throw new IllegalArgumentException("tags Array must be in key value pairs");
             }
-            var kv = KeyValues.empty();
+
+            var keyvalues = new ArrayList<KeyValue>();
             for (int i = 0; i < tags.length - 1; i += 2) {
                 var key = tags[i];
                 var value = tags[i + 1];
-                kv.and(KeyValue.of(key, value));
+                keyvalues.add(KeyValue.of(key, value));
             }
-            return new AnnotationData(name, kv);
+            return keyvalues.isEmpty() ? KeyValues.empty() : KeyValues.of(keyvalues.toArray(KeyValue[]::new));
         }
 
         record AnnotationData(String name, KeyValues tags) {
