@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity, Long> {
 //    @Query("""
 //              SELECT e FROM OutboxEvent e
-//                WHERE e.topic = :#{#query.topic()}
+//                WHERE e.value = :#{#query.value()}
 //                AND e.aggregateId = :#{#query.aggregateId()}
 //                AND e.value >= :#{#query.offset()}
 //                ORDER BY e.value

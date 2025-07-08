@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
-import com.github.mangila.webshop.shared.application.registry.DomainRegistryService;
+import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
@@ -21,16 +21,16 @@ import java.util.concurrent.CompletableFuture;
 public class OutboxRabbitProducer {
 
     private final JsonMapper jsonMapper;
-    private final DomainRegistryService domainRegistryService;
+    private final RegistryService registryService;
     private final Map<String, RabbitStreamTemplate> streamTemplates;
     private final Tracer tracer;
 
     public OutboxRabbitProducer(JsonMapper jsonMapper,
-                                DomainRegistryService domainRegistryService,
+                                RegistryService registryService,
                                 @Qualifier("productStreamTemplate") RabbitStreamTemplate productStreamTemplate,
                                 @Qualifier("inventoryStreamTemplate") RabbitStreamTemplate inventoryStreamTemplate, Tracer tracer) {
         this.jsonMapper = jsonMapper;
-        this.domainRegistryService = domainRegistryService;
+        this.registryService = registryService;
         this.tracer = tracer;
         this.streamTemplates = Map.of(
                 "PRODUCT", productStreamTemplate,
@@ -38,28 +38,28 @@ public class OutboxRabbitProducer {
         );
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void verifyTopics() {
-        boolean containsAll = new HashSet<>(domainRegistryService.topics())
-                .containsAll(streamTemplates.keySet());
-        if (!containsAll) {
-            throw new ApplicationException("OutboxEventRabbitMqProducer does not contain all topics");
-        }
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void verifyTopics() {
+//        boolean containsAll = new HashSet<>(registryService.topics())
+//                .containsAll(streamTemplates.keySet());
+//        if (!containsAll) {
+//            throw new ApplicationException("OutboxEventRabbitMqProducer does not contain all topics");
+//        }
+//    }
 
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
-        var topic = outboxMessage.topic();
-        var type = outboxMessage.event();
-        var template = streamTemplates.get(topic);
+        var domain = outboxMessage.domain();
+        var event = outboxMessage.event();
+        var template = streamTemplates.get(domain);
         template.setObservationEnabled(Boolean.TRUE);
-        template.setProducerCustomizer((__, producerBuilder) -> {
+        template.setProducerCustomizer((_, producerBuilder) -> {
             producerBuilder.filterValue(message -> message.getApplicationProperties()
-                    .get(topic)
+                    .get(domain)
                     .toString());
         });
         Message message = template.messageBuilder()
                 .applicationProperties()
-                .entry(topic, type)
+                .entry(domain, event)
                 .messageBuilder()
                 .addData(jsonMapper.toBytes(outboxMessage))
                 .build();

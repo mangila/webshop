@@ -76,7 +76,6 @@ public class ObservedBeanAspect {
             if (tags.length % 2 != 0) {
                 throw new IllegalArgumentException("tags Array must be in key value pairs");
             }
-
             var keyvalues = new ArrayList<KeyValue>();
             for (int i = 0; i < tags.length - 1; i += 2) {
                 var key = tags[i];

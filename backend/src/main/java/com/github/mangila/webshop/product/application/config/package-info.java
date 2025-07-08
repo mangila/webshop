@@ -3,4 +3,4 @@
  * This package provides configuration classes for product services and repositories.
  */
 @org.jspecify.annotations.NullMarked
-package com.github.mangila.webshop.product.infrastructure.config;
+package com.github.mangila.webshop.product.application.config;

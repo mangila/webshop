@@ -48,6 +48,7 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private @Nullable Instant updated;
 
+    @Transient
     private volatile boolean isNew = true;
 
     protected ProductEntity() {

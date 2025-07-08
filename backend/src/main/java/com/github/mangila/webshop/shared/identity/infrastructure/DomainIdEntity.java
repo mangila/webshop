@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.uuid.infrastructure;
+package com.github.mangila.webshop.shared.identity.infrastructure;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
@@ -15,11 +15,14 @@ import java.util.UUID;
 @Table(name = "uuid_record")
 @Immutable
 @EntityListeners(AuditingEntityListener.class)
-public class UuidRecordEntity implements Persistable<UUID> {
+public class DomainIdEntity implements Persistable<UUID> {
 
     @Id
     @Column(columnDefinition = "uuid")
     private UUID id;
+
+    @Column(nullable = false)
+    private String domainKey;
 
     @Column(nullable = false)
     private String intent;
@@ -28,18 +31,20 @@ public class UuidRecordEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private @Nullable Instant created;
 
+    @Transient
     private volatile boolean isNew = true;
 
-    protected UuidRecordEntity() {
+    protected DomainIdEntity() {
     }
 
-    private UuidRecordEntity(UUID id, String intent) {
+    private DomainIdEntity(UUID id, String domainKey, String intent) {
         this.id = id;
+        this.domainKey = domainKey;
         this.intent = intent;
     }
 
-    public static UuidRecordEntity from(UUID id, String intent) {
-        return new UuidRecordEntity(id, intent);
+    public static DomainIdEntity from(UUID id, String domainKey, String intent) {
+        return new DomainIdEntity(id, domainKey, intent);
     }
 
     public UUID getId() {
@@ -73,5 +78,13 @@ public class UuidRecordEntity implements Persistable<UUID> {
 
     public void setIntent(String intent) {
         this.intent = intent;
+    }
+
+    public String getDomainKey() {
+        return domainKey;
+    }
+
+    public void setDomainKey(String domainKey) {
+        this.domainKey = domainKey;
     }
 }

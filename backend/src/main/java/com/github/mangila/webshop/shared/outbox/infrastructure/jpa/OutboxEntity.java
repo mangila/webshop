@@ -23,7 +23,7 @@ public class OutboxEntity {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private String topic;
+    private String domain;
 
     @Column(nullable = false, updatable = false)
     private String event;
@@ -51,8 +51,8 @@ public class OutboxEntity {
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String topic, String event, UUID aggregateId, JsonNode payload, boolean published) {
-        this.topic = topic;
+    private OutboxEntity(String domain, String event, UUID aggregateId, JsonNode payload, boolean published) {
+        this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
         this.payload = payload;
@@ -71,12 +71,12 @@ public class OutboxEntity {
         this.id = id;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setDomain(String topic) {
+        this.domain = topic;
     }
 
     public String getEvent() {

@@ -7,15 +7,15 @@ import java.util.UUID;
 
 public record OutboxDto(
         long id,
-        String topic,
+        String domain,
         String event,
         UUID aggregateId,
         JsonNode payload,
         boolean published,
         Instant created) {
 
-    public static OutboxDto from(long id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
-        return new OutboxDto(id, topic, event, aggregateId, payload, published, created);
+    public static OutboxDto from(long id, String domain, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
+        return new OutboxDto(id, domain, event, aggregateId, payload, published, created);
     }
 }
 

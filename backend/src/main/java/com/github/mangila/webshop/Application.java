@@ -28,7 +28,7 @@ public class Application implements CommandLineRunner {
         Thread.ofVirtual().factory().newThread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                     var client = HttpClient.newHttpClient();
                     var c = new ProductInsertCommand(
                             "tesst",

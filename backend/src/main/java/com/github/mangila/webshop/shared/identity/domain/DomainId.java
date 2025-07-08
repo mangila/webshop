@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.uuid.domain;
+package com.github.mangila.webshop.shared.identity.domain;
 
 import org.jspecify.annotations.Nullable;
 
@@ -6,24 +6,26 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UuidRecord {
+public class DomainId {
 
     private UUID id;
+    private String domainKey;
     private String intent;
     private @Nullable Instant created;
 
-    private UuidRecord(UUID id, String intent, @Nullable Instant created) {
+    private DomainId(UUID id, String domainKey, String intent, @Nullable Instant created) {
         this.id = id;
+        this.domainKey = domainKey;
         this.intent = intent;
         this.created = created;
     }
 
-    public static UuidRecord from(UUID id, String intent, Instant created) {
-        return new UuidRecord(id, intent, created);
+    public static DomainId from(UUID id, String domainKey, String intent, Instant created) {
+        return new DomainId(id, domainKey, intent, created);
     }
 
-    public static UuidRecord create(String intent) {
-        return new UuidRecord(UUID.randomUUID(), intent, null);
+    public static DomainId create(String domainKey, String intent) {
+        return new DomainId(UUID.randomUUID(), domainKey, intent, null);
     }
 
     public UUID getId() {
@@ -32,6 +34,14 @@ public class UuidRecord {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getDomainKey() {
+        return domainKey;
+    }
+
+    public void setDomainKey(String domainKey) {
+        this.domainKey = domainKey;
     }
 
     public String getIntent() {

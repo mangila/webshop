@@ -12,20 +12,20 @@ public class OutboxEntityMapper {
 
     public OutboxEntity toEntity(OutboxInsert command) {
         return OutboxEntity.from(
-                command.topic(),
-                command.event(),
-                command.aggregateId(),
-                command.payload()
+                command.domain().value(),
+                command.event().value(),
+                command.aggregateId().value(),
+                command.payload().value()
         );
     }
 
     public Outbox toDomain(OutboxEntity entity) {
         Instant created = entity.getCreated().orElseThrow(
-                () -> new ApplicationException("Created date is required to map from entity to domain")
+                () -> new ApplicationException("Created date is required to map from entity to value")
         );
         return Outbox.from(
                 entity.getId(),
-                entity.getTopic(),
+                entity.getDomain(),
                 entity.getEvent(),
                 entity.getAggregateId(),
                 entity.getPayload(),

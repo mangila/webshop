@@ -1,0 +1,47 @@
+package com.github.mangila.webshop.inventory.application.config;
+
+import com.github.mangila.webshop.inventory.domain.event.InventoryEvent;
+import com.github.mangila.webshop.inventory.domain.model.Inventory;
+import com.github.mangila.webshop.shared.application.registry.DomainKey;
+import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.RegistryService;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.EnumSet;
+
+@Configuration
+public class InventoryDomainRegistryConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(InventoryDomainRegistryConfig.class);
+
+    private final RegistryService registryService;
+
+    public InventoryDomainRegistryConfig(RegistryService registryService) {
+        this.registryService = registryService;
+    }
+
+    @PostConstruct
+    void init() {
+        registerInventoryDomain();
+        registerInventoryEvent();
+    }
+
+    void registerInventoryDomain() {
+        var domainKey = DomainKey.from(Inventory.class);
+        log.info("Registering domain: {}", domainKey.value());
+        registryService.registerDomain(domainKey, domainKey.value());
+    }
+
+    void registerInventoryEvent() {
+        EnumSet.allOf(InventoryEvent.class)
+                .stream()
+                .map(EventKey::from)
+                .forEach(eventKey -> {
+                    log.info("Registering event: {}", eventKey.value());
+                    registryService.registerEvent(eventKey, eventKey.value());
+                });
+    }
+}

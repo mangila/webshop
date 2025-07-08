@@ -6,11 +6,11 @@ import com.github.mangila.webshop.product.domain.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
 import com.github.mangila.webshop.product.infrastructure.event.ProductOutboxMapper;
+import com.github.mangila.webshop.shared.identity.application.DomainIdGeneratorService;
+import com.github.mangila.webshop.shared.identity.application.cqrs.GenerateDomainIdCommand;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
-import com.github.mangila.webshop.shared.uuid.application.GenerateNewUuidIntent;
-import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_CREATE_NEW;
 import static com.github.mangila.webshop.product.infrastructure.event.ProductEvent.PRODUCT_DELETED;
-import static com.github.mangila.webshop.product.infrastructure.event.ProductTopic.PRODUCT;
 
 @ObservedRepository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
@@ -31,28 +30,27 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     private final ProductQueryRepository queryRepository;
     private final ProductOutboxMapper outboxMapper;
     private final ProductEntityMapper entityMapper;
-    private final UuidGeneratorService uuidGeneratorService;
+    private final DomainIdGeneratorService domainIdGeneratorService;
     private final OutboxServiceGateway outboxServiceGateway;
 
     public ProductJpaCommandRepository(ProductEntityCommandRepository repository,
                                        ProductQueryRepository queryRepository,
                                        ProductOutboxMapper outboxMapper,
                                        ProductEntityMapper entityMapper,
-                                       UuidGeneratorService uuidGeneratorService,
+                                       DomainIdGeneratorService domainIdGeneratorService,
                                        OutboxServiceGateway outboxServiceGateway) {
         this.repository = repository;
         this.queryRepository = queryRepository;
         this.outboxMapper = outboxMapper;
         this.entityMapper = entityMapper;
-        this.uuidGeneratorService = uuidGeneratorService;
+        this.domainIdGeneratorService = domainIdGeneratorService;
         this.outboxServiceGateway = outboxServiceGateway;
     }
-
 
     @Transactional
     @Override
     public Product insert(ProductInsert command) {
-        UUID id = uuidGeneratorService.generate(new GenerateNewUuidIntent("Create new Product"));
+        UUID id = domainIdGeneratorService.generate(GenerateDomainIdCommand.from(Product.class, "Create new Product"));
         Product product = Stream.of(id)
                 .map(_ -> entityMapper.toEntity(id, command))
                 .map(repository::save)
@@ -60,7 +58,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
                 .get();
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
-                .map(dto -> outboxMapper.toCommand(PRODUCT, PRODUCT_CREATE_NEW, dto))
+                .map(dto -> outboxMapper.toCommand(PRODUCT_CREATE_NEW, dto))
                 .map(outboxServiceGateway.command()::insert)
                 .get();
         log.debug("Inserted product with id: {} and event: {} in outbox with id: {}", product.getId(), PRODUCT_CREATE_NEW, outboxDto.id());
@@ -74,7 +72,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
         repository.deleteById(productId.value());
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
-                .map(dto -> outboxMapper.toCommand(PRODUCT, PRODUCT_DELETED, dto))
+                .map(dto -> outboxMapper.toCommand(PRODUCT_DELETED, dto))
                 .map(outboxServiceGateway.command()::insert)
                 .get();
         log.debug("Deleted product with id: {} and event: {} in outbox with id: {}", product.getId(), PRODUCT_DELETED, outboxDto.id());

@@ -1,29 +1,29 @@
-package com.github.mangila.webshop.shared.uuid.infrastructure;
+package com.github.mangila.webshop.shared.identity.infrastructure;
 
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
+import com.github.mangila.webshop.shared.identity.domain.DomainId;
+import com.github.mangila.webshop.shared.identity.domain.DomainIdRepository;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
-import com.github.mangila.webshop.shared.uuid.domain.UuidRecord;
-import com.github.mangila.webshop.shared.uuid.domain.UuidRecordRepository;
 import io.vavr.collection.Stream;
 
 import java.util.UUID;
 
 
 @ObservedRepository
-public class UuidRecordJpaRepository implements UuidRecordRepository {
+public class DomainIdJpaRepository implements DomainIdRepository {
 
-    private final UuidRecordEntityRepository repository;
-    private final UuidRecordEntityMapper mapper;
+    private final DomainIdEntityRepository repository;
+    private final DomainIdEntityMapper mapper;
 
-    public UuidRecordJpaRepository(UuidRecordEntityRepository repository,
-                                   UuidRecordEntityMapper mapper) {
+    public DomainIdJpaRepository(DomainIdEntityRepository repository,
+                                 DomainIdEntityMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Override
-    public UuidRecord save(UuidRecord record) {
+    public DomainId save(DomainId record) {
         return Stream.of(record)
                 .map(mapper::toEntity)
                 .map(repository::save)
@@ -32,10 +32,13 @@ public class UuidRecordJpaRepository implements UuidRecordRepository {
     }
 
     @Override
-    public UuidRecord findById(UUID id) {
+    public DomainId findById(UUID id) {
         var entity = repository.findById(id);
         if (entity.isEmpty()) {
-            throw new CqrsException("UuidRecord not found for id: " + id, CqrsOperation.QUERY, UuidRecord.class);
+            throw new CqrsException(
+                    String.format("UuidRecord not found for id: %s", id),
+                    CqrsOperation.QUERY,
+                    DomainId.class);
         }
         return mapper.toDomain(entity.get());
     }

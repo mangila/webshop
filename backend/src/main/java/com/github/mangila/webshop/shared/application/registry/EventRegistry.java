@@ -6,22 +6,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class DomainRegistry implements Registry<DomainKey, String> {
+public class EventRegistry implements Registry<EventKey, String> {
 
-    private final Map<DomainKey, String> registry = new ConcurrentHashMap<>();
+    private final Map<EventKey, String> registry = new ConcurrentHashMap<>();
 
     @Override
-    public boolean isRegistered(DomainKey key) {
+    public boolean isRegistered(EventKey key) {
         return registry.containsKey(key);
     }
 
     @Override
-    public String get(DomainKey key) {
+    public String get(EventKey key) {
         return registry.get(key);
     }
 
     @Override
-    public void register(DomainKey key, String value) {
+    public void register(EventKey key, String value) {
         registry.put(key, value);
     }
 }

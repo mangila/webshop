@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.shared.infrastructure.spring.validation;
 
-import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
+import com.github.mangila.webshop.shared.identity.application.DomainIdGeneratorService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
@@ -10,14 +10,14 @@ import java.util.UUID;
 @Component
 public class DomainIdValidator implements ConstraintValidator<DomainId, UUID> {
 
-    private final UuidGeneratorService uuidGeneratorService;
+    private final DomainIdGeneratorService domainIdGeneratorService;
 
-    public DomainIdValidator(UuidGeneratorService uuidGeneratorService) {
-        this.uuidGeneratorService = uuidGeneratorService;
+    public DomainIdValidator(DomainIdGeneratorService domainIdGeneratorService) {
+        this.domainIdGeneratorService = domainIdGeneratorService;
     }
 
     @Override
     public boolean isValid(UUID value, ConstraintValidatorContext context) {
-        return uuidGeneratorService.hasGenerated(value);
+        return domainIdGeneratorService.hasGenerated(value);
     }
 }

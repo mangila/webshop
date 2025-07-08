@@ -23,10 +23,10 @@ public class ProductEntityMapper {
 
     public Product toDomain(ProductEntity entity) {
         Instant created = entity.getCreated().orElseThrow(
-                () -> new ApplicationException("Created date is required to map from entity to domain")
+                () -> new ApplicationException("Created date is required to map from entity to value")
         );
         Instant updated = entity.getUpdated().orElseThrow(
-                () -> new ApplicationException("Updated date is required to map from entity to domain")
+                () -> new ApplicationException("Updated date is required to map from entity to value")
         );
         return Product.from(
                 entity.getId(),

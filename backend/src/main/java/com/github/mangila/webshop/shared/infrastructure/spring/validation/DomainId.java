@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface DomainId {
 
-    String message() default "Invalid domain ID";
+    String message() default "Invalid value ID";
 
     Class<?>[] groups() default {};
 

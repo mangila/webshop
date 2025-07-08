@@ -10,16 +10,16 @@ import java.util.UUID;
 public class Outbox {
 
     private OutboxId id;
-    private OutboxTopic topic;
+    private OutboxDomain domain;
     private OutboxEvent event;
     private OutboxAggregateId aggregateId;
     private OutboxPayload payload;
     private OutboxPublished published;
     private OutboxCreated created;
 
-    public Outbox(OutboxId id, OutboxTopic topic, OutboxEvent event, OutboxAggregateId aggregateId, OutboxPayload payload, OutboxPublished published, OutboxCreated created) {
+    public Outbox(OutboxId id, OutboxDomain domain, OutboxEvent event, OutboxAggregateId aggregateId, OutboxPayload payload, OutboxPublished published, OutboxCreated created) {
         this.id = id;
-        this.topic = topic;
+        this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
         this.payload = payload;
@@ -27,16 +27,16 @@ public class Outbox {
         this.created = created;
     }
 
-    public static Outbox from(Long id, String topic, String event, UUID aggregateId, JsonNode payload, boolean published, Instant instant) {
-        return new Outbox(new OutboxId(id), new OutboxTopic(topic), new OutboxEvent(event), new OutboxAggregateId(aggregateId), new OutboxPayload(payload), new OutboxPublished(published), new OutboxCreated(instant));
+    public static Outbox from(Long id, String domain, String event, UUID aggregateId, JsonNode payload, boolean published, Instant instant) {
+        return new Outbox(new OutboxId(id), new OutboxDomain(domain), new OutboxEvent(event), new OutboxAggregateId(aggregateId), new OutboxPayload(payload), new OutboxPublished(published), new OutboxCreated(instant));
     }
 
     public OutboxId getId() {
         return id;
     }
 
-    public OutboxTopic getTopic() {
-        return topic;
+    public OutboxDomain getDomain() {
+        return domain;
     }
 
     public OutboxEvent getEvent() {

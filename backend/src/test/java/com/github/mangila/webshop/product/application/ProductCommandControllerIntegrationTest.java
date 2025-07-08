@@ -5,7 +5,7 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import com.github.mangila.webshop.shared.uuid.application.UuidGeneratorService;
+import com.github.mangila.webshop.shared.identity.application.DomainIdGeneratorService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class ProductCommandControllerIntegrationTest {
     private ProductServiceGateway productServiceGateway;
 
     @Autowired
-    private UuidGeneratorService uuidGeneratorService;
+    private DomainIdGeneratorService domainIdGeneratorService;
 
     private final ProductTestUtil.TestProductInsertCommandBuilder insertCommandBuilder
             = new ProductTestUtil.TestProductInsertCommandBuilder();
@@ -57,7 +57,7 @@ class ProductCommandControllerIntegrationTest {
                 .existsById(productIdQuery);
         assertThat(exists).isTrue();
 
-        boolean hasGenerated = uuidGeneratorService.hasGenerated(productIdQuery.value());
+        boolean hasGenerated = domainIdGeneratorService.hasGenerated(productIdQuery.value());
         assertThat(hasGenerated).isTrue();
 
         webTestClient.method(HttpMethod.DELETE)

@@ -1,6 +1,8 @@
 package com.github.mangila.webshop.product.infrastructure.event;
 
 import com.github.mangila.webshop.product.domain.Product;
+import com.github.mangila.webshop.shared.application.registry.DomainKey;
+import com.github.mangila.webshop.shared.application.registry.EventKey;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import org.springframework.stereotype.Component;
@@ -25,12 +27,9 @@ public class ProductOutboxMapper {
         );
     }
 
-    public OutboxInsertCommand toCommand(
-            ProductTopic topic,
-            ProductEvent event,
-            ProductOutboxDto dto) {
+    public OutboxInsertCommand toCommand(ProductEvent event, ProductOutboxDto dto) {
         return OutboxInsertCommand.from(
-                topic,
+                Product.class,
                 event,
                 dto.id(),
                 dto.toJsonNode(jsonMapper)
