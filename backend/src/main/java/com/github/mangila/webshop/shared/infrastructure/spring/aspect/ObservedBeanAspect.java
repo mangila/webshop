@@ -63,11 +63,10 @@ public class ObservedBeanAspect {
                 String name = observedBean.name().isEmpty() ? beanName : observedBean.name();
                 String[] tags = observedBean.tags();
                 Class<?> clazz = AopUtils.getTargetClass(bean);
-                var metadata = new AnnotationData(name, KeyValues.empty()
-                        .and(createTags(tags))
-                        .and(KeyValue.of("bean", beanName))
-                        .and(KeyValue.of("class", clazz.getSimpleName()))
-                );
+                var metadata = new AnnotationData(name, KeyValues.of(
+                                KeyValue.of("bean", beanName),
+                                KeyValue.of("class", clazz.getSimpleName()))
+                        .and(createTags(tags)));
                 observedBeans.put(clazz, metadata);
             }
             return bean;
