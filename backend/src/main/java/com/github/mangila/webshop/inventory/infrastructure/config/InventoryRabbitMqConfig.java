@@ -26,10 +26,8 @@ public class InventoryRabbitMqConfig {
     @Bean
     public RabbitListenerContainerFactory<StreamListenerContainer> inventoryNewProductConsumer(Environment env) {
         var streamKey = RabbitMqConfig.PRODUCT_STREAM_KEY;
-        var domain = "PRODUCT";
-        var event = "PRODUCT_CREATE_NEW";
-        registryService.ensureDomainIsRegistered(DomainKey.from(domain));
-        registryService.ensureEventIsRegistered(EventKey.from(event));
+        var domain = DomainKey.from("PRODUCT", registryService);
+        var event = EventKey.from("PRODUCT_CREATE_NEW", registryService);
         StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory(env);
         factory.setNativeListener(Boolean.TRUE);
         factory.setObservationEnabled(Boolean.TRUE);
@@ -37,8 +35,8 @@ public class InventoryRabbitMqConfig {
         factory.setConsumerCustomizer((_, builder) -> builder.name("inventoryNewProductConsumer")
                 .stream(streamKey)
                 .filter()
-                .values(event)
-                .postFilter(message -> event.equals(message.getApplicationProperties().get(domain)))
+                .values(event.value())
+                .postFilter(message -> event.equals(message.getApplicationProperties().get(domain.value())))
                 .builder()
                 .autoTrackingStrategy());
         return factory;

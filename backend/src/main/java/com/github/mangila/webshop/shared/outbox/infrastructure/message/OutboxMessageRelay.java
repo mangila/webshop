@@ -1,16 +1,16 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.message;
 
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdCommand;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServiceGateway;
 import com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq.OutboxRabbitProducer;
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
-@Service
+@ObservedService
 public class OutboxMessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxMessageRelay.class);

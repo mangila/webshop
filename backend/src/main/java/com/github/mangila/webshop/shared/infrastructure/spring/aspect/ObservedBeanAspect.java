@@ -5,7 +5,6 @@ import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
-import io.vavr.control.Try;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,13 +40,17 @@ public class ObservedBeanAspect {
                 .lowCardinalityKeyValues(annotationData.tags)
                 .lowCardinalityKeyValue("method", pjp.getSignature().getName())
                 .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()));
-        return Try.of(pjp::proceed)
-                .onFailure(throwable -> {
-                    observation.error(throwable);
-                    observation.stop();
-                })
-                .andFinally(observation::stop)
-                .get();
+        try (Observation.Scope scope = observation.openScope()) {
+            observation.event(Observation.Event.of("Method call", "Method Start"));
+            return pjp.proceed();
+        } catch (Exception e) {
+            observation.error(e);
+            observation.stop();
+            throw e;
+        } finally {
+            observation.stop();
+            observation.event(Observation.Event.of("Method call", "Method End"));
+        }
     }
 
     @Component

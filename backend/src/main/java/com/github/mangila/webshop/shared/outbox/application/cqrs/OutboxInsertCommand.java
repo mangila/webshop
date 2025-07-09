@@ -14,6 +14,6 @@ public record OutboxInsertCommand(
         ObjectNode payload
 ) {
     public static OutboxInsertCommand from(Class<?> domain, Enum<?> event, UUID value, JsonNode jsonNode) {
-        return new OutboxInsertCommand(DomainKey.from(domain), EventKey.from(event), value, (ObjectNode) jsonNode);
+        return new OutboxInsertCommand(DomainKey.create(domain), EventKey.create(event), value, (ObjectNode) jsonNode);
     }
 }

@@ -51,7 +51,7 @@ public class OutboxRabbitProducer {
         );
     }
 
-    record RabbitStreamTemplateHolder(RabbitStreamTemplate template, String streamName) {
+    private record RabbitStreamTemplateHolder(RabbitStreamTemplate template, String streamName) {
 
     }
 
@@ -72,13 +72,14 @@ public class OutboxRabbitProducer {
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
         var domain = outboxMessage.domain();
         var event = outboxMessage.event();
-        var holder = streamTemplates.get(DomainKey.from(domain));
+        var holder = streamTemplates.get(DomainKey.from(domain, registryService));
 
         if (Objects.isNull(holder)) {
             log.error("No stream template found for domain: {}", domain);
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }
         var template = holder.template;
+
         Message rabbitMessage = template.messageBuilder()
                 .applicationProperties()
                 .entry("event", event)

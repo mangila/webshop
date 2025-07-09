@@ -17,7 +17,7 @@ public class InventoryDomainRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryDomainRegistryConfig.class);
 
-    public static final DomainKey INVENTORY_DOMAIN_KEY = DomainKey.from(Inventory.class);
+    public static final DomainKey INVENTORY_DOMAIN_KEY = DomainKey.create(Inventory.class);
 
     private final RegistryService registryService;
 
@@ -39,7 +39,7 @@ public class InventoryDomainRegistryConfig {
     void registerInventoryEvent() {
         EnumSet.allOf(InventoryEvent.class)
                 .stream()
-                .map(EventKey::from)
+                .map(EventKey::create)
                 .forEach(eventKey -> {
                     log.info("Registering event: {}", eventKey.value());
                     registryService.registerEvent(eventKey, eventKey.value());

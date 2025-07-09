@@ -17,7 +17,7 @@ public class ProductRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductRegistryConfig.class);
 
-    public static final DomainKey PRODUCT_DOMAIN_KEY = DomainKey.from(Product.class);
+    public static final DomainKey PRODUCT_DOMAIN_KEY = DomainKey.create(Product.class);
 
     private final RegistryService registryService;
 
@@ -39,7 +39,7 @@ public class ProductRegistryConfig {
     void registerProductEvents() {
         EnumSet.allOf(ProductEvent.class)
                 .stream()
-                .map(EventKey::from)
+                .map(EventKey::create)
                 .forEach(eventKey -> {
                     log.info("Registering event: {}", eventKey.value());
                     registryService.registerEvent(eventKey, eventKey.value());
