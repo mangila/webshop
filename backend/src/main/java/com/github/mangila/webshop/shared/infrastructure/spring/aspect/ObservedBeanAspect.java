@@ -42,7 +42,10 @@ public class ObservedBeanAspect {
                 .lowCardinalityKeyValue("method", pjp.getSignature().getName())
                 .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()));
         return Try.of(pjp::proceed)
-                .onFailure(observation::error)
+                .onFailure(throwable -> {
+                    observation.error(throwable);
+                    observation.stop();
+                })
                 .andFinally(observation::stop)
                 .get();
     }

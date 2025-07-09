@@ -79,7 +79,7 @@ public class OutboxRabbitProducer {
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }
         var template = holder.template;
-        Message message = template.messageBuilder()
+        Message rabbitMessage = template.messageBuilder()
                 .applicationProperties()
                 .entry("event", event)
                 .entry("domain", domain)
@@ -88,22 +88,21 @@ public class OutboxRabbitProducer {
                 .addData(jsonMapper.toBytes(outboxMessage))
                 .build();
 
-        var observation = Observation.start(holder.streamName.concat(" ").concat("send"), observationRegistry)
+        var observation = Observation.start(holder.streamName, observationRegistry)
+                .contextualName(holder.streamName.concat(" ").concat("send"))
                 .lowCardinalityKeyValue("domain", domain)
                 .lowCardinalityKeyValue("event", event)
                 .lowCardinalityKeyValue("aggregateId", outboxMessage.aggregateId().toString())
                 .lowCardinalityKeyValue("stream", holder.streamName);
-
-        return template.send(message)
-                .thenApply(result -> {
-                    observation.stop();
-                    log.info("OutboxMessage sent to RabbitMQ: {}", message);
-                    return result;
-                })
-                .exceptionally(ex -> {
-                    observation.error(ex);
-                    log.error("OutboxMessage failed to send to RabbitMQ: {}", message);
-                    return Boolean.FALSE;
-                });
+        try (Observation.Scope scope = observation.openScope()) {
+            return template.send(rabbitMessage)
+                    .exceptionally(throwable -> {
+                        observation.error(throwable);
+                        observation.stop();
+                        return Boolean.FALSE;
+                    });
+        } finally {
+            observation.stop();
+        }
     }
 }
