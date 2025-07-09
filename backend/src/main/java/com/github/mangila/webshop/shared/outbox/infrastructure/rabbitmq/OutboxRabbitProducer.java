@@ -2,6 +2,7 @@ package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
 import com.github.mangila.webshop.inventory.application.config.InventoryDomainRegistryConfig;
 import com.github.mangila.webshop.product.application.config.ProductRegistryConfig;
+import com.github.mangila.webshop.shared.application.registry.DomainKey;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
@@ -33,7 +34,7 @@ public class OutboxRabbitProducer {
 
     private final JsonMapper jsonMapper;
     private final RegistryService registryService;
-    private final Map<String, RabbitStreamTemplateHolder> streamTemplates;
+    private final Map<DomainKey, RabbitStreamTemplateHolder> streamTemplates;
     private final ObservationRegistry observationRegistry;
 
     public OutboxRabbitProducer(JsonMapper jsonMapper,
@@ -45,8 +46,8 @@ public class OutboxRabbitProducer {
         this.registryService = registryService;
         this.observationRegistry = observationRegistry;
         this.streamTemplates = Map.of(
-                ProductRegistryConfig.PRODUCT_DOMAIN_KEY.value(), new RabbitStreamTemplateHolder(productStreamTemplate, PRODUCT_STREAM_KEY),
-                InventoryDomainRegistryConfig.INVENTORY_DOMAIN_KEY.value(), new RabbitStreamTemplateHolder(inventoryStreamTemplate, INVENTORY_STREAM_KEY)
+                ProductRegistryConfig.PRODUCT_DOMAIN_KEY, new RabbitStreamTemplateHolder(productStreamTemplate, PRODUCT_STREAM_KEY),
+                InventoryDomainRegistryConfig.INVENTORY_DOMAIN_KEY, new RabbitStreamTemplateHolder(inventoryStreamTemplate, INVENTORY_STREAM_KEY)
         );
     }
 
@@ -56,9 +57,9 @@ public class OutboxRabbitProducer {
 
     @EventListener(ApplicationReadyEvent.class)
     public void verifyTemplates() {
-        var domains = registryService.domains();
-        var errors = new ArrayList<String>();
-        for (String key : streamTemplates.keySet()) {
+        var domains = registryService.domainKeys();
+        var errors = new ArrayList<DomainKey>();
+        for (DomainKey key : streamTemplates.keySet()) {
             if (!domains.contains(key)) {
                 errors.add(key);
             }
@@ -71,7 +72,7 @@ public class OutboxRabbitProducer {
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
         var domain = outboxMessage.domain();
         var event = outboxMessage.event();
-        var holder = streamTemplates.get(domain);
+        var holder = streamTemplates.get(DomainKey.from(domain));
 
         if (Objects.isNull(holder)) {
             log.error("No stream template found for domain: {}", domain);

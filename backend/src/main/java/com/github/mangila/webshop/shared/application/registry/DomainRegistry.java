@@ -30,4 +30,9 @@ public class DomainRegistry implements Registry<DomainKey, String> {
     public List<String> values() {
         return registry.values().stream().toList();
     }
+
+    @Override
+    public List<DomainKey> keys() {
+        return registry.keySet().stream().toList();
+    }
 }

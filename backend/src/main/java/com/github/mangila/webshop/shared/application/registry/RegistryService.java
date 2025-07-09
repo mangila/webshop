@@ -37,7 +37,7 @@ public class RegistryService {
         domainRegistry.register(domainKey, value);
     }
 
-    public List<String> domains() {
-        return domainRegistry.values();
+    public List<DomainKey> domainKeys() {
+        return domainRegistry.keys();
     }
 }

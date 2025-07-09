@@ -30,4 +30,9 @@ public class EventRegistry implements Registry<EventKey, String> {
     public List<String> values() {
         return registry.values().stream().toList();
     }
+
+    @Override
+    public List<EventKey> keys() {
+        return registry.keySet().stream().toList();
+    }
 }

@@ -11,4 +11,6 @@ interface Registry<K, V> {
     void register(K key, V value);
 
     List<V> values();
+
+    List<K> keys();
 }
