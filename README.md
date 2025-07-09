@@ -11,6 +11,8 @@ Spring Boot web app
 
 Postgres is used as a database and RabbitMQ as a message broker
 
+### Architecture for the backend
+
 - CQRS (Command Query Responsibility Segregation)
     - GraphQL is used for Queries and REST for Commands
 - Transactional Outbox
