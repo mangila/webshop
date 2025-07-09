@@ -21,7 +21,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("it-test")
-@AutoConfigureWebTestClient(timeout = "10000000")
+@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestcontainersConfiguration.class)
 class ProductCommandControllerIntegrationTest {
