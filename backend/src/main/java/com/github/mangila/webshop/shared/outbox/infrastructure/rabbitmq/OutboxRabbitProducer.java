@@ -78,17 +78,12 @@ public class OutboxRabbitProducer {
             log.error("No stream template found for domain: {}", domain);
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }
-
         var template = holder.template;
-        template.setProducerCustomizer((_, producerBuilder) -> {
-            producerBuilder.filterValue(message -> message.getApplicationProperties()
-                    .get(domain)
-                    .toString());
-        });
-
         Message message = template.messageBuilder()
                 .applicationProperties()
-                .entry(domain, event)
+                .entry("event", event)
+                .entry("domain", domain)
+                .entry("aggregateId", outboxMessage.aggregateId().toString())
                 .messageBuilder()
                 .addData(jsonMapper.toBytes(outboxMessage))
                 .build();
@@ -96,6 +91,7 @@ public class OutboxRabbitProducer {
         var observation = Observation.start(holder.streamName.concat(" ").concat("send"), observationRegistry)
                 .lowCardinalityKeyValue("domain", domain)
                 .lowCardinalityKeyValue("event", event)
+                .lowCardinalityKeyValue("aggregateId", outboxMessage.aggregateId().toString())
                 .lowCardinalityKeyValue("stream", holder.streamName);
 
         return template.send(message)

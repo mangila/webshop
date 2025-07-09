@@ -42,6 +42,17 @@ public class RabbitMqConfig {
     public RabbitStreamTemplate productStreamTemplate(Environment env) {
         var template = new RabbitStreamTemplate(env, PRODUCT_STREAM_KEY);
         template.setObservationEnabled(Boolean.TRUE);
+        template.setProducerCustomizer((_, builder) -> {
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("event")
+                    .toString());
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("domain")
+                    .toString());
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("aggregateId")
+                    .toString());
+        });
         return template;
     }
 

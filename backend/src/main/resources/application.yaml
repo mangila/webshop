@@ -84,3 +84,7 @@ management:
     tracing:
       export:
         enabled: true
+# Jdbc Observation
+jdbc:
+  datasource-proxy:
+    type: concrete

@@ -3,6 +3,7 @@ package com.github.mangila.webshop.shared.infrastructure.postgres;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.zaxxer.hikari.HikariDataSource;
 import io.vavr.control.Try;
+import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.postgresql.PGNotification;
 import org.postgresql.jdbc.PgConnection;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 public abstract class AbstractPgNotificationListener implements DisposableBean {
 
@@ -24,20 +26,34 @@ public abstract class AbstractPgNotificationListener implements DisposableBean {
     private final SingleConnectionDataSource dataSource;
     private final String channelName;
 
-    /**
-     * javax.sql.DataSource don't have getters for url, username and password
-     * since we need to create a brand-new connection so we not use one from the connection pool
-     */
     public AbstractPgNotificationListener(DataSource dataSource) {
         Assert.notNull(dataSource, "DataSource must not be null");
         Assert.notNull(getProps(), "PostgresListenerProps must not be null");
-        HikariDataSource hikariDataSource = DataSourceUnwrapper.unwrap(dataSource, HikariDataSource.class);
+        HikariDataSource hikariDataSource = unwrapHikariDataSource(dataSource);
         this.dataSource = new SingleConnectionDataSource(
                 hikariDataSource.getJdbcUrl(),
                 hikariDataSource.getUsername(),
                 hikariDataSource.getPassword(),
                 Boolean.TRUE);
         this.channelName = getProps().channelName();
+    }
+
+    /**
+     * When using Observation with datasource-micrometer-spring-boot we need to unwrap our autoconfigured datasource.
+     * javax.sql.DataSource doesn't have getters for url, username and password
+     * since we need to create a brand-new connection, so we do not use one from the connection pool
+     * only inject properties would create issues with Testcontainers @ServiceConnection setup
+     */
+    private HikariDataSource unwrapHikariDataSource(DataSource dataSource) {
+        try {
+            if (dataSource.isWrapperFor(ProxyDataSource.class)) {
+                ProxyDataSource proxyDataSource = DataSourceUnwrapper.unwrap(dataSource, ProxyDataSource.class);
+                return DataSourceUnwrapper.unwrap(proxyDataSource.getDataSource(), HikariDataSource.class);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return DataSourceUnwrapper.unwrap(dataSource, HikariDataSource.class);
     }
 
     public abstract PostgresListenerProps getProps();
