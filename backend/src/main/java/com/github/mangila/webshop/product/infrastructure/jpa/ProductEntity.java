@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.domain.ProductUnit;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
@@ -62,19 +61,22 @@ public class ProductEntity implements Persistable<UUID> {
         this.unit = unit;
     }
 
-    public static ProductEntity from(UUID id, String name, BigDecimal price, ObjectNode attributes, ProductUnit unit) {
+    public static ProductEntity from(UUID id, String name, BigDecimal price, JsonNode attributes, ProductUnit unit) {
         return new ProductEntity(id, name, price, attributes, unit);
     }
 
+    @Override
     public UUID getId() {
         return id;
     }
 
+    @Transient
     @Override
     public boolean isNew() {
         return isNew;
     }
 
+    @Transient
     public void setNew(boolean isNew) {
         this.isNew = isNew;
     }

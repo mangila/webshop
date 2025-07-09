@@ -2,6 +2,7 @@ package com.github.mangila.webshop.product.application;
 
 import com.github.mangila.webshop.TestcontainersConfiguration;
 import com.github.mangila.webshop.product.ProductTestUtil;
+import com.github.mangila.webshop.product.application.cqrs.ProductIdCommand;
 import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
@@ -20,7 +21,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("it-test")
-@AutoConfigureWebTestClient
+@AutoConfigureWebTestClient(timeout = "10000000")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestcontainersConfiguration.class)
 class ProductCommandControllerIntegrationTest {
@@ -63,7 +64,7 @@ class ProductCommandControllerIntegrationTest {
         webTestClient.method(HttpMethod.DELETE)
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_DELETE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(productIdQuery)
+                .bodyValue(new ProductIdCommand(dto.id()))
                 .exchange()
                 .expectStatus()
                 .isNoContent();

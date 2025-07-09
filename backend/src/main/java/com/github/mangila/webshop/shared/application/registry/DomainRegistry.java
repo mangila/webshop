@@ -2,6 +2,7 @@ package com.github.mangila.webshop.shared.application.registry;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,5 +24,10 @@ public class DomainRegistry implements Registry<DomainKey, String> {
     @Override
     public void register(DomainKey key, String value) {
         registry.put(key, value);
+    }
+
+    @Override
+    public List<String> values() {
+        return registry.values().stream().toList();
     }
 }

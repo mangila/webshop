@@ -17,6 +17,8 @@ public class ProductRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductRegistryConfig.class);
 
+    public static final DomainKey PRODUCT_DOMAIN_KEY = DomainKey.from(Product.class);
+
     private final RegistryService registryService;
 
     public ProductRegistryConfig(RegistryService registryService) {
@@ -30,9 +32,8 @@ public class ProductRegistryConfig {
     }
 
     void registerProductDomain() {
-        var domainKey = DomainKey.from(Product.class);
-        log.info("Registering domain: {}", domainKey.value());
-        registryService.registerDomain(domainKey, domainKey.value());
+        log.info("Registering domain: {}", PRODUCT_DOMAIN_KEY.value());
+        registryService.registerDomain(PRODUCT_DOMAIN_KEY, PRODUCT_DOMAIN_KEY.value());
     }
 
     void registerProductEvents() {

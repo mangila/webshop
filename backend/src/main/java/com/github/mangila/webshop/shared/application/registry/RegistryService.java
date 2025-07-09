@@ -3,6 +3,8 @@ package com.github.mangila.webshop.shared.application.registry;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 
+import java.util.List;
+
 @ObservedService
 public class RegistryService {
 
@@ -33,5 +35,9 @@ public class RegistryService {
 
     public void registerDomain(DomainKey domainKey, String value) {
         domainRegistry.register(domainKey, value);
+    }
+
+    public List<String> domains() {
+        return domainRegistry.values();
     }
 }

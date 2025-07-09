@@ -14,8 +14,8 @@ import org.springframework.rabbit.stream.support.StreamAdmin;
 @EnableRabbit
 public class RabbitMqConfig {
 
-    public static final String OUTBOX_EVENT_PRODUCT_STREAM_KEY = "product.event.stream";
-    public static final String OUTBOX_EVENT_INVENTORY_STREAM_KEY = "inventory.event.stream";
+    public static final String PRODUCT_STREAM_KEY = "product.event.stream";
+    public static final String INVENTORY_STREAM_KEY = "inventory.event.stream";
 
     /**
      * https://rabbitmq.github.io/rabbitmq-stream-java-client/stable/htmlsingle/#understanding-connection-logic
@@ -24,7 +24,7 @@ public class RabbitMqConfig {
     public Environment rabbitStreamEnvironment(RabbitProperties properties) {
         EnvironmentBuilder builder = Environment.builder();
         var streamProps = properties.getStream();
-        builder.addressResolver(address -> new Address(streamProps.getHost(), streamProps.getPort()));
+        builder.addressResolver(_ -> new Address(streamProps.getHost(), streamProps.getPort()));
         builder.username(streamProps.getUsername())
                 .password(streamProps.getPassword());
         return builder.build();
@@ -33,18 +33,22 @@ public class RabbitMqConfig {
     @Bean
     public StreamAdmin streamAdmin(Environment env) {
         return new StreamAdmin(env, sc -> {
-            sc.stream(OUTBOX_EVENT_PRODUCT_STREAM_KEY).create();
-            sc.stream(OUTBOX_EVENT_INVENTORY_STREAM_KEY).create();
+            sc.stream(PRODUCT_STREAM_KEY).create();
+            sc.stream(INVENTORY_STREAM_KEY).create();
         });
     }
 
     @Bean
     public RabbitStreamTemplate productStreamTemplate(Environment env) {
-        return new RabbitStreamTemplate(env, RabbitMqConfig.OUTBOX_EVENT_PRODUCT_STREAM_KEY);
+        var template = new RabbitStreamTemplate(env, PRODUCT_STREAM_KEY);
+        template.setObservationEnabled(Boolean.TRUE);
+        return template;
     }
 
     @Bean
     public RabbitStreamTemplate inventoryStreamTemplate(Environment env) {
-        return new RabbitStreamTemplate(env, RabbitMqConfig.OUTBOX_EVENT_INVENTORY_STREAM_KEY);
+        var template = new RabbitStreamTemplate(env, INVENTORY_STREAM_KEY);
+        template.setObservationEnabled(Boolean.TRUE);
+        return template;
     }
 }

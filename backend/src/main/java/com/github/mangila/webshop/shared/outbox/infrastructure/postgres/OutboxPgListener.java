@@ -1,32 +1,46 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.postgres;
 
+import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.infrastructure.postgres.AbstractPgNotificationListener;
 import com.github.mangila.webshop.shared.infrastructure.postgres.PostgresListenerProps;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgListenerFailedEvent;
-import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgNotification;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.SpringEventPublisher;
+import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
+import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessageRelay;
+import com.zaxxer.hikari.HikariDataSource;
 import org.postgresql.PGNotification;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.sql.Wrapper;
 
 @Service
 public class OutboxPgListener extends AbstractPgNotificationListener {
 
     private final SpringEventPublisher publisher;
     private final JdbcTemplate jdbcTemplate;
+    private final JsonMapper jsonMapper;
+    private final OutboxMessageRelay outboxMessageRelay;
 
     public OutboxPgListener(SpringEventPublisher publisher,
-                            DataSourceProperties dataSourceProperties,
-                            JdbcTemplate jdbcTemplate) {
-        super(dataSourceProperties);
+                            DataSource dataSource,
+                            JdbcTemplate jdbcTemplate,
+                            JsonMapper jsonMapper,
+                            OutboxMessageRelay outboxMessageRelay) {
+        super(dataSource);
         this.publisher = publisher;
         this.jdbcTemplate = jdbcTemplate;
+        this.jsonMapper = jsonMapper;
+        this.outboxMessageRelay = outboxMessageRelay;
     }
 
     @Override
     public void onPgNotification(PGNotification pgNotification) {
-        publisher.publish(new OutboxPgNotification(pgNotification));
+        String payload = pgNotification.getParameter();
+        var message = jsonMapper.toObject(payload.getBytes(), OutboxMessage.class);
+        outboxMessageRelay.publish(message);
     }
 
     @Override
@@ -40,7 +54,8 @@ public class OutboxPgListener extends AbstractPgNotificationListener {
                 "outbox",
                 "outbox_channel",
                 "pg_notify_outbox_channel",
-                "trg_outbox_insert_01");
+                "trg_outbox_insert_01",
+                500);
     }
 
     @Override

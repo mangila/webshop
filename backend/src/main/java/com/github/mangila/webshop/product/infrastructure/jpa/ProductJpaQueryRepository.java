@@ -6,7 +6,6 @@ import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
-import io.micrometer.observation.annotation.Observed;
 
 @ObservedRepository
 public class ProductJpaQueryRepository implements ProductQueryRepository {
@@ -20,7 +19,6 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
         this.repository = repository;
     }
 
-    @Observed
     @Override
     public Product findById(ProductId productId) {
         return repository.findById(productId.value())
@@ -32,7 +30,6 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
                 ));
     }
 
-    @Observed
     @Override
     public boolean existsById(ProductId productId) {
         return repository.existsById(productId.value());

@@ -1,16 +1,20 @@
 package com.github.mangila.webshop.shared.infrastructure.postgres;
 
+import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
+import com.zaxxer.hikari.HikariDataSource;
 import io.vavr.control.Try;
 import org.postgresql.PGNotification;
 import org.postgresql.jdbc.PgConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.jdbc.DataSourceUnwrapper;
 import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.util.Assert;
+
+import javax.sql.DataSource;
 
 public abstract class AbstractPgNotificationListener implements DisposableBean {
 
@@ -20,10 +24,19 @@ public abstract class AbstractPgNotificationListener implements DisposableBean {
     private final SingleConnectionDataSource dataSource;
     private final String channelName;
 
-    public AbstractPgNotificationListener(DataSourceProperties dataSourceProperties) {
-        Assert.notNull(dataSourceProperties, "DataSourceProperties must not be null");
+    /**
+     * javax.sql.DataSource don't have getters for url, username and password
+     * since we need to create a brand-new connection so we not use one from the connection pool
+     */
+    public AbstractPgNotificationListener(DataSource dataSource) {
+        Assert.notNull(dataSource, "DataSource must not be null");
         Assert.notNull(getProps(), "PostgresListenerProps must not be null");
-        this.dataSource = new SingleConnectionDataSource(dataSourceProperties.determineUrl(), dataSourceProperties.getUsername(), dataSourceProperties.getPassword(), Boolean.TRUE);
+        HikariDataSource hikariDataSource = DataSourceUnwrapper.unwrap(dataSource, HikariDataSource.class);
+        this.dataSource = new SingleConnectionDataSource(
+                hikariDataSource.getJdbcUrl(),
+                hikariDataSource.getUsername(),
+                hikariDataSource.getPassword(),
+                Boolean.TRUE);
         this.channelName = getProps().channelName();
     }
 
@@ -42,7 +55,7 @@ public abstract class AbstractPgNotificationListener implements DisposableBean {
                     var template = new JdbcTemplate(dataSource);
                     // language=PostgreSQL
                     template.execute("LISTEN %s".formatted(channelName));
-                    int timeoutMillis = 300;
+                    int timeoutMillis = getProps().pollTimeoutMillis();
                     template.execute((ConnectionCallback<Void>) connection -> {
                         PgConnection pgConnection = connection.unwrap(PgConnection.class);
                         while (running) {
@@ -56,12 +69,12 @@ public abstract class AbstractPgNotificationListener implements DisposableBean {
                     return null;
                 })
                 .onFailure(this::onFailure)
-                .onSuccess(__ -> {
+                .onSuccess(_ -> {
                     if (!running) {
                         log.info("PostgresListener for channel '{}' stopped", channelName);
                         return;
                     }
-                    onFailure(new IllegalStateException(String.format("PostgresListener for channel '%s' stopped for unknown reason", channelName)));
+                    onFailure(new ApplicationException(String.format("PostgresListener for channel '%s' stopped for unknown reason", channelName)));
                 });
     }
 

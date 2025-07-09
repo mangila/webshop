@@ -16,7 +16,4 @@ public class SpringEventPublisher {
         publisher.publishEvent(event);
     }
 
-    public void publish(OutboxPgNotification event) {
-        publisher.publishEvent(event);
-    }
 }

@@ -4,5 +4,6 @@ public record PostgresListenerProps(
         String tableName,
         String channelName,
         String functionName,
-        String triggerName) {
+        String triggerName,
+        int pollTimeoutMillis) {
 }

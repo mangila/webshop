@@ -1,10 +1,6 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.postgres;
 
-import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
-import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
 import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgListenerFailedEvent;
-import com.github.mangila.webshop.shared.infrastructure.spring.event.OutboxPgNotification;
-import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessageRelay;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,20 +9,16 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class OutboxPgListenerHandler {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxPgListenerHandler.class);
 
-    private final JsonMapper jsonMapper;
-    private final OutboxMessageRelay outboxMessageRelay;
     private final OutboxPgListener outboxPgListener;
 
-    public OutboxPgListenerHandler(JsonMapper jsonMapper,
-                                   OutboxMessageRelay outboxMessageRelay,
-                                   OutboxPgListener outboxPgListener) {
-        this.jsonMapper = jsonMapper;
-        this.outboxMessageRelay = outboxMessageRelay;
+    public OutboxPgListenerHandler(OutboxPgListener outboxPgListener) {
         this.outboxPgListener = outboxPgListener;
     }
 
@@ -43,17 +35,10 @@ public class OutboxPgListenerHandler {
 
     @Async
     @EventListener
-    public void onNotification(OutboxPgNotification pgNotification) {
-        String payload = pgNotification.notification().getParameter();
-        var message = jsonMapper.toObject(payload.getBytes(), OutboxMessage.class);
-        outboxMessageRelay.publish(message);
-    }
-
-    @Async
-    @EventListener
-    public void onFailed(OutboxPgListenerFailedEvent event) {
+    public void onFailed(OutboxPgListenerFailedEvent event) throws InterruptedException {
         log.error("OutboxEventPostgresListener failed, will restart", event.cause());
         outboxPgListener.stop();
+        TimeUnit.SECONDS.sleep(5);
         outboxPgListener.start();
     }
 }

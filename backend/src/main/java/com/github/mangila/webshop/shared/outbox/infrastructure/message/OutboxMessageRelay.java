@@ -29,11 +29,10 @@ public class OutboxMessageRelay {
                 .map(CompletableFuture::join)
                 .get();
         if (ok) {
-            log.info("OutboxMessage sent to RabbitMQ: {}", message);
             outboxServiceGateway.command()
                     .updateAsPublished(new OutboxIdCommand(message.id()));
         } else {
-            log.error("OutboxMessage failed to send to RabbitMQ: {}", message);
+            // TODO fallback polling
         }
     }
 

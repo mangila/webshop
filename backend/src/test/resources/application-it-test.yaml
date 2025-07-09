@@ -13,3 +13,14 @@ logging:
 springdoc:
   api-docs:
     enabled: false
+# Actuator
+management:
+  tracing:
+    enabled: false
+  zipkin:
+    tracing:
+      export:
+        enabled: false
+jdbc:
+  datasource-proxy:
+    enabled: false

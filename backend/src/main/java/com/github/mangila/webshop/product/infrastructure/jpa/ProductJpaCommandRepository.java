@@ -69,7 +69,10 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     @Override
     public void deleteById(ProductId productId) {
         Product product = queryRepository.findById(productId);
-        repository.deleteById(productId.value());
+        var entity = entityMapper.toEntity(product);
+        // Entity is not managed, so we need to use the persistence flag
+        entity.setNew(Boolean.FALSE);
+        repository.delete(entity);
         OutboxDto outboxDto = Stream.of(product)
                 .map(outboxMapper::toDto)
                 .map(dto -> outboxMapper.toCommand(PRODUCT_DELETED, dto))

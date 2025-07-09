@@ -5,6 +5,7 @@ import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import io.vavr.control.Try;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,19 +37,14 @@ public class ObservedBeanAspect {
     public Object observeAnnotation(ProceedingJoinPoint pjp) throws Throwable {
         Class<?> targetClass = pjp.getTarget().getClass();
         var annotationData = processor.observedBeans.get(targetClass);
-        var observation = Observation.createNotStarted(annotationData.name, registry)
+        var observation = Observation.start(annotationData.name, registry)
                 .lowCardinalityKeyValues(annotationData.tags)
-                .lowCardinalityKeyValues(KeyValues.of("method", pjp.getSignature().getName()))
-                .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()))
-                .start();
-        try (Observation.Scope scope = observation.openScope()) {
-            return pjp.proceed();
-        } catch (Throwable t) {
-            observation.error(t);
-            throw t;
-        } finally {
-            observation.stop();
-        }
+                .lowCardinalityKeyValue("method", pjp.getSignature().getName())
+                .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()));
+        return Try.of(pjp::proceed)
+                .onFailure(observation::error)
+                .andFinally(observation::stop)
+                .get();
     }
 
     @Component
@@ -72,6 +68,9 @@ public class ObservedBeanAspect {
             return bean;
         }
 
+        private record AnnotationData(String name, KeyValues tags) {
+        }
+
         private KeyValues createTags(String[] tags) {
             if (tags.length % 2 != 0) {
                 throw new IllegalArgumentException("tags Array must be in key value pairs");
@@ -83,9 +82,6 @@ public class ObservedBeanAspect {
                 keyvalues.add(KeyValue.of(key, value));
             }
             return keyvalues.isEmpty() ? KeyValues.empty() : KeyValues.of(keyvalues.toArray(KeyValue[]::new));
-        }
-
-        record AnnotationData(String name, KeyValues tags) {
         }
     }
 }
