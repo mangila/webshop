@@ -22,7 +22,7 @@ public class DomainIdEntity implements Persistable<UUID> {
     private UUID id;
 
     @Column(nullable = false)
-    private String domainKey;
+    private String domain;
 
     @Column(nullable = false)
     private String intent;
@@ -37,9 +37,9 @@ public class DomainIdEntity implements Persistable<UUID> {
     protected DomainIdEntity() {
     }
 
-    private DomainIdEntity(UUID id, String domainKey, String intent) {
+    private DomainIdEntity(UUID id, String domain, String intent) {
         this.id = id;
-        this.domainKey = domainKey;
+        this.domain = domain;
         this.intent = intent;
     }
 
@@ -80,11 +80,11 @@ public class DomainIdEntity implements Persistable<UUID> {
         this.intent = intent;
     }
 
-    public String getDomainKey() {
-        return domainKey;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setDomainKey(String domainKey) {
-        this.domainKey = domainKey;
+    public void setDomain(String domainKey) {
+        this.domain = domainKey;
     }
 }

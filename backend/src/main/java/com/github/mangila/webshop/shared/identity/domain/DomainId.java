@@ -1,5 +1,7 @@
 package com.github.mangila.webshop.shared.identity.domain;
 
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
@@ -9,22 +11,22 @@ import java.util.UUID;
 public class DomainId {
 
     private UUID id;
-    private String domain;
+    private Domain domain;
     private String intent;
     private @Nullable Instant created;
 
-    private DomainId(UUID id, String domain, String intent, @Nullable Instant created) {
+    private DomainId(UUID id, Domain domain, String intent, @Nullable Instant created) {
         this.id = id;
         this.domain = domain;
         this.intent = intent;
         this.created = created;
     }
 
-    public static DomainId from(UUID id, String domain, String intent, Instant created) {
+    public static DomainId from(UUID id, Domain domain, String intent, Instant created) {
         return new DomainId(id, domain, intent, created);
     }
 
-    public static DomainId create(String domain, String intent) {
+    public static DomainId create(@NotNull Domain domain, String intent) {
         return new DomainId(UUID.randomUUID(), domain, intent, null);
     }
 
@@ -36,11 +38,11 @@ public class DomainId {
         this.id = id;
     }
 
-    public String getDomain() {
+    public Domain getDomain() {
         return domain;
     }
 
-    public void setDomain(String domain) {
+    public void setDomain(Domain domain) {
         this.domain = domain;
     }
 
