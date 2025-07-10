@@ -6,6 +6,7 @@ import com.github.mangila.webshop.shared.application.registry.DomainKey;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
+import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
 import com.rabbitmq.stream.Message;
 import io.micrometer.observation.Observation;
@@ -27,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import static com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig.INVENTORY_STREAM_KEY;
 import static com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig.PRODUCT_STREAM_KEY;
 
-@Service
+@ObservedService
 public class OutboxRabbitProducer {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxRabbitProducer.class);
@@ -89,21 +90,14 @@ public class OutboxRabbitProducer {
                 .addData(jsonMapper.toBytes(outboxMessage))
                 .build();
 
-        var observation = Observation.start(holder.streamName, observationRegistry)
-                .contextualName(holder.streamName.concat(" ").concat("send"))
-                .lowCardinalityKeyValue("domain", domain)
-                .lowCardinalityKeyValue("event", event)
-                .lowCardinalityKeyValue("aggregateId", outboxMessage.aggregateId().toString())
-                .lowCardinalityKeyValue("stream", holder.streamName);
-        try (Observation.Scope scope = observation.openScope()) {
-            return template.send(rabbitMessage)
-                    .exceptionally(throwable -> {
-                        observation.error(throwable);
-                        observation.stop();
-                        return Boolean.FALSE;
-                    });
-        } finally {
-            observation.stop();
+        var observation = observationRegistry.getCurrentObservation();
+        if (Objects.nonNull(observation)) {
+            observation.lowCardinalityKeyValue("domain", domain)
+                    .lowCardinalityKeyValue("event", event)
+                    .lowCardinalityKeyValue("aggregateId", outboxMessage.aggregateId().toString())
+                    .lowCardinalityKeyValue("stream", holder.streamName);
         }
+
+        return template.send(rabbitMessage);
     }
 }
