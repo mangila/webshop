@@ -4,7 +4,7 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.application.web.ProductCommandController;
-import com.github.mangila.webshop.shared.application.DomainMoneyDto;
+import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

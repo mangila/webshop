@@ -2,10 +2,9 @@ package com.github.mangila.webshop.product.infrastructure.event;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
-import com.github.mangila.webshop.shared.application.DomainMoneyDto;
+import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
 import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
-import org.joda.money.Money;
 
 import java.time.Instant;
 import java.util.UUID;

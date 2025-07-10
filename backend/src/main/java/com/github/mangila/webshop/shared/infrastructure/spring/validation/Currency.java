@@ -2,6 +2,8 @@ package com.github.mangila.webshop.shared.infrastructure.spring.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.lang.annotation.*;
 
@@ -9,6 +11,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CurrencyValidator.class)
 @Documented
+@NotBlank
+@Size(min = 3, max = 3)
 public @interface Currency {
     String message() default "Unknown Currency";
 

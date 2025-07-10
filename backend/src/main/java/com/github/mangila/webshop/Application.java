@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
-import com.github.mangila.webshop.shared.application.DomainMoneyDto;
+import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

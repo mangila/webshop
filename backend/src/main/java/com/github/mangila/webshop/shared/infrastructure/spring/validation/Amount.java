@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.validation;
+package com.github.mangila.webshop.shared.infrastructure.spring.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -9,14 +9,14 @@ import jakarta.validation.constraints.Positive;
 import java.lang.annotation.*;
 
 @NotNull
-@Positive(message = "Product price must be positive")
-@Digits(integer = 10, fraction = 2, message = "Product price must have at most 10 integer digits and 2 decimal places")
+@Positive(message = "Amount must be positive")
+@Digits(integer = 10, fraction = 2, message = "Amount must have at most 10 integer digits and 2 decimal places")
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
 @Documented
-public @interface ProductPrice {
-    String message() default "Not a valid Product price";
+public @interface Amount {
+    String message() default "Not a valid amount";
 
     Class<?>[] groups() default {};
 
