@@ -56,10 +56,10 @@ public class OutboxRabbitProducer {
         template.setObservationEnabled(Boolean.TRUE);
         template.setProducerCustomizer((_, builder) -> {
             builder.filterValue(message -> message.getApplicationProperties()
-                    .get("event")
+                    .get("domain")
                     .toString());
             builder.filterValue(message -> message.getApplicationProperties()
-                    .get("domain")
+                    .get("event")
                     .toString());
             builder.filterValue(message -> message.getApplicationProperties()
                     .get("aggregateId")
