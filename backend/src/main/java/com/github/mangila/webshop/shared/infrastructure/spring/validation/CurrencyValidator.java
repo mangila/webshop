@@ -3,6 +3,7 @@ package com.github.mangila.webshop.shared.infrastructure.spring.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.joda.money.CurrencyUnit;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ public class CurrencyValidator implements ConstraintValidator<Currency, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isEmpty()) {
+        if (!StringUtils.hasText(value)) {
             return false;
         }
         return validCurrencies.stream()
