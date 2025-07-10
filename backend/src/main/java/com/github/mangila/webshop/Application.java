@@ -3,7 +3,7 @@ package com.github.mangila.webshop;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnit;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

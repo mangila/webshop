@@ -11,10 +11,9 @@ public class RegistryService {
     private final DomainRegistry domainRegistry;
     private final EventRegistry eventRegistry;
 
-    public RegistryService(DomainRegistry domainRegistry,
-                           EventRegistry eventRegistry) {
-        this.domainRegistry = domainRegistry;
-        this.eventRegistry = eventRegistry;
+    public RegistryService() {
+        this.domainRegistry = new DomainRegistry();
+        this.eventRegistry = new EventRegistry();
     }
 
     public void ensureEventIsRegistered(EventKey key) {

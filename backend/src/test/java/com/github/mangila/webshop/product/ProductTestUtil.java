@@ -3,7 +3,7 @@ package com.github.mangila.webshop.product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnit;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.math.BigDecimal;

@@ -13,7 +13,7 @@ import org.springframework.rabbit.stream.config.StreamRabbitListenerContainerFac
 import org.springframework.rabbit.stream.listener.StreamListenerContainer;
 import org.springframework.rabbit.stream.micrometer.RabbitStreamListenerObservation;
 
-@DependsOn("productRegistryConfig")
+@DependsOn("productDomainRegistryConfig")
 @Configuration
 public class InventoryRabbitMqConfig {
 

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.application.mapper;
 
 import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
-import com.github.mangila.webshop.product.domain.ProductId;
+import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import org.springframework.stereotype.Component;
 
 @Component

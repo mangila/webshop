@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.domain;
+package com.github.mangila.webshop.product.domain.types;
 
 public enum ProductUnit {
     PIECE,

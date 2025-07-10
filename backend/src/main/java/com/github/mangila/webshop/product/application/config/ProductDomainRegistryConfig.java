@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import java.util.EnumSet;
 
 @Configuration
-public class ProductRegistryConfig {
+public class ProductDomainRegistryConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductRegistryConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductDomainRegistryConfig.class);
 
     private final RegistryService registryService;
 
-    public ProductRegistryConfig(RegistryService registryService) {
+    public ProductDomainRegistryConfig(RegistryService registryService) {
         this.registryService = registryService;
     }
 

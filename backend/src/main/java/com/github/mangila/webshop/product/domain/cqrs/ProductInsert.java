@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.product.domain.cqrs;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.product.domain.ProductName;
-import com.github.mangila.webshop.product.domain.ProductPrice;
-import com.github.mangila.webshop.product.domain.ProductUnit;
+import com.github.mangila.webshop.product.domain.primitive.ProductName;
+import com.github.mangila.webshop.product.domain.primitive.ProductPrice;
+import com.github.mangila.webshop.product.domain.types.ProductUnit;
 
 import java.math.BigDecimal;
 

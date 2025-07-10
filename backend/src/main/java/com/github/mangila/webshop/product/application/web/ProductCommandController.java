@@ -31,7 +31,7 @@ public class ProductCommandController {
             value = "delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductDto> deleteProduct(@Valid @RequestBody ProductIdCommand command) {
+    public ResponseEntity<Void> deleteProduct(@Valid @RequestBody ProductIdCommand command) {
         productServiceGateway.command().delete(command);
         return ResponseEntity.noContent().build();
     }

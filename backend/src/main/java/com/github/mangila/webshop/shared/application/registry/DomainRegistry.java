@@ -1,12 +1,9 @@
 package com.github.mangila.webshop.shared.application.registry;
 
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
 public class DomainRegistry implements Registry<DomainKey, String> {
 
     private final Map<DomainKey, String> registry = new ConcurrentHashMap<>();

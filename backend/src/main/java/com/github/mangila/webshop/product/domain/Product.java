@@ -1,6 +1,10 @@
 package com.github.mangila.webshop.product.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.webshop.product.domain.primitive.ProductId;
+import com.github.mangila.webshop.product.domain.primitive.ProductName;
+import com.github.mangila.webshop.product.domain.primitive.ProductPrice;
+import com.github.mangila.webshop.product.domain.types.ProductUnit;
 
 import java.math.BigDecimal;
 import java.time.Instant;

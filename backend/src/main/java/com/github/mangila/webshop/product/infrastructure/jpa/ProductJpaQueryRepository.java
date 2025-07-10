@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.product.domain.ProductId;
+import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
 import com.github.mangila.webshop.shared.domain.exception.CqrsException;

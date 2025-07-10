@@ -4,5 +4,5 @@ import com.github.mangila.webshop.shared.infrastructure.spring.validation.Domain
 
 import java.util.UUID;
 
-public record ProductIdQuery(@DomainId(message = "Invalid Product ID") UUID value) {
+public record ProductIdQuery(@DomainId(message = "Not a valid Product ID") UUID value) {
 }

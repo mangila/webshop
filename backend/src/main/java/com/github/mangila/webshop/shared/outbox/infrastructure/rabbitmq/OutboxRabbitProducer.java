@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
 import com.github.mangila.webshop.shared.application.registry.DomainKey;
+import com.github.mangila.webshop.shared.application.registry.EventKey;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
@@ -83,9 +84,9 @@ public class OutboxRabbitProducer {
     }
 
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
-        var domain = outboxMessage.domain();
-        var event = outboxMessage.event();
-        var holder = streamTemplates.get(DomainKey.from(domain, registryService));
+        var domain = DomainKey.from(outboxMessage.domain(), registryService);
+        var event = EventKey.from(outboxMessage.event(), registryService);
+        var holder = streamTemplates.get(domain);
 
         if (Objects.isNull(holder)) {
             log.error("No stream template found for domain: {}", domain);
@@ -95,8 +96,8 @@ public class OutboxRabbitProducer {
 
         Message rabbitMessage = template.messageBuilder()
                 .applicationProperties()
-                .entry("domain", domain)
-                .entry("event", event)
+                .entry("domain", domain.value())
+                .entry("event", event.value())
                 .entry("aggregateId", outboxMessage.aggregateId().toString())
                 .messageBuilder()
                 .addData(jsonMapper.toBytes(outboxMessage))
@@ -104,8 +105,8 @@ public class OutboxRabbitProducer {
 
         var observation = observationRegistry.getCurrentObservation();
         if (Objects.nonNull(observation)) {
-            observation.lowCardinalityKeyValue("domain", domain)
-                    .lowCardinalityKeyValue("event", event)
+            observation.lowCardinalityKeyValue("domain", domain.value())
+                    .lowCardinalityKeyValue("event", event.value())
                     .lowCardinalityKeyValue("aggregateId", outboxMessage.aggregateId().toString())
                     .lowCardinalityKeyValue("stream", holder.streamName);
         }

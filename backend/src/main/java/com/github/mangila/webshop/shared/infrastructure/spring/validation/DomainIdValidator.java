@@ -3,6 +3,8 @@ package com.github.mangila.webshop.shared.infrastructure.spring.validation;
 import com.github.mangila.webshop.shared.identity.application.DomainIdGeneratorService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

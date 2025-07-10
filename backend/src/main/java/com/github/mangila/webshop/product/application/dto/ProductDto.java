@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.application.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.mangila.webshop.product.domain.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnit;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 
 import java.math.BigDecimal;
