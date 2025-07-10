@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EventRegistry implements Registry<EventKey, String> {
+public class EventRegistry implements Registry<Event, String> {
 
-    private final Map<EventKey, String> registry = new ConcurrentHashMap<>();
+    private final Map<Event, String> registry = new ConcurrentHashMap<>();
 
     @Override
-    public boolean isRegistered(EventKey key) {
+    public boolean isRegistered(Event key) {
         return registry.containsKey(key);
     }
 
     @Override
-    public String get(EventKey key) {
+    public String get(Event key) {
         return registry.get(key);
     }
 
     @Override
-    public void register(EventKey key, String value) {
+    public void register(Event key, String value) {
         registry.put(key, value);
     }
 
@@ -29,7 +29,7 @@ public class EventRegistry implements Registry<EventKey, String> {
     }
 
     @Override
-    public List<EventKey> keys() {
+    public List<Event> keys() {
         return registry.keySet().stream().toList();
     }
 }

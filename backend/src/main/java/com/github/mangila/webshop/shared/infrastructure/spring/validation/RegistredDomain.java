@@ -7,14 +7,10 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AlphaNumericValidator.class)
+@Constraint(validatedBy = RegistredDomainValidator.class)
 @Documented
-public @interface AlphaNumeric {
-    String message() default "Value must be alphanumeric (letters and digits)";
-
-    boolean withHyphen() default false;
-
-    boolean withSpace() default false;
+public @interface RegistredDomain {
+    String message() default "Domain is not registred";
 
     Class<?>[] groups() default {};
 

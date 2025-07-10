@@ -2,8 +2,8 @@ package com.github.mangila.webshop.product.application.config;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.infrastructure.event.ProductEvent;
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -30,18 +30,18 @@ public class ProductDomainRegistryConfig {
     }
 
     void registerProductDomain() {
-        final DomainKey domainKey = DomainKey.create(Product.class);
-        log.info("Registering domain: {}", domainKey.value());
-        registryService.registerDomain(domainKey, domainKey.value());
+        final Domain domain = Domain.from(Product.class);
+        log.info("Registering domain: {}", domain.value());
+        registryService.register(domain);
     }
 
     void registerProductEvents() {
         EnumSet.allOf(ProductEvent.class)
                 .stream()
-                .map(EventKey::create)
-                .forEach(eventKey -> {
-                    log.info("Registering event: {}", eventKey.value());
-                    registryService.registerEvent(eventKey, eventKey.value());
+                .map(Event::from)
+                .forEach(event -> {
+                    log.info("Registering event: {}", event.value());
+                    registryService.register(event);
                 });
     }
 }

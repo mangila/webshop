@@ -9,23 +9,23 @@ import java.util.UUID;
 public class DomainId {
 
     private UUID id;
-    private String domainKey;
+    private String domain;
     private String intent;
     private @Nullable Instant created;
 
-    private DomainId(UUID id, String domainKey, String intent, @Nullable Instant created) {
+    private DomainId(UUID id, String domain, String intent, @Nullable Instant created) {
         this.id = id;
-        this.domainKey = domainKey;
+        this.domain = domain;
         this.intent = intent;
         this.created = created;
     }
 
-    public static DomainId from(UUID id, String domainKey, String intent, Instant created) {
-        return new DomainId(id, domainKey, intent, created);
+    public static DomainId from(UUID id, String domain, String intent, Instant created) {
+        return new DomainId(id, domain, intent, created);
     }
 
-    public static DomainId create(String domainKey, String intent) {
-        return new DomainId(UUID.randomUUID(), domainKey, intent, null);
+    public static DomainId create(String domain, String intent) {
+        return new DomainId(UUID.randomUUID(), domain, intent, null);
     }
 
     public UUID getId() {
@@ -36,12 +36,12 @@ public class DomainId {
         this.id = id;
     }
 
-    public String getDomainKey() {
-        return domainKey;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setDomainKey(String domainKey) {
-        this.domainKey = domainKey;
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     public String getIntent() {

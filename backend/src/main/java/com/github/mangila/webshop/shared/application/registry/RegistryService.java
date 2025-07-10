@@ -16,27 +16,35 @@ public class RegistryService {
         this.eventRegistry = new EventRegistry();
     }
 
-    public void ensureEventIsRegistered(EventKey key) {
+    public void ensureIsRegistered(Event key) {
         if (!eventRegistry.isRegistered(key)) {
             throw new ApplicationException(String.format("Event is not registered: '%s'", key.value()));
         }
     }
 
-    public void registerEvent(EventKey key, String value) {
-        eventRegistry.register(key, value);
+    public void register(Event event) {
+        eventRegistry.register(event, event.value());
     }
 
-    public void ensureDomainIsRegistered(DomainKey domainKey) {
-        if (!domainRegistry.isRegistered(domainKey)) {
-            throw new ApplicationException(String.format("Domain is not registered: '%s'", domainKey.value()));
+    public void ensureIsRegistered(Domain domain) {
+        if (!domainRegistry.isRegistered(domain)) {
+            throw new ApplicationException(String.format("Domain is not registered: '%s'", domain.value()));
         }
     }
 
-    public void registerDomain(DomainKey domainKey, String value) {
-        domainRegistry.register(domainKey, value);
+    public void register(Domain domain) {
+        domainRegistry.register(domain, domain.value());
     }
 
-    public List<DomainKey> domainKeys() {
+    public List<Domain> domains() {
         return domainRegistry.keys();
+    }
+
+    public boolean isRegistered(Domain domain) {
+        return domainRegistry.isRegistered(domain);
+    }
+
+    public boolean isRegistered(Event event) {
+        return eventRegistry.isRegistered(event);
     }
 }

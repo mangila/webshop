@@ -17,6 +17,6 @@ public class DomainIdEntityMapper {
     }
 
     public DomainIdEntity toEntity(DomainId domain) {
-        return DomainIdEntity.from(domain.getId(), domain.getDomainKey(), domain.getIntent());
+        return DomainIdEntity.from(domain.getId(), domain.getDomain(), domain.getIntent());
     }
 }

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
@@ -32,7 +32,7 @@ public class OutboxRabbitProducer {
 
     private final JsonMapper jsonMapper;
     private final RegistryService registryService;
-    private final Map<DomainKey, RabbitStreamTemplateHolder> streamTemplates;
+    private final Map<Domain, RabbitStreamTemplateHolder> streamTemplates;
     private final ObservationRegistry observationRegistry;
 
     public OutboxRabbitProducer(
@@ -44,8 +44,8 @@ public class OutboxRabbitProducer {
         this.registryService = registryService;
         this.observationRegistry = observationRegistry;
         this.streamTemplates = Map.of(
-                DomainKey.from("PRODUCT", registryService), createStreamTemplate(streamEnvironment, PRODUCT_STREAM_KEY),
-                DomainKey.from("INVENTORY", registryService), createStreamTemplate(streamEnvironment, INVENTORY_STREAM_KEY)
+                Domain.from("PRODUCT", registryService), createStreamTemplate(streamEnvironment, PRODUCT_STREAM_KEY),
+                Domain.from("INVENTORY", registryService), createStreamTemplate(streamEnvironment, INVENTORY_STREAM_KEY)
         );
     }
 
@@ -71,9 +71,9 @@ public class OutboxRabbitProducer {
 
     @EventListener(ApplicationReadyEvent.class)
     public void verifyTemplates() {
-        var domains = registryService.domainKeys();
-        var errors = new ArrayList<DomainKey>();
-        for (DomainKey key : streamTemplates.keySet()) {
+        var domains = registryService.domains();
+        var errors = new ArrayList<Domain>();
+        for (Domain key : streamTemplates.keySet()) {
             if (!domains.contains(key)) {
                 errors.add(key);
             }
@@ -84,8 +84,8 @@ public class OutboxRabbitProducer {
     }
 
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
-        var domain = DomainKey.from(outboxMessage.domain(), registryService);
-        var event = EventKey.from(outboxMessage.event(), registryService);
+        var domain = Domain.from(outboxMessage.domain(), registryService);
+        var event = Event.from(outboxMessage.event(), registryService);
         var holder = streamTemplates.get(domain);
 
         if (Objects.isNull(holder)) {

@@ -2,18 +2,20 @@ package com.github.mangila.webshop.shared.outbox.application.cqrs;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import com.github.mangila.webshop.shared.application.registry.Event;
+import com.github.mangila.webshop.shared.infrastructure.spring.validation.RegistredDomain;
+import com.github.mangila.webshop.shared.infrastructure.spring.validation.RegistredEvent;
 
 import java.util.UUID;
 
 public record OutboxInsertCommand(
-        DomainKey domain,
-        EventKey event,
+        @RegistredDomain Domain domain,
+        @RegistredEvent Event event,
         UUID aggregateId,
         ObjectNode payload
 ) {
     public static OutboxInsertCommand from(Class<?> domain, Enum<?> event, UUID value, JsonNode jsonNode) {
-        return new OutboxInsertCommand(DomainKey.create(domain), EventKey.create(event), value, (ObjectNode) jsonNode);
+        return new OutboxInsertCommand(Domain.from(domain), Event.from(event), value, (ObjectNode) jsonNode);
     }
 }

@@ -2,11 +2,11 @@ package com.github.mangila.webshop.shared.application.registry;
 
 import java.util.Objects;
 
-public final class DomainKey {
+public final class Domain {
 
     private final String value;
 
-    private DomainKey(String value) {
+    private Domain(String value) {
         this.value = value;
     }
 
@@ -14,13 +14,13 @@ public final class DomainKey {
         return value;
     }
 
-    public static DomainKey create(Class<?> domain) {
-        return new DomainKey(domain.getSimpleName().toUpperCase());
+    public static Domain from(Class<?> domain) {
+        return new Domain(domain.getSimpleName().toUpperCase());
     }
 
-    public static DomainKey from(String domain, RegistryService registry) {
-        var key = new DomainKey(domain);
-        registry.ensureDomainIsRegistered(key);
+    public static Domain from(String domain, RegistryService registry) {
+        var key = new Domain(domain);
+        registry.ensureIsRegistered(key);
         return key;
     }
 
@@ -28,8 +28,8 @@ public final class DomainKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DomainKey domainKey = (DomainKey) o;
-        return Objects.equals(value, domainKey.value);
+        Domain domain = (Domain) o;
+        return Objects.equals(value, domain.value);
     }
 
     @Override

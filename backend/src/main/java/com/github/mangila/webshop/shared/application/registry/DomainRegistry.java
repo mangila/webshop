@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DomainRegistry implements Registry<DomainKey, String> {
+public class DomainRegistry implements Registry<Domain, String> {
 
-    private final Map<DomainKey, String> registry = new ConcurrentHashMap<>();
+    private final Map<Domain, String> registry = new ConcurrentHashMap<>();
 
     @Override
-    public boolean isRegistered(DomainKey key) {
+    public boolean isRegistered(Domain key) {
         return registry.containsKey(key);
     }
 
     @Override
-    public String get(DomainKey key) {
+    public String get(Domain key) {
         return registry.get(key);
     }
 
     @Override
-    public void register(DomainKey key, String value) {
+    public void register(Domain key, String value) {
         registry.put(key, value);
     }
 
@@ -29,7 +29,7 @@ public class DomainRegistry implements Registry<DomainKey, String> {
     }
 
     @Override
-    public List<DomainKey> keys() {
+    public List<Domain> keys() {
         return registry.keySet().stream().toList();
     }
 }

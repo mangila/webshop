@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.shared.outbox.application.service;
 
-import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdCommand;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
@@ -17,19 +16,14 @@ public class OutboxCommandService {
 
     private final OutboxMapperGateway mapper;
     private final OutboxRepositoryGateway repository;
-    private final RegistryService registryService;
 
     public OutboxCommandService(OutboxMapperGateway mapper,
-                                OutboxRepositoryGateway repository,
-                                RegistryService registryService) {
+                                OutboxRepositoryGateway repository) {
         this.mapper = mapper;
         this.repository = repository;
-        this.registryService = registryService;
     }
 
     public OutboxDto insert(@Valid OutboxInsertCommand command) {
-        registryService.ensureDomainIsRegistered(command.domain());
-        registryService.ensureEventIsRegistered(command.event());
         return Stream.of(command)
                 .map(mapper.command()::toDomain)
                 .map(repository.command()::insert)

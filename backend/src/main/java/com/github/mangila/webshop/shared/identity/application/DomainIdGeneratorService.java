@@ -23,7 +23,7 @@ public class DomainIdGeneratorService {
 
     @CacheEvict(value = "domain-id", allEntries = true)
     public UUID generate(@Valid GenerateDomainIdCommand command) {
-        var record = DomainId.create(command.domainKey().value(), command.intent());
+        var record = DomainId.create(command.domain().value(), command.intent());
         return repository.save(record).getId();
     }
 

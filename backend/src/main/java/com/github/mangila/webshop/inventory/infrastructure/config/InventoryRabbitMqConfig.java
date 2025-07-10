@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.inventory.infrastructure.config;
 
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig;
 import com.rabbitmq.stream.Environment;
@@ -26,8 +26,8 @@ public class InventoryRabbitMqConfig {
     @Bean
     public RabbitListenerContainerFactory<StreamListenerContainer> inventoryNewProductConsumer(Environment env) {
         var streamKey = RabbitMqConfig.PRODUCT_STREAM_KEY;
-        var domain = DomainKey.from("PRODUCT", registryService);
-        var event = EventKey.from("PRODUCT_CREATE_NEW", registryService);
+        var domain = Domain.from("PRODUCT", registryService);
+        var event = Event.from("PRODUCT_CREATE_NEW", registryService);
         StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory(env);
         factory.setNativeListener(Boolean.TRUE);
         factory.setObservationEnabled(Boolean.TRUE);

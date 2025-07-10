@@ -2,8 +2,8 @@ package com.github.mangila.webshop.inventory.application.config;
 
 import com.github.mangila.webshop.inventory.domain.event.InventoryEvent;
 import com.github.mangila.webshop.inventory.domain.model.Inventory;
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
+import com.github.mangila.webshop.shared.application.registry.Domain;
+import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -30,18 +30,18 @@ public class InventoryDomainRegistryConfig {
     }
 
     void registerInventoryDomain() {
-        final DomainKey domainKey = DomainKey.create(Inventory.class);
-        log.info("Registering domain: {}", domainKey.value());
-        registryService.registerDomain(domainKey, domainKey.value());
+        final Domain domain = Domain.from(Inventory.class);
+        log.info("Registering domain: {}", domain.value());
+        registryService.register(domain);
     }
 
     void registerInventoryEvent() {
         EnumSet.allOf(InventoryEvent.class)
                 .stream()
-                .map(EventKey::create)
-                .forEach(eventKey -> {
-                    log.info("Registering event: {}", eventKey.value());
-                    registryService.registerEvent(eventKey, eventKey.value());
+                .map(Event::from)
+                .forEach(event -> {
+                    log.info("Registering event: {}", event.value());
+                    registryService.register(event);
                 });
     }
 }
