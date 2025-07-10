@@ -7,7 +7,6 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.rabbit.stream.support.StreamAdmin;
 
 @Configuration
@@ -36,30 +35,5 @@ public class RabbitMqConfig {
             sc.stream(PRODUCT_STREAM_KEY).create();
             sc.stream(INVENTORY_STREAM_KEY).create();
         });
-    }
-
-    @Bean
-    public RabbitStreamTemplate productStreamTemplate(Environment env) {
-        var template = new RabbitStreamTemplate(env, PRODUCT_STREAM_KEY);
-        template.setObservationEnabled(Boolean.TRUE);
-        template.setProducerCustomizer((_, builder) -> {
-            builder.filterValue(message -> message.getApplicationProperties()
-                    .get("event")
-                    .toString());
-            builder.filterValue(message -> message.getApplicationProperties()
-                    .get("domain")
-                    .toString());
-            builder.filterValue(message -> message.getApplicationProperties()
-                    .get("aggregateId")
-                    .toString());
-        });
-        return template;
-    }
-
-    @Bean
-    public RabbitStreamTemplate inventoryStreamTemplate(Environment env) {
-        var template = new RabbitStreamTemplate(env, INVENTORY_STREAM_KEY);
-        template.setObservationEnabled(Boolean.TRUE);
-        return template;
     }
 }

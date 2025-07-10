@@ -17,8 +17,6 @@ public class InventoryDomainRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryDomainRegistryConfig.class);
 
-    public static final DomainKey INVENTORY_DOMAIN_KEY = DomainKey.create(Inventory.class);
-
     private final RegistryService registryService;
 
     public InventoryDomainRegistryConfig(RegistryService registryService) {
@@ -32,8 +30,9 @@ public class InventoryDomainRegistryConfig {
     }
 
     void registerInventoryDomain() {
-        log.info("Registering domain: {}", INVENTORY_DOMAIN_KEY.value());
-        registryService.registerDomain(INVENTORY_DOMAIN_KEY, INVENTORY_DOMAIN_KEY.value());
+        final DomainKey domainKey = DomainKey.create(Inventory.class);
+        log.info("Registering domain: {}", domainKey.value());
+        registryService.registerDomain(domainKey, domainKey.value());
     }
 
     void registerInventoryEvent() {

@@ -1,23 +1,19 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
-import com.github.mangila.webshop.inventory.application.config.InventoryDomainRegistryConfig;
-import com.github.mangila.webshop.product.application.config.ProductRegistryConfig;
 import com.github.mangila.webshop.shared.application.registry.DomainKey;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
+import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.Message;
-import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -38,22 +34,38 @@ public class OutboxRabbitProducer {
     private final Map<DomainKey, RabbitStreamTemplateHolder> streamTemplates;
     private final ObservationRegistry observationRegistry;
 
-    public OutboxRabbitProducer(JsonMapper jsonMapper,
-                                RegistryService registryService,
-                                @Qualifier("productStreamTemplate") RabbitStreamTemplate productStreamTemplate,
-                                @Qualifier("inventoryStreamTemplate") RabbitStreamTemplate inventoryStreamTemplate,
-                                ObservationRegistry observationRegistry) {
+    public OutboxRabbitProducer(
+            Environment streamEnvironment,
+            JsonMapper jsonMapper,
+            RegistryService registryService,
+            ObservationRegistry observationRegistry) {
         this.jsonMapper = jsonMapper;
         this.registryService = registryService;
         this.observationRegistry = observationRegistry;
         this.streamTemplates = Map.of(
-                ProductRegistryConfig.PRODUCT_DOMAIN_KEY, new RabbitStreamTemplateHolder(productStreamTemplate, PRODUCT_STREAM_KEY),
-                InventoryDomainRegistryConfig.INVENTORY_DOMAIN_KEY, new RabbitStreamTemplateHolder(inventoryStreamTemplate, INVENTORY_STREAM_KEY)
+                DomainKey.from("PRODUCT", registryService), createStreamTemplate(streamEnvironment, PRODUCT_STREAM_KEY),
+                DomainKey.from("INVENTORY", registryService), createStreamTemplate(streamEnvironment, INVENTORY_STREAM_KEY)
         );
     }
 
     private record RabbitStreamTemplateHolder(RabbitStreamTemplate template, String streamName) {
+    }
 
+    private RabbitStreamTemplateHolder createStreamTemplate(Environment streamEnvironment, String streamKey) {
+        var template = new RabbitStreamTemplate(streamEnvironment, streamKey);
+        template.setObservationEnabled(Boolean.TRUE);
+        template.setProducerCustomizer((_, builder) -> {
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("event")
+                    .toString());
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("domain")
+                    .toString());
+            builder.filterValue(message -> message.getApplicationProperties()
+                    .get("aggregateId")
+                    .toString());
+        });
+        return new RabbitStreamTemplateHolder(template, streamKey);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -66,7 +78,7 @@ public class OutboxRabbitProducer {
             }
         }
         if (!CollectionUtils.isEmpty(errors)) {
-            throw new ApplicationException("RabbitMQ Stream templates not found for domains: '%s'".formatted(errors));
+            throw new ApplicationException("RabbitMQ Stream templates not found for registred domains: '%s'".formatted(errors));
         }
     }
 
@@ -83,8 +95,8 @@ public class OutboxRabbitProducer {
 
         Message rabbitMessage = template.messageBuilder()
                 .applicationProperties()
-                .entry("event", event)
                 .entry("domain", domain)
+                .entry("event", event)
                 .entry("aggregateId", outboxMessage.aggregateId().toString())
                 .messageBuilder()
                 .addData(jsonMapper.toBytes(outboxMessage))
