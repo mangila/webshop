@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
