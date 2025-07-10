@@ -3,9 +3,10 @@ package com.github.mangila.webshop.shared.infrastructure.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
-import graphql.Assert;
 import io.vavr.control.Try;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 @Component
 public class JsonMapper {
@@ -18,19 +19,27 @@ public class JsonMapper {
 
     public JsonNode toJsonNode(Object object) {
         return Try.of(() -> {
-                    Assert.assertNotNull(object, "Object must not be null");
-                    return (JsonNode) objectMapper.valueToTree(object);
+                    Assert.notNull(object, "Object cannot be null");
+                    String json = objectMapper.writeValueAsString(object);
+                    return objectMapper.readTree(json);
                 })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", object), cause));
     }
 
     public <T> T toObject(byte[] bytes, Class<T> clazz) {
-        return Try.of(() -> objectMapper.readValue(bytes, clazz))
+        return Try.of(() -> {
+                    Assert.notNull(bytes, "Array cannot be null");
+                    Assert.isTrue(ArrayUtils.isEmpty(bytes), "Array cannot be empty");
+                    return objectMapper.readValue(bytes, clazz);
+                })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error serialize object: %s", clazz.getSimpleName()), cause));
     }
 
     public byte[] toBytes(Object object) {
-        return Try.of(() -> objectMapper.writeValueAsBytes(object))
+        return Try.of(() -> {
+                    Assert.notNull(object, "Object cannot be null");
+                    return objectMapper.writeValueAsBytes(object);
+                })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error deserialize object: %s", object.getClass().getSimpleName()), cause));
     }
 }
