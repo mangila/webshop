@@ -52,6 +52,7 @@ class ProductCommandControllerIntegrationTest {
                 .returnResult()
                 .getResponseBody();
 
+        assertThat(dto).isNotNull();
         ProductIdQuery productIdQuery = new ProductIdQuery(dto.id());
 
         boolean exists = productServiceGateway.query()
