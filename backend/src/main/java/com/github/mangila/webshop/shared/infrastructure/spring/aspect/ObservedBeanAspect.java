@@ -13,10 +13,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Aspect
 @Component
@@ -39,6 +36,7 @@ public class ObservedBeanAspect {
         var observation = Observation.start(annotationData.name, registry)
                 .lowCardinalityKeyValues(annotationData.tags)
                 .lowCardinalityKeyValue("method", pjp.getSignature().getName())
+                .highCardinalityKeyValue("payload", Arrays.toString(pjp.getArgs()))
                 .contextualName(targetClass.getSimpleName().concat("#").concat(pjp.getSignature().getName()));
         try (Observation.Scope scope = observation.openScope()) {
             observation.event(Observation.Event.of("Method call", "Method Start"));

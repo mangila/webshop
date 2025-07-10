@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.domain.primitive;
 
-import java.math.BigDecimal;
+import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 
-public record ProductPrice(BigDecimal value) {
+public record ProductPrice(DomainMoney value) {
 }

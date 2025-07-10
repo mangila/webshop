@@ -4,6 +4,7 @@ import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.application.web.ProductCommandController;
+import com.github.mangila.webshop.shared.application.DomainMoneyDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,9 +42,9 @@ class ProductCommandControllerValidationTest {
                 .build();
     }
 
-    @ParameterizedTest(name = "Invalid product attributes: {0}")
-    @MethodSource("invalidProductJsonTestCases")
-    void testInvalidJson(InvalidProductJsonTestCase testCase) {
+    @ParameterizedTest(name = "validate product raw JSON: {0}")
+    @MethodSource("notValidProductJsonTestCases")
+    void testInvalidJson(NotValidProductJsonTestCase testCase) {
         ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,14 +59,14 @@ class ProductCommandControllerValidationTest {
                 .isEqualTo("HTTP Message Not Readable");
     }
 
-    record InvalidProductJsonTestCase(String description, String json) {
+    record NotValidProductJsonTestCase(String description, String json) {
         @Override
         public String toString() {
             return description;
         }
     }
 
-    static Stream<InvalidProductJsonTestCase> invalidProductJsonTestCases() {
+    static Stream<NotValidProductJsonTestCase> notValidProductJsonTestCases() {
         return Stream.of(
                 createJsonTestCase("Attributes is JSON Array",
                         // language=JSON
@@ -85,7 +86,7 @@ class ProductCommandControllerValidationTest {
                                    {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":null,"unit":"KILOGRAM"}
                                 """
                 ),
-                createJsonTestCase("Attributes is invalid JSON object",
+                createJsonTestCase("Attributes is not a valid JSON object",
                         // language=JSON
                         """
                                    {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":{"11","23"},"unit":"KILOGRAM"}
@@ -97,13 +98,13 @@ class ProductCommandControllerValidationTest {
         );
     }
 
-    private static InvalidProductJsonTestCase createJsonTestCase(String description, String json) {
-        return new InvalidProductJsonTestCase(description, json);
+    private static NotValidProductJsonTestCase createJsonTestCase(String description, String json) {
+        return new NotValidProductJsonTestCase(description, json);
     }
 
-    @ParameterizedTest(name = "Invalid product validation: {0}")
-    @MethodSource("invalidProductTestCases")
-    void testInvalidProductInsertCommands(InvalidProductTestCase testCase) {
+    @ParameterizedTest(name = "product validation: {0}")
+    @MethodSource("notValidProductTestCases")
+    void testInvalidProductInsertCommands(NotValidProductTestCase testCase) {
         ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -118,14 +119,14 @@ class ProductCommandControllerValidationTest {
                 .isEqualTo("Validation Failed");
     }
 
-    record InvalidProductTestCase(String description, ProductInsertCommand command) {
+    record NotValidProductTestCase(String description, ProductInsertCommand command) {
         @Override
         public String toString() {
             return description;
         }
     }
 
-    static Stream<InvalidProductTestCase> invalidProductTestCases() {
+    static Stream<NotValidProductTestCase> notValidProductTestCases() {
         return Stream.of(
                 // Product Name
                 createTestCase("Null product name",
@@ -140,23 +141,23 @@ class ProductCommandControllerValidationTest {
                 createTestCase("Null product price",
                         builder -> builder.withPrice(null)),
                 createTestCase("Negative product price",
-                        builder -> builder.withPrice(new BigDecimal("-1.00"))),
+                        builder -> builder.withPrice(new DomainMoneyDto(new BigDecimal("-1.00"), "USD"))),
                 createTestCase("Zero product price",
-                        builder -> builder.withPrice(BigDecimal.ZERO)),
+                        builder -> builder.withPrice(new DomainMoneyDto(BigDecimal.ZERO, "USD"))),
                 createTestCase("Extremely high product price",
-                        builder -> builder.withPrice(new BigDecimal("99999999999999.99"))),
+                        builder -> builder.withPrice(new DomainMoneyDto(new BigDecimal("99999999999999.99"), "USD"))),
                 // Product Attributes
                 createTestCase("Null attributes",
                         builder -> builder.withAttributes(null)),
                 // Product Unit
                 createTestCase("Null product unit",
-                        builder -> builder.withUnit(null))
-                );
+                        builder -> builder.withUnit(null)
+                ));
     }
 
-    private static InvalidProductTestCase createTestCase(String description, Consumer<ProductTestUtil.TestProductInsertCommandBuilder> customizer) {
+    private static NotValidProductTestCase createTestCase(String description, Consumer<ProductTestUtil.TestProductInsertCommandBuilder> customizer) {
         ProductTestUtil.TestProductInsertCommandBuilder builder = new ProductTestUtil.TestProductInsertCommandBuilder();
         customizer.accept(builder);
-        return new InvalidProductTestCase(description, builder.build());
+        return new NotValidProductTestCase(description, builder.build());
     }
 }

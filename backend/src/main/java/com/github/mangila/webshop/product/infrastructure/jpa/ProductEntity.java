@@ -2,6 +2,7 @@ package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -28,6 +29,9 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "currency", nullable = false)
+    private String currency;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
@@ -53,16 +57,17 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    private ProductEntity(UUID id, String name, BigDecimal price, JsonNode attributes, ProductUnit unit) {
+    private ProductEntity(UUID id, String name, String currency, BigDecimal price, JsonNode attributes, ProductUnit unit) {
         this.id = id;
         this.name = name;
+        this.currency = currency;
         this.price = price;
         this.attributes = attributes;
         this.unit = unit;
     }
 
-    public static ProductEntity from(UUID id, String name, BigDecimal price, JsonNode attributes, ProductUnit unit) {
-        return new ProductEntity(id, name, price, attributes, unit);
+    public static ProductEntity from(UUID id, String name, DomainMoney price, JsonNode attributes, ProductUnit unit) {
+        return new ProductEntity(id, name, price.getCurrencyCode(), price.getAmount(), attributes, unit);
     }
 
     @Override
@@ -99,6 +104,14 @@ public class ProductEntity implements Persistable<UUID> {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public JsonNode getAttributes() {

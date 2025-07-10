@@ -2,6 +2,7 @@ package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
+import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import org.springframework.stereotype.Component;
 
@@ -28,10 +29,11 @@ public class ProductEntityMapper {
         Instant updated = entity.getUpdated().orElseThrow(
                 () -> new ApplicationException("Updated date is required to map from entity to value")
         );
+
         return Product.from(
                 entity.getId(),
                 entity.getName(),
-                entity.getPrice(),
+                DomainMoney.from(entity.getCurrency(), entity.getPrice()),
                 entity.getAttributes(),
                 entity.getUnit(),
                 created,

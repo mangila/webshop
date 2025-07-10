@@ -1,8 +1,6 @@
 package com.github.mangila.webshop.product.infrastructure.event;
 
 import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.shared.application.registry.DomainKey;
-import com.github.mangila.webshop.shared.application.registry.EventKey;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxInsertCommand;
 import org.springframework.stereotype.Component;

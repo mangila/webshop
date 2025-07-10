@@ -5,8 +5,8 @@ import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
 import com.github.mangila.webshop.product.domain.primitive.ProductPrice;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class Product {
         this.updated = updated;
     }
 
-    public static Product from(UUID id, String name, BigDecimal price, JsonNode attributes, ProductUnit unit, Instant created, Instant updated) {
+    public static Product from(UUID id, String name, DomainMoney price, JsonNode attributes, ProductUnit unit, Instant created, Instant updated) {
         return new Product(new ProductId(id), new ProductName(name), new ProductPrice(price), attributes, unit, created, updated);
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.shared.application.DomainMoneyDto;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.math.BigDecimal;
@@ -17,12 +18,15 @@ public class ProductTestUtil {
     public static class TestProductInsertCommandBuilder {
 
         final String defaultName = "Test Product XYZ-10";
-        final BigDecimal defaultPrice = new BigDecimal("19.99");
+        final DomainMoneyDto defaultPrice = new DomainMoneyDto(
+                new BigDecimal("19.99"),
+                "USD"
+        );
         final ObjectNode defaultAttributes = new ObjectMapper().createObjectNode();
         final ProductUnit defaultUnit = ProductUnit.PIECE;
 
         private String name = defaultName;
-        private BigDecimal price = defaultPrice;
+        private DomainMoneyDto price = defaultPrice;
         private ObjectNode attributes = defaultAttributes;
         private ProductUnit unit = defaultUnit;
 
@@ -34,7 +38,7 @@ public class ProductTestUtil {
             return this;
         }
 
-        public TestProductInsertCommandBuilder withPrice(BigDecimal price) {
+        public TestProductInsertCommandBuilder withPrice(DomainMoneyDto price) {
             this.price = price;
             return this;
         }
