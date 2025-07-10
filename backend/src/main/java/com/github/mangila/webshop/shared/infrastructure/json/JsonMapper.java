@@ -29,7 +29,7 @@ public class JsonMapper {
     public <T> T toObject(byte[] bytes, Class<T> clazz) {
         return Try.of(() -> {
                     Assert.notNull(bytes, "Array cannot be null");
-                    Assert.isTrue(ArrayUtils.isEmpty(bytes), "Array cannot be empty");
+                    Assert.isTrue(!ArrayUtils.isEmpty(bytes), "Array cannot be empty");
                     return objectMapper.readValue(bytes, clazz);
                 })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error serialize object: %s", clazz.getSimpleName()), cause));
