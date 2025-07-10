@@ -11,8 +11,8 @@ public class OutboxCommandMapper {
 
     public OutboxInsert toDomain(OutboxInsertCommand command) {
         return OutboxInsert.from(
-                command.domain().value(),
-                command.event().value(),
+                command.domain(),
+                command.event(),
                 command.aggregateId(),
                 command.payload()
         );
