@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
 import com.github.mangila.webshop.shared.domain.common.DomainMoney;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
@@ -37,7 +37,7 @@ public class ProductEntity implements Persistable<UUID> {
 
     @Type(JsonBinaryType.class)
     @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
-    private JsonNode attributes;
+    private ObjectNode attributes;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "unit", nullable = false)
@@ -57,7 +57,7 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    private ProductEntity(UUID id, String name, String currency, BigDecimal price, JsonNode attributes, ProductUnit unit) {
+    private ProductEntity(UUID id, String name, String currency, BigDecimal price, ObjectNode attributes, ProductUnit unit) {
         this.id = id;
         this.name = name;
         this.currency = currency;
@@ -66,7 +66,7 @@ public class ProductEntity implements Persistable<UUID> {
         this.unit = unit;
     }
 
-    public static ProductEntity from(UUID id, String name, DomainMoney price, JsonNode attributes, ProductUnit unit) {
+    public static ProductEntity from(UUID id, String name, DomainMoney price, ObjectNode attributes, ProductUnit unit) {
         return new ProductEntity(id, name, price.getCurrencyCode(), price.getAmount(), attributes, unit);
     }
 
@@ -114,11 +114,11 @@ public class ProductEntity implements Persistable<UUID> {
         this.currency = currency;
     }
 
-    public JsonNode getAttributes() {
+    public ObjectNode getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JsonNode attributes) {
+    public void setAttributes(ObjectNode attributes) {
         this.attributes = attributes;
     }
 
@@ -146,4 +146,3 @@ public class ProductEntity implements Persistable<UUID> {
         this.updated = updated;
     }
 }
-

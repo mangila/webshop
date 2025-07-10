@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
 import com.github.mangila.webshop.product.domain.primitive.ProductPrice;
@@ -15,12 +15,12 @@ public class Product {
     private ProductId id;
     private ProductName name;
     private ProductPrice price;
-    private JsonNode attributes;
+    private ObjectNode attributes;
     private ProductUnit unit;
     private Instant created;
     private Instant updated;
 
-    private Product(ProductId id, ProductName name, ProductPrice price, JsonNode attributes, ProductUnit unit, Instant created, Instant updated) {
+    private Product(ProductId id, ProductName name, ProductPrice price, ObjectNode attributes, ProductUnit unit, Instant created, Instant updated) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -30,7 +30,7 @@ public class Product {
         this.updated = updated;
     }
 
-    public static Product from(UUID id, String name, DomainMoney price, JsonNode attributes, ProductUnit unit, Instant created, Instant updated) {
+    public static Product from(UUID id, String name, DomainMoney price, ObjectNode attributes, ProductUnit unit, Instant created, Instant updated) {
         return new Product(new ProductId(id), new ProductName(name), new ProductPrice(price), attributes, unit, created, updated);
     }
 
@@ -58,11 +58,11 @@ public class Product {
         this.price = price;
     }
 
-    public JsonNode getAttributes() {
+    public ObjectNode getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JsonNode attributes) {
+    public void setAttributes(ObjectNode attributes) {
         this.attributes = attributes;
     }
 
@@ -90,4 +90,3 @@ public class Product {
         this.updated = updated;
     }
 }
-

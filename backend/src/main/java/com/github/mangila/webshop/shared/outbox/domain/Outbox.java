@@ -1,7 +1,7 @@
 
 package com.github.mangila.webshop.shared.outbox.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.shared.application.registry.Domain;
 import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.*;
@@ -29,7 +29,7 @@ public class Outbox {
         this.created = created;
     }
 
-    public static Outbox from(Long id, Domain domain, Event event, UUID aggregateId, JsonNode payload, boolean published, Instant instant) {
+    public static Outbox from(Long id, Domain domain, Event event, UUID aggregateId, ObjectNode payload, boolean published, Instant instant) {
         return new Outbox(new OutboxId(id), domain, event, new OutboxAggregateId(aggregateId), new OutboxPayload(payload), new OutboxPublished(published), new OutboxCreated(instant));
     }
 

@@ -30,7 +30,7 @@ public class ProductOutboxMapper {
                 Product.class,
                 event,
                 dto.id(),
-                dto.toJsonNode(jsonMapper)
+                dto.toObjectNode(jsonMapper)
         );
     }
 }

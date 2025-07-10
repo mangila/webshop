@@ -2,9 +2,9 @@ package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
-import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsert;
+import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.event.ProductOutboxMapper;
 import com.github.mangila.webshop.shared.identity.application.DomainIdGeneratorService;
 import com.github.mangila.webshop.shared.identity.application.cqrs.GenerateDomainIdCommand;

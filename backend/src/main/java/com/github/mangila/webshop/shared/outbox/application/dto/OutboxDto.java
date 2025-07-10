@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.shared.outbox.application.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -10,12 +10,11 @@ public record OutboxDto(
         String domain,
         String event,
         UUID aggregateId,
-        JsonNode payload,
+        ObjectNode payload,
         boolean published,
         Instant created) {
 
-    public static OutboxDto from(long id, String domain, String event, UUID aggregateId, JsonNode payload, boolean published, Instant created) {
+    public static OutboxDto from(long id, String domain, String event, UUID aggregateId, ObjectNode payload, boolean published, Instant created) {
         return new OutboxDto(id, domain, event, aggregateId, payload, published, created);
     }
 }
-

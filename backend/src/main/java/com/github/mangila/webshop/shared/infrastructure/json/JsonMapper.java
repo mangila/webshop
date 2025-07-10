@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.infrastructure.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,11 +17,11 @@ public class JsonMapper {
         this.objectMapper = objectMapper;
     }
 
-    public JsonNode toJsonNode(Object object) {
+    public ObjectNode toObjectNode(Object object) {
         return Try.of(() -> {
                     Assert.notNull(object, "Object cannot be null");
                     String json = objectMapper.writeValueAsString(object);
-                    return objectMapper.readTree(json);
+                    return (ObjectNode) objectMapper.readTree(json);
                 })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", object), cause));
     }

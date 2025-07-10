@@ -1,7 +1,7 @@
 
 package com.github.mangila.webshop.shared.outbox.infrastructure.jpa;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -39,7 +39,7 @@ public class OutboxEntity {
             columnDefinition = "jsonb",
             nullable = false,
             updatable = false)
-    private JsonNode payload;
+    private ObjectNode payload;
 
     @Column(nullable = false)
     private boolean published;
@@ -51,7 +51,7 @@ public class OutboxEntity {
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String domain, String event, UUID aggregateId, JsonNode payload, boolean published) {
+    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, boolean published) {
         this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
@@ -59,7 +59,7 @@ public class OutboxEntity {
         this.published = published;
     }
 
-    public static OutboxEntity from(String topic, String event, UUID aggregateId, JsonNode payload) {
+    public static OutboxEntity from(String topic, String event, UUID aggregateId, ObjectNode payload) {
         return new OutboxEntity(topic, event, aggregateId, payload, false);
     }
 
@@ -95,11 +95,11 @@ public class OutboxEntity {
         this.aggregateId = aggregateId;
     }
 
-    public JsonNode getPayload() {
+    public ObjectNode getPayload() {
         return payload;
     }
 
-    public void setPayload(JsonNode payload) {
+    public void setPayload(ObjectNode payload) {
         this.payload = payload;
     }
 
