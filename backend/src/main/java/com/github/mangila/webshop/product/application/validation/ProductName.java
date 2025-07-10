@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {})
 @Documented
 public @interface ProductName {
-    String message() default "Invalid product name";
+    String message() default "Not a valid Product name";
 
     Class<?>[] groups() default {};
 

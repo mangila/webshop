@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {})
 @Documented
 public @interface ProductPrice {
-    String message() default "Invalid product price";
+    String message() default "Not a valid Product price";
 
     Class<?>[] groups() default {};
 
