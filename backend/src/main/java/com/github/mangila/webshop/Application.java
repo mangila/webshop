@@ -33,7 +33,7 @@ public class Application implements CommandLineRunner {
                     var client = HttpClient.newHttpClient();
                     var c = new ProductInsertCommand(
                             "tesst",
-                            new DomainMoneyDto(new BigDecimal(10), "SEK"),
+                            new DomainMoneyDto("SEK", new BigDecimal(10)),
                             objectMapper.createObjectNode(),
                             ProductUnit.PIECE
                     );

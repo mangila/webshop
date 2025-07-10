@@ -19,8 +19,8 @@ public class ProductTestUtil {
 
         final String defaultName = "Test Product XYZ-10";
         final DomainMoneyDto defaultPrice = new DomainMoneyDto(
-                new BigDecimal("19.99"),
-                "USD"
+                "USD",
+                new BigDecimal("19.99")
         );
         final ObjectNode defaultAttributes = new ObjectMapper().createObjectNode();
         final ProductUnit defaultUnit = ProductUnit.PIECE;
