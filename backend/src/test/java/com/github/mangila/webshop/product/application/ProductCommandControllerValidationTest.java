@@ -138,13 +138,13 @@ class ProductCommandControllerValidationTest {
                 createTestCase("Extremely long product name",
                         builder -> builder.withName("a".repeat(256))),
                 // Product Price
-                createTestCase("Null product price",
+                createTestCase("Null product amount",
                         builder -> builder.withPrice(null)),
-                createTestCase("Negative product price",
+                createTestCase("Negative product amount",
                         builder -> builder.withPrice(new DomainMoneyDto(new BigDecimal("-1.00"), "USD"))),
-                createTestCase("Zero product price",
+                createTestCase("Zero product amount",
                         builder -> builder.withPrice(new DomainMoneyDto(BigDecimal.ZERO, "USD"))),
-                createTestCase("Extremely high product price",
+                createTestCase("Extremely high product amount",
                         builder -> builder.withPrice(new DomainMoneyDto(new BigDecimal("99999999999999.99"), "USD"))),
                 // Product Attributes
                 createTestCase("Null attributes",

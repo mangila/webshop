@@ -32,7 +32,7 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(name = "currency", nullable = false)
     private String currency;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "amount", nullable = false)
     private BigDecimal price;
 
     @Type(JsonBinaryType.class)

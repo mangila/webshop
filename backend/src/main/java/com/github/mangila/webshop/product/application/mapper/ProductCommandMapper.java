@@ -14,7 +14,7 @@ public class ProductCommandMapper {
 
     public ProductInsert toDomain(ProductInsertCommand command) {
         String currency = command.price().currency();
-        BigDecimal price = command.price().price();
+        BigDecimal price = command.price().amount();
         return ProductInsert.from(
                 command.name(),
                 DomainMoney.from(currency, price),
