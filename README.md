@@ -28,7 +28,9 @@ Postgres is used as a database and RabbitMQ as a message broker
     - Prometheus (Metrics monitoring)
     - Grafana (Visualization)
 - Design for Resilience
-- Design for Security
+- Design for Security 
+  - Audit and Logging
+  - Input validation
 
 ### Management, UI and Infrastructure
 
