@@ -58,6 +58,10 @@ logging:
     name: "webshop.log"
   level:
     sql: debug
+  logback:
+    rollingpolicy:
+      max-history: 1
+      max-file-size: 1MB
 # SpringDoc
 springdoc:
   show-actuator: true

@@ -28,7 +28,8 @@ public class InventoryRabbitMqConsumer {
 
     @RabbitListener(
             queues = RabbitMqConfig.PRODUCT_STREAM_KEY,
-            containerFactory = "inventoryNewProductConsumer")
+            containerFactory = "inventoryNewProductConsumer",
+            id = "inventoryNewProductConsumer")
     void listen(Message message) {
         OutboxMessage event = jsonMapper.toObject(message.getBodyAsBinary(), OutboxMessage.class);
         log.info("Consumed Message: {}", event);

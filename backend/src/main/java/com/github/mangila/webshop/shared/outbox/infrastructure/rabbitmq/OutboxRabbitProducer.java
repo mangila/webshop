@@ -62,9 +62,6 @@ public class OutboxRabbitProducer {
             builder.filterValue(message -> message.getApplicationProperties()
                     .get("event")
                     .toString());
-            builder.filterValue(message -> message.getApplicationProperties()
-                    .get("aggregateId")
-                    .toString());
         });
         return new RabbitStreamTemplateHolder(template, streamKey);
     }

@@ -5,13 +5,15 @@ import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.infrastructure.config.RabbitMqConfig;
 import com.rabbitmq.stream.Environment;
+import com.rabbitmq.stream.Message;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.rabbit.stream.config.StreamRabbitListenerContainerFactory;
 import org.springframework.rabbit.stream.listener.StreamListenerContainer;
-import org.springframework.rabbit.stream.micrometer.RabbitStreamListenerObservation;
+
+import java.util.function.Predicate;
 
 @DependsOn("productDomainRegistryConfig")
 @Configuration
@@ -31,15 +33,23 @@ public class InventoryRabbitMqConfig {
         StreamRabbitListenerContainerFactory factory = new StreamRabbitListenerContainerFactory(env);
         factory.setNativeListener(Boolean.TRUE);
         factory.setObservationEnabled(Boolean.TRUE);
-        factory.setStreamListenerObservationConvention(new RabbitStreamListenerObservation.DefaultRabbitStreamListenerObservationConvention());
         factory.setConsumerCustomizer((_, builder) -> builder.name("inventoryNewProductConsumer")
                 .stream(streamKey)
                 .filter()
+                .values(domain.value())
+                .postFilter(filterOnDomain(domain))
                 .values(event.value())
-                .postFilter(message -> event.equals(message.getApplicationProperties().get(domain.value())))
+                .postFilter(filterOnEvent(event))
                 .builder()
                 .autoTrackingStrategy());
         return factory;
     }
 
+    private Predicate<Message> filterOnDomain(Domain domain) {
+        return message -> domain.value().equals(message.getApplicationProperties().get("domain"));
+    }
+
+    private Predicate<Message> filterOnEvent(Event event) {
+        return message -> event.value().equals(message.getApplicationProperties().get("event"));
+    }
 }
