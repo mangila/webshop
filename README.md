@@ -23,9 +23,10 @@ Postgres is used as a database and RabbitMQ as a message broker
 - Event Sourcing (ish)
     - Outbox table can be used for Replays
 - Design for Observability
-    - Loki
-    - Zipkin
-    - Grafana
+    - Loki (Log aggregation)
+    - Zipkin (Distributed tracing)
+    - Prometheus (Metrics monitoring)
+    - Grafana (Visualization)
 - Design for Resilience
 - Design for Security
 

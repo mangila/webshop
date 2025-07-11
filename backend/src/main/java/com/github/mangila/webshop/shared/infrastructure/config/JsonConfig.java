@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class JsonConfig {
 
     @Bean
-    Jackson2ObjectMapperBuilderCustomizer bigDecimalPlainCustomizer() {
+    public Jackson2ObjectMapperBuilderCustomizer bigDecimalPlainCustomizer() {
         return builder -> builder.featuresToEnable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
     }
 }

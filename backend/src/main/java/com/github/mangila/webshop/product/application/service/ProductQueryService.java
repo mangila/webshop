@@ -4,11 +4,13 @@ import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
+import com.github.mangila.webshop.shared.infrastructure.config.CacheConfig;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import io.vavr.collection.Stream;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -25,6 +27,8 @@ public class ProductQueryService {
         this.repository = repository;
     }
 
+
+    @Cacheable(value = CacheConfig.LRU, key = "#query.value()")
     public ProductDto findById(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Find product by id: {}", q.value()))

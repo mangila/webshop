@@ -6,7 +6,7 @@ spring:
     admin:
       client:
         url: "http://localhost:8081"
-        enabled: false
+        enabled: true
   jpa:
     properties:
       hibernate.generate_statistics: true
@@ -22,7 +22,6 @@ spring:
       pool-name: "webshop-hikari-pool"
       maximum-pool-size: 10
       minimum-idle: 5
-      driver-class-name: org.postgresql.Driver
   sql:
     init:
       mode: always
@@ -79,6 +78,8 @@ management:
     metrics:
       access: unrestricted
     shutdown:
+      access: unrestricted
+    caches:
       access: unrestricted
   zipkin:
     tracing:

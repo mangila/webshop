@@ -5,13 +5,14 @@ import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.dto.ProductDto;
 import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
 import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
+import com.github.mangila.webshop.shared.infrastructure.config.CacheConfig;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
-import io.micrometer.observation.annotation.Observed;
 import io.vavr.collection.Stream;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -31,6 +32,8 @@ public class ProductCommandService {
     }
 
     @Transactional
+    @CachePut(value = CacheConfig.LRU,
+            key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertCommand command) {
         return Stream.of(command)
                 .peek(c -> log.debug("Insert product: {}", c))
@@ -41,6 +44,10 @@ public class ProductCommandService {
     }
 
     @Transactional
+    @CacheEvict(
+            value = CacheConfig.LRU,
+            key = "#command.value()",
+            beforeInvocation = true)
     public void delete(@Valid ProductIdCommand command) {
         Stream.of(command)
                 .peek(c -> log.debug("Delete product: {}", c))
