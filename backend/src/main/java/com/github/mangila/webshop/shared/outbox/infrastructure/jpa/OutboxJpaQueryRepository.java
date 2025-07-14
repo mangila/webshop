@@ -10,7 +10,6 @@ import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
 
 import java.util.List;
-import java.util.Optional;
 
 @ObservedRepository
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
@@ -44,8 +43,8 @@ public class OutboxJpaQueryRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public List<OutboxMessage> findAllByPublished(boolean published) {
-        var projections = repository.findAllByPublished(published);
+    public List<OutboxMessage> findAllByPublished(boolean published, int limit) {
+        var projections = repository.findAllByPublished(published, limit);
         return mapper.toDomain(projections);
     }
 }

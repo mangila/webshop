@@ -31,9 +31,9 @@ public class OutboxMessageRelay {
         this.mapper = mapper;
     }
 
-    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
     void poll() {
-        var outboxMessages = repository.query().findAllByPublished(false);
+        var outboxMessages = repository.query().findAllByPublished(false, 10);
         for (var message : outboxMessages) {
             Try.of(() -> publish(message))
                     .onSuccess(ok -> {
