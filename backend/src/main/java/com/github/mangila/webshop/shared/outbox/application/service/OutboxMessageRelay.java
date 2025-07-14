@@ -31,7 +31,7 @@ public class OutboxMessageRelay {
         this.mapper = mapper;
     }
 
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
     void poll() {
         var outboxMessages = repository.query().findAllByPublished(false, 10);
         for (var message : outboxMessages) {
