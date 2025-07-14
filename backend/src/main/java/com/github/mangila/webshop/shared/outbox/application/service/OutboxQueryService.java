@@ -2,15 +2,12 @@ package com.github.mangila.webshop.shared.outbox.application.service;
 
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
 import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxIdQuery;
-import com.github.mangila.webshop.shared.outbox.application.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.shared.outbox.application.dto.OutboxDto;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
 import io.vavr.collection.Stream;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
 
 @Validated
 @ObservedService
@@ -25,14 +22,10 @@ public class OutboxQueryService {
         this.repository = repository;
     }
 
-    public List<OutboxDto> replay(@Valid OutboxReplayQuery query) {
-        return List.of();
-    }
-
     public OutboxDto findById(@Valid OutboxIdQuery query) {
         return Stream.of(query)
                 .map(mapper.query()::toDomain)
-                .map(repository.query()::findById)
+                .map(repository.query()::findByIdOrThrow)
                 .map(mapper.dto()::toDto)
                 .get();
     }

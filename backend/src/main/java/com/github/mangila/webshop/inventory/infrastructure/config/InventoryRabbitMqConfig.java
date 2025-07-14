@@ -29,7 +29,7 @@ public class InventoryRabbitMqConfig {
     }
 
     @Bean
-    public RabbitListenerContainerFactory<StreamListenerContainer> inventoryNewProductConsumer(Environment environment) {
+    public RabbitListenerContainerFactory<StreamListenerContainer> inventoryNewProductConsumerFactory(Environment environment) {
         var streamKey = RabbitMqConfig.PRODUCT_STREAM_KEY;
         var domain = Domain.from("PRODUCT", registryService);
         var event = Event.from("PRODUCT_CREATE_NEW", registryService);

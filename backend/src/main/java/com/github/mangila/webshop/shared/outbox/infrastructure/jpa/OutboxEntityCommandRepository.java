@@ -10,6 +10,9 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
 
     @Modifying
     @Transactional
-    @Query("UPDATE OutboxEntity e SET e.published = true WHERE e.id = :id")
+    @Query("""
+            UPDATE OutboxEntity e SET e.published = true
+            WHERE e.id = :id
+            """)
     void updateAsPublished(@Param("id") long id);
 }

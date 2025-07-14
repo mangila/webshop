@@ -6,7 +6,6 @@ import com.github.mangila.webshop.shared.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.shared.outbox.domain.cqrs.OutboxInsert;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
-import org.springframework.data.jpa.repository.Modifying;
 
 @ObservedRepository
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {

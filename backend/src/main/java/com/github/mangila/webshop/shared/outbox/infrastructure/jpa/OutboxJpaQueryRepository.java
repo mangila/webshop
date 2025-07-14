@@ -5,8 +5,12 @@ import com.github.mangila.webshop.shared.domain.exception.CqrsException;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
 import com.github.mangila.webshop.shared.outbox.domain.Outbox;
 import com.github.mangila.webshop.shared.outbox.domain.OutboxQueryRepository;
+import com.github.mangila.webshop.shared.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.shared.outbox.domain.primitive.OutboxId;
 import io.vavr.collection.Stream;
+
+import java.util.List;
+import java.util.Optional;
 
 @ObservedRepository
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
@@ -21,7 +25,7 @@ public class OutboxJpaQueryRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public Outbox findById(OutboxId id) {
+    public Outbox findByIdOrThrow(OutboxId id) {
         return Stream.of(id)
                 .map(OutboxId::value)
                 .map(repository::findById)
@@ -37,5 +41,11 @@ public class OutboxJpaQueryRepository implements OutboxQueryRepository {
                 })
                 .map(mapper::toDomain)
                 .get();
+    }
+
+    @Override
+    public List<OutboxMessage> findAllByPublished(boolean published) {
+        var projections = repository.findAllByPublished(published);
+        return mapper.toDomain(projections);
     }
 }

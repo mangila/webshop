@@ -1,6 +1,9 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.jpa;
 
+import com.github.mangila.webshop.shared.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity, Long> {
 //    @Query("""
@@ -12,5 +15,8 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
 //                LIMIT :#{#query.limit()}
 //            """)
 //    List<OutboxEvent> replay(@Param("query") EventReplayQuery query);
+
+
+    List<OutboxMessageProjection> findAllByPublished(boolean published);
 
 }

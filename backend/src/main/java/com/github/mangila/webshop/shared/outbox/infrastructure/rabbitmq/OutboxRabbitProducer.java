@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq;
 
 import com.github.mangila.webshop.shared.application.registry.Domain;
-import com.github.mangila.webshop.shared.application.registry.Event;
 import com.github.mangila.webshop.shared.application.registry.RegistryService;
 import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
 import com.github.mangila.webshop.shared.infrastructure.json.JsonMapper;
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
-import com.github.mangila.webshop.shared.outbox.infrastructure.message.OutboxMessage;
+import com.github.mangila.webshop.shared.outbox.application.mapper.OutboxDtoMapper;
+import com.github.mangila.webshop.shared.outbox.domain.message.OutboxMessage;
 import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.Message;
 import io.micrometer.observation.ObservationRegistry;
@@ -31,6 +31,7 @@ public class OutboxRabbitProducer {
     private static final Logger log = LoggerFactory.getLogger(OutboxRabbitProducer.class);
 
     private final JsonMapper jsonMapper;
+    private final OutboxDtoMapper outboxDtoMapper;
     private final RegistryService registryService;
     private final Map<Domain, RabbitStreamTemplateHolder> streamTemplates;
     private final ObservationRegistry observationRegistry;
@@ -38,9 +39,11 @@ public class OutboxRabbitProducer {
     public OutboxRabbitProducer(
             Environment streamEnvironment,
             JsonMapper jsonMapper,
+            OutboxDtoMapper outboxDtoMapper,
             RegistryService registryService,
             ObservationRegistry observationRegistry) {
         this.jsonMapper = jsonMapper;
+        this.outboxDtoMapper = outboxDtoMapper;
         this.registryService = registryService;
         this.observationRegistry = observationRegistry;
         this.streamTemplates = Map.of(
@@ -81,8 +84,9 @@ public class OutboxRabbitProducer {
     }
 
     public CompletableFuture<Boolean> sendToStream(OutboxMessage outboxMessage) {
-        var domain = Domain.from(outboxMessage.domain(), registryService);
-        var event = Event.from(outboxMessage.event(), registryService);
+        var dto = outboxDtoMapper.toDto(outboxMessage);
+        var domain = outboxMessage.domain();
+        var event = outboxMessage.event();
         var holder = streamTemplates.get(domain);
 
         if (Objects.isNull(holder)) {
@@ -97,7 +101,7 @@ public class OutboxRabbitProducer {
                 .entry("event", event.value())
                 .entry("aggregateId", outboxMessage.aggregateId().toString())
                 .messageBuilder()
-                .addData(jsonMapper.toBytes(outboxMessage))
+                .addData(jsonMapper.toBytes(dto))
                 .build();
 
         var observation = observationRegistry.getCurrentObservation();
