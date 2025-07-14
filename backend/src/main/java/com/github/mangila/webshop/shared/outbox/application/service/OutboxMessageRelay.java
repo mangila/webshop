@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.shared.outbox.application.service;
 
 import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
-import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxMapperGateway;
 import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxRepositoryGateway;
 import com.github.mangila.webshop.shared.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.shared.outbox.infrastructure.rabbitmq.OutboxRabbitProducer;
@@ -21,14 +20,11 @@ public class OutboxMessageRelay {
 
     private final OutboxRepositoryGateway repository;
     private final OutboxRabbitProducer rabbitProducer;
-    private final OutboxMapperGateway mapper;
 
     public OutboxMessageRelay(OutboxRepositoryGateway repository,
-                              OutboxRabbitProducer rabbitProducer,
-                              OutboxMapperGateway mapper) {
+                              OutboxRabbitProducer rabbitProducer) {
         this.repository = repository;
         this.rabbitProducer = rabbitProducer;
-        this.mapper = mapper;
     }
 
     @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
