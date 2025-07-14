@@ -30,9 +30,4 @@ public class OutboxCommandService {
                 .map(mapper.dto()::toDto)
                 .get();
     }
-
-    public void updateAsPublished(@Valid OutboxIdCommand command) {
-        var id = mapper.command().toDomain(command);
-        repository.command().updateAsPublished(id);
-    }
 }
