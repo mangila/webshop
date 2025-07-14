@@ -37,6 +37,8 @@ public class OutboxMessageRelay {
                     .onSuccess(ok -> {
                         if (ok) {
                             repository.command().updateAsPublished(message.id());
+                        } else {
+                            log.error("Failed to publish message: {}", message);
                         }
                     })
                     .onFailure(e -> log.error("Failed to publish message: {}", message, e));
