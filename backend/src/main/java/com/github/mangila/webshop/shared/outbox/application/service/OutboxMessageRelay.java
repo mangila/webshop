@@ -9,6 +9,7 @@ import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,8 @@ public class OutboxMessageRelay {
         this.rabbitProducer = rabbitProducer;
     }
 
-    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
+    @Transactional
+    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
     void poll() {
         var outboxMessages = repository.query().findAllByPublished(false, 10);
         for (var message : outboxMessages) {
