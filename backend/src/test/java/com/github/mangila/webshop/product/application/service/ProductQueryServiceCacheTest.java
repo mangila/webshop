@@ -1,9 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
-import com.github.mangila.webshop.TestCacheConfig;
-import com.github.mangila.webshop.product.application.gateway.ProductMapperGateway;
-import com.github.mangila.webshop.product.application.gateway.ProductRepositoryGateway;
-import com.github.mangila.webshop.shared.infrastructure.config.CacheConfig;
+import com.github.mangila.webshop.TestPostgresContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,18 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = {
-        ProductQueryService.class,
-        CacheManager.class,
-})
-@Import({TestCacheConfig.class,
-        CacheConfig.class})
-@MockitoBean(types = {
-        ProductMapperGateway.class,
-        ProductRepositoryGateway.class
-})
+@ActiveProfiles("it-test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Import(TestPostgresContainer.class)
 class ProductQueryServiceCacheTest {
 
     @Autowired
