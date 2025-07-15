@@ -1,10 +1,9 @@
-package com.github.mangila.webshop.product.application;
+package com.github.mangila.webshop.product.application.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
-import com.github.mangila.webshop.product.application.web.ProductCommandController;
 import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

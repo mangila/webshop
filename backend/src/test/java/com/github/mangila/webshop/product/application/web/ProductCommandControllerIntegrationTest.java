@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application;
+package com.github.mangila.webshop.product.application.web;
 
 import com.github.mangila.webshop.TestCacheConfig;
 import com.github.mangila.webshop.TestPostgresContainer;

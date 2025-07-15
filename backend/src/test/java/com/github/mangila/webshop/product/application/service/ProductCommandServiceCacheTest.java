@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
+import com.github.mangila.webshop.TestCacheConfig;
 import com.github.mangila.webshop.TestPostgresContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("it-test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Import(TestPostgresContainer.class)
+@Import({TestPostgresContainer.class, TestCacheConfig.class})
 class ProductCommandServiceCacheTest {
 
     @BeforeEach
