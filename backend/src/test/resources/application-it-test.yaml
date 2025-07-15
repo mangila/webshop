@@ -4,6 +4,18 @@ spring:
     admin:
       client:
         enabled: false
+  jpa:
+    properties:
+      hibernate.generate_statistics: false
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+  graphql:
+    graphiql:
+      enabled: false
+      path: "/graphiql"
+    schema:
+      file-extensions: ".graphql"
 # Logging properties
 # SpringDoc
 springdoc:

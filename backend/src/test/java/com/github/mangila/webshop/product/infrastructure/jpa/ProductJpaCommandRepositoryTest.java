@@ -1,30 +1,35 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.github.mangila.webshop.TestPostgresContainer;
-import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import com.github.mangila.webshop.shared.infrastructure.config.JpaConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 @ActiveProfiles("it-test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Import(TestPostgresContainer.class)
-class ProductJpaQueryRepositoryTest {
+class ProductJpaCommandRepositoryTest {
 
     @Autowired
-    private ProductJpaQueryRepository repository;
+    private ProductJpaCommandRepository repository;
+
+    @BeforeEach
+    void setUp() {
+    }
+
+    @AfterEach
+    void tearDown() {
+    }
 
     @Test
-    void findByIdOrThrow() {
-        var l = repository.existsById(new ProductId(UUID.randomUUID()));
-        assertFalse(l);
+    void insert() {
+    }
+
+    @Test
+    void deleteById() {
     }
 }

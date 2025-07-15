@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
 import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
-import org.springframework.boot.test.context.TestComponent;
 
 import java.math.BigDecimal;
 
-@TestComponent
 public class ProductTestUtil {
 
     public static final String API_V1_PRODUCT_COMMAND_INSERT = "/api/v1/product/command/insert";

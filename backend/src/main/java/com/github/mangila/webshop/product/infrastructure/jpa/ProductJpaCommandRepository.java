@@ -14,6 +14,7 @@ import com.github.mangila.webshop.shared.outbox.application.gateway.OutboxServic
 import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     private final OutboxServiceGateway outboxServiceGateway;
 
     public ProductJpaCommandRepository(ProductEntityCommandRepository repository,
-                                       ProductQueryRepository queryRepository,
+                                       @Qualifier("productJpaQueryRepository") ProductQueryRepository queryRepository,
                                        ProductOutboxMapper outboxMapper,
                                        ProductEntityMapper entityMapper,
                                        DomainIdGeneratorService domainIdGeneratorService,
