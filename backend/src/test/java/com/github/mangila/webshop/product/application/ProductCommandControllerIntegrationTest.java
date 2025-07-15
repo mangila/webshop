@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.product.application;
 
-import com.github.mangila.webshop.TestcontainersConfiguration;
+import com.github.mangila.webshop.TestPostgresContainer;
+import com.github.mangila.webshop.TestRabbitMqContainer;
 import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductIdCommand;
 import com.github.mangila.webshop.product.application.cqrs.ProductIdQuery;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("it-test")
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(TestcontainersConfiguration.class)
+@Import({TestPostgresContainer.class, TestRabbitMqContainer.class})
 class ProductCommandControllerIntegrationTest {
 
     @Autowired
