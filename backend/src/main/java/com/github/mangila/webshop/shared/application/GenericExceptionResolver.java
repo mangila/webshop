@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 import org.springframework.graphql.execution.ErrorType;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -58,9 +57,13 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     }
 
     private GraphQLError handleConstraintViolationException(ConstraintViolationException ex, DataFetchingEnvironment env) {
+        var errors = ex.getConstraintViolations().stream()
+                .map(cv -> String.join(":", cv.getPropertyPath().toString(), cv.getMessage()))
+                .toList();
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.BAD_REQUEST)
                 .message("Validation error")
+                .extensions(Map.of("errors", errors))
                 .build();
     }
 

@@ -5,10 +5,6 @@ spring:
       client:
         enabled: false
 # Logging properties
-logging:
-  file:
-    name:
-    path:
 # SpringDoc
 springdoc:
   api-docs:

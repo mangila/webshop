@@ -33,6 +33,8 @@ public class ProductCommandService {
 
     @Transactional
     @CachePut(value = CacheConfig.LRU,
+            cacheManager = "cacheManager",
+            condition = "#command != null and #result != null ",
             key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertCommand command) {
         return Stream.of(command)
@@ -46,6 +48,7 @@ public class ProductCommandService {
     @Transactional
     @CacheEvict(
             value = CacheConfig.LRU,
+            condition = "#command != null and #command.value() != null ",
             key = "#command.value()",
             beforeInvocation = true)
     public void delete(@Valid ProductIdCommand command) {

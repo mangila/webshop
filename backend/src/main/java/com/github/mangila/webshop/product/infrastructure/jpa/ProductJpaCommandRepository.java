@@ -68,7 +68,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     @Transactional
     @Override
     public void deleteById(ProductId productId) {
-        Product product = queryRepository.findById(productId);
+        Product product = queryRepository.findByIdOrThrow(productId);
         var entity = entityMapper.toEntity(product);
         // Entity is not managed, so we need to use the persistence flag
         entity.setNew(Boolean.FALSE);

@@ -13,6 +13,7 @@ public class GraphQLConfig {
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder
                 .scalar(ExtendedScalars.GraphQLBigInteger)
+                .scalar(ExtendedScalars.GraphQLBigDecimal)
                 .scalar(ExtendedScalars.Json);
     }
 }

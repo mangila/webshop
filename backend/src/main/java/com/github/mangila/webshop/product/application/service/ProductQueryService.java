@@ -28,12 +28,16 @@ public class ProductQueryService {
     }
 
 
-    @Cacheable(value = CacheConfig.LRU, key = "#query.value()")
-    public ProductDto findById(@Valid ProductIdQuery query) {
+    @Cacheable(value = CacheConfig.LRU,
+            cacheManager = "cacheManager",
+            condition = "#query != null and #query.value() != null",
+            key = "#query.value()",
+            unless = "#result == null")
+    public ProductDto findByIdOrThrow(@Valid ProductIdQuery query) {
         return Stream.of(query)
                 .peek(q -> log.debug("Find product by id: {}", q.value()))
                 .map(mapper.query()::toDomain)
-                .map(repository.query()::findById)
+                .map(repository.query()::findByIdOrThrow)
                 .map(mapper.dto()::toDto)
                 .get();
     }

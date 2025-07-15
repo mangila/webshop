@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record ProductInsertCommand(
-        @ProductName String name,
+        @NotNull @ProductName String name,
         @NotNull @Valid DomainMoneyDto price,
         @NotNull ObjectNode attributes,
         @NotNull ProductUnit unit

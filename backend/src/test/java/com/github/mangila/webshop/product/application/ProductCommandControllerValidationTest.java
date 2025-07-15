@@ -1,11 +1,13 @@
 package com.github.mangila.webshop.product.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.mangila.webshop.product.ProductTestUtil;
 import com.github.mangila.webshop.product.application.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.application.gateway.ProductServiceGateway;
 import com.github.mangila.webshop.product.application.web.ProductCommandController;
 import com.github.mangila.webshop.shared.application.dto.DomainMoneyDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductCommandControllerValidationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ProductCommandControllerValidationTest.class);
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -42,9 +45,10 @@ class ProductCommandControllerValidationTest {
                 .build();
     }
 
-    @ParameterizedTest(name = "validate product raw JSON: {0}")
+    @ParameterizedTest(name = "raw JSON: {0}")
     @MethodSource("notValidProductJsonTestCases")
-    void testInvalidJson(NotValidProductJsonTestCase testCase) {
+    @DisplayName("Validate raw JSON")
+    void shouldValidateJson(NotValidProductJsonTestCase testCase) {
         ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,25 +75,43 @@ class ProductCommandControllerValidationTest {
                 createJsonTestCase("Attributes is JSON Array",
                         // language=JSON
                         """
-                                   {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":[],"unit":"KILOGRAM"}
+                                 {
+                                  "name" : "Test-Product",
+                                  "price" : {
+                                    "currency" : "USD",
+                                    "amount" : "19.99"
+                                  },
+                                  "attributes" : [1,2,3],
+                                  "unit" : "PIECE"
+                                }
                                 """
                 ),
-                createJsonTestCase("Attributes is JSON Value",
+                createJsonTestCase("Attributes is JSON Key/Value",
                         // language=JSON
                         """
-                                   {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":"hej","unit":"KILOGRAM"}
-                                """
-                ),
-                createJsonTestCase("Attributes is null",
-                        // language=JSON
-                        """
-                                   {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":null,"unit":"KILOGRAM"}
+                                 {
+                                  "name" : "Test-Product",
+                                  "price" : {
+                                    "currency" : "USD",
+                                    "amount" : "19.99"
+                                  },
+                                  "attributes" : "json value",
+                                  "unit" : "PIECE"
+                                }
                                 """
                 ),
                 createJsonTestCase("Attributes is not a valid JSON object",
                         // language=JSON
                         """
-                                   {"name":{"value":"Test Product"},"price":{"value":19.99},"attributes":{"11","23"},"unit":"KILOGRAM"}
+                                 {
+                                  "name" : "Test-Product",
+                                  "price" : {
+                                    "currency" : "USD",
+                                    "amount" : "19.99"
+                                  },
+                                  "attributes" : {"a","ab"},
+                                  "unit" : "PIECE"
+                                }
                                 """
                 ),
                 createJsonTestCase("Empty body",
@@ -102,9 +124,10 @@ class ProductCommandControllerValidationTest {
         return new NotValidProductJsonTestCase(description, json);
     }
 
-    @ParameterizedTest(name = "product validation: {0}")
-    @MethodSource("notValidProductTestCases")
-    void testInvalidProductInsertCommands(NotValidProductTestCase testCase) {
+    @ParameterizedTest(name = "command: {0}")
+    @MethodSource("notValidProductInsertCommandTestCases")
+    @DisplayName("Validate ProductInsertCommand")
+    void shouldValidateProductInsertCommands(NotValidProductInsertCommandTestCase testCase) throws JsonProcessingException {
         ProblemDetail detail = webTestClient.post()
                 .uri(ProductTestUtil.API_V1_PRODUCT_COMMAND_INSERT)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,14 +142,14 @@ class ProductCommandControllerValidationTest {
                 .isEqualTo("Validation Failed");
     }
 
-    record NotValidProductTestCase(String description, ProductInsertCommand command) {
+    record NotValidProductInsertCommandTestCase(String description, ProductInsertCommand command) {
         @Override
         public String toString() {
             return description;
         }
     }
 
-    static Stream<NotValidProductTestCase> notValidProductTestCases() {
+    static Stream<NotValidProductInsertCommandTestCase> notValidProductInsertCommandTestCases() {
         return Stream.of(
                 // Product Name
                 createTestCase("Null product name",
@@ -155,9 +178,9 @@ class ProductCommandControllerValidationTest {
                 ));
     }
 
-    private static NotValidProductTestCase createTestCase(String description, Consumer<ProductTestUtil.TestProductInsertCommandBuilder> customizer) {
+    private static NotValidProductInsertCommandTestCase createTestCase(String description, Consumer<ProductTestUtil.TestProductInsertCommandBuilder> customizer) {
         ProductTestUtil.TestProductInsertCommandBuilder builder = new ProductTestUtil.TestProductInsertCommandBuilder();
         customizer.accept(builder);
-        return new NotValidProductTestCase(description, builder.build());
+        return new NotValidProductInsertCommandTestCase(description, builder.build());
     }
 }

@@ -19,9 +19,9 @@ public final class Domain {
     }
 
     public static Domain from(String domain, RegistryService registry) {
-        var key = new Domain(domain);
-        registry.ensureIsRegistered(key);
-        return key;
+        var d = new Domain(domain);
+        registry.ensureIsRegistered(d);
+        return d;
     }
 
     @Override

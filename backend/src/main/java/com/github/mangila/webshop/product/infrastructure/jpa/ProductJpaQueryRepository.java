@@ -20,7 +20,7 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
     }
 
     @Override
-    public Product findById(ProductId productId) {
+    public Product findByIdOrThrow(ProductId productId) {
         return repository.findById(productId.value())
                 .map(mapper::toDomain)
                 .orElseThrow(() -> new CqrsException(
