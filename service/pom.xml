@@ -21,6 +21,7 @@
         <module>product</module>
         <module>inventory</module>
         <module>shared</module>
+        <module>price</module>
     </modules>
 
     <dependencyManagement>
