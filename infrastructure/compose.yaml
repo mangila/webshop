@@ -1,0 +1,40 @@
+services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "9411:9411"
+    environment:
+      - 'STORAGE_TYPE=mem'
+  postgres:
+    image: 'postgres:17.5-alpine'
+    environment:
+      - 'POSTGRES_DB=webshop'
+      - 'POSTGRES_USER=my_user'
+      - 'POSTGRES_PASSWORD=secret'
+    ports:
+      - '5432:5432'
+  rabbitmq:
+    image: 'rabbitmq:4.1.1-management-alpine'
+    environment:
+      - 'RABBITMQ_DEFAULT_USER=my_user'
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+    ports:
+      - '5672:5672'    # AMQP
+      - '15672:15672'  # Management UI
+      - '5552:5552'    # Stream
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_stream,rabbitmq_management]."

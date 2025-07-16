@@ -1,0 +1,89 @@
+# Spring Properties
+spring:
+  application:
+    name: "relay"
+  boot:
+    admin:
+      client:
+        url: "http://localhost:8081"
+        enabled: true
+  jpa:
+    properties:
+      hibernate.generate_statistics: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/webshop"
+    username: "my_user"
+    password: "secret"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: "webshop-hikari-pool"
+      maximum-pool-size: 10
+      minimum-idle: 5
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  rabbitmq:
+    stream:
+      host: localhost
+      port: 5552
+      username: "my_user"
+      password: "secret"
+  graphql:
+    graphiql:
+      enabled: true
+      path: "/graphiql"
+    schema:
+      file-extensions: ".graphql"
+  threads:
+    virtual:
+      enabled: true
+  task:
+    execution:
+      mode: force
+      thread-name-prefix: "spring-task-"
+  docker:
+    compose:
+      enabled: true
+      skip:
+        in-tests: true
+      file: "./backend/compose.yaml"
+      lifecycle-management: start_only
+# Logging properties
+logging:
+  level:
+    sql: debug
+# SpringDoc
+springdoc:
+  show-actuator: true
+# Actuator
+management:
+  tracing:
+    sampling:
+      probability: 1
+    enabled: true
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    metrics:
+      access: unrestricted
+    shutdown:
+      access: unrestricted
+    caches:
+      access: unrestricted
+  zipkin:
+    tracing:
+      export:
+        enabled: true
+# Jdbc Observation
+jdbc:
+  datasource-proxy:
+    type: concrete
