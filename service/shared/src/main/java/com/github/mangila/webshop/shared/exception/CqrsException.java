@@ -1,6 +1,6 @@
-package com.github.mangila.webshop.shared.domain.exception;
+package com.github.mangila.webshop.shared.exception;
 
-import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
+import com.github.mangila.webshop.shared.model.CqrsOperation;
 import org.jspecify.annotations.Nullable;
 
 public class CqrsException extends RuntimeException {

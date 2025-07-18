@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.shared.application;
+package com.github.mangila.webshop.app.error;
 
-import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
-import com.github.mangila.webshop.shared.domain.exception.CqrsException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.exception.CqrsException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;

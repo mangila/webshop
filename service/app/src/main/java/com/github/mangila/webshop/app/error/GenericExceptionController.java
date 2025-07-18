@@ -1,7 +1,8 @@
-package com.github.mangila.webshop.shared.application;
+package com.github.mangila.webshop.app.error;
 
-import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
-import com.github.mangila.webshop.shared.domain.exception.CqrsException;
+
+import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.exception.CqrsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

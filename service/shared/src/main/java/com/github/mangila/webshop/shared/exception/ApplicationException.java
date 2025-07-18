@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.domain.exception;
+package com.github.mangila.webshop.shared.exception;
 
 public class ApplicationException extends RuntimeException {
 

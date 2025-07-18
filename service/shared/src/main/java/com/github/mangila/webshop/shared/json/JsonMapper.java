@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.shared.infrastructure.json;
+package com.github.mangila.webshop.shared.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
