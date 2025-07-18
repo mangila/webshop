@@ -25,6 +25,7 @@
         <module>identity</module>
         <module>message</module>
         <module>outbox</module>
+        <module>registry</module>
     </modules>
 
     <dependencyManagement>

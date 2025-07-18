@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.identity.infrastructure;
+package com.github.mangila.webshop.identity.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,10 +1,9 @@
-package com.github.mangila.webshop.shared.identity.infrastructure;
+package com.github.mangila.webshop.identity.infrastructure;
 
-import com.github.mangila.webshop.shared.domain.common.CqrsOperation;
-import com.github.mangila.webshop.shared.domain.exception.CqrsException;
-import com.github.mangila.webshop.shared.identity.domain.DomainId;
-import com.github.mangila.webshop.shared.identity.domain.DomainIdRepository;
-import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository;
+import com.github.mangila.webshop.identity.domain.DomainId;
+import com.github.mangila.webshop.identity.domain.DomainIdRepository;
+import com.github.mangila.webshop.shared.exception.CqrsException;
+import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
 
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.identity.application.cqrs;
+package com.github.mangila.webshop.identity.application.cqrs;
 
 import com.github.mangila.webshop.shared.application.registry.Domain;
 import com.github.mangila.webshop.shared.infrastructure.spring.validation.RegistredDomain;

@@ -12,5 +12,28 @@
     <groupId>com.github.mangila.webshop.identity</groupId>
     <artifactId>identity</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.mangila.webshop.shared</groupId>
+            <artifactId>shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

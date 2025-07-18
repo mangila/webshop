@@ -1,9 +1,7 @@
-package com.github.mangila.webshop.shared.identity.infrastructure;
+package com.github.mangila.webshop.identity.infrastructure;
 
-import com.github.mangila.webshop.shared.application.registry.Domain;
-import com.github.mangila.webshop.shared.application.registry.RegistryService;
-import com.github.mangila.webshop.shared.domain.exception.ApplicationException;
-import com.github.mangila.webshop.shared.identity.domain.DomainId;
+import com.github.mangila.webshop.identity.domain.DomainId;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

@@ -1,7 +1,5 @@
-package com.github.mangila.webshop.shared.identity.domain;
+package com.github.mangila.webshop.identity.domain;
 
-import com.github.mangila.webshop.shared.application.registry.Domain;
-import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;

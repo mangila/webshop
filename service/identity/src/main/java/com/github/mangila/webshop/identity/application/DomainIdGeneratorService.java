@@ -1,11 +1,9 @@
-package com.github.mangila.webshop.shared.identity.application;
+package com.github.mangila.webshop.identity.application;
 
-import com.github.mangila.webshop.shared.identity.application.cqrs.GenerateDomainIdCommand;
-import com.github.mangila.webshop.shared.identity.domain.DomainId;
-import com.github.mangila.webshop.shared.identity.domain.DomainIdRepository;
-import com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService;
-import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
+
+import com.github.mangila.webshop.identity.application.cqrs.GenerateDomainIdCommand;
+import com.github.mangila.webshop.identity.domain.DomainId;
+import com.github.mangila.webshop.identity.domain.DomainIdRepository;
 
 import java.util.UUID;
 

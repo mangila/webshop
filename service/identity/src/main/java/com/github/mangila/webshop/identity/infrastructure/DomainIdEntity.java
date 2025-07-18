@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.identity.infrastructure;
+package com.github.mangila.webshop.identity.infrastructure;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@Table(name = "uuid_record")
+@Table(name = "domain_id")
 @Immutable
 @EntityListeners(AuditingEntityListener.class)
 public class DomainIdEntity implements Persistable<UUID> {
@@ -24,9 +24,6 @@ public class DomainIdEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private String domain;
 
-    @Column(nullable = false)
-    private String intent;
-
     @CreatedDate
     @Column(nullable = false)
     private @Nullable Instant created;
@@ -37,14 +34,13 @@ public class DomainIdEntity implements Persistable<UUID> {
     protected DomainIdEntity() {
     }
 
-    private DomainIdEntity(UUID id, String domain, String intent) {
+    private DomainIdEntity(UUID id, String domain) {
         this.id = id;
         this.domain = domain;
-        this.intent = intent;
     }
 
-    public static DomainIdEntity from(UUID id, String domainKey, String intent) {
-        return new DomainIdEntity(id, domainKey, intent);
+    public static DomainIdEntity from(UUID id, String domain) {
+        return new DomainIdEntity(id, domain);
     }
 
     public UUID getId() {

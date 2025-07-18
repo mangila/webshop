@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.event;
+package com.github.mangila.webshop.message;
 
 import org.springframework.stereotype.Service;
 

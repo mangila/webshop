@@ -12,7 +12,7 @@ public class OutboxRelay {
     @Transactional
     @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
     void poll() {
-       // var outboxMessages = repository.query().findAllByPublished(false, 10);
+        // var outboxMessages = repository.query().findAllByPublished(false, 10);
     }
 
 }
