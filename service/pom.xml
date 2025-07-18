@@ -22,6 +22,7 @@
         <module>inventory</module>
         <module>shared</module>
         <module>price</module>
+        <module>identity</module>
     </modules>
 
     <dependencyManagement>
