@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.infrastructure.config;
+package com.github.mangila.webshop.app.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

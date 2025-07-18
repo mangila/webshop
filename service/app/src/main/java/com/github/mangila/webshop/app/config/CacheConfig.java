@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.infrastructure.config;
+package com.github.mangila.webshop.app.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

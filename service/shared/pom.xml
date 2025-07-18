@@ -5,12 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.mangila.webshop</groupId>
-        <artifactId>service</artifactId>
+        <artifactId>platform</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.github.mangila.webshop.shared</groupId>
     <artifactId>shared</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-money</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

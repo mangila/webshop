@@ -2,11 +2,6 @@
 spring:
   application:
     name: "webshop"
-  boot:
-    admin:
-      client:
-        url: "http://localhost:8081"
-        enabled: true
   jpa:
     properties:
       hibernate.generate_statistics: true
@@ -45,13 +40,6 @@ spring:
     execution:
       mode: force
       thread-name-prefix: "spring-task-"
-  docker:
-    compose:
-      enabled: true
-      skip:
-        in-tests: true
-      file: "./backend/compose.yaml"
-      lifecycle-management: start_only
 # Logging properties
 logging:
   level:
