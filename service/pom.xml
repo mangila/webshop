@@ -23,6 +23,8 @@
         <module>shared</module>
         <module>price</module>
         <module>identity</module>
+        <module>message</module>
+        <module>outbox</module>
     </modules>
 
     <dependencyManagement>
