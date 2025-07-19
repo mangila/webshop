@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.spring;
+package com.github.mangila.webshop.outbox.infrastructure.message.spring;
 
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import org.springframework.context.ApplicationEventPublisher;
