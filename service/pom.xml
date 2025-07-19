@@ -23,9 +23,7 @@
         <module>shared</module>
         <module>price</module>
         <module>identity</module>
-        <module>message</module>
         <module>outbox</module>
-        <module>registry</module>
     </modules>
 
     <dependencyManagement>
@@ -36,8 +34,8 @@
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.github.mangila.message</groupId>
-                <artifactId>message</artifactId>
+                <groupId>com.github.mangila.webshop.outbox</groupId>
+                <artifactId>outbox</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

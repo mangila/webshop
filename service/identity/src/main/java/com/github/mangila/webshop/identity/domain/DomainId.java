@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.identity.domain;
 
-import org.jspecify.annotations.Nullable;
+import com.github.mangila.webshop.shared.model.Domain;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -10,22 +10,20 @@ public class DomainId {
 
     private UUID id;
     private Domain domain;
-    private String intent;
-    private @Nullable Instant created;
+    private Instant created;
 
-    private DomainId(UUID id, Domain domain, String intent, @Nullable Instant created) {
+    private DomainId(UUID id, Domain domain, Instant created) {
         this.id = id;
         this.domain = domain;
-        this.intent = intent;
         this.created = created;
     }
 
-    public static DomainId from(UUID id, Domain domain, String intent, Instant created) {
-        return new DomainId(id, domain, intent, created);
+    public static DomainId from(UUID id, Domain domain, Instant created) {
+        return new DomainId(id, domain, created);
     }
 
-    public static DomainId create(@NotNull Domain domain, String intent) {
-        return new DomainId(UUID.randomUUID(), domain, intent, null);
+    public static DomainId create(Domain domain) {
+        return new DomainId(UUID.randomUUID(), domain, null);
     }
 
     public UUID getId() {
@@ -44,16 +42,8 @@ public class DomainId {
         this.domain = domain;
     }
 
-    public String getIntent() {
-        return intent;
-    }
-
-    public void setIntent(String intent) {
-        this.intent = intent;
-    }
-
-    public Optional<Instant> getCreated() {
-        return Optional.ofNullable(created);
+    public Instant getCreated() {
+        return created;
     }
 
     public void setCreated(Instant created) {

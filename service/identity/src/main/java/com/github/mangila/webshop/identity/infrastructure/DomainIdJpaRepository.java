@@ -31,7 +31,7 @@ public class DomainIdJpaRepository implements DomainIdRepository {
     }
 
     @Override
-    public DomainId findById(UUID id) {
+    public DomainId findByIdOrThrow(UUID id) {
         var entity = repository.findById(id);
         if (entity.isEmpty()) {
             throw new CqrsException(

@@ -12,5 +12,12 @@
     <groupId>com.github.mangila.webshop.outbox</groupId>
     <artifactId>outbox</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.mangila.webshop.shared</groupId>
+            <artifactId>shared</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>

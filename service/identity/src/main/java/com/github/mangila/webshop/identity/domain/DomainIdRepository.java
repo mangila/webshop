@@ -6,7 +6,7 @@ public interface DomainIdRepository {
 
     DomainId save(DomainId record);
 
-    DomainId findById(UUID id);
+    DomainId findByIdOrThrow(UUID id);
 
     boolean existsById(UUID id);
 }

@@ -8,7 +8,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -26,7 +25,7 @@ public class DomainIdEntity implements Persistable<UUID> {
 
     @CreatedDate
     @Column(nullable = false)
-    private @Nullable Instant created;
+    private Instant created;
 
     @Transient
     private volatile boolean isNew = true;
@@ -47,40 +46,34 @@ public class DomainIdEntity implements Persistable<UUID> {
         return id;
     }
 
+    @Transient
     @Override
     public boolean isNew() {
         return isNew;
     }
 
+    @Transient
     public void setNew(boolean isNew) {
         this.isNew = isNew;
-    }
-
-    public Optional<Instant> getCreated() {
-        return Optional.ofNullable(created);
-    }
-
-    public String getIntent() {
-        return intent;
     }
 
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setCreated(Instant created) {
-        this.created = created;
-    }
-
-    public void setIntent(String intent) {
-        this.intent = intent;
-    }
-
     public String getDomain() {
         return domain;
     }
 
-    public void setDomain(String domainKey) {
-        this.domain = domainKey;
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
     }
 }

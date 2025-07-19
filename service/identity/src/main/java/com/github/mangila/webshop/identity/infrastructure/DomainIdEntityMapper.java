@@ -1,10 +1,9 @@
 package com.github.mangila.webshop.identity.infrastructure;
 
 import com.github.mangila.webshop.identity.domain.DomainId;
-import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.registry.RegistryService;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
 
 @Component
 public class DomainIdEntityMapper {
@@ -16,13 +15,10 @@ public class DomainIdEntityMapper {
     }
 
     public DomainId toDomain(DomainIdEntity entity) {
-        Instant created = entity.getCreated().orElseThrow(
-                () -> new ApplicationException("Created date is required to map from entity to value")
-        );
-        return DomainId.from(entity.getId(), Domain.from(entity.getDomain(), registryService), entity.getIntent(), created);
+        return DomainId.from(entity.getId(), Domain.from(entity.getDomain(), registryService), entity.getCreated());
     }
 
     public DomainIdEntity toEntity(DomainId domain) {
-        return DomainIdEntity.from(domain.getId(), domain.getDomain().value(), domain.getIntent());
+        return DomainIdEntity.from(domain.getId(), domain.getDomain().value());
     }
 }
