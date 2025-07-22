@@ -1,0 +1,19 @@
+# Spring Properties
+spring:
+  jpa:
+    properties:
+      hibernate.generate_statistics: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  graphql:
+    graphiql:
+      enabled: true
+# Logging properties
+logging:
+  level:
+    sql: debug

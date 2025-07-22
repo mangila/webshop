@@ -21,17 +21,17 @@ public class MessageRelay {
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
 
     private final MessageMapper mapper;
-    private final MessageQueue messageQueue;
+    private final InternalMessageQueue internalMessageQueue;
     private final OutboxCommandRepository commandRepository;
     private final SpringEventPublisher publisher;
 
     public MessageRelay(MessageMapper mapper,
                         OutboxCommandRepository commandRepository,
-                        MessageQueue messageQueue,
+                        InternalMessageQueue internalMessageQueue,
                         SpringEventPublisher publisher) {
         this.mapper = mapper;
         this.commandRepository = commandRepository;
-        this.messageQueue = messageQueue;
+        this.internalMessageQueue = internalMessageQueue;
         this.publisher = publisher;
     }
 
@@ -39,8 +39,9 @@ public class MessageRelay {
     @Scheduled(
             fixedDelay = 1,
             timeUnit = TimeUnit.SECONDS)
-    void poll() {
-        OutboxId outboxId = messageQueue.poll();
+    public void poll() {
+        OutboxId outboxId = internalMessageQueue.poll();
+        log.info("Pulled message from outbox: {}", outboxId);
         if (Objects.isNull(outboxId)) {
             return;
         }
@@ -52,9 +53,9 @@ public class MessageRelay {
     @Scheduled(
             fixedDelay = 2,
             timeUnit = TimeUnit.MINUTES)
-    void pollMany() {
+    public void pollMany() {
         var messages = commandRepository.findAllByPublishedForUpdate(new OutboxPublished(false), 10);
-        log.debug("Pulled {} messages from outbox", messages.size());
+        log.info("Pulled {} messages from outbox", messages.size());
         if (messages.isEmpty()) {
             return;
         }

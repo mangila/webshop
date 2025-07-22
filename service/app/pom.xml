@@ -9,28 +9,27 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.github.mangila.webshop.app</groupId>
     <artifactId>app</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.mangila.webshop.shared</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>shared</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop.outbox</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>outbox</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop.product</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>product</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop.identity</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>identity</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop.price</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>price</artifactId>
         </dependency>
         <dependency>

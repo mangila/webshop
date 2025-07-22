@@ -1,13 +1,16 @@
-package com.github.mangila.webshop.outbox.infrastructure.jpa;
+package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
     private final OutboxEntityQueryRepository jpaRepository;

@@ -9,16 +9,15 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.github.mangila.webshop.inventory</groupId>
     <artifactId>inventory</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.mangila.webshop.shared</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>shared</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop.outbox</groupId>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>outbox</artifactId>
         </dependency>
         <dependency>

@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.jpa;
+package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
@@ -7,10 +7,14 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.shared.exception.CqrsException;
+import com.github.mangila.webshop.shared.model.CqrsOperation;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
     private final OutboxEntityCommandRepository jpaRepository;
@@ -30,8 +34,14 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
     @Override
     public OutboxMessage findByIdForUpdateOrThrow(OutboxId id) throws CqrsException {
-        var projection = jpaRepository.findProjectionByIdForUpdate(id.value());
-        return mapper.toDomain(projection);
+        var projection = jpaRepository.findProjectionByIdForUpdateOrThrow(id.value());
+        if (projection.isEmpty()) {
+            throw new CqrsException(String.format("Id not found or locked %s",
+                    id.value()),
+                    CqrsOperation.COMMAND,
+                    Outbox.class);
+        }
+        return mapper.toDomain(projection.get());
     }
 
     @Override

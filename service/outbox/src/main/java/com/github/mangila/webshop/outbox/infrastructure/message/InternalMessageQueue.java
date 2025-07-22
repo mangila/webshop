@@ -7,11 +7,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
-public class MessageQueue {
+public class InternalMessageQueue {
 
     private final BlockingQueue<OutboxId> queue;
 
-    public MessageQueue() {
+    public InternalMessageQueue() {
         queue = new LinkedBlockingQueue<>();
     }
 

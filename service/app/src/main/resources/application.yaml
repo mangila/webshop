@@ -4,10 +4,10 @@ spring:
     name: "webshop"
   jpa:
     properties:
-      hibernate.generate_statistics: true
-    show-sql: true
+      hibernate.generate_statistics: false
+    show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   datasource:
     url: "jdbc:postgresql://localhost:5432/webshop"
     username: "my_user"
@@ -19,17 +19,11 @@ spring:
       minimum-idle: 5
   sql:
     init:
-      mode: always
+      mode: never
       platform: postgres
-  rabbitmq:
-    stream:
-      host: localhost
-      port: 5552
-      username: "my_user"
-      password: "secret"
   graphql:
     graphiql:
-      enabled: true
+      enabled: false
       path: "/graphiql"
     schema:
       file-extensions: ".graphql"
@@ -43,7 +37,7 @@ spring:
 # Logging properties
 logging:
   level:
-    sql: debug
+    sql: info
 # SpringDoc
 springdoc:
   show-actuator: true
