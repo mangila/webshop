@@ -1,13 +1,14 @@
 package com.github.mangila.webshop.product.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
+import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
+import org.springframework.stereotype.Repository;
 
-@ObservedRepository
+@Repository
 public class ProductJpaQueryRepository implements ProductQueryRepository {
 
     private final ProductEntityMapper mapper;

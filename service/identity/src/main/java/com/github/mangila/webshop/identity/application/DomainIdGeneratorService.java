@@ -4,12 +4,13 @@ package com.github.mangila.webshop.identity.application;
 import com.github.mangila.webshop.identity.domain.DomainId;
 import com.github.mangila.webshop.identity.domain.DomainIdRepository;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.UUID;
 
 @Validated
-@ObservedService
+@Service
 public class DomainIdGeneratorService {
 
     private final DomainIdRepository repository;

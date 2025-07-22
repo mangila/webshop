@@ -9,9 +9,9 @@ import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntity;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
 import io.vavr.collection.Stream;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
-@ObservedRepository
+@Repository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private final ProductEntityCommandRepository repository;

@@ -5,11 +5,12 @@ import com.github.mangila.webshop.identity.domain.DomainIdRepository;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 
-@ObservedRepository
+@Repository
 public class DomainIdJpaRepository implements DomainIdRepository {
 
     private final DomainIdEntityRepository repository;
