@@ -28,4 +28,12 @@ public class RegistryService {
             throw new ApplicationException(String.format("Domain %s is not registered", domain));
         }
     }
+
+    public void registerDomain(Domain domain) {
+        domainRegistry.register(domain, domain.value());
+    }
+
+    public void registerEvent(Event event) {
+        eventRegistry.register(event, event.value());
+    }
 }

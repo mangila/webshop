@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application;
+package com.github.mangila.webshop.product.application.mapper;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
@@ -9,32 +9,24 @@ import com.github.mangila.webshop.shared.model.Event;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper {
+public class ProductEventMapper {
 
+    private final ProductDtoMapper dtoMapper;
     private final JsonMapper jsonMapper;
 
-    public ProductMapper(JsonMapper jsonMapper) {
+    public ProductEventMapper(ProductDtoMapper dtoMapper,
+                              JsonMapper jsonMapper) {
+        this.dtoMapper = dtoMapper;
         this.jsonMapper = jsonMapper;
     }
 
     public DomainEvent toEvent(ProductEvent event, Product product) {
-        var dto = toDto(product);
+        var dto = dtoMapper.toDto(product);
         return new DomainEvent(
                 Domain.from(Product.class),
                 Event.from(event),
                 product.getId().value(),
                 jsonMapper.toObjectNode(dto)
-        );
-    }
-
-    public ProductDto toDto(Product product) {
-        return new ProductDto(
-                product.getId().value(),
-                product.getName().value(),
-                product.getAttributes(),
-                product.getUnit(),
-                product.getCreated(),
-                product.getUpdated()
         );
     }
 }

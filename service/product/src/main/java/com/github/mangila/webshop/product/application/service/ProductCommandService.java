@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
-import com.github.mangila.webshop.product.application.ProductMapper;
+import com.github.mangila.webshop.product.application.mapper.ProductEventMapper;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductCommandService {
 
-    private final ProductMapper eventMapper;
+    private final ProductEventMapper eventMapper;
     private final ProductCommandRepository repository;
     private final SpringEventPublisher publisher;
 
-    public ProductCommandService(ProductMapper eventMapper,
+    public ProductCommandService(ProductEventMapper eventMapper,
                                  ProductCommandRepository repository,
                                  SpringEventPublisher publisher) {
         this.eventMapper = eventMapper;
