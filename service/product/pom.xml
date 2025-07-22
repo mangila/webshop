@@ -9,6 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.github.mangila.webshop.product</groupId>
     <artifactId>product</artifactId>
 
     <dependencies>

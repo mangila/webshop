@@ -18,6 +18,22 @@
             <artifactId>shared</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.mangila.webshop.outbox</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop.product</groupId>
+            <artifactId>product</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop.identity</groupId>
+            <artifactId>identity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop.price</groupId>
+            <artifactId>price</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
