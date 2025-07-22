@@ -1,24 +1,73 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
+import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
-import com.github.mangila.webshop.outbox.infrastructure.message.spring.SpringEventPublisher;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
+
+    private final MessageMapper mapper;
     private final MessageQueue messageQueue;
+    private final OutboxCommandRepository commandRepository;
     private final SpringEventPublisher publisher;
 
-    public MessageRelay(MessageQueue messageQueue, SpringEventPublisher publisher) {
+    public MessageRelay(MessageMapper mapper,
+                        OutboxCommandRepository commandRepository,
+                        MessageQueue messageQueue,
+                        SpringEventPublisher publisher) {
+        this.mapper = mapper;
+        this.commandRepository = commandRepository;
         this.messageQueue = messageQueue;
         this.publisher = publisher;
     }
 
-    public void relay(OutboxMessage message) {
-        messageQueue.add(message);
+    @Transactional
+    @Scheduled(
+            fixedDelay = 1,
+            timeUnit = TimeUnit.SECONDS)
+    void poll() {
+        OutboxId outboxId = messageQueue.poll();
+        if (Objects.isNull(outboxId)) {
+            return;
+        }
+        OutboxMessage message = commandRepository.findByIdForUpdateOrThrow(outboxId);
+        tryRelay(message);
+    }
+
+    @Transactional
+    @Scheduled(
+            fixedDelay = 2,
+            timeUnit = TimeUnit.MINUTES)
+    void pollMany() {
+        var messages = commandRepository.findAllByPublishedForUpdate(new OutboxPublished(false), 10);
+        log.debug("Pulled {} messages from outbox", messages.size());
+        if (messages.isEmpty()) {
+            return;
+        }
+        messages.forEach(this::tryRelay);
+    }
+
+    private void tryRelay(OutboxMessage outboxMessage) {
+        Try.of(() -> {
+                    publisher.publishMessage(mapper.toDomain(outboxMessage));
+                    commandRepository.updateAsPublished(outboxMessage.id(), new OutboxPublished(Boolean.TRUE));
+                    return outboxMessage;
+                })
+                .onFailure(throwable -> log.error("Error relaying message: {}", outboxMessage, throwable))
+                .onSuccess(msg -> log.info("Message relayed: {}", msg));
     }
 }

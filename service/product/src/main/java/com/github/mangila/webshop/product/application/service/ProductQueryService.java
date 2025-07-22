@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application;
+package com.github.mangila.webshop.product.application.service;
 
 import org.springframework.stereotype.Service;
 

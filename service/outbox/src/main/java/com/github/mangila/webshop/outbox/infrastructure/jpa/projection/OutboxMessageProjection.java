@@ -1,4 +1,9 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.projection;
 
-public record OutboxMessageProjection(Long id, String domain, String event) {
+import java.util.UUID;
+
+public record OutboxMessageProjection(long id,
+                                      UUID aggregateId,
+                                      String domain,
+                                      String event) {
 }

@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.inventory;
 
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
+import com.github.mangila.webshop.shared.event.DomainMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -17,7 +17,7 @@ public class InventoryEventListener {
             condition = "#message.event().value() == 'PRODUCT_CREATED'",
             fallbackExecution = true
     )
-    void listen(OutboxMessage message) {
+    void listen(DomainMessage message) {
         log.info("Received message: {}", message);
     }
 

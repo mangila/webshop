@@ -1,6 +1,5 @@
-package com.github.mangila.webshop.outbox.infrastructure.message.spring;
+package com.github.mangila.webshop.shared.event;
 
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,11 @@ public class SpringEventPublisher {
         this.publisher = publisher;
     }
 
-    public void publish(OutboxMessage event) {
+    public void publishEvent(DomainEvent event) {
         publisher.publishEvent(event);
+    }
+
+    public void publishMessage(DomainMessage domainMessage) {
+        publisher.publishEvent(domainMessage);
     }
 }

@@ -4,19 +4,20 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
+import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.infrastructure.message.MessageRelay;
-import org.springframework.transaction.annotation.Transactional;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.shared.exception.CqrsException;
+
+import java.util.List;
 
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
-    private final MessageRelay messageRelay;
     private final OutboxEntityCommandRepository jpaRepository;
     private final OutboxEntityMapper mapper;
 
-    public OutboxJpaCommandRepository(MessageRelay messageRelay, OutboxEntityCommandRepository jpaRepository,
+    public OutboxJpaCommandRepository(OutboxEntityCommandRepository jpaRepository,
                                       OutboxEntityMapper mapper) {
-        this.messageRelay = messageRelay;
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }
@@ -24,13 +25,23 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     @Override
     public Outbox insert(OutboxInsertCommand command) {
         var entity = jpaRepository.save(mapper.toEntity(command));
-        messageRelay.relay(mapper.toMessage(entity));
         return mapper.toDomain(entity);
     }
 
-    @Transactional
     @Override
-    public void updateAsPublished(OutboxId id) {
+    public OutboxMessage findByIdForUpdateOrThrow(OutboxId id) throws CqrsException {
+        var projection = jpaRepository.findProjectionByIdForUpdate(id.value());
+        return mapper.toDomain(projection);
+    }
 
+    @Override
+    public void updateAsPublished(OutboxId id, OutboxPublished published) {
+        jpaRepository.updateAsPublished(id.value(), published.value());
+    }
+
+    @Override
+    public List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit) {
+        var projections = jpaRepository.findAllProjectionsByPublishedForUpdate(published.value(), limit);
+        return mapper.toDomain(projections);
     }
 }

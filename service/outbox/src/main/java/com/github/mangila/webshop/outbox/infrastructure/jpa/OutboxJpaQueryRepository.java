@@ -3,14 +3,10 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa;
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
-
-import java.util.List;
 
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
@@ -40,10 +36,5 @@ public class OutboxJpaQueryRepository implements OutboxQueryRepository {
                 })
                 .map(mapper::toDomain)
                 .get();
-    }
-
-    @Override
-    public List<OutboxMessage> findAllByPublished(OutboxPublished published, int limit) {
-        return List.of();
     }
 }
