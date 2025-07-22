@@ -10,6 +10,7 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
+import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,18 +29,22 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
 
     @Override
     public Outbox insert(OutboxInsertCommand command) {
-        var entity = jpaRepository.save(mapper.toEntity(command));
-        return mapper.toDomain(entity);
+        return Stream.of(command)
+                .map(mapper::toEntity)
+                .map(jpaRepository::save)
+                .map(mapper::toDomain)
+                .get();
     }
 
     @Override
     public OutboxMessage findProjectionByIdAndPublishedFalseForUpdateOrThrow(OutboxId id) throws CqrsException {
-        var projection = jpaRepository.findProjectionByIdAndPublishedFalseForUpdateOrThrow(id.value());
+        var projection = jpaRepository.findProjectionByIdAndPublishedFalseForUpdate(id.value());
         if (projection.isEmpty()) {
-            throw new CqrsException(String.format("Outbox might already have been published: %s",
-                    id.value()),
+            throw new CqrsException(
+                    String.format("Outbox with ID: %s - is not available or already published", id.value()),
                     CqrsOperation.COMMAND,
                     Outbox.class);
+
         }
         return mapper.toDomain(projection.get());
     }

@@ -22,7 +22,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     """,
             nativeQuery = true
     )
-    Optional<OutboxMessageProjection> findProjectionByIdAndPublishedFalseForUpdateOrThrow(@Param("id") long id);
+    Optional<OutboxMessageProjection> findProjectionByIdAndPublishedFalseForUpdate(@Param("id") long id);
 
     @Query(
             value = """
