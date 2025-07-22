@@ -7,7 +7,6 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
-import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,20 +23,13 @@ public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
     @Override
     public Outbox findByIdOrThrow(OutboxId id) throws CqrsException {
-        return Stream.of(id)
-                .map(OutboxId::value)
-                .map(jpaRepository::findById)
-                .map(find -> {
-                    if (find.isEmpty()) {
-                        throw new CqrsException(
-                                String.format("id not found: %s", id.value()),
-                                CqrsOperation.QUERY,
-                                Outbox.class
-                        );
-                    }
-                    return find.get();
-                })
-                .map(mapper::toDomain)
-                .get();
+        var projection = jpaRepository.findById(id.value());
+        if (projection.isEmpty()) {
+            throw new CqrsException(String.format("Id not found: %s",
+                    id.value()),
+                    CqrsOperation.COMMAND,
+                    Outbox.class);
+        }
+        return mapper.toDomain(projection.get());
     }
 }

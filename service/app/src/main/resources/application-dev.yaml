@@ -16,4 +16,4 @@ spring:
 # Logging properties
 logging:
   level:
-    sql: debug
+    root: debug

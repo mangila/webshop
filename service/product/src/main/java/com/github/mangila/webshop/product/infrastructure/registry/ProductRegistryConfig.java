@@ -16,6 +16,7 @@ import java.util.EnumSet;
 public class ProductRegistryConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ProductRegistryConfig.class);
+
     private final RegistryService registryService;
 
     public ProductRegistryConfig(RegistryService registryService) {

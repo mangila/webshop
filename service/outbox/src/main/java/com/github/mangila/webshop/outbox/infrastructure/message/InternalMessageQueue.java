@@ -3,16 +3,16 @@ package com.github.mangila.webshop.outbox.infrastructure.message;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
 public class InternalMessageQueue {
 
-    private final BlockingQueue<OutboxId> queue;
+    private final Queue<OutboxId> queue;
 
     public InternalMessageQueue() {
-        queue = new LinkedBlockingQueue<>();
+        queue = new ConcurrentLinkedQueue<>();
     }
 
     public void add(OutboxId outboxId) {
@@ -22,5 +22,4 @@ public class InternalMessageQueue {
     public OutboxId poll() {
         return queue.poll();
     }
-
 }

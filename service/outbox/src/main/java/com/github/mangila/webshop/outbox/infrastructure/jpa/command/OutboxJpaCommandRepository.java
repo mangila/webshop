@@ -36,7 +36,7 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     public OutboxMessage findByIdForUpdateOrThrow(OutboxId id) throws CqrsException {
         var projection = jpaRepository.findProjectionByIdForUpdateOrThrow(id.value());
         if (projection.isEmpty()) {
-            throw new CqrsException(String.format("Id not found or locked %s",
+            throw new CqrsException(String.format("Id not found or row is locked: %s",
                     id.value()),
                     CqrsOperation.COMMAND,
                     Outbox.class);

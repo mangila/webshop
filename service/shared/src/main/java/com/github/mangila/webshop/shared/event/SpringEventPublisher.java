@@ -16,7 +16,7 @@ public class SpringEventPublisher {
         publisher.publishEvent(event);
     }
 
-    public void publishMessage(DomainMessage domainMessage) {
-        publisher.publishEvent(domainMessage);
+    public void publishMessage(DomainMessage message) {
+        publisher.publishEvent(message);
     }
 }

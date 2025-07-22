@@ -30,6 +30,10 @@
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>inventory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>price</artifactId>
         </dependency>
         <dependency>

@@ -5,7 +5,6 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
-import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,38 +36,34 @@ public class MessageRelay {
 
     @Transactional
     @Scheduled(
-            fixedDelay = 1,
+            fixedRate = 1,
             timeUnit = TimeUnit.SECONDS)
-    public void poll() {
+    public void pollInternalMessageQueue() {
         OutboxId outboxId = internalMessageQueue.poll();
-        log.info("Pulled message from outbox: {}", outboxId);
         if (Objects.isNull(outboxId)) {
             return;
         }
+        log.info("Pulled message from outbox: {}", outboxId);
         OutboxMessage message = commandRepository.findByIdForUpdateOrThrow(outboxId);
         tryRelay(message);
     }
 
     @Transactional
     @Scheduled(
-            fixedDelay = 2,
+            fixedRate = 2,
             timeUnit = TimeUnit.MINUTES)
-    public void pollMany() {
+    public void pollDatabase() {
         var messages = commandRepository.findAllByPublishedForUpdate(new OutboxPublished(false), 10);
-        log.info("Pulled {} messages from outbox", messages.size());
         if (messages.isEmpty()) {
             return;
         }
+        log.info("Pulled {} messages from outbox", messages.size());
         messages.forEach(this::tryRelay);
     }
 
     private void tryRelay(OutboxMessage outboxMessage) {
-        Try.of(() -> {
-                    publisher.publishMessage(mapper.toDomain(outboxMessage));
-                    commandRepository.updateAsPublished(outboxMessage.id(), new OutboxPublished(Boolean.TRUE));
-                    return outboxMessage;
-                })
-                .onFailure(throwable -> log.error("Error relaying message: {}", outboxMessage, throwable))
-                .onSuccess(msg -> log.info("Message relayed: {}", msg));
+        var message = mapper.toDomain(outboxMessage);
+        publisher.publishMessage(message);
+        commandRepository.updateAsPublished(outboxMessage.id(), new OutboxPublished(Boolean.TRUE));
     }
 }
