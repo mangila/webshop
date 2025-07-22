@@ -12,7 +12,7 @@ public interface OutboxCommandRepository {
 
     Outbox insert(OutboxInsertCommand command);
 
-    OutboxMessage findByIdForUpdateOrThrow(OutboxId id) throws CqrsException;
+    OutboxMessage findProjectionByIdAndPublishedFalseForUpdateOrThrow(OutboxId id) throws CqrsException;
 
     void updateAsPublished(OutboxId id, OutboxPublished published);
 

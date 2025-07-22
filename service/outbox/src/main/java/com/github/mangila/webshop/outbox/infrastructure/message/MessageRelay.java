@@ -44,7 +44,7 @@ public class MessageRelay {
             return;
         }
         log.info("Pulled message from outbox: {}", outboxId);
-        OutboxMessage message = commandRepository.findByIdForUpdateOrThrow(outboxId);
+        OutboxMessage message = commandRepository.findProjectionByIdAndPublishedFalseForUpdateOrThrow(outboxId);
         tryRelay(message);
     }
 

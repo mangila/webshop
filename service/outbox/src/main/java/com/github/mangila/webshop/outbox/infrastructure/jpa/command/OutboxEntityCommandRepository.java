@@ -16,13 +16,13 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
             value = """
                     SELECT id,aggregate_id,domain,event
                     FROM outbox
-                    WHERE id = :id
+                    WHERE id = :id AND published = false
                     ORDER BY created
                     FOR UPDATE SKIP LOCKED
                     """,
             nativeQuery = true
     )
-    Optional<OutboxMessageProjection> findProjectionByIdForUpdateOrThrow(@Param("id") long id);
+    Optional<OutboxMessageProjection> findProjectionByIdAndPublishedFalseForUpdateOrThrow(@Param("id") long id);
 
     @Query(
             value = """
