@@ -1,9 +1,11 @@
 # Webshop
 
-***This is NOT a production-ready application, just mock services with made-up Payment Providers & Delivery Providers***  
-***For Educational purposes only***
+***This is NOT a production-ready application, just mock services with made-up Payment Providers & Delivery Providers***
 
-A mock webshop application built with Spring Boot, PostgreSQL, and React Vite for Admin Web UI and Flutter for Webshop UI
+***Educational purposes only***
+
+A mock webshop application built with Spring Boot, PostgreSQL, React Vite for Admin Web UI, and Flutter for Webshop
+UI
 
 ## Project Overview
 
@@ -13,7 +15,8 @@ This project demonstrates a modern e-commerce application architecture with the 
 - CQRS pattern with GraphQL for queries and REST for commands
 - Event-driven architecture with Transactional Outbox pattern
 - Observability and monitoring tools integration
-- React-based admin dashboard
+- React-based admin web-dashboard
+- Flutter-based Webshop UI
 
 ## Architecture
 
@@ -22,30 +25,37 @@ This project demonstrates a modern e-commerce application architecture with the 
 The backend follows several architectural patterns:
 
 #### CQRS (Command Query Responsibility Segregation)
+
 - **GraphQL** is used for Queries
 - **REST** is used for Commands
 
 #### Transactional Outbox
+
 - Message Relay with a Polling Publisher pattern
 - Ensures reliable message delivery across services
 
 #### DDD (Domain Driven Design)
+
 The application is structured according to DDD principles:
+
 - **Application Layer**: Contains application services, controllers, and DTOs
 - **Domain Layer**: Contains domain entities, value objects, and domain services
 - **Infrastructure Layer**: Contains repository implementations, external service integrations
 
 #### Event Sourcing
+
 - Outbox table can be used for event replays
 - Enables rebuilding state from event history
 
 #### Observability
+
 - **Loki**: Log aggregation
 - **Zipkin**: Distributed tracing
 - **Prometheus**: Metrics monitoring
 - **Grafana**: Visualization
 
 #### Resilience & Security
+
 - Audit and logging
 - Input validation
 - Error handling
@@ -71,6 +81,7 @@ The project is organized into multiple modules:
 ## Technology Stack
 
 ### Backend
+
 - **Java 21**
 - **Spring Boot 3.5.3**
 - **Spring Data JPA**
@@ -81,6 +92,7 @@ The project is organized into multiple modules:
 - **Zipkin** (for distributed tracing)
 
 ### Frontend
+
 - **React**
 - **TypeScript**
 - **Vite**
@@ -88,27 +100,32 @@ The project is organized into multiple modules:
 ## Setup and Running
 
 ### Prerequisites
+
 - Java 21
 - Docker and Docker Compose
 - Node.js and npm/yarn
 
 ### Running the Infrastructure
+
 ```bash
 cd infrastructure
 docker-compose up -d
 ```
 
 This will start:
+
 - PostgreSQL database on port 5432
 - Zipkin on port 9411
 
 ### Running the Backend
+
 ```bash
 cd platform
 ./mvnw spring-boot:run -pl app
 ```
 
 ### Running the Admin Dashboard
+
 ```bash
 cd ui/admin-dashboard
 npm install
@@ -128,6 +145,7 @@ npm run dev
 ## Database Configuration
 
 The PostgreSQL database is configured with:
+
 - Database name: `webshop`
 - Username: `my_user`
 - Password: `secret`

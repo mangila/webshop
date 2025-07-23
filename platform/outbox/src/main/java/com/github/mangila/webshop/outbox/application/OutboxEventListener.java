@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.application;
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
+import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
 import com.github.mangila.webshop.shared.event.DomainEvent;
 import org.springframework.context.event.EventListener;
@@ -26,7 +27,8 @@ public class OutboxEventListener {
 
     @EventListener
     public void listen(DomainEvent event) {
-        Outbox outbox = repository.insert(mapper.toCommand(event));
+        OutboxInsertCommand command = mapper.toCommand(event);
+        Outbox outbox = repository.insert(command);
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override
