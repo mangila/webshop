@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/product/command")
 public class ProductCommandController {
 
-    private final ProductWebService webService;
+    private final ProductCommandWebService webService;
 
-    public ProductCommandController(ProductWebService webService) {
+    public ProductCommandController(ProductCommandWebService webService) {
         this.webService = webService;
     }
 

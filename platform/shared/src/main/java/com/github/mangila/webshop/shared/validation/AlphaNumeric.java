@@ -12,8 +12,6 @@ import java.lang.annotation.*;
 public @interface AlphaNumeric {
     String message() default "Value must be alphanumeric (letters and digits)";
 
-    boolean allowNull() default false;
-
     boolean withHyphen() default false;
 
     boolean withSpace() default false;

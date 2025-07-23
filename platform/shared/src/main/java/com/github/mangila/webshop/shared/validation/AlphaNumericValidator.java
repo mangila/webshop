@@ -13,11 +13,9 @@ public class AlphaNumericValidator implements ConstraintValidator<AlphaNumeric, 
     private static final Pattern ALPHA_NUMERIC_SPACE_HYPHEN = Pattern.compile("^[a-zA-Z0-9\\s-]+$");
 
     private Pattern pattern;
-    private boolean allowNull;
 
     @Override
     public void initialize(AlphaNumeric constraintAnnotation) {
-        this.allowNull = constraintAnnotation.allowNull();
         boolean withHyphen = constraintAnnotation.withHyphen();
         boolean withSpace = constraintAnnotation.withSpace();
         if (withHyphen && withSpace) {
@@ -34,7 +32,7 @@ public class AlphaNumericValidator implements ConstraintValidator<AlphaNumeric, 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return allowNull;
+            return true;
         }
         return pattern.matcher(value).matches();
     }

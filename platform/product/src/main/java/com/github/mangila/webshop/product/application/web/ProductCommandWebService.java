@@ -14,17 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProductWebService {
+public class ProductCommandWebService {
 
     private final ProductDtoMapper dtoMapper;
     private final ProductRequestMapper webMapper;
     private final ProductCommandService service;
     private final DomainIdGeneratorService idGenerator;
 
-    public ProductWebService(ProductDtoMapper dtoMapper,
-                             ProductRequestMapper webMapper,
-                             ProductCommandService service,
-                             DomainIdGeneratorService idGenerator) {
+    public ProductCommandWebService(ProductDtoMapper dtoMapper,
+                                    ProductRequestMapper webMapper,
+                                    ProductCommandService service,
+                                    DomainIdGeneratorService idGenerator) {
         this.dtoMapper = dtoMapper;
         this.webMapper = webMapper;
         this.service = service;
@@ -35,7 +35,7 @@ public class ProductWebService {
     public ProductDto insert(ProductInsertRequest request) {
         var id = idGenerator.generate(new NewDomainIdRequest(Domain.from(Product.class)));
         ProductInsertCommand command = webMapper.toCommand(id, request);
-        var product = service.insert(command);
+        Product product = service.insert(command);
         return dtoMapper.toDto(product);
     }
 }
