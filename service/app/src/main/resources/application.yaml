@@ -1,0 +1,79 @@
+# Application Properties
+app:
+  message-relay:
+    enabled: true
+    poller-queue:
+      fixed-rate: 1s
+    poller-database:
+      fixed-rate: 2m
+# Spring Properties
+spring:
+  application:
+    name: "webshop"
+  jpa:
+    properties:
+      hibernate.generate_statistics: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/webshop"
+    username: "my_user"
+    password: "secret"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: "webshop-hikari-pool"
+      maximum-pool-size: 10
+      minimum-idle: 5
+  sql:
+    init:
+      mode: never
+      platform: postgres
+  graphql:
+    graphiql:
+      enabled: false
+      path: "/graphiql"
+    schema:
+      file-extensions: ".graphql"
+  threads:
+    virtual:
+      enabled: true
+  task:
+    execution:
+      mode: force
+      thread-name-prefix: "spring-task-"
+# Logging properties
+logging:
+  level:
+    root: info
+# SpringDoc
+springdoc:
+  show-actuator: true
+# Actuator
+management:
+  tracing:
+    sampling:
+      probability: 1
+    enabled: true
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    metrics:
+      access: unrestricted
+    shutdown:
+      access: unrestricted
+    caches:
+      access: unrestricted
+  zipkin:
+    tracing:
+      export:
+        enabled: true
+# Jdbc Observation
+jdbc:
+  datasource-proxy:
+    type: concrete
