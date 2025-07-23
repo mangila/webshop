@@ -48,14 +48,11 @@ public class MessageRelay {
     @Transactional
     @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
-        var messages = commandRepository.findManyMessagesByPublishedForUpdate(new OutboxPublished(false), 10);
-        if (messages.isEmpty()) {
-            return;
-        }
-        messages.forEach(message -> {
-            log.info("Relay Message with ID: {}", message.id().value());
-            producer.produce(message);
-            commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
-        });
+        commandRepository.findManyMessagesByPublishedForUpdate(new OutboxPublished(false), 10)
+                .forEach(message -> {
+                    log.info("Relay Message with ID: {}", message.id().value());
+                    producer.produce(message);
+                    commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
+                });
     }
 }
