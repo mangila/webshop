@@ -1,16 +1,24 @@
 extend type Query {
-    findProductById(input: ProductIdQuery):Product
+    findProductById(request: ProductByIdRequest):Product
 }
 
-input ProductIdQuery {
+input ProductByIdRequest {
     value: ID!
 }
 
 type Product {
-    id: ID
+    id: ID!
     name: String
-    price: Money
-    created: String
-    updated: String
     attributes: JSON
+    unit: ProductUnit
+    created: DateTime
+    updated: DateTime
+}
+
+enum ProductUnit {
+    PIECE,
+    KILOGRAM,
+    LITER,
+    METER,
+    CUSTOM
 }

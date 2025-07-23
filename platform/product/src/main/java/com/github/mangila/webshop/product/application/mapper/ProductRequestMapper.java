@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.product.application.mapper;
 
+import com.github.mangila.webshop.product.application.web.request.ProductByIdRequest;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
@@ -18,5 +19,9 @@ public class ProductRequestMapper {
                 request.attributes(),
                 request.unit()
         );
+    }
+
+    public ProductId toQuery(ProductByIdRequest request) {
+        return new ProductId(request.value());
     }
 }

@@ -6,11 +6,7 @@ type Query {
     _empty: String
 }
 
-type Money {
-    amount: BigDecimal!
-    currency: String!
-}
-
 scalar JSON
+scalar DateTime
 scalar BigInteger
 scalar BigDecimal

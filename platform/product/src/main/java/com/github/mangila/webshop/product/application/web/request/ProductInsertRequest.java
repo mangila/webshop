@@ -12,7 +12,8 @@ public record ProductInsertRequest(
         @Size(min = 2, max = 100)
         @AlphaNumeric(
                 withSpace = true,
-                withHyphen = true) String name,
+                withHyphen = true)
+        String name,
         @NotNull ObjectNode attributes,
         @NotNull ProductUnit unit
 ) {

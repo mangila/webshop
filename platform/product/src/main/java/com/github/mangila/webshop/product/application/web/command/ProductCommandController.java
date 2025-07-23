@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.web;
+package com.github.mangila.webshop.product.application.web.command;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;

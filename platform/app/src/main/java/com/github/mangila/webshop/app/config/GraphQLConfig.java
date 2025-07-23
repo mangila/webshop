@@ -14,6 +14,7 @@ public class GraphQLConfig {
         return wiringBuilder -> wiringBuilder
                 .scalar(ExtendedScalars.GraphQLBigInteger)
                 .scalar(ExtendedScalars.GraphQLBigDecimal)
+                .scalar(ExtendedScalars.DateTime)
                 .scalar(ExtendedScalars.Json);
     }
 }
