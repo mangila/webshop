@@ -1,6 +1,6 @@
 # Webshop
 
-***This is not a production-ready application, just mock services with made-up Payment Providers & Delivery Providers***  
+***This is NOT a production-ready application, just mock services with made-up Payment Providers & Delivery Providers***  
 ***For Educational purposes only***
 
 A mock webshop application built with Spring Boot, PostgreSQL, and React Vite for both the Webshop UI and Admin UI.
