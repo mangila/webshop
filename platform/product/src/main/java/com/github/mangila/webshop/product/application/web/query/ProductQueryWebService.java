@@ -10,13 +10,13 @@ import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductWebQueryService {
+public class ProductQueryWebService {
 
     private final ProductRequestMapper mapper;
     private final ProductDtoMapper dtoMapper;
     private final ProductQueryService service;
 
-    public ProductWebQueryService(ProductRequestMapper mapper, ProductDtoMapper dtoMapper,
+    public ProductQueryWebService(ProductRequestMapper mapper, ProductDtoMapper dtoMapper,
                                   ProductQueryService service) {
         this.mapper = mapper;
         this.dtoMapper = dtoMapper;

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductQueryResolver {
 
-    private final ProductWebQueryService service;
+    private final ProductQueryWebService service;
 
-    public ProductQueryResolver(ProductWebQueryService service) {
+    public ProductQueryResolver(ProductQueryWebService service) {
         this.service = service;
     }
 
