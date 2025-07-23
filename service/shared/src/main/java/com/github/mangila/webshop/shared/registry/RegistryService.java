@@ -36,4 +36,12 @@ public class RegistryService {
     public void registerEvent(Event event) {
         eventRegistry.register(event, event.value());
     }
+
+    public boolean isRegistered(Event value) {
+        return eventRegistry.isRegistered(value);
+    }
+
+    public boolean isRegistered(Domain value) {
+        return domainRegistry.isRegistered(value);
+    }
 }

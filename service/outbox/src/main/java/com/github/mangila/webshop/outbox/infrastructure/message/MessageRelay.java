@@ -7,14 +7,15 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Service
+@ConditionalOnProperty(name = "app.message-relay.enabled", havingValue = "true")
 public class MessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
@@ -35,9 +36,7 @@ public class MessageRelay {
     }
 
     @Transactional
-    @Scheduled(
-            fixedRate = 1,
-            timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedRateString = "${app.message-relay.poller-queue.fixed-rate}")
     public void pollInternalMessageQueue() {
         OutboxId outboxId = internalMessageQueue.poll();
         if (Objects.isNull(outboxId)) {
@@ -49,9 +48,7 @@ public class MessageRelay {
     }
 
     @Transactional
-    @Scheduled(
-            fixedRate = 2,
-            timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
         var messages = commandRepository.findAllByPublishedForUpdate(new OutboxPublished(false), 10);
         if (messages.isEmpty()) {

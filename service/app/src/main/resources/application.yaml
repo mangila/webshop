@@ -1,3 +1,11 @@
+# Application Properties
+app:
+  message-relay:
+    enabled: true
+    poller-queue:
+      fixed-rate: 1s
+    poller-database:
+      fixed-rate: 2m
 # Spring Properties
 spring:
   application:
