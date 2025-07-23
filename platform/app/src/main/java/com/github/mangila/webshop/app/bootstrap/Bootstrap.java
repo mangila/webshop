@@ -42,8 +42,6 @@ public class Bootstrap implements CommandLineRunner {
                             .build(), HttpResponse.BodyHandlers.ofString());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

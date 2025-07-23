@@ -17,25 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductCommandWebService {
 
     private final ProductDtoMapper dtoMapper;
-    private final ProductRequestMapper webMapper;
-    private final ProductCommandService service;
+    private final ProductRequestMapper requestMapper;
+    private final ProductCommandService commandService;
     private final DomainIdGeneratorService idGenerator;
 
     public ProductCommandWebService(ProductDtoMapper dtoMapper,
-                                    ProductRequestMapper webMapper,
-                                    ProductCommandService service,
+                                    ProductRequestMapper requestMapper,
+                                    ProductCommandService commandService,
                                     DomainIdGeneratorService idGenerator) {
         this.dtoMapper = dtoMapper;
-        this.webMapper = webMapper;
-        this.service = service;
+        this.requestMapper = requestMapper;
+        this.commandService = commandService;
         this.idGenerator = idGenerator;
     }
 
     @Transactional
     public ProductDto insert(ProductInsertRequest request) {
         var id = idGenerator.generate(new NewDomainIdRequest(Domain.from(Product.class)));
-        ProductInsertCommand command = webMapper.toCommand(id, request);
-        Product product = service.insert(command);
+        ProductInsertCommand command = requestMapper.toCommand(id, request);
+        Product product = commandService.insert(command);
         return dtoMapper.toDto(product);
     }
 }

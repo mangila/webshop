@@ -5,6 +5,8 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import com.github.mangila.webshop.shared.exception.CqrsException;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,9 +44,19 @@ public class MessageRelay {
         if (Objects.isNull(outboxId)) {
             return;
         }
-        log.info("Pulled message from outbox: {}", outboxId);
-        OutboxMessage message = commandRepository.findProjectionByIdAndPublishedFalseForUpdateOrThrow(outboxId);
-        tryRelay(message);
+        log.info("Pulled message from queue: {}", outboxId);
+        Try.run(() -> {
+                    OutboxMessage outboxMessage = commandRepository.findProjectionByIdAndPublishedFalseForUpdateOrThrow(outboxId);
+                    relay(outboxMessage);
+                })
+                .onFailure(CqrsException.class, e -> log.warn("{}", e.getMessage()))
+                .onFailure(throwable -> {
+                    if (throwable instanceof CqrsException) {
+                        log.warn("{}", throwable.getMessage());
+                    } else {
+                        log.error("Failed to relay message with ID: {}", outboxId, throwable);
+                    }
+                });
     }
 
     @Transactional
@@ -54,11 +66,14 @@ public class MessageRelay {
         if (messages.isEmpty()) {
             return;
         }
-        log.info("Pulled {} messages from outbox", messages.size());
-        messages.forEach(this::tryRelay);
+        log.info("Pulled {} messages from database", messages.size());
+        messages.stream()
+                .peek(message -> log.info("Relay Message with ID: {}", message.id().value()))
+                .forEach(message -> Try.run(() -> relay(message))
+                        .onFailure(e -> log.error("Failed to relay message with ID: {}", message.id().value(), e)));
     }
 
-    private void tryRelay(OutboxMessage outboxMessage) {
+    private void relay(OutboxMessage outboxMessage) {
         var message = mapper.toDomain(outboxMessage);
         publisher.publishMessage(message);
         commandRepository.updateAsPublished(outboxMessage.id(), new OutboxPublished(Boolean.TRUE));
