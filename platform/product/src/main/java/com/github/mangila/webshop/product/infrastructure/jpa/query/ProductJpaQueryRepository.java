@@ -4,9 +4,9 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
-import com.github.mangila.webshop.shared.exception.CqrsException;
-import com.github.mangila.webshop.shared.model.CqrsOperation;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class ProductJpaQueryRepository implements ProductQueryRepository {
@@ -21,14 +21,8 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
     }
 
     @Override
-    public Product findByIdOrThrow(ProductId productId) {
-        return repository.findById(productId.value())
-                .map(mapper::toDomain)
-                .orElseThrow(() -> new CqrsException(
-                        String.format("id not found: '%s'", productId.value()),
-                        CqrsOperation.QUERY,
-                        Product.class
-                ));
+    public Optional<Product> findById(ProductId productId) {
+        return repository.findById(productId.value()).map(mapper::toDomain);
     }
 
     @Override

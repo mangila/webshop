@@ -16,13 +16,13 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
             value = """
                     SELECT id,aggregate_id,domain,event
                     FROM outbox
-                    WHERE id = :id AND published = false
+                    WHERE id = :id AND published = :published
                     ORDER BY created
                     FOR UPDATE SKIP LOCKED
                     """,
             nativeQuery = true
     )
-    Optional<OutboxMessageProjection> findProjectionByIdAndPublishedFalseForUpdate(@Param("id") long id);
+    Optional<OutboxMessageProjection> findMessageByIdAndPublishedForUpdate(@Param("id") long id, @Param("published") boolean published);
 
     @Query(
             value = """
@@ -34,7 +34,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     """,
             nativeQuery = true
     )
-    List<OutboxMessageProjection> findAllProjectionsByPublishedForUpdate(@Param("published") boolean published, @Param("limit") int limit);
+    List<OutboxMessageProjection> findManyMessagesByPublishedForUpdate(@Param("published") boolean published, @Param("limit") int limit);
 
     @Modifying
     @Query(

@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import org.slf4j.Logger;
@@ -38,24 +37,25 @@ public class MessageRelay {
         if (Objects.isNull(outboxId)) {
             return;
         }
-        log.info("Pulled message from queue: {}", outboxId);
-        OutboxMessage message = commandRepository.findProjectionByIdAndPublishedFalseForUpdateOrThrow(outboxId);
-        producer.produce(message);
-        commandRepository.updateAsPublished(message.id(), new OutboxPublished(Boolean.TRUE));
+        commandRepository.findMessageByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
+                .ifPresent(message -> {
+                    log.info("Relay Message with ID: {}", message.id().value());
+                    producer.produce(message);
+                    commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
+                });
     }
 
     @Transactional
     @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
-        var messages = commandRepository.findAllByPublishedForUpdate(new OutboxPublished(false), 10);
+        var messages = commandRepository.findManyMessagesByPublishedForUpdate(new OutboxPublished(false), 10);
         if (messages.isEmpty()) {
             return;
         }
-        log.info("Pulled {} messages from database", messages.size());
         messages.forEach(message -> {
             log.info("Relay Message with ID: {}", message.id().value());
             producer.produce(message);
-            commandRepository.updateAsPublished(message.id(), new OutboxPublished(Boolean.TRUE));
+            commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
         });
     }
 }

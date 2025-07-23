@@ -2,11 +2,10 @@ package com.github.mangila.webshop.identity.infrastructure;
 
 import com.github.mangila.webshop.identity.domain.DomainId;
 import com.github.mangila.webshop.identity.domain.DomainIdRepository;
-import com.github.mangila.webshop.shared.exception.CqrsException;
-import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -32,15 +31,8 @@ public class DomainIdJpaRepository implements DomainIdRepository {
     }
 
     @Override
-    public DomainId findByIdOrThrow(UUID id) {
-        var entity = repository.findById(id);
-        if (entity.isEmpty()) {
-            throw new CqrsException(
-                    String.format("UuidRecord not found for id: %s", id),
-                    CqrsOperation.QUERY,
-                    DomainId.class);
-        }
-        return mapper.toDomain(entity.get());
+    public Optional<DomainId> findById(UUID id) {
+        return repository.findById(id).map(mapper::toDomain);
     }
 
     @Override

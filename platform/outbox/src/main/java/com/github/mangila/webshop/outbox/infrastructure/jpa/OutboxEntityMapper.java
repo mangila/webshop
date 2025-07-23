@@ -55,10 +55,4 @@ public class OutboxEntityMapper {
                 event
         );
     }
-
-    public List<OutboxMessage> toDomain(List<OutboxMessageProjection> projections) {
-        return projections.stream()
-                .map(this::toDomain)
-                .toList();
-    }
 }

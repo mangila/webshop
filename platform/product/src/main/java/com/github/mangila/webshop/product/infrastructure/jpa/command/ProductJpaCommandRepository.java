@@ -6,14 +6,14 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntity;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
-import com.github.mangila.webshop.shared.exception.CqrsException;
-import com.github.mangila.webshop.shared.model.CqrsOperation;
-import io.vavr.collection.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);
     private final ProductEntityCommandRepository repository;
     private final ProductEntityMapper entityMapper;
 
@@ -25,21 +25,13 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     @Override
     public Product insert(ProductInsertCommand command) {
-        ProductEntity entity = entityMapper.toEntity(command);
-        Product product = Stream.of(entity)
-                .map(repository::save)
-                .map(entityMapper::toDomain)
-                .get();
-        return product;
+        ProductEntity entity = repository.save(entityMapper.toEntity(command));
+        return entityMapper.toDomain(entity);
     }
 
     @Override
-    public void deleteByIdOrThrow(ProductId productId) {
+    public void deleteById(ProductId productId) {
         repository.findById(productId.value())
-                .ifPresentOrElse(repository::delete, () -> {
-                    throw new CqrsException(String.format("id not found: '%s'", productId.value()),
-                            CqrsOperation.COMMAND,
-                            Product.class);
-                });
+                .ifPresentOrElse(repository::delete, () -> log.warn("Product not found: {}", productId.value()));
     }
 }

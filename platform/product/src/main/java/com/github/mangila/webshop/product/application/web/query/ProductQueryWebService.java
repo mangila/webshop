@@ -12,19 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductQueryWebService {
 
-    private final ProductRequestMapper mapper;
+    private final ProductRequestMapper requestMapper;
     private final ProductDtoMapper dtoMapper;
     private final ProductQueryService service;
 
-    public ProductQueryWebService(ProductRequestMapper mapper, ProductDtoMapper dtoMapper,
+    public ProductQueryWebService(ProductRequestMapper requestMapper,
+                                  ProductDtoMapper dtoMapper,
                                   ProductQueryService service) {
-        this.mapper = mapper;
+        this.requestMapper = requestMapper;
         this.dtoMapper = dtoMapper;
         this.service = service;
     }
 
     public ProductDto findProductById(ProductByIdRequest request) {
-        ProductId productId = mapper.toQuery(request);
+        ProductId productId = requestMapper.toQuery(request);
         Product product = service.findByIdOrThrow(productId);
         return dtoMapper.toDto(product);
     }

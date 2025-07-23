@@ -2,11 +2,12 @@ package com.github.mangila.webshop.product.domain;
 
 
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import com.github.mangila.webshop.shared.exception.CqrsException;
+
+import java.util.Optional;
 
 public interface ProductQueryRepository {
 
-    Product findByIdOrThrow(ProductId productId) throws CqrsException;
+    Optional<Product> findById(ProductId productId);
 
     boolean existsById(ProductId productId);
 }

@@ -8,12 +8,11 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
-import com.github.mangila.webshop.shared.exception.CqrsException;
-import com.github.mangila.webshop.shared.model.CqrsOperation;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OutboxJpaCommandRepository implements OutboxCommandRepository {
@@ -37,16 +36,9 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public OutboxMessage findProjectionByIdAndPublishedFalseForUpdateOrThrow(OutboxId id) throws CqrsException {
-        var projection = jpaRepository.findProjectionByIdAndPublishedFalseForUpdate(id.value());
-        if (projection.isEmpty()) {
-            throw new CqrsException(
-                    String.format("Outbox with ID: %s - is not available or already published", id.value()),
-                    CqrsOperation.COMMAND,
-                    Outbox.class);
-
-        }
-        return mapper.toDomain(projection.get());
+    public Optional<OutboxMessage> findMessageByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published) {
+        return jpaRepository.findMessageByIdAndPublishedForUpdate(id.value(), published.value())
+                .map(mapper::toDomain);
     }
 
     @Override
@@ -55,8 +47,10 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit) {
-        var projections = jpaRepository.findAllProjectionsByPublishedForUpdate(published.value(), limit);
-        return mapper.toDomain(projections);
+    public List<OutboxMessage> findManyMessagesByPublishedForUpdate(OutboxPublished published, int limit) {
+        return jpaRepository.findManyMessagesByPublishedForUpdate(published.value(), limit)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }
