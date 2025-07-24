@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public class Outbox {
 
+    // TODO sequence number
     private OutboxId id;
     private Domain domain;
     private Event event;

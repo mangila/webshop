@@ -1,0 +1,11 @@
+extend type Query {
+    replay(request: OutboxReplayRequest): Outbox
+}
+
+input OutboxReplayRequest {
+    value: ID!
+}
+
+type Outbox {
+    id: ID!
+}

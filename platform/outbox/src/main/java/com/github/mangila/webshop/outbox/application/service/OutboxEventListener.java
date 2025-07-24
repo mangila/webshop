@@ -1,5 +1,6 @@
-package com.github.mangila.webshop.outbox.application;
+package com.github.mangila.webshop.outbox.application.service;
 
+import com.github.mangila.webshop.outbox.application.mapper.OutboxEventMapper;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;

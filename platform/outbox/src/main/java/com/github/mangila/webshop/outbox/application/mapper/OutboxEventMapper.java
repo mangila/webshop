@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.application;
+package com.github.mangila.webshop.outbox.application.mapper;
 
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
