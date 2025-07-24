@@ -4,6 +4,7 @@ import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +30,15 @@ public class MessageRelay {
         this.commandRepository = commandRepository;
         this.internalMessageQueue = internalMessageQueue;
         this.springEventProducer = springEventProducer;
+    }
+
+    @PostConstruct
+    public void init() {
+        commandRepository.findManyMessagesByPublishedForUpdate(OutboxPublished.notPublished(), 100)
+                .stream()
+                .map(OutboxMessage::id)
+                .peek(id -> log.info("Add Message with ID: {}", id.value()))
+                .forEach(internalMessageQueue::add);
     }
 
     @Transactional
