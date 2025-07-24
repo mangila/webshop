@@ -7,18 +7,18 @@ import com.github.mangila.webshop.product.application.service.ProductQueryServic
 import com.github.mangila.webshop.product.application.web.request.ProductByIdRequest;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import org.springframework.stereotype.Service;
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 
-@Service
-public class ProductQueryWebService {
+@ObservedService
+public class ProductQueryWebFacade {
 
     private final ProductRequestMapper requestMapper;
     private final ProductDtoMapper dtoMapper;
     private final ProductQueryService service;
 
-    public ProductQueryWebService(ProductRequestMapper requestMapper,
-                                  ProductDtoMapper dtoMapper,
-                                  ProductQueryService service) {
+    public ProductQueryWebFacade(ProductRequestMapper requestMapper,
+                                 ProductDtoMapper dtoMapper,
+                                 ProductQueryService service) {
         this.requestMapper = requestMapper;
         this.dtoMapper = dtoMapper;
         this.service = service;

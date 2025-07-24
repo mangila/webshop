@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.shared.aspect;
 
-import com.github.mangila.webshop.shared.annotation.ObservedBean;
+import com.github.mangila.webshop.shared.annotation.ObservedStereotype;
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
@@ -17,19 +17,20 @@ import java.util.*;
 
 @Aspect
 @Component
-public class ObservedBeanAspect {
+public class ObservedStereotypeAspect {
 
     private final ObservationRegistry registry;
-    private final ObservedBeanPostProcessor processor;
+    private final ObservedStereotypePostProcessor processor;
 
-    public ObservedBeanAspect(ObservationRegistry registry,
-                              ObservedBeanPostProcessor processor) {
+    public ObservedStereotypeAspect(ObservationRegistry registry,
+                                    ObservedStereotypePostProcessor processor) {
         this.registry = registry;
         this.processor = processor;
     }
 
-    @Around(value = "@within(com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedService)" +
-                    " || @within(com.github.mangila.webshop.shared.infrastructure.spring.annotation.ObservedRepository)")
+    @Around(value = "@within(com.github.mangila.webshop.shared.annotation.ObservedService)" +
+                    " || @within(com.github.mangila.webshop.shared.annotation.ObservedRepository)" +
+                    " || @within(com.github.mangila.webshop.shared.annotation.ObservedComponent)")
     public Object observeAnnotation(ProceedingJoinPoint pjp) throws Throwable {
         Class<?> targetClass = pjp.getTarget().getClass();
         var annotationData = processor.observedBeans.get(targetClass);
@@ -52,16 +53,16 @@ public class ObservedBeanAspect {
     }
 
     @Component
-    public static class ObservedBeanPostProcessor implements BeanPostProcessor {
+    public static class ObservedStereotypePostProcessor implements BeanPostProcessor {
 
         private final Map<Class<?>, AnnotationData> observedBeans = new HashMap<>();
 
         @Override
         public Object postProcessBeforeInitialization(Object bean, String beanName) {
-            ObservedBean observedBean = AnnotatedElementUtils.findMergedAnnotation(bean.getClass(), ObservedBean.class);
-            if (Objects.nonNull(observedBean)) {
-                String name = observedBean.name().isEmpty() ? beanName : observedBean.name();
-                String[] tags = observedBean.tags();
+            ObservedStereotype observedStereotype = AnnotatedElementUtils.findMergedAnnotation(bean.getClass(), ObservedStereotype.class);
+            if (Objects.nonNull(observedStereotype)) {
+                String name = observedStereotype.name().isEmpty() ? beanName : observedStereotype.name();
+                String[] tags = observedStereotype.tags();
                 Class<?> clazz = AopUtils.getTargetClass(bean);
                 var metadata = new AnnotationData(name, KeyValues.of(
                                 KeyValue.of("bean", beanName),

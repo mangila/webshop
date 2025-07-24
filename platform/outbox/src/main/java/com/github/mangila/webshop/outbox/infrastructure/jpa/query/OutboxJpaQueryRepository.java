@@ -5,11 +5,11 @@ import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
-import org.springframework.stereotype.Repository;
+import com.github.mangila.webshop.shared.annotation.ObservedRepository;
 
 import java.util.Optional;
 
-@Repository
+@ObservedRepository
 public class OutboxJpaQueryRepository implements OutboxQueryRepository {
 
     private final OutboxEntityQueryRepository jpaRepository;

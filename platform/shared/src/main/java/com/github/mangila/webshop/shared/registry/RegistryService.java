@@ -1,11 +1,11 @@
 package com.github.mangila.webshop.shared.registry;
 
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.model.Event;
-import org.springframework.stereotype.Service;
 
-@Service
+@ObservedService
 public class RegistryService {
 
     private final DomainRegistry domainRegistry;

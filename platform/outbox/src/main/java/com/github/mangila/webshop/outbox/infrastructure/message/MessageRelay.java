@@ -20,14 +20,14 @@ public class MessageRelay {
 
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxCommandRepository commandRepository;
-    private final SpringEventProducer producer;
+    private final SpringEventProducer springEventProducer;
 
     public MessageRelay(OutboxCommandRepository commandRepository,
                         InternalMessageQueue internalMessageQueue,
-                        SpringEventProducer producer) {
+                        SpringEventProducer springEventProducer) {
         this.commandRepository = commandRepository;
         this.internalMessageQueue = internalMessageQueue;
-        this.producer = producer;
+        this.springEventProducer = springEventProducer;
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class MessageRelay {
         commandRepository.findMessageByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
                 .ifPresent(message -> {
                     log.info("Relay Message with ID: {}", message.id().value());
-                    producer.produce(message);
+                    springEventProducer.produce(message);
                     commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
                 });
     }
@@ -51,7 +51,7 @@ public class MessageRelay {
         commandRepository.findManyMessagesByPublishedForUpdate(new OutboxPublished(false), 10)
                 .forEach(message -> {
                     log.info("Relay Message with ID: {}", message.id().value());
-                    producer.produce(message);
+                    springEventProducer.produce(message);
                     commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
                 });
     }

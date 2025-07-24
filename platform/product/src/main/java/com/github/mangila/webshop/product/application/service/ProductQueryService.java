@@ -3,11 +3,11 @@ package com.github.mangila.webshop.product.application.service;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.exception.CqrsException;
 import com.github.mangila.webshop.shared.model.CqrsOperation;
-import org.springframework.stereotype.Service;
 
-@Service
+@ObservedService
 public class ProductQueryService {
 
     private final ProductQueryRepository repository;

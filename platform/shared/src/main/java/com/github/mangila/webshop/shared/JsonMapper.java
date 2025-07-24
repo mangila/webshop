@@ -2,13 +2,13 @@ package com.github.mangila.webshop.shared;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.mangila.webshop.shared.annotation.ObservedComponent;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Component
+@ObservedComponent
 public class JsonMapper {
 
     private final ObjectMapper objectMapper;

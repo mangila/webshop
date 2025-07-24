@@ -10,14 +10,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductQueryResolver {
 
-    private final ProductQueryWebService service;
+    private final ProductQueryWebFacade webFacade;
 
-    public ProductQueryResolver(ProductQueryWebService service) {
-        this.service = service;
+    public ProductQueryResolver(ProductQueryWebFacade webFacade) {
+        this.webFacade = webFacade;
     }
 
     @QueryMapping
     public ProductDto findProductById(@Argument("request") @Valid ProductByIdRequest request) {
-        return service.findProductById(request);
+        return webFacade.findProductById(request);
     }
 }

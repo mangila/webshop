@@ -6,11 +6,12 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntity;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
+import com.github.mangila.webshop.shared.annotation.ObservedRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@ObservedRepository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);

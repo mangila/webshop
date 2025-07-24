@@ -9,22 +9,22 @@ import com.github.mangila.webshop.product.application.service.ProductCommandServ
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.model.Domain;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class ProductCommandWebService {
+@ObservedService
+public class ProductCommandWebFacade {
 
     private final ProductDtoMapper dtoMapper;
     private final ProductRequestMapper requestMapper;
     private final ProductCommandService commandService;
     private final DomainIdGeneratorService idGenerator;
 
-    public ProductCommandWebService(ProductDtoMapper dtoMapper,
-                                    ProductRequestMapper requestMapper,
-                                    ProductCommandService commandService,
-                                    DomainIdGeneratorService idGenerator) {
+    public ProductCommandWebFacade(ProductDtoMapper dtoMapper,
+                                   ProductRequestMapper requestMapper,
+                                   ProductCommandService commandService,
+                                   DomainIdGeneratorService idGenerator) {
         this.dtoMapper = dtoMapper;
         this.requestMapper = requestMapper;
         this.commandService = commandService;

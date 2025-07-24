@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/product/command")
 public class ProductCommandController {
 
-    private final ProductCommandWebService webService;
+    private final ProductCommandWebFacade webFacade;
 
-    public ProductCommandController(ProductCommandWebService webService) {
-        this.webService = webService;
+    public ProductCommandController(ProductCommandWebFacade webFacade) {
+        this.webFacade = webFacade;
     }
 
     @PostMapping
     public ResponseEntity<ProductDto> insert(@Valid @RequestBody ProductInsertRequest request) {
-        ProductDto dto = webService.insert(request);
+        ProductDto dto = webFacade.insert(request);
         return ResponseEntity.ok(dto);
     }
 }

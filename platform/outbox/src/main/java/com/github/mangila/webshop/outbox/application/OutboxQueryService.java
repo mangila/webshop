@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.application;
 
-import org.springframework.stereotype.Service;
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 
-@Service
+@ObservedService
 public class OutboxQueryService {
 }

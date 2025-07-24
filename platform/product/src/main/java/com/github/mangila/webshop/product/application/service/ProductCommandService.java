@@ -5,12 +5,12 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.event.DomainEvent;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@ObservedService
 public class ProductCommandService {
 
     private final ProductEventMapper eventMapper;

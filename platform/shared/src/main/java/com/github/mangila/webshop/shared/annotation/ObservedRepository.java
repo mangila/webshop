@@ -8,17 +8,17 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ObservedBean
+@ObservedStereotype
 @Repository
 public @interface ObservedRepository {
 
     @AliasFor(annotation = Repository.class, attribute = "value")
     String value() default "";
 
-    @AliasFor(annotation = ObservedBean.class, attribute = "name")
+    @AliasFor(annotation = ObservedStereotype.class, attribute = "name")
     String name() default "";
 
-    @AliasFor(annotation = ObservedBean.class, attribute = "tags")
+    @AliasFor(annotation = ObservedStereotype.class, attribute = "tags")
     String[] tags() default {};
 }
 

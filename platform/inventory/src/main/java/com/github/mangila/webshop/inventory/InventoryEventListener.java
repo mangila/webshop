@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.inventory;
 
+import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.event.DomainMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
 
-@Service
+@ObservedService
 public class InventoryEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryEventListener.class);

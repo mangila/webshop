@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.shared.event;
 
+import com.github.mangila.webshop.shared.annotation.ObservedComponent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 
-@Service
+@ObservedComponent
 public class SpringEventPublisher {
 
     private final ApplicationEventPublisher publisher;
