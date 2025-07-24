@@ -29,11 +29,7 @@ public class ProductCommandController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") @DomainId UUID id) {
-        boolean deleted = webFacade.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        webFacade.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -38,7 +39,7 @@ public class Bootstrap implements CommandLineRunner {
                     String response = client.send(HttpRequest.newBuilder()
                                     .header("Content-Type", "application/json")
                                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(request)))
-                                    .uri(java.net.URI.create("http://localhost:8080/api/v1/product/command"))
+                                    .uri(URI.create("http://localhost:8080/api/v1/product/command"))
                                     .build(), HttpResponse.BodyHandlers.ofString())
                             .body();
                     JsonNode jsonNode = objectMapper.readTree(response);
@@ -46,7 +47,7 @@ public class Bootstrap implements CommandLineRunner {
                     client.send(HttpRequest.newBuilder()
                             .header("Content-Type", "application/json")
                             .DELETE()
-                            .uri(java.net.URI.create("http://localhost:8080/api/v1/product/command/".concat(id)))
+                            .uri(URI.create("http://localhost:8080/api/v1/product/command/".concat(id)))
                             .build(), HttpResponse.BodyHandlers.ofString());
                 } catch (InterruptedException e) {
                     e.printStackTrace();

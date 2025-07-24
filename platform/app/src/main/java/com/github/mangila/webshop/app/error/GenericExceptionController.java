@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.app.error;
 
 
+import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,15 @@ public class GenericExceptionController {
         var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problem.setTitle("Path/Resource not found");
         problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Resource not found");
+        problem.setDetail(ex.getMessage());
+        problem.setProperty("domain", ex.getDomain());
         return problem;
     }
 

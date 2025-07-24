@@ -9,9 +9,8 @@ import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.event.DomainEvent;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @ObservedService
 public class ProductCommandService {
@@ -37,14 +36,12 @@ public class ProductCommandService {
     }
 
     @Transactional
-    public boolean deleteById(ProductId productId) {
-        Optional<Product> optional = repository.deleteById(productId);
-        if (optional.isPresent()) {
-            Product product = optional.get();
-            DomainEvent domainEvent = eventMapper.toEvent(ProductEvent.PRODUCT_DELETED, product);
-            publisher.publishEvent(domainEvent);
-            return true;
-        }
-        return false;
+    public void deleteByIdOrThrow(ProductId productId) {
+        Product product = repository.deleteById(productId).orElseThrow(() -> new ResourceNotFoundException(
+                "Product not found with id: %s".formatted(productId.value()),
+                Product.class
+        ));
+        DomainEvent domainEvent = eventMapper.toEvent(ProductEvent.PRODUCT_DELETED, product);
+        publisher.publishEvent(domainEvent);
     }
 }

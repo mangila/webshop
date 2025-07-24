@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.app.error;
 
+import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -23,6 +24,7 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         return switch (ex) {
+            case ResourceNotFoundException rnfe -> handleResourceNotFoundException(rnfe, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
             default -> {
@@ -33,6 +35,14 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                         .build();
             }
         };
+    }
+
+    private GraphQLError handleResourceNotFoundException(ResourceNotFoundException rnfe, DataFetchingEnvironment env) {
+        return GraphqlErrorBuilder.newError(env)
+                .errorType(ErrorType.NOT_FOUND)
+                .message(rnfe.getMessage())
+                .extensions(Map.of("domain", rnfe.getDomain()))
+                .build();
     }
 
     private GraphQLError handleConstraintViolationException(ConstraintViolationException ex, DataFetchingEnvironment env) {

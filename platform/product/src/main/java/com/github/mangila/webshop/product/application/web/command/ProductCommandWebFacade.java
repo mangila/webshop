@@ -12,7 +12,6 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.registry.model.Domain;
-import jakarta.validation.Valid;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -44,8 +43,8 @@ public class ProductCommandWebFacade {
     }
 
     @Transactional
-    public boolean deleteById(UUID request) {
+    public void deleteById(UUID request) {
         ProductId productId = requestMapper.toCommand(request);
-        return commandService.deleteById(productId);
+        commandService.deleteByIdOrThrow(productId);
     }
 }
