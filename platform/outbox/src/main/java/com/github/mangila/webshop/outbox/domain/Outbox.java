@@ -4,8 +4,8 @@ package com.github.mangila.webshop.outbox.domain;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.outbox.domain.primitive.*;
-import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.model.Event;
+import com.github.mangila.webshop.shared.registry.model.Domain;
+import com.github.mangila.webshop.shared.registry.model.Event;
 
 import java.time.Instant;
 import java.util.UUID;

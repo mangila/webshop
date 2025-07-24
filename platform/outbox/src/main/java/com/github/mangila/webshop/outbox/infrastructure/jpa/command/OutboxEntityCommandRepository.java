@@ -45,5 +45,5 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     """,
             nativeQuery = true
     )
-    void updateAsPublished(@Param("id") long id, @Param("published") boolean published);
+    void updatePublished(@Param("id") long id, @Param("published") boolean published);
 }

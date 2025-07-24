@@ -6,12 +6,10 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
-import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.registry.RegistryService;
+import com.github.mangila.webshop.shared.registry.model.Domain;
+import com.github.mangila.webshop.shared.registry.model.Event;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class OutboxEntityMapper {

@@ -4,8 +4,7 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
-import com.github.mangila.webshop.shared.exception.CqrsException;
-import com.github.mangila.webshop.shared.model.CqrsOperation;
+import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 
 @ObservedService
 public class ProductQueryService {
@@ -16,11 +15,10 @@ public class ProductQueryService {
         this.repository = repository;
     }
 
-    public Product findByIdOrThrow(ProductId productId) throws CqrsException {
+    public Product findByIdOrThrow(ProductId productId) throws ResourceNotFoundException {
         return repository.findById(productId)
-                .orElseThrow(() -> new CqrsException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Product not found with id: %s".formatted(productId.value()),
-                        CqrsOperation.QUERY,
                         Product.class));
     }
 }

@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.app.bootstrap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;

@@ -9,12 +9,14 @@ import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper
 import com.github.mangila.webshop.shared.annotation.ObservedRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @ObservedRepository
 public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ProductJpaCommandRepository.class);
+
     private final ProductEntityCommandRepository repository;
     private final ProductEntityMapper entityMapper;
 
@@ -31,8 +33,15 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     }
 
     @Override
-    public void deleteById(ProductId productId) {
-        repository.findById(productId.value())
-                .ifPresentOrElse(repository::delete, () -> log.warn("Product not found: {}", productId.value()));
+    public boolean deleteById(ProductId productId) {
+        Optional<ProductEntity> optional = repository.findById(productId.value());
+        if (optional.isPresent()) {
+            ProductEntity entity = optional.get();
+            repository.delete(entity);
+            return true;
+        } else {
+            log.error("Product not found with id {}", productId.value());
+            return false;
+        }
     }
 }

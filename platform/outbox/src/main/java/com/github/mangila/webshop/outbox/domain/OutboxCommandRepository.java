@@ -14,7 +14,7 @@ public interface OutboxCommandRepository {
 
     Optional<OutboxMessage> findMessageByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published);
 
-    void updateAsPublished(OutboxId id, OutboxPublished published);
+    void updatePublished(OutboxId id, OutboxPublished published);
 
     List<OutboxMessage> findManyMessagesByPublishedForUpdate(OutboxPublished published, int limit);
 }

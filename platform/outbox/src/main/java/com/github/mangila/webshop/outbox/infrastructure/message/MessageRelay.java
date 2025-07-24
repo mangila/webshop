@@ -41,18 +41,18 @@ public class MessageRelay {
                 .ifPresent(message -> {
                     log.info("Relay Message with ID: {}", message.id().value());
                     springEventProducer.produce(message);
-                    commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
+                    commandRepository.updatePublished(message.id(), OutboxPublished.published());
                 });
     }
 
     @Transactional
     @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
-        commandRepository.findManyMessagesByPublishedForUpdate(new OutboxPublished(false), 10)
+        commandRepository.findManyMessagesByPublishedForUpdate(OutboxPublished.notPublished(), 10)
                 .forEach(message -> {
                     log.info("Relay Message with ID: {}", message.id().value());
                     springEventProducer.produce(message);
-                    commandRepository.updateAsPublished(message.id(), OutboxPublished.published());
+                    commandRepository.updatePublished(message.id(), OutboxPublished.published());
                 });
     }
 }

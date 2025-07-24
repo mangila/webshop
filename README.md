@@ -139,7 +139,6 @@ npm run dev
 
 ## Management and Monitoring
 
-- **Codecentric Admin Server**: Available at port 8081
 - **Zipkin UI**: Available at port 9411
 
 ## Database Configuration

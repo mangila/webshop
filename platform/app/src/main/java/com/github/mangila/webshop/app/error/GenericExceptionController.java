@@ -1,8 +1,6 @@
 package com.github.mangila.webshop.app.error;
 
 
-import com.github.mangila.webshop.shared.exception.ApplicationException;
-import com.github.mangila.webshop.shared.exception.CqrsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.Map;
 import java.util.Objects;
 
 @RestControllerAdvice
@@ -56,23 +53,6 @@ public class GenericExceptionController {
                     return String.join(":", fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue().toString());
                 }).toList();
         problem.setProperty("errors", errors);
-        return problem;
-    }
-
-    @ExceptionHandler(CqrsException.class)
-    public ProblemDetail handleApiException(CqrsException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problem.setTitle("Api Error");
-        problem.setDetail(ex.getMessage());
-        problem.setProperties(Map.of("operation", ex.getOperation().name()));
-        return problem;
-    }
-
-    @ExceptionHandler(ApplicationException.class)
-    public ProblemDetail handleApplicationException(ApplicationException ex, WebRequest request) {
-        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problem.setTitle("Api Error");
-        problem.setDetail(ex.getMessage());
         return problem;
     }
 

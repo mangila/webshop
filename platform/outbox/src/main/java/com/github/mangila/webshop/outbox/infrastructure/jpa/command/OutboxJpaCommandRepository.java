@@ -42,8 +42,8 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public void updateAsPublished(OutboxId id, OutboxPublished published) {
-        jpaRepository.updateAsPublished(id.value(), published.value());
+    public void updatePublished(OutboxId id, OutboxPublished published) {
+        jpaRepository.updatePublished(id.value(), published.value());
     }
 
     @Override

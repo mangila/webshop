@@ -7,5 +7,5 @@ public interface ProductCommandRepository {
 
     Product insert(ProductInsertCommand command);
 
-    void deleteById(ProductId productId);
+    boolean deleteById(ProductId productId);
 }

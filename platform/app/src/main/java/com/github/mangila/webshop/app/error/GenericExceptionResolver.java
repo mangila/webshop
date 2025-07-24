@@ -1,7 +1,5 @@
 package com.github.mangila.webshop.app.error;
 
-import com.github.mangila.webshop.shared.exception.ApplicationException;
-import com.github.mangila.webshop.shared.exception.CqrsException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -25,8 +23,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         return switch (ex) {
-            case ApplicationException ae -> handleApplicationException(ae, env);
-            case CqrsException ce -> handleCqrsException(ce, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
             default -> {
@@ -37,23 +33,6 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                         .build();
             }
         };
-    }
-
-    private GraphQLError handleApplicationException(ApplicationException ex, DataFetchingEnvironment env) {
-        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
-        return GraphqlErrorBuilder.newError(env)
-                .errorType(graphqlErrorType)
-                .message(ex.getMessage())
-                .build();
-    }
-
-    private GraphQLError handleCqrsException(CqrsException ex, DataFetchingEnvironment env) {
-        ErrorType graphqlErrorType = ErrorType.BAD_REQUEST;
-        return GraphqlErrorBuilder.newError(env)
-                .errorType(graphqlErrorType)
-                .message(ex.getMessage())
-                .extensions(Map.of("operation", ex.getOperation().name()))
-                .build();
     }
 
     private GraphQLError handleConstraintViolationException(ConstraintViolationException ex, DataFetchingEnvironment env) {

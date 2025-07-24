@@ -13,14 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>shared</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>outbox</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -32,6 +24,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>shared.annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>shared.event</artifactId>
         </dependency>
     </dependencies>
 

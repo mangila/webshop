@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.identity.infrastructure;
 
 import com.github.mangila.webshop.identity.domain.DomainId;
-import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.registry.RegistryService;
+import com.github.mangila.webshop.shared.registry.model.Domain;
 import org.springframework.stereotype.Component;
 
 @Component

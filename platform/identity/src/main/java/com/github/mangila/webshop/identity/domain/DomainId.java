@@ -1,9 +1,9 @@
 package com.github.mangila.webshop.identity.domain;
 
-import com.github.mangila.webshop.shared.model.Domain;
+
+import com.github.mangila.webshop.shared.registry.model.Domain;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 public class DomainId {
