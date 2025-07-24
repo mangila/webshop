@@ -11,6 +11,8 @@ import com.github.mangila.webshop.shared.event.DomainEvent;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @ObservedService
 public class ProductCommandService {
 
@@ -34,7 +36,15 @@ public class ProductCommandService {
         return product;
     }
 
+    @Transactional
     public boolean deleteById(ProductId productId) {
-        return repository.deleteById(productId);
+        Optional<Product> optional = repository.deleteById(productId);
+        if (optional.isPresent()) {
+            Product product = optional.get();
+            DomainEvent domainEvent = eventMapper.toEvent(ProductEvent.PRODUCT_DELETED, product);
+            publisher.publishEvent(domainEvent);
+            return true;
+        }
+        return false;
     }
 }

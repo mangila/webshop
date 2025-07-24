@@ -2,15 +2,17 @@ package com.github.mangila.webshop.product.application.web.command;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
+import com.github.mangila.webshop.shared.validation.DomainId;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/product/command")
+@Validated
 public class ProductCommandController {
 
     private final ProductCommandWebFacade webFacade;
@@ -23,5 +25,15 @@ public class ProductCommandController {
     public ResponseEntity<ProductDto> insert(@Valid @RequestBody ProductInsertRequest request) {
         ProductDto dto = webFacade.insert(request);
         return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") @DomainId UUID id) {
+        boolean deleted = webFacade.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

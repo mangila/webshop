@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.app.bootstrap;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.types.ProductUnit;
@@ -34,10 +35,18 @@ public class Bootstrap implements CommandLineRunner {
                             objectMapper.createObjectNode(),
                             ProductUnit.PIECE
                     );
+                    String response = client.send(HttpRequest.newBuilder()
+                                    .header("Content-Type", "application/json")
+                                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(request)))
+                                    .uri(java.net.URI.create("http://localhost:8080/api/v1/product/command"))
+                                    .build(), HttpResponse.BodyHandlers.ofString())
+                            .body();
+                    JsonNode jsonNode = objectMapper.readTree(response);
+                    String id = jsonNode.get("id").asText();
                     client.send(HttpRequest.newBuilder()
                             .header("Content-Type", "application/json")
-                            .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(request)))
-                            .uri(java.net.URI.create("http://localhost:8080/api/v1/product/command"))
+                            .DELETE()
+                            .uri(java.net.URI.create("http://localhost:8080/api/v1/product/command/".concat(id)))
                             .build(), HttpResponse.BodyHandlers.ofString());
                 } catch (InterruptedException e) {
                     e.printStackTrace();

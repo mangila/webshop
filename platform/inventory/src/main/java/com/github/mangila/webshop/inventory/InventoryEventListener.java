@@ -15,7 +15,15 @@ public class InventoryEventListener {
             value = DomainMessage.class,
             condition = "#root.args[0].event().value() == 'PRODUCT_CREATED'"
     )
-    public void listen(DomainMessage message) {
+    public void listenProductCreated(DomainMessage message) {
+        log.info("Received message: {}", message);
+    }
+
+    @EventListener(
+            value = DomainMessage.class,
+            condition = "#root.args[0].event().value() == 'PRODUCT_DELETED'"
+    )
+    public void listenProductDeleted(DomainMessage message) {
         log.info("Received message: {}", message);
     }
 }

@@ -21,6 +21,10 @@ public class ProductRequestMapper {
         );
     }
 
+    public ProductId toCommand(UUID request) {
+        return new ProductId(request);
+    }
+
     public ProductId toQuery(ProductByIdRequest request) {
         return new ProductId(request.value());
     }

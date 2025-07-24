@@ -33,15 +33,15 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
     }
 
     @Override
-    public boolean deleteById(ProductId productId) {
+    public Optional<Product> deleteById(ProductId productId) {
         Optional<ProductEntity> optional = repository.findById(productId.value());
         if (optional.isPresent()) {
             ProductEntity entity = optional.get();
             repository.delete(entity);
-            return true;
+            return Optional.of(entityMapper.toDomain(entity));
         } else {
             log.error("Product not found with id {}", productId.value());
-            return false;
+            return Optional.empty();
         }
     }
 }
