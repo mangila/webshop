@@ -7,23 +7,21 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
-import com.github.mangila.webshop.shared.annotation.ObservedRepository;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@ObservedRepository
+@Repository
 public class OutboxQueryJpaRepository implements OutboxQueryRepository {
 
     private final OutboxEntityQueryRepository entityRepository;
-    private final OutboxSequenceEntityQueryRepository sequenceRepository;
     private final OutboxEntityMapper mapper;
 
-    public OutboxQueryJpaRepository(OutboxEntityQueryRepository entityRepository, OutboxSequenceEntityQueryRepository sequenceRepository,
+    public OutboxQueryJpaRepository(OutboxEntityQueryRepository entityRepository,
                                     OutboxEntityMapper mapper) {
         this.entityRepository = entityRepository;
-        this.sequenceRepository = sequenceRepository;
         this.mapper = mapper;
     }
 

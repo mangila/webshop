@@ -60,11 +60,6 @@
             </dependency>
             <dependency>
                 <groupId>com.github.mangila.webshop</groupId>
-                <artifactId>shared.annotation</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.mangila.webshop</groupId>
                 <artifactId>shared.event</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
@@ -161,6 +156,11 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>3.5.3</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -35,6 +35,8 @@ spring:
       path: "/graphiql"
     schema:
       file-extensions: ".graphql"
+      inspection:
+        enabled: true
   threads:
     virtual:
       enabled: true

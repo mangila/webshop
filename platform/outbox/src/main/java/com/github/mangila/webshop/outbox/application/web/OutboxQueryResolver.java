@@ -2,7 +2,7 @@ package com.github.mangila.webshop.outbox.application.web;
 
 import com.github.mangila.webshop.outbox.application.OutboxDto;
 import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
-import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -14,15 +14,13 @@ import java.util.List;
 public class OutboxQueryResolver {
 
     private final OutboxQueryWebFacade webFacade;
-    private final ObservationRegistry observationRegistry;
 
-    public OutboxQueryResolver(OutboxQueryWebFacade webFacade, ObservationRegistry observationRegistry) {
+    public OutboxQueryResolver(OutboxQueryWebFacade webFacade) {
         this.webFacade = webFacade;
-        this.observationRegistry = observationRegistry;
     }
 
     @QueryMapping
-    public List<OutboxDto> replay(@Argument("request") @Valid OutboxReplayRequest request) {
+    public List<OutboxDto> replay(@Argument("request") OutboxReplayRequest request) {
         return webFacade.replay(request);
     }
 }

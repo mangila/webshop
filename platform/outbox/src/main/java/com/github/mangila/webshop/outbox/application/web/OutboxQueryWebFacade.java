@@ -6,11 +6,14 @@ import com.github.mangila.webshop.outbox.application.mapper.OutboxRequestMapper;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
 import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
-import com.github.mangila.webshop.shared.annotation.ObservedService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-@ObservedService
+@Service
+@Validated
 public class OutboxQueryWebFacade {
 
     private final OutboxRequestMapper requestMapper;
@@ -25,7 +28,7 @@ public class OutboxQueryWebFacade {
         this.outboxDtoMapper = outboxDtoMapper;
     }
 
-    public List<OutboxDto> replay(OutboxReplayRequest request) {
+    public List<OutboxDto> replay(@Valid OutboxReplayRequest request) {
         OutboxReplayQuery query = requestMapper.toQuery(request);
         return service.replay(query)
                 .stream()

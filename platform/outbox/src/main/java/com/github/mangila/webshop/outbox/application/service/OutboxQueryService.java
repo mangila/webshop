@@ -3,11 +3,11 @@ package com.github.mangila.webshop.outbox.application.service;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
-import com.github.mangila.webshop.shared.annotation.ObservedService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@ObservedService
+@Service
 public class OutboxQueryService {
 
     private final OutboxQueryRepository repository;

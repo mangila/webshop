@@ -4,11 +4,11 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
-import com.github.mangila.webshop.shared.annotation.ObservedRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@ObservedRepository
+@Repository
 public class ProductJpaQueryRepository implements ProductQueryRepository {
 
     private final ProductEntityMapper mapper;

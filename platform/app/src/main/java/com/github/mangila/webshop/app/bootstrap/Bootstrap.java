@@ -25,12 +25,12 @@ public class Bootstrap implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         var client = HttpClient.newHttpClient();
         Thread.ofVirtual().factory().newThread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(400);
+                    Thread.sleep(5000);
                     var request = new ProductInsertRequest(
                             "test",
                             objectMapper.createObjectNode(),

@@ -3,10 +3,10 @@ package com.github.mangila.webshop.product.application.service;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
-@ObservedService
+@Service
 public class ProductQueryService {
 
     private final ProductQueryRepository repository;

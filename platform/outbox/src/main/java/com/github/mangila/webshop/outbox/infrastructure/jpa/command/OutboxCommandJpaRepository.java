@@ -11,13 +11,13 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity;
-import com.github.mangila.webshop.shared.annotation.ObservedRepository;
 import io.vavr.collection.Stream;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@ObservedRepository
+@Repository
 public class OutboxCommandJpaRepository implements OutboxCommandRepository {
 
     private final OutboxEntityCommandRepository entityCommandRepository;

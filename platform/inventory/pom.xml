@@ -27,10 +27,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>shared.annotation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>shared.event</artifactId>
         </dependency>
     </dependencies>

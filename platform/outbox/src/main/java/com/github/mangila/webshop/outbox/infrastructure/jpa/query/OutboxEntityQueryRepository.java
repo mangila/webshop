@@ -17,7 +17,7 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
             SELECT o FROM OutboxEntity o
             WHERE o.aggregateId = :aggregateId
             AND o.sequence >= :sequence
-            ORDER BY o.created ASC
+            ORDER BY o.sequence ASC
             LIMIT :limit
             """)
     List<OutboxEntity> replay(@Param("aggregateId") UUID aggregateId, @Param("sequence") int sequence, @Param("limit") int limit);

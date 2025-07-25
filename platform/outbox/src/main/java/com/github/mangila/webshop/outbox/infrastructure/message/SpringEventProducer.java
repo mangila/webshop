@@ -1,10 +1,10 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
-import com.github.mangila.webshop.shared.annotation.ObservedComponent;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import org.springframework.stereotype.Component;
 
-@ObservedComponent
+@Component
 public class SpringEventProducer {
 
     private final SpringEventPublisher publisher;
