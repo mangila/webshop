@@ -1,9 +1,12 @@
 package com.github.mangila.webshop.shared.registry;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Domain;
 import com.github.mangila.webshop.shared.registry.model.Event;
+import com.github.mangila.webshop.shared.util.CacheName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +16,16 @@ public class RegistryService {
     private final DomainRegistry domainRegistry;
     private final EventRegistry eventRegistry;
 
-    public RegistryService(DomainRegistry domainRegistry,
-                           EventRegistry eventRegistry) {
-        this.domainRegistry = domainRegistry;
-        this.eventRegistry = eventRegistry;
+    @SuppressWarnings("unchecked")
+    public RegistryService(CacheManager cacheManager) {
+        this.domainRegistry = new DomainRegistry(
+                (Cache<Domain, String>) cacheManager.getCache(CacheName.DOMAIN_REGISTRY)
+                        .getNativeCache()
+        );
+        this.eventRegistry = new EventRegistry(
+                (Cache<Event, String>) cacheManager.getCache(CacheName.EVENT_REGISTRY)
+                        .getNativeCache()
+        );
     }
 
     public void ensureIsRegistered(Event event) {

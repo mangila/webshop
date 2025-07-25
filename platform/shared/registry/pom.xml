@@ -16,6 +16,10 @@
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>shared.util</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

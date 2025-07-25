@@ -12,6 +12,7 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.registry.model.Domain;
+import com.github.mangila.webshop.shared.util.CacheName;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class ProductCommandWebFacade {
     }
 
     @Transactional
-    @CachePut(value = "lru", key = "#result.id()")
+    @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(ProductInsertRequest request) {
         var id = idGenerator.generate(new NewDomainIdRequest(Domain.from(Product.class)));
         ProductInsertCommand command = requestMapper.toCommand(id, request);
@@ -46,7 +47,7 @@ public class ProductCommandWebFacade {
     }
 
     @Transactional
-    @CacheEvict(value = "lru", key = "#a0")
+    @CacheEvict(value = CacheName.LRU, key = "#a0")
     public void deleteById(UUID request) {
         ProductId productId = requestMapper.toCommand(request);
         commandService.deleteByIdOrThrow(productId);

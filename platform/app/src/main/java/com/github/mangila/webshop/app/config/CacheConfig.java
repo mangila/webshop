@@ -2,6 +2,7 @@ package com.github.mangila.webshop.app.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.mangila.webshop.shared.util.CacheName;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.cache.CaffeineCacheMetrics;
 import org.springframework.cache.CacheManager;
@@ -11,17 +12,13 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.github.mangila.webshop.shared.util.CacheName.*;
 
 @Configuration
 @EnableCaching
 public class CacheConfig {
-
-    private static final String LRU = "lru";
-    private static final String TTL = "ttl";
-    private static final String EVENT_REGISTRY = "eventRegistry";
-    private static final String DOMAIN_REGISTRY = "domainRegistry";
 
     @Bean
     public CacheManager cacheManager(MeterRegistry meterRegistry) {
@@ -42,11 +39,7 @@ public class CacheConfig {
                     case EVENT_REGISTRY, DOMAIN_REGISTRY -> Caffeine.newBuilder()
                             .initialCapacity(50)
                             .recordStats();
-
-                    default -> Caffeine.newBuilder()
-                            .expireAfterWrite(30, TimeUnit.MINUTES)
-                            .maximumSize(200)
-                            .recordStats();
+                    default -> throw new IllegalStateException("Unexpected value: " + name);
                 };
 
                 Cache<Object, Object> nativeCache = caffeineBuilder.build();
@@ -54,7 +47,7 @@ public class CacheConfig {
                 return new CaffeineCache(name, nativeCache);
             }
         };
-        caffeineCacheManager.setCacheNames(List.of(LRU, TTL, EVENT_REGISTRY, DOMAIN_REGISTRY, "default"));
+        caffeineCacheManager.setCacheNames(CacheName.ALL);
         return caffeineCacheManager;
     }
 }

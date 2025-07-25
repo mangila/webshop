@@ -2,22 +2,16 @@ package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Domain;
-import com.github.mangila.webshop.shared.registry.model.Event;
-import org.springframework.cache.CacheManager;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Component
 public class DomainRegistry implements Registry<Domain, String> {
 
     private final Cache<Domain, String> registry;
 
-    @SuppressWarnings("unchecked")
-    public DomainRegistry(CacheManager cacheManager) {
-        this.registry = (Cache<Domain, String>) cacheManager.getCache("domainRegistry")
-                .getNativeCache();
+    public DomainRegistry(Cache<Domain, String> cache) {
+        this.registry = cache;
     }
 
     @Override

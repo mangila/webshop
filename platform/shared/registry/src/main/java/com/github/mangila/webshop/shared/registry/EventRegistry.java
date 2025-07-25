@@ -2,22 +2,16 @@ package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Event;
-import org.springframework.cache.CacheManager;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Component
 public class EventRegistry implements Registry<Event, String> {
 
     private final Cache<Event, String> registry;
 
-
-    @SuppressWarnings("unchecked")
-    public EventRegistry(CacheManager cacheManager) {
-        this.registry = (Cache<Event, String>) cacheManager.getCache("eventRegistry")
-                .getNativeCache();
+    public EventRegistry(Cache<Event, String> cache) {
+        this.registry = cache;
     }
 
     @Override
