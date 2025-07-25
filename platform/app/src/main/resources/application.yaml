@@ -79,3 +79,4 @@ management:
 jdbc:
   datasource-proxy:
     type: concrete
+    enabled: true
