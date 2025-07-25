@@ -27,7 +27,7 @@ public class ProductCommandController {
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") @DomainId UUID id) {
         webFacade.deleteById(id);
         return ResponseEntity.noContent().build();
