@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.registry.model;
 
 import com.github.mangila.webshop.shared.registry.RegistryService;
-import com.github.mangila.webshop.shared.util.ApplicationException;
+import com.github.mangila.webshop.shared.util.Ensure;
 
 import java.util.Objects;
 
@@ -10,9 +10,7 @@ public final class Event {
     private final String value;
 
     private Event(String value) {
-        if (Objects.isNull(value) || value.isBlank()) {
-            throw new ApplicationException("Event name cannot be null or blank");
-        }
+        Ensure.notBlank(value, "Event cannot be blank");
         this.value = value;
     }
 
