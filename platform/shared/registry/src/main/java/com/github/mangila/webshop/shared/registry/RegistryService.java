@@ -37,7 +37,7 @@ public class RegistryService {
     }
 
     public void registerEvent(Event event) {
-        log.info("Registered event: {}", event.value());
+        log.info("Registering event: {}", event.value());
         eventRegistry.register(event, event.value());
     }
 

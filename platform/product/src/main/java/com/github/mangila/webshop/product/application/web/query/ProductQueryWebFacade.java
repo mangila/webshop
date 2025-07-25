@@ -8,6 +8,7 @@ import com.github.mangila.webshop.product.application.web.request.ProductByIdReq
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
+import org.springframework.cache.annotation.Cacheable;
 
 @ObservedService
 public class ProductQueryWebFacade {
@@ -24,6 +25,7 @@ public class ProductQueryWebFacade {
         this.service = service;
     }
 
+    @Cacheable(value = "lru", key = "#request.value()")
     public ProductDto findProductById(ProductByIdRequest request) {
         ProductId productId = requestMapper.toQuery(request);
         Product product = service.findByIdOrThrow(productId);

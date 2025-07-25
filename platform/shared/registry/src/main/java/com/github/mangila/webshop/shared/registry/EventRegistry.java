@@ -1,25 +1,33 @@
 package com.github.mangila.webshop.shared.registry;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Event;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 @Component
 public class EventRegistry implements Registry<Event, String> {
 
-    private final Map<Event, String> registry = new ConcurrentHashMap<>();
+    private final Cache<Event, String> registry;
+
+
+    @SuppressWarnings("unchecked")
+    public EventRegistry(CacheManager cacheManager) {
+        this.registry = (Cache<Event, String>) cacheManager.getCache("eventRegistry")
+                .getNativeCache();
+    }
 
     @Override
     public boolean isRegistered(Event key) {
-        return registry.containsKey(key);
+        return Objects.nonNull(registry.getIfPresent(key));
     }
 
     @Override
     public String get(Event key) {
-        return registry.get(key);
+        return registry.getIfPresent(key);
     }
 
     @Override
@@ -29,11 +37,11 @@ public class EventRegistry implements Registry<Event, String> {
 
     @Override
     public List<String> values() {
-        return registry.values().stream().toList();
+        return registry.asMap().values().stream().toList();
     }
 
     @Override
     public List<Event> keys() {
-        return registry.keySet().stream().toList();
+        return registry.asMap().keySet().stream().toList();
     }
 }

@@ -18,8 +18,10 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
-    public static final String LRU = "lru";
-    public static final String TTL = "ttl";
+    private static final String LRU = "lru";
+    private static final String TTL = "ttl";
+    private static final String EVENT_REGISTRY = "eventRegistry";
+    private static final String DOMAIN_REGISTRY = "domainRegistry";
 
     @Bean
     public CacheManager cacheManager(MeterRegistry meterRegistry) {
@@ -37,6 +39,11 @@ public class CacheConfig {
                             .maximumSize(1000)
                             .recordStats();
 
+                    case EVENT_REGISTRY, DOMAIN_REGISTRY -> Caffeine.newBuilder()
+                            .initialCapacity(50)
+                            .maximumSize(1000)
+                            .recordStats();
+
                     default -> Caffeine.newBuilder()
                             .expireAfterWrite(30, TimeUnit.MINUTES)
                             .maximumSize(200)
@@ -48,7 +55,7 @@ public class CacheConfig {
                 return new CaffeineCache(name, nativeCache);
             }
         };
-        caffeineCacheManager.setCacheNames(List.of(LRU, TTL, "default"));
+        caffeineCacheManager.setCacheNames(List.of(LRU, TTL, EVENT_REGISTRY, DOMAIN_REGISTRY, "default"));
         return caffeineCacheManager;
     }
 }
