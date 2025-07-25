@@ -2,6 +2,7 @@ package com.github.mangila.webshop.app.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.mangila.webshop.shared.util.ApplicationException;
 import com.github.mangila.webshop.shared.util.CacheName;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.cache.CaffeineCacheMetrics;
@@ -39,7 +40,7 @@ public class CacheConfig {
                     case EVENT_REGISTRY, DOMAIN_REGISTRY -> Caffeine.newBuilder()
                             .initialCapacity(50)
                             .recordStats();
-                    default -> throw new IllegalStateException("Unexpected value: " + name);
+                    default -> throw new ApplicationException(String.format("Unknown cache name: %s", name));
                 };
 
                 Cache<Object, Object> nativeCache = caffeineBuilder.build();

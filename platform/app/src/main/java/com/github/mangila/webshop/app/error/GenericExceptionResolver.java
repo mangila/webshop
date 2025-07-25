@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.app.error;
 
+import com.github.mangila.webshop.shared.util.ApplicationException;
 import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
@@ -24,6 +25,7 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         return switch (ex) {
+            case ApplicationException ae -> handleApplicationException(ae, env);
             case ResourceNotFoundException rnfe -> handleResourceNotFoundException(rnfe, env);
             case BindException be -> handleBindException(be, env);
             case ConstraintViolationException cve -> handleConstraintViolationException(cve, env);
@@ -37,11 +39,18 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
         };
     }
 
-    private GraphQLError handleResourceNotFoundException(ResourceNotFoundException rnfe, DataFetchingEnvironment env) {
+    private GraphQLError handleApplicationException(ApplicationException ex, DataFetchingEnvironment env) {
+        return GraphqlErrorBuilder.newError(env)
+                .errorType(ErrorType.BAD_REQUEST)
+                .message(ex.getMessage())
+                .build();
+    }
+
+    private GraphQLError handleResourceNotFoundException(ResourceNotFoundException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.NOT_FOUND)
-                .message(rnfe.getMessage())
-                .extensions(Map.of("domain", rnfe.getDomain()))
+                .message(ex.getMessage())
+                .extensions(Map.of("domain", ex.getDomain()))
                 .build();
     }
 

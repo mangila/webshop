@@ -3,6 +3,7 @@ package com.github.mangila.webshop.shared.registry;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Domain;
 import com.github.mangila.webshop.shared.registry.model.Event;
+import com.github.mangila.webshop.shared.util.ApplicationException;
 import com.github.mangila.webshop.shared.util.CacheName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,13 @@ public class RegistryService {
 
     public void ensureIsRegistered(Event event) {
         if (!eventRegistry.isRegistered(event)) {
-            throw new IllegalStateException(String.format("Event %s is not registered", event));
+            throw new ApplicationException(String.format("Event %s is not registered", event));
         }
     }
 
     public void ensureIsRegistered(Domain domain) {
         if (!domainRegistry.isRegistered(domain)) {
-            throw new IllegalStateException(String.format("Domain %s is not registered", domain));
+            throw new ApplicationException(String.format("Domain %s is not registered", domain));
         }
     }
 

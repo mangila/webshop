@@ -3,13 +3,10 @@ package com.github.mangila.webshop.identity.application;
 
 import com.github.mangila.webshop.identity.domain.DomainId;
 import com.github.mangila.webshop.identity.domain.DomainIdRepository;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.UUID;
 
-@Validated
 @Service
 public class DomainIdGeneratorService {
 
@@ -19,7 +16,7 @@ public class DomainIdGeneratorService {
         this.repository = repository;
     }
 
-    public UUID generate(@Valid NewDomainIdRequest request) {
+    public UUID generate(NewDomainIdRequest request) {
         var record = DomainId.create(request.domain());
         return repository.save(record).getId();
     }

@@ -22,7 +22,7 @@ public class JsonMapper {
                     String json = objectMapper.writeValueAsString(object);
                     return (ObjectNode) objectMapper.readTree(json);
                 })
-                .getOrElseThrow(cause -> new IllegalStateException(String.format("Error parsing object: %s", object), cause));
+                .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", object), cause));
     }
 
     public <T> T toObject(byte[] bytes, Class<T> clazz) {
@@ -31,7 +31,7 @@ public class JsonMapper {
                     Assert.isTrue(!ArrayUtils.isEmpty(bytes), "Array cannot be empty");
                     return objectMapper.readValue(bytes, clazz);
                 })
-                .getOrElseThrow(cause -> new IllegalStateException(String.format("Error serialize object: %s", clazz.getSimpleName()), cause));
+                .getOrElseThrow(cause -> new ApplicationException(String.format("Error serialize object: %s", clazz.getSimpleName()), cause));
     }
 
     public byte[] toBytes(Object object) {
@@ -39,6 +39,6 @@ public class JsonMapper {
                     Assert.notNull(object, "Object cannot be null");
                     return objectMapper.writeValueAsBytes(object);
                 })
-                .getOrElseThrow(cause -> new IllegalStateException(String.format("Error deserialize object: %s", object.getClass().getSimpleName()), cause));
+                .getOrElseThrow(cause -> new ApplicationException(String.format("Error deserialize object: %s", object.getClass().getSimpleName()), cause));
     }
 }

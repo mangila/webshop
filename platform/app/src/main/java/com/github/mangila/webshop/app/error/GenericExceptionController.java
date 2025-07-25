@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.app.error;
 
 
+import com.github.mangila.webshop.shared.util.ApplicationException;
 import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,14 @@ public class GenericExceptionController {
         problem.setTitle("Resource not found");
         problem.setDetail(ex.getMessage());
         problem.setProperty("domain", ex.getDomain());
+        return problem;
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ProblemDetail handleApplicationException(ApplicationException ex, WebRequest request) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Application/API error");
+        problem.setDetail(ex.getMessage());
         return problem;
     }
 
