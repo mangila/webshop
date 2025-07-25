@@ -41,11 +41,11 @@ public class RegistryService {
         eventRegistry.register(event, event.value());
     }
 
-    public boolean isRegistered(Event value) {
-        return eventRegistry.isRegistered(value);
+    public boolean isRegistered(Event event) {
+        return eventRegistry.isRegistered(event);
     }
 
-    public boolean isRegistered(Domain value) {
-        return domainRegistry.isRegistered(value);
+    public boolean isRegistered(Domain domain) {
+        return domainRegistry.isRegistered(domain);
     }
 }

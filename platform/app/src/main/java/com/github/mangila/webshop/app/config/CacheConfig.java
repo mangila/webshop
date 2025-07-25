@@ -41,7 +41,6 @@ public class CacheConfig {
 
                     case EVENT_REGISTRY, DOMAIN_REGISTRY -> Caffeine.newBuilder()
                             .initialCapacity(50)
-                            .maximumSize(1000)
                             .recordStats();
 
                     default -> Caffeine.newBuilder()
