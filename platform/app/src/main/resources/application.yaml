@@ -3,9 +3,9 @@ app:
   message-relay:
     enabled: true
     poller-queue:
-      fixed-rate: 1s
+      fixed-rate: 500ms
     poller-database:
-      fixed-rate: 2m
+      fixed-rate: 30s
 # Spring Properties
 spring:
   application:

@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
+import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
@@ -22,22 +23,25 @@ public class MessageRelay {
 
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxCommandRepository commandRepository;
+    private final OutboxQueryRepository queryRepository;
     private final SpringEventProducer springEventProducer;
 
     public MessageRelay(OutboxCommandRepository commandRepository,
                         InternalMessageQueue internalMessageQueue,
+                        OutboxQueryRepository queryRepository,
                         SpringEventProducer springEventProducer) {
         this.commandRepository = commandRepository;
         this.internalMessageQueue = internalMessageQueue;
+        this.queryRepository = queryRepository;
         this.springEventProducer = springEventProducer;
     }
 
     @PostConstruct
     public void init() {
-        commandRepository.findManyMessagesByPublishedForUpdate(OutboxPublished.notPublished(), 100)
+        queryRepository.findAllByPublished(OutboxPublished.notPublished(), 50)
                 .stream()
                 .map(OutboxMessage::id)
-                .peek(id -> log.info("Add Message with ID: {}", id.value()))
+                .peek(id -> log.info("Queue Message with ID: {}", id))
                 .forEach(internalMessageQueue::add);
     }
 
@@ -48,19 +52,19 @@ public class MessageRelay {
         if (Objects.isNull(outboxId)) {
             return;
         }
-        commandRepository.findMessageByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
-                .ifPresent(this::tryRelay);
+        commandRepository.findByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
+                .ifPresentOrElse(this::tryRelay, () -> log.debug("Message locked or processed already with ID: {}", outboxId));
     }
 
     @Transactional
     @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
-        commandRepository.findManyMessagesByPublishedForUpdate(OutboxPublished.notPublished(), 10)
+        commandRepository.findAllByPublishedForUpdate(OutboxPublished.notPublished(), 10)
                 .forEach(this::tryRelay);
     }
 
     private void tryRelay(OutboxMessage message) {
-        log.info("Relay Message with ID: {}", message.id().value());
+        log.debug("Relay Message with ID: {}", message.id());
         springEventProducer.produce(message);
         commandRepository.updatePublished(message.id(), OutboxPublished.published());
     }

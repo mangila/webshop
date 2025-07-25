@@ -36,8 +36,8 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxMessage> findMessageByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published) {
-        return jpaRepository.findMessageByIdAndPublishedForUpdate(id.value(), published.value())
+    public Optional<OutboxMessage> findByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published) {
+        return jpaRepository.findByIdAndPublishedForUpdate(id.value(), published.value())
                 .map(mapper::toDomain);
     }
 
@@ -47,8 +47,8 @@ public class OutboxJpaCommandRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public List<OutboxMessage> findManyMessagesByPublishedForUpdate(OutboxPublished published, int limit) {
-        return jpaRepository.findManyMessagesByPublishedForUpdate(published.value(), limit)
+    public List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit) {
+        return jpaRepository.findByPublishedForUpdate(published.value(), limit)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

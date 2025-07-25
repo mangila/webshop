@@ -12,9 +12,9 @@ public interface OutboxCommandRepository {
 
     Outbox insert(OutboxInsertCommand command);
 
-    Optional<OutboxMessage> findMessageByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published);
+    Optional<OutboxMessage> findByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published);
 
     void updatePublished(OutboxId id, OutboxPublished published);
 
-    List<OutboxMessage> findManyMessagesByPublishedForUpdate(OutboxPublished published, int limit);
+    List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit);
 }
