@@ -12,6 +12,9 @@ import java.util.UUID;
 
 public interface OutboxSequenceEntityCommandRepository extends JpaRepository<OutboxSequenceEntity, UUID> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT s FROM OutboxSequenceEntity s WHERE s.aggregateId = :aggregateId")
+    @Query("""
+            SELECT s FROM OutboxSequenceEntity s
+            WHERE s.aggregateId = :aggregateId
+            """)
     Optional<OutboxSequenceEntity> findAndLockByAggregateId(@Param("aggregateId") UUID aggregateId);
 }

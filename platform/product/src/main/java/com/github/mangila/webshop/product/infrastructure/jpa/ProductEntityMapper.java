@@ -21,13 +21,4 @@ public class ProductEntityMapper {
                 entity.getUpdated()
         );
     }
-
-    public ProductEntity toEntity(Product product) {
-        return ProductEntity.from(
-                product.getId().value(),
-                product.getName().value(),
-                product.getAttributes(),
-                product.getUnit()
-        );
-    }
 }

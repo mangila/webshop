@@ -7,11 +7,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistredDomainValidator implements ConstraintValidator<RegistredDomain, Domain> {
+public class RegisteredDomainValidator implements ConstraintValidator<RegisteredDomain, Domain> {
 
     private final RegistryService registryService;
 
-    public RegistredDomainValidator(RegistryService registryService) {
+    public RegisteredDomainValidator(RegistryService registryService) {
         this.registryService = registryService;
     }
 

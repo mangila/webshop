@@ -12,11 +12,11 @@ public class SpringEventPublisher {
         this.publisher = publisher;
     }
 
-    public void publishEvent(DomainEvent event) {
+    public void publishDomainEvent(DomainEvent event) {
         publisher.publishEvent(event);
     }
 
-    public void publishMessage(DomainMessage message) {
+    public void publishDomainMessage(DomainMessage message) {
         publisher.publishEvent(message);
     }
 }

@@ -18,6 +18,6 @@ public class SpringEventProducer {
 
     public void produce(OutboxMessage outboxMessage) {
         var message = mapper.toDomain(outboxMessage);
-        publisher.publishMessage(message);
+        publisher.publishDomainMessage(message);
     }
 }

@@ -7,11 +7,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistredEventValidator implements ConstraintValidator<RegistredEvent, Event> {
+public class RegisteredEventValidator implements ConstraintValidator<RegisteredEvent, Event> {
 
     private final RegistryService registryService;
 
-    public RegistredEventValidator(RegistryService registryService) {
+    public RegisteredEventValidator(RegistryService registryService) {
         this.registryService = registryService;
     }
 

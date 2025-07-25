@@ -7,10 +7,10 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RegistredDomainValidator.class)
+@Constraint(validatedBy = RegisteredEventValidator.class)
 @Documented
-public @interface RegistredDomain {
-    String message() default "Domain is not registred";
+public @interface RegisteredEvent {
+    String message() default "Event is not registered";
 
     Class<?>[] groups() default {};
 
