@@ -2,8 +2,6 @@ package com.github.mangila.webshop.outbox.application.web;
 
 import com.github.mangila.webshop.outbox.application.OutboxDto;
 import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
-import io.micrometer.observation.annotation.Observed;
-import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
