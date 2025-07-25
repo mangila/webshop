@@ -1,11 +1,20 @@
 extend type Query {
-    replay(request: OutboxReplayRequest): Outbox
+    replay(request: OutboxReplayRequest): [Outbox]
 }
 
 input OutboxReplayRequest {
-    value: ID!
+    aggregateId: String!
+    sequence: Int = 1
+    limit: Int = 50
 }
 
 type Outbox {
     id: ID!
+    domain: String!
+    event: String!
+    aggregateId: ID!
+    payload: JSON!
+    published: Boolean!
+    sequence: Int!
+    created: DateTime!
 }

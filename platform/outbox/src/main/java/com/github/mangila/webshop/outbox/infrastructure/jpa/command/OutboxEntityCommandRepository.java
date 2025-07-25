@@ -29,7 +29,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     SELECT id,aggregate_id,domain,event
                     FROM outbox
                     WHERE published = :published
-                    ORDER BY created
+                    ORDER BY created ASC
                     LIMIT :limit
                     FOR UPDATE SKIP LOCKED
                     """,

@@ -14,25 +14,33 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @ObservedRepository
-public class OutboxJpaQueryRepository implements OutboxQueryRepository {
+public class OutboxQueryJpaRepository implements OutboxQueryRepository {
 
-    private final OutboxEntityQueryRepository jpaRepository;
+    private final OutboxEntityQueryRepository entityRepository;
+    private final OutboxSequenceEntityQueryRepository sequenceRepository;
     private final OutboxEntityMapper mapper;
 
-    public OutboxJpaQueryRepository(OutboxEntityQueryRepository jpaRepository,
+    public OutboxQueryJpaRepository(OutboxEntityQueryRepository entityRepository, OutboxSequenceEntityQueryRepository sequenceRepository,
                                     OutboxEntityMapper mapper) {
-        this.jpaRepository = jpaRepository;
+        this.entityRepository = entityRepository;
+        this.sequenceRepository = sequenceRepository;
         this.mapper = mapper;
     }
 
     @Override
     public List<Outbox> replay(OutboxReplayQuery query) {
-        return List.of();
+        return entityRepository.replay(
+                        query.sequence().aggregateId().value(),
+                        query.sequence().value(),
+                        query.limit()
+                ).stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 
     @Override
     public List<OutboxMessage> findAllByPublished(OutboxPublished published, int limit) {
-        return jpaRepository.findAllByPublished(
+        return entityRepository.findAllByPublished(
                         published.value(),
                         Sort.by(Sort.Direction.ASC, "created"),
                         Limit.of(limit))

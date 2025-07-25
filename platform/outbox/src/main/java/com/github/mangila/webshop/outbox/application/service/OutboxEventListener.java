@@ -3,7 +3,9 @@ package com.github.mangila.webshop.outbox.application.service;
 import com.github.mangila.webshop.outbox.application.mapper.OutboxEventMapper;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
+import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
 import com.github.mangila.webshop.shared.annotation.ObservedService;
 import com.github.mangila.webshop.shared.event.DomainEvent;
@@ -28,8 +30,17 @@ public class OutboxEventListener {
 
     @EventListener
     public void listen(DomainEvent event) {
-        OutboxInsertCommand command = mapper.toCommand(event);
+        repository.findSequenceAndLockByAggregateId(new OutboxAggregateId(event.aggregateId()))
+                .ifPresentOrElse(
+                        currentSequence -> tryOutbox(event, OutboxSequence.incrementFrom(currentSequence)),
+                        () -> tryOutbox(event, OutboxSequence.initial(event.aggregateId()))
+                );
+    }
+
+    private void tryOutbox(DomainEvent event, OutboxSequence newSequence) {
+        OutboxInsertCommand command = mapper.toCommand(event, newSequence);
         Outbox outbox = repository.insert(command);
+        repository.updateNewSequence(newSequence);
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override

@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.domain;
 
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 
@@ -17,4 +18,8 @@ public interface OutboxCommandRepository {
     void updatePublished(OutboxId id, OutboxPublished published);
 
     List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit);
+
+    Optional<OutboxSequence> findSequenceAndLockByAggregateId(OutboxAggregateId aggregateId);
+
+    void updateNewSequence(OutboxSequence outboxSequence);
 }

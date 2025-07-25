@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.application.web;
 
 import com.github.mangila.webshop.outbox.application.OutboxDto;
 import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
+import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -13,9 +14,11 @@ import java.util.List;
 public class OutboxQueryResolver {
 
     private final OutboxQueryWebFacade webFacade;
+    private final ObservationRegistry observationRegistry;
 
-    public OutboxQueryResolver(OutboxQueryWebFacade webFacade) {
+    public OutboxQueryResolver(OutboxQueryWebFacade webFacade, ObservationRegistry observationRegistry) {
         this.webFacade = webFacade;
+        this.observationRegistry = observationRegistry;
     }
 
     @QueryMapping

@@ -42,6 +42,9 @@ public class OutboxEntity {
     @Column(nullable = false)
     private boolean published;
 
+    @Column(nullable = false, updatable = false)
+    private int sequence;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant created;
@@ -49,16 +52,17 @@ public class OutboxEntity {
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, boolean published) {
+    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence, boolean published) {
         this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
         this.payload = payload;
+        this.sequence = sequence;
         this.published = published;
     }
 
-    public static OutboxEntity from(String domain, String event, UUID aggregateId, ObjectNode payload) {
-        return new OutboxEntity(domain, event, aggregateId, payload, false);
+    public static OutboxEntity from(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence) {
+        return new OutboxEntity(domain, event, aggregateId, payload, sequence, false);
     }
 
     public Long getId() {
@@ -107,6 +111,14 @@ public class OutboxEntity {
 
     public void setPublished(boolean published) {
         this.published = published;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
     }
 
     public Instant getCreated() {

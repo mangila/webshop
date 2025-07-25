@@ -1,4 +1,6 @@
 package com.github.mangila.webshop.outbox.domain.cqrs;
 
-public record OutboxReplayQuery() {
+import com.github.mangila.webshop.outbox.domain.OutboxSequence;
+
+public record OutboxReplayQuery(OutboxSequence sequence, int limit) {
 }

@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa;
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
+import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
@@ -25,7 +26,8 @@ public class OutboxEntityMapper {
                 command.domain().value(),
                 command.event().value(),
                 command.aggregateId().value(),
-                command.payload().value()
+                command.payload().value(),
+                command.sequence().value()
         );
     }
 
@@ -38,6 +40,7 @@ public class OutboxEntityMapper {
                 event,
                 entity.getAggregateId(),
                 entity.getPayload(),
+                entity.getSequence(),
                 entity.isPublished(),
                 entity.getCreated()
         );
@@ -51,6 +54,20 @@ public class OutboxEntityMapper {
                 new OutboxAggregateId(projection.aggregateId()),
                 domain,
                 event
+        );
+    }
+
+    public OutboxSequence toDomain(OutboxSequenceEntity entity) {
+        return OutboxSequence.from(
+                entity.getAggregateId(),
+                entity.getCurrentSequence()
+        );
+    }
+
+    public OutboxSequenceEntity toEntity(OutboxSequence outboxSequence) {
+        return new OutboxSequenceEntity(
+                outboxSequence.aggregateId().value(),
+                outboxSequence.value()
         );
     }
 }
