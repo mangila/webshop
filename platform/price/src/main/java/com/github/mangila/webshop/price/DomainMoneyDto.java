@@ -3,8 +3,8 @@ package com.github.mangila.webshop.price;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.github.mangila.webshop.shared.validation.Amount;
-import com.github.mangila.webshop.shared.validation.Currency;
+import com.github.mangila.webshop.shared.validation.annotation.Amount;
+import com.github.mangila.webshop.shared.validation.annotation.Currency;
 
 import java.math.BigDecimal;
 

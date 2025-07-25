@@ -15,6 +15,7 @@ public final class CacheName {
             DOMAIN_REGISTRY);
 
     private CacheName() {
+        throw new ApplicationException("Utility class");
     }
 }
 

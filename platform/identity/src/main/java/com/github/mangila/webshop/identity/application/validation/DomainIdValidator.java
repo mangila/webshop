@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.validation;
+package com.github.mangila.webshop.identity.application.validation;
 
 import com.github.mangila.webshop.identity.application.DomainIdGeneratorService;
 import jakarta.validation.ConstraintValidator;

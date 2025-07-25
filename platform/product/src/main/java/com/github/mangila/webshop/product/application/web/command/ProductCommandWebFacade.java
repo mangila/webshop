@@ -12,7 +12,7 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.registry.model.Domain;
 import com.github.mangila.webshop.shared.util.CacheName;
-import com.github.mangila.webshop.shared.validation.DomainId;
+import com.github.mangila.webshop.identity.application.validation.DomainId;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.validation;
+package com.github.mangila.webshop.shared.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

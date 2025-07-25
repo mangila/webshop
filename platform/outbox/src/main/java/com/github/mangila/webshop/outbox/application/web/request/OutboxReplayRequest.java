@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.application.web.request;
 
-import com.github.mangila.webshop.shared.validation.DomainId;
+import com.github.mangila.webshop.identity.application.validation.DomainId;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 

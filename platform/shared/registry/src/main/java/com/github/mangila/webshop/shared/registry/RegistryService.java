@@ -3,8 +3,8 @@ package com.github.mangila.webshop.shared.registry;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.registry.model.Domain;
 import com.github.mangila.webshop.shared.registry.model.Event;
-import com.github.mangila.webshop.shared.util.ApplicationException;
 import com.github.mangila.webshop.shared.util.CacheName;
+import com.github.mangila.webshop.shared.util.Ensure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -30,15 +30,11 @@ public class RegistryService {
     }
 
     public void ensureIsRegistered(Event event) {
-        if (!eventRegistry.isRegistered(event)) {
-            throw new ApplicationException(String.format("Event %s is not registered", event));
-        }
+        Ensure.isTrue(eventRegistry.isRegistered(event), "Event %s is not registered".formatted(event));
     }
 
     public void ensureIsRegistered(Domain domain) {
-        if (!domainRegistry.isRegistered(domain)) {
-            throw new ApplicationException(String.format("Domain %s is not registered", domain));
-        }
+        Ensure.isTrue(domainRegistry.isRegistered(domain), "Domain %s is not registered".formatted(domain));
     }
 
     public void registerDomain(Domain domain) {

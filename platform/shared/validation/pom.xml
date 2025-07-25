@@ -17,20 +17,12 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>shared.registry</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.joda</groupId>
             <artifactId>joda-money</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>identity</artifactId>
         </dependency>
     </dependencies>
 

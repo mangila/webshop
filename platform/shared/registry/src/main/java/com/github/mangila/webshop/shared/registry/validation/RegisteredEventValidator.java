@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.shared.validation;
+package com.github.mangila.webshop.shared.registry.validation;
 
 import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.registry.model.Event;
