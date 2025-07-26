@@ -1,0 +1,75 @@
+fail_fast: false
+repos:
+  - repo: local
+    hooks:
+      - id: app-build
+        name: App Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/app/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/app
+        require_serial: true
+        pass_filenames: false
+
+      - id: identity-build
+        name: Identity Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/identity
+        require_serial: true
+        pass_filenames: false
+
+      - id: inventory-build
+        name: Inventory Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/inventory/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/inventory
+        require_serial: true
+        pass_filenames: false
+
+      - id: outbox-build
+        name: Outbox Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/outbox/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/outbox
+        require_serial: true
+        pass_filenames: false
+
+      - id: price-build
+        name: Price Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/price/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/price
+        require_serial: true
+        pass_filenames: false
+
+      - id: product-build
+        name: Product Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/product/pom.xml", "-am", "clean", "verify" ]
+        language: system
+        files: ^platform/product
+        require_serial: true
+        pass_filenames: false
+
+      - id: shared-build
+        name: Shared Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/shared/pom.xml", "-am", "clean", "verify", ]
+        language: system
+        files: ^platform/shared
+        require_serial: true
+        pass_filenames: false
+
+      - id: platform-build
+        name: Platform Parent Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
+        language: system
+        files: pom.xml$
+        pass_filenames: false
+        require_serial: true
