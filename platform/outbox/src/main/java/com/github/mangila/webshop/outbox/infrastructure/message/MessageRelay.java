@@ -18,7 +18,6 @@ import java.util.Objects;
 public class MessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
-
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxQueryRepository queryRepository;
     private final MessageProcessor processor;

@@ -27,7 +27,7 @@ public class MessageHandler {
                         outboxMessage -> {
                             springEventProducer.produce(outboxMessage);
                             commandRepository.updatePublished(outboxMessage.id(), OutboxPublished.published());
-                        }, () -> log.debug("Message locked or processed already with ID: {}", outboxId)
+                        }, () -> log.debug("Message locked or already processed with ID: {}", outboxId)
                 );
     }
 }
