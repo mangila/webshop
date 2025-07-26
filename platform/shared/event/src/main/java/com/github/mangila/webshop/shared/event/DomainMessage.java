@@ -13,6 +13,7 @@ public record DomainMessage(
         Event event
 ) {
     public DomainMessage {
+        Ensure.min(outboxId, 1, "outboxId must be greater than 0");
         Ensure.notNull(aggregateId, "aggregateId cannot be null");
         Ensure.notNull(domain, "domain cannot be null");
         Ensure.notNull(event, "event cannot be null");
