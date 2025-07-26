@@ -30,7 +30,7 @@ public class Bootstrap implements CommandLineRunner {
         Thread.ofVirtual().factory().newThread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(10000);
                     var request = new ProductInsertRequest(
                             "test",
                             objectMapper.createObjectNode(),

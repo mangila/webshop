@@ -1,35 +1,30 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
-import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.shared.util.ApplicationException;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MessageProcessor {
-
     private static final Logger log = LoggerFactory.getLogger(MessageProcessor.class);
-    private final OutboxCommandRepository commandRepository;
-    private final SpringEventProducer springEventProducer;
+    private final MessageHandler messageHandler;
+    private final RetryTemplate retryTemplate;
 
-    public MessageProcessor(OutboxCommandRepository commandRepository, SpringEventProducer springEventProducer) {
-        this.commandRepository = commandRepository;
-        this.springEventProducer = springEventProducer;
+    public MessageProcessor(MessageHandler messageHandler,
+                            RetryTemplate retryTemplate) {
+        this.messageHandler = messageHandler;
+        this.retryTemplate = retryTemplate;
     }
 
-    @Transactional
-    public void processMessage(OutboxId outboxId) {
-        commandRepository.findByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
-                .ifPresentOrElse(this::tryProcess, () -> log.debug("Message locked or processed already with ID: {}", outboxId));
-    }
-
-    private void tryProcess(OutboxMessage message) {
-        log.debug("Process Message with ID: {}", message.id());
-        springEventProducer.produce(message);
-        commandRepository.updatePublished(message.id(), OutboxPublished.published());
+    public void process(OutboxId outboxId) {
+        retryTemplate.execute(context -> {
+            return Try.run(() -> messageHandler.handle(outboxId))
+                    .onSuccess(v -> log.debug("Message processed with ID: {}", outboxId))
+                    .getOrElseThrow(cause -> new ApplicationException("Error while processing message %s".formatted(outboxId), cause));
+        });
     }
 }

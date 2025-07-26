@@ -7,8 +7,6 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,11 +36,7 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
 
     @Override
     public List<OutboxId> findAllIdsByPublished(OutboxPublished published, int limit) {
-        return entityRepository.findAllIdsByPublished(
-                        published.value(),
-                        Sort.by(Sort.Direction.ASC, "created"),
-                        Limit.of(limit)
-                )
+        return entityRepository.findAllIdsByPublished(published.value(), limit)
                 .stream()
                 .map(OutboxId::new)
                 .toList();

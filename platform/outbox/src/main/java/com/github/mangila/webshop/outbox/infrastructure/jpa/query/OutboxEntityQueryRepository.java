@@ -1,8 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +19,11 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
             """)
     List<OutboxEntity> replay(@Param("aggregateId") UUID aggregateId, @Param("sequence") int sequence, @Param("limit") int limit);
 
-    List<Long> findAllIdsByPublished(boolean published, Sort sort, Limit limit);
+    @Query("""
+                    SELECT o.id FROM OutboxEntity o
+                    WHERE o.published = :published
+                    ORDER BY o.created ASC
+                    LIMIT :limit
+            """)
+    List<Long> findAllIdsByPublished(@Param("published") boolean published, @Param("limit") int limit);
 }

@@ -55,7 +55,7 @@ public class MessageRelay {
     }
 
     private void tryProcess(OutboxId id) {
-        Try.run(() -> processor.processMessage(id))
+        Try.run(() -> processor.process(id))
                 .onFailure(e -> log.error("Error while relaying message with ID: {}", id, e));
     }
 }
