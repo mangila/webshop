@@ -48,7 +48,7 @@ public class ProductCommandWebFacade {
     @Transactional
     @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertRequest request) {
-        var domain = Domain.from(Product.class, registryService);
+        var domain = new Domain(Product.class, registryService);
         var domainIdRequest = new NewDomainIdRequest(domain);
         UUID id = domainIdFacade.generate(domainIdRequest);
         ProductInsertCommand command = requestMapper.toCommand(id, request);

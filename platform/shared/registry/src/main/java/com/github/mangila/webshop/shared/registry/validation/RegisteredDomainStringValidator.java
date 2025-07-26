@@ -19,7 +19,7 @@ public class RegisteredDomainStringValidator implements ConstraintValidator<Regi
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return Try.of(() -> {
-            Domain.from(value, registryService);
+            new Domain(value, registryService);
             return true;
         }).getOrElseGet(failure -> false);
     }

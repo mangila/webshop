@@ -19,7 +19,7 @@ public class RegisteredEventStringValidator implements ConstraintValidator<Regis
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return Try.of(() -> {
-            Event.from(value, registryService);
+            new Event(value, registryService);
             return true;
         }).getOrElseGet(failure -> false);
     }

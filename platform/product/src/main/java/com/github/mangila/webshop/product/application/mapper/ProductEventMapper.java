@@ -27,8 +27,8 @@ public class ProductEventMapper {
     public DomainEvent toEvent(ProductEvent event, Product product) {
         var dto = dtoMapper.toDto(product);
         return new DomainEvent(
-                Domain.from(Product.class, registryService),
-                Event.from(event, registryService),
+                new Domain(Product.class, registryService),
+                new Event(event, registryService),
                 product.id().value(),
                 jsonMapper.toObjectNode(dto)
         );

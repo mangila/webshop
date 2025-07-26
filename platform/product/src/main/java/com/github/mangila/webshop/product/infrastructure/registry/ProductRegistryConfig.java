@@ -21,11 +21,11 @@ public class ProductRegistryConfig {
     @PostConstruct
     public void init() {
         final Class<Product> clazz = Product.class;
-        final Domain domain = Domain.createNew(clazz);
+        final Domain domain = new Domain(clazz);
         registryService.registerDomain(domain);
         EnumSet.allOf(ProductEvent.class)
                 .stream()
-                .map(Event::createNew)
+                .map(Event::new)
                 .forEach(registryService::registerEvent);
     }
 }

@@ -15,7 +15,7 @@ public class DomainIdEntityMapper {
     }
 
     public DomainId toDomain(DomainIdEntity entity) {
-        return DomainId.from(entity.getId(), Domain.from(entity.getDomain(), registryService), entity.getCreated());
+        return DomainId.from(entity.getId(), new Domain(entity.getDomain(), registryService), entity.getCreated());
     }
 
     public DomainIdEntity toEntity(DomainId domainId) {
