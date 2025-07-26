@@ -14,7 +14,6 @@ import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,14 +49,6 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     @Override
     public void updatePublished(OutboxId id, OutboxPublished published) {
         entityCommandRepository.updatePublished(id.value(), published.value());
-    }
-
-    @Override
-    public List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit) {
-        return entityCommandRepository.findByPublishedForUpdate(published.value(), limit)
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
     }
 
     @Override

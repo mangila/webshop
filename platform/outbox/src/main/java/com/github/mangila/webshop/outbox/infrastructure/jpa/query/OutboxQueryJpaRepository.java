@@ -4,7 +4,7 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import org.springframework.data.domain.Limit;
@@ -37,13 +37,14 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public List<OutboxMessage> findAllByPublished(OutboxPublished published, int limit) {
-        return entityRepository.findAllByPublished(
+    public List<OutboxId> findAllIdsByPublished(OutboxPublished published, int limit) {
+        return entityRepository.findAllIdsByPublished(
                         published.value(),
                         Sort.by(Sort.Direction.ASC, "created"),
-                        Limit.of(limit))
+                        Limit.of(limit)
+                )
                 .stream()
-                .map(mapper::toDomain)
+                .map(OutboxId::new)
                 .toList();
     }
 }

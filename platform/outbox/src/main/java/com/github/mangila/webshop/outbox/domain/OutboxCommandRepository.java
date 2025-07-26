@@ -6,7 +6,6 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface OutboxCommandRepository {
@@ -16,9 +15,7 @@ public interface OutboxCommandRepository {
     Optional<OutboxMessage> findByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published);
 
     void updatePublished(OutboxId id, OutboxPublished published);
-
-    List<OutboxMessage> findAllByPublishedForUpdate(OutboxPublished published, int limit);
-
+    
     Optional<OutboxSequence> findSequenceAndLockByAggregateId(OutboxAggregateId aggregateId);
 
     void updateNewSequence(OutboxSequence outboxSequence);
