@@ -22,9 +22,9 @@ public class MessageProcessor {
 
     public void process(OutboxId outboxId) {
         retryTemplate.execute(context -> {
-            log.debug("Processing message with ID: {} with Retry Attempt: {}", outboxId, context.getRetryCount());
+            log.debug("Processing message: {} Retry Attempt: {}", outboxId, context.getRetryCount());
             return Try.run(() -> messageHandler.handle(outboxId))
-                    .onSuccess(v -> log.debug("Message processed with ID: {}", outboxId))
+                    .onSuccess(v -> log.debug("Message processed: {}", outboxId))
                     .getOrElseThrow(cause -> new ApplicationException("Error while processing message %s".formatted(outboxId), cause));
         });
     }
