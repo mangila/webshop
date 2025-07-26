@@ -28,7 +28,7 @@ public class MessageProcessor {
     }
 
     private void tryProcess(OutboxMessage message) {
-        log.debug("Relay Message with ID: {}", message.id());
+        log.debug("Process Message with ID: {}", message.id());
         springEventProducer.produce(message);
         commandRepository.updatePublished(message.id(), OutboxPublished.published());
     }

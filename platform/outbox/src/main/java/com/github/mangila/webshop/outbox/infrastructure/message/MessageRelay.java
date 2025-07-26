@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
-import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
@@ -21,19 +20,14 @@ public class MessageRelay {
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
 
     private final InternalMessageQueue internalMessageQueue;
-    private final OutboxCommandRepository commandRepository;
     private final OutboxQueryRepository queryRepository;
-    private final SpringEventProducer springEventProducer;
     private final MessageProcessor processor;
 
-    public MessageRelay(OutboxCommandRepository commandRepository,
-                        InternalMessageQueue internalMessageQueue,
+    public MessageRelay(InternalMessageQueue internalMessageQueue,
                         OutboxQueryRepository queryRepository,
-                        SpringEventProducer springEventProducer, MessageProcessor processor) {
-        this.commandRepository = commandRepository;
+                        MessageProcessor processor) {
         this.internalMessageQueue = internalMessageQueue;
         this.queryRepository = queryRepository;
-        this.springEventProducer = springEventProducer;
         this.processor = processor;
     }
 
