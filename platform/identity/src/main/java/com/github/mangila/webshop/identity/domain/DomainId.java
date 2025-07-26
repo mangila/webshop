@@ -2,20 +2,16 @@ package com.github.mangila.webshop.identity.domain;
 
 
 import com.github.mangila.webshop.shared.registry.model.Domain;
+import com.github.mangila.webshop.shared.util.Ensure;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public class DomainId {
+public record DomainId(UUID id, Domain domain, Instant created) {
 
-    private UUID id;
-    private Domain domain;
-    private Instant created;
-
-    private DomainId(UUID id, Domain domain, Instant created) {
-        this.id = id;
-        this.domain = domain;
-        this.created = created;
+    public DomainId {
+        Ensure.notNull(id, "Id must not be null");
+        Ensure.notNull(domain, "Domain must not be null");
     }
 
     public static DomainId from(UUID id, Domain domain, Instant created) {
@@ -24,29 +20,5 @@ public class DomainId {
 
     public static DomainId create(Domain domain) {
         return new DomainId(UUID.randomUUID(), domain, null);
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Domain getDomain() {
-        return domain;
-    }
-
-    public void setDomain(Domain domain) {
-        this.domain = domain;
-    }
-
-    public Instant getCreated() {
-        return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
     }
 }

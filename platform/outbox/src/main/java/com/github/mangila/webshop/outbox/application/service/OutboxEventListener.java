@@ -45,7 +45,7 @@ public class OutboxEventListener {
                 new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
-                        internalMessageQueue.add(outbox.getId());
+                        internalMessageQueue.add(outbox.id());
                     }
                 }
         );

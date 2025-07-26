@@ -12,5 +12,4 @@ public record OutboxPublished(boolean value) {
     public static OutboxPublished notPublished() {
         return NOT_PUBLISHED;
     }
-
 }

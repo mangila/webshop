@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.application.web.request;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import com.github.mangila.webshop.shared.validation.annotation.AlphaNumeric;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +15,6 @@ public record ProductInsertRequest(
                 withHyphen = true)
         String name,
         @NotNull ObjectNode attributes,
-        @NotNull ProductUnit unit
+        @NotNull ProductUnitType unit
 ) {
 }

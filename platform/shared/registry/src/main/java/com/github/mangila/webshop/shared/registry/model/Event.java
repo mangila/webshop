@@ -18,8 +18,14 @@ public final class Event {
         return value;
     }
 
-    public static Event from(Enum<?> event) {
+    public static Event createNew(Enum<?> event) {
         return new Event(event.name());
+    }
+
+    public static Event from(Enum<?> event, RegistryService registry) {
+        var e = createNew(event);
+        registry.ensureIsRegistered(e);
+        return e;
     }
 
     public static Event from(String event, RegistryService registry) {

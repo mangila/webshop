@@ -7,7 +7,10 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RegisteredDomainValidator.class)
+@Constraint(validatedBy = {
+        RegisteredDomainValidator.class,
+        RegisteredDomainStringValidator.class
+})
 @Documented
 public @interface RegisteredDomain {
     String message() default "Domain is not Registered";

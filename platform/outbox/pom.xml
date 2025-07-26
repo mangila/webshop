@@ -86,6 +86,10 @@
             <groupId>com.github.mangila.webshop</groupId>
             <artifactId>shared.validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>identity</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

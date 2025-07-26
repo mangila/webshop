@@ -22,21 +22,4 @@ public class JsonMapper {
                 })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", object), cause));
     }
-
-    public <T> T toObject(byte[] bytes, Class<T> clazz) {
-        return Try.of(() -> {
-                    Ensure.notNull(clazz, "Class cannot be null");
-                    Ensure.notEmpty(bytes, "Array cannot be empty");
-                    return objectMapper.readValue(bytes, clazz);
-                })
-                .getOrElseThrow(cause -> new ApplicationException(String.format("Error serialize object: %s", clazz.getSimpleName()), cause));
-    }
-
-    public byte[] toBytes(Object object) {
-        return Try.of(() -> {
-                    Ensure.notNull(object, "Object cannot be null");
-                    return objectMapper.writeValueAsBytes(object);
-                })
-                .getOrElseThrow(cause -> new ApplicationException(String.format("Error deserialize object: %s", object.getClass().getSimpleName()), cause));
-    }
 }

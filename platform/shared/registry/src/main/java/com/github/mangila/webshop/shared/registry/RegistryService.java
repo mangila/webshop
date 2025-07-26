@@ -29,14 +29,6 @@ public class RegistryService {
         );
     }
 
-    public void ensureIsRegistered(Event event) {
-        Ensure.isTrue(eventRegistry.isRegistered(event), "Event %s is not registered".formatted(event));
-    }
-
-    public void ensureIsRegistered(Domain domain) {
-        Ensure.isTrue(domainRegistry.isRegistered(domain), "Domain %s is not registered".formatted(domain));
-    }
-
     public void registerDomain(Domain domain) {
         log.info("Registering domain: {}", domain.value());
         domainRegistry.register(domain, domain.value());
@@ -53,5 +45,13 @@ public class RegistryService {
 
     public boolean isRegistered(Domain domain) {
         return domainRegistry.isRegistered(domain);
+    }
+
+    public void ensureIsRegistered(Event event) {
+        Ensure.isTrue(eventRegistry.isRegistered(event), "Event %s is not registered".formatted(event));
+    }
+
+    public void ensureIsRegistered(Domain domain) {
+        Ensure.isTrue(domainRegistry.isRegistered(domain), "Domain %s is not registered".formatted(domain));
     }
 }

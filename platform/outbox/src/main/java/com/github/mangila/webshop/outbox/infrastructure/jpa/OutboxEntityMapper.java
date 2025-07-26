@@ -4,8 +4,7 @@ import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
+import com.github.mangila.webshop.outbox.domain.primitive.*;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
 import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.registry.model.Domain;
@@ -34,15 +33,16 @@ public class OutboxEntityMapper {
     public Outbox toDomain(OutboxEntity entity) {
         var domain = Domain.from(entity.getDomain(), registryService);
         var event = Event.from(entity.getEvent(), registryService);
-        return Outbox.from(
-                entity.getId(),
+        var aggregateId = new OutboxAggregateId(entity.getAggregateId());
+        return new Outbox(
+                new OutboxId(entity.getId()),
                 domain,
                 event,
-                entity.getAggregateId(),
-                entity.getPayload(),
-                entity.getSequence(),
-                entity.isPublished(),
-                entity.getCreated()
+                aggregateId,
+                new OutboxPayload(entity.getPayload()),
+                new OutboxSequence(aggregateId, entity.getSequence()),
+                new OutboxPublished(entity.isPublished()),
+                new OutboxCreated(entity.getCreated())
         );
     }
 

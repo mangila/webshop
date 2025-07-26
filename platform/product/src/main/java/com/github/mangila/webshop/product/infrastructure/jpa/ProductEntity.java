@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -31,7 +31,7 @@ public class ProductEntity implements Persistable<UUID> {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ProductUnit unit;
+    private ProductUnitType unit;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -47,15 +47,11 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    private ProductEntity(UUID id, String name, ObjectNode attributes, ProductUnit unit) {
+    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductUnitType unit) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
         this.unit = unit;
-    }
-
-    public static ProductEntity from(UUID id, String name, ObjectNode attributes, ProductUnit unit) {
-        return new ProductEntity(id, name, attributes, unit);
     }
 
     @Override
@@ -94,11 +90,11 @@ public class ProductEntity implements Persistable<UUID> {
         this.attributes = attributes;
     }
 
-    public ProductUnit getUnit() {
+    public ProductUnitType getUnit() {
         return unit;
     }
 
-    public void setUnit(ProductUnit unit) {
+    public void setUnit(ProductUnitType unit) {
         this.unit = unit;
     }
 

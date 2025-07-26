@@ -3,7 +3,7 @@ package com.github.mangila.webshop.app.bootstrap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
-import com.github.mangila.webshop.product.domain.types.ProductUnit;
+import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class Bootstrap implements CommandLineRunner {
                     var request = new ProductInsertRequest(
                             "test",
                             objectMapper.createObjectNode(),
-                            ProductUnit.PIECE
+                            ProductUnitType.PIECE
                     );
                     String response = client.send(HttpRequest.newBuilder()
                                     .header("Content-Type", "application/json")

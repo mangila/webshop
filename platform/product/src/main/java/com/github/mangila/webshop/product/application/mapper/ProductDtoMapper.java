@@ -2,19 +2,22 @@ package com.github.mangila.webshop.product.application.mapper;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.domain.Product;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 @Component
+@Validated
 public class ProductDtoMapper {
 
-    public ProductDto toDto(Product product) {
+    public @Valid ProductDto toDto(Product product) {
         return new ProductDto(
-                product.getId().value(),
-                product.getName().value(),
-                product.getAttributes(),
-                product.getUnit(),
-                product.getCreated(),
-                product.getUpdated()
+                product.id().value(),
+                product.name().value(),
+                product.attributes().value(),
+                product.unit().value(),
+                product.created().value(),
+                product.updated().value()
         );
     }
 }

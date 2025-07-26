@@ -31,7 +31,7 @@ public class ProductQueryWebFacade {
 
     @Cacheable(value = CacheName.LRU, key = "#request.value()")
     public ProductDto findProductById(@Valid ProductByIdRequest request) {
-        ProductId productId = requestMapper.toQuery(request);
+        ProductId productId = requestMapper.toDomain(request);
         Product product = service.findByIdOrThrow(productId);
         return dtoMapper.toDto(product);
     }

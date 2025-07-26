@@ -18,8 +18,14 @@ public final class Domain {
         return value;
     }
 
-    public static Domain from(Class<?> domain) {
+    public static Domain createNew(Class<?> domain) {
         return new Domain(domain.getSimpleName().toUpperCase());
+    }
+
+    public static Domain from(Class<?> domain, RegistryService registry) {
+        var d = createNew(domain);
+        registry.ensureIsRegistered(d);
+        return d;
     }
 
     public static Domain from(String domain, RegistryService registry) {

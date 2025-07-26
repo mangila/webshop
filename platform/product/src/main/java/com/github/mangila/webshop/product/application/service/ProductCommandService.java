@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.application.service;
 
-import com.github.mangila.webshop.identity.application.DomainIdGeneratorService;
+import com.github.mangila.webshop.identity.application.DomainIdFacade;
 import com.github.mangila.webshop.product.application.mapper.ProductEventMapper;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
@@ -9,6 +9,7 @@ import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.shared.event.DomainEvent;
 import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import com.github.mangila.webshop.shared.util.Ensure;
 import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,22 +19,23 @@ public class ProductCommandService {
 
     private final ProductEventMapper eventMapper;
     private final ProductCommandRepository repository;
-    private final DomainIdGeneratorService idGenerator;
     private final SpringEventPublisher publisher;
+    private final DomainIdFacade domainIdFacade;
 
     public ProductCommandService(ProductEventMapper eventMapper,
                                  ProductCommandRepository repository,
-                                 DomainIdGeneratorService idGenerator,
-                                 SpringEventPublisher publisher) {
+                                 SpringEventPublisher publisher,
+                                 DomainIdFacade domainIdFacade) {
         this.eventMapper = eventMapper;
         this.repository = repository;
-        this.idGenerator = idGenerator;
         this.publisher = publisher;
+        this.domainIdFacade = domainIdFacade;
     }
 
     @Transactional
     public Product insert(ProductInsertCommand command) {
-        idGenerator.ensureHasGenerated(command.id().value());
+        Ensure.notNull(command, "ProductInsertCommand cannot be null");
+        domainIdFacade.ensureHasGenerated(command.id().value());
         Product product = repository.insert(command);
         DomainEvent domainEvent = eventMapper.toEvent(ProductEvent.PRODUCT_CREATED, product);
         publisher.publishDomainEvent(domainEvent);
@@ -42,7 +44,7 @@ public class ProductCommandService {
 
     @Transactional
     public void deleteByIdOrThrow(ProductId productId) {
-        idGenerator.ensureHasGenerated(productId.value());
+        Ensure.notNull(productId, "ProductId cannot be null");
         Product product = repository.deleteById(productId).orElseThrow(() -> new ResourceNotFoundException(
                 "Product not found with id: %s".formatted(productId.value()),
                 Product.class
