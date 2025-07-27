@@ -3,8 +3,8 @@ package com.github.mangila.webshop.product.infrastructure.registry;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.shared.registry.RegistryService;
-import com.github.mangila.webshop.shared.registry.model.Domain;
-import com.github.mangila.webshop.shared.registry.model.Event;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.model.Event;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 

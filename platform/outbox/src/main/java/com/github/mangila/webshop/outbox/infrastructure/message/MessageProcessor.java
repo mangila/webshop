@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.util.ApplicationException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

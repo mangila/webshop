@@ -4,7 +4,7 @@ import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPayload;
-import com.github.mangila.webshop.shared.event.DomainEvent;
+import com.github.mangila.webshop.shared.model.DomainEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

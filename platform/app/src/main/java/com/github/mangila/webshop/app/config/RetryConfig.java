@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.app.config;
 
-import com.github.mangila.webshop.shared.util.ApplicationException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;

@@ -7,7 +7,7 @@ import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
-import com.github.mangila.webshop.shared.event.DomainEvent;
+import com.github.mangila.webshop.shared.model.DomainEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;

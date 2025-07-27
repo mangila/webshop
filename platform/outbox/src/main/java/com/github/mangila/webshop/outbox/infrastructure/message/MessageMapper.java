@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
-import com.github.mangila.webshop.shared.event.DomainMessage;
+import com.github.mangila.webshop.shared.model.DomainMessage;
 import org.springframework.stereotype.Component;
 
 @Component

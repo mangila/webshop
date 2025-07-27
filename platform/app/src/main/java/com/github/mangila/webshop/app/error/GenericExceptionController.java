@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.app.error;
 
 
-import com.github.mangila.webshop.shared.util.ApplicationException;
-import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

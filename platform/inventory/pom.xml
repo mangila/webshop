@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>shared.event</artifactId>
+            <artifactId>shared</artifactId>
         </dependency>
     </dependencies>
 

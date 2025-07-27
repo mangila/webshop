@@ -7,8 +7,8 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.*;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
 import com.github.mangila.webshop.shared.registry.RegistryService;
-import com.github.mangila.webshop.shared.registry.model.Domain;
-import com.github.mangila.webshop.shared.registry.model.Event;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.model.Event;
 import org.springframework.stereotype.Component;
 
 @Component

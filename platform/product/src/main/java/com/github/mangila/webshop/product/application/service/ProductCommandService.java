@@ -7,10 +7,10 @@ import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import com.github.mangila.webshop.shared.event.DomainEvent;
-import com.github.mangila.webshop.shared.event.SpringEventPublisher;
-import com.github.mangila.webshop.shared.util.Ensure;
-import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
+import com.github.mangila.webshop.shared.Ensure;
+import com.github.mangila.webshop.shared.SpringEventPublisher;
+import com.github.mangila.webshop.shared.model.DomainEvent;
+import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.domain.cqrs;
 
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 
 public record OutboxReplayQuery(OutboxSequence sequence, int limit) {
     public OutboxReplayQuery {

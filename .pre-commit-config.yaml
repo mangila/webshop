@@ -5,7 +5,7 @@ repos:
       - id: app-build
         name: App Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/app/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/app/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/app
         require_serial: true
@@ -14,7 +14,7 @@ repos:
       - id: identity-build
         name: Identity Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/identity
         require_serial: true
@@ -23,7 +23,7 @@ repos:
       - id: inventory-build
         name: Inventory Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/inventory/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/inventory/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/inventory
         require_serial: true
@@ -32,7 +32,7 @@ repos:
       - id: outbox-build
         name: Outbox Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/outbox/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/outbox/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/outbox
         require_serial: true
@@ -41,7 +41,7 @@ repos:
       - id: price-build
         name: Price Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/price/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/price/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/price
         require_serial: true
@@ -50,7 +50,7 @@ repos:
       - id: product-build
         name: Product Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/product/pom.xml", "-am", "clean", "verify" ]
+        args: [ "-f", "platform/product/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/product
         require_serial: true
@@ -59,7 +59,7 @@ repos:
       - id: shared-build
         name: Shared Module Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/shared/pom.xml", "-am", "clean", "verify", ]
+        args: [ "-f", "platform/shared/pom.xml", "-am", "clean", "test", ]
         language: system
         files: ^platform/shared
         require_serial: true

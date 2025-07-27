@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
-import com.github.mangila.webshop.shared.event.DomainMessage;
-import com.github.mangila.webshop.shared.event.SpringEventPublisher;
+import com.github.mangila.webshop.shared.model.DomainMessage;
+import com.github.mangila.webshop.shared.SpringEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

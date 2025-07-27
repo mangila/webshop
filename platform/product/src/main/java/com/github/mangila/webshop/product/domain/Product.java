@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.domain;
 
 import com.github.mangila.webshop.product.domain.primitive.*;
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 
 public record Product(
         ProductId id,

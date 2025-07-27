@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.inventory;
 
-import com.github.mangila.webshop.shared.event.DomainMessage;
+import com.github.mangila.webshop.shared.model.DomainMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;

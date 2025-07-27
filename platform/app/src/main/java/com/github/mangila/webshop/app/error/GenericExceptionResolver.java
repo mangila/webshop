@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.app.error;
 
-import com.github.mangila.webshop.shared.util.ApplicationException;
-import com.github.mangila.webshop.shared.util.ResourceNotFoundException;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;

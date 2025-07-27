@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.domain.primitive;
 
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 
 import java.time.Instant;
 

@@ -2,8 +2,8 @@ package com.github.mangila.webshop.app.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.mangila.webshop.shared.util.ApplicationException;
-import com.github.mangila.webshop.shared.util.CacheName;
+import com.github.mangila.webshop.shared.exception.ApplicationException;
+import com.github.mangila.webshop.shared.model.CacheName;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.cache.CaffeineCacheMetrics;
 import org.springframework.cache.CacheManager;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.github.mangila.webshop.shared.util.CacheName.*;
+import static com.github.mangila.webshop.shared.model.CacheName.*;
 
 @Configuration
 @EnableCaching

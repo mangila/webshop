@@ -2,11 +2,11 @@ package com.github.mangila.webshop.product.application.mapper;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
-import com.github.mangila.webshop.shared.event.DomainEvent;
+import com.github.mangila.webshop.shared.model.DomainEvent;
 import com.github.mangila.webshop.shared.registry.RegistryService;
-import com.github.mangila.webshop.shared.registry.model.Domain;
-import com.github.mangila.webshop.shared.registry.model.Event;
-import com.github.mangila.webshop.shared.util.JsonMapper;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.model.Event;
+import com.github.mangila.webshop.shared.JsonMapper;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -4,7 +4,7 @@ import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
 import com.github.mangila.webshop.product.domain.primitive.ProductUnit;
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 
 public record ProductInsertCommand(
         ProductId id,

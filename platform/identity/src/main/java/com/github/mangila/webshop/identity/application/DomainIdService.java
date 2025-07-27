@@ -4,7 +4,7 @@ package com.github.mangila.webshop.identity.application;
 import com.github.mangila.webshop.identity.domain.DomainId;
 import com.github.mangila.webshop.identity.domain.DomainIdRepository;
 import com.github.mangila.webshop.identity.domain.cqrs.NewDomainIdCommand;
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

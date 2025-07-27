@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.domain;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
-import com.github.mangila.webshop.shared.util.Ensure;
+import com.github.mangila.webshop.shared.Ensure;
 
 import java.util.UUID;
 
