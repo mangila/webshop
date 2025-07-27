@@ -2,19 +2,15 @@ package com.github.mangila.webshop.identity.infrastructure;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
-import org.jspecify.annotations.Nullable;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "domain_id")
+@Table(name = "identity_record")
 @Immutable
-@EntityListeners(AuditingEntityListener.class)
-public class DomainIdEntity implements Persistable<UUID> {
+public class IdentityEntity implements Persistable<UUID> {
 
     @Id
     @Column(columnDefinition = "uuid")
@@ -23,23 +19,23 @@ public class DomainIdEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private String domain;
 
-    @CreatedDate
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Instant created;
 
     @Transient
     private volatile boolean isNew = true;
 
-    protected DomainIdEntity() {
+    protected IdentityEntity() {
     }
 
-    private DomainIdEntity(UUID id, String domain) {
+    private IdentityEntity(UUID id, String domain, Instant created) {
         this.id = id;
         this.domain = domain;
+        this.created = created;
     }
 
-    public static DomainIdEntity from(UUID id, String domain) {
-        return new DomainIdEntity(id, domain);
+    public static IdentityEntity from(UUID id, String domain, Instant created) {
+        return new IdentityEntity(id, domain, created);
     }
 
     public UUID getId() {

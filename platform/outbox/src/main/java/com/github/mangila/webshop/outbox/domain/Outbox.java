@@ -13,17 +13,22 @@ public record Outbox(
         Event event,
         OutboxAggregateId aggregateId,
         OutboxPayload payload,
-        OutboxSequence sequence,
         OutboxPublished published,
+        OutboxPublishedAt publishedAt,
+        OutboxSequence sequence,
         OutboxCreated created) {
     public Outbox {
         Ensure.notNull(id, "OutboxId must not be null");
         Ensure.notNull(domain, "Domain must not be null");
         Ensure.notNull(event, "Event must not be null");
         Ensure.notNull(aggregateId, "OutboxAggregateId must not be null");
-        Ensure.notNull(payload, "Payload must not be null");
-        Ensure.notNull(sequence, "OutboxSequence must not be null");
+        Ensure.notNull(payload, "OutboxPayload must not be null");
         Ensure.notNull(published, "OutboxPublished must not be null");
+        Ensure.notNull(publishedAt, "OutboxPublishedAt must not be null");
+        Ensure.notNull(sequence, "OutboxSequence must not be null");
         Ensure.notNull(created, "OutboxCreated must not be null");
+        if (published.value()) {
+            Ensure.notNull(publishedAt.value(), "OutboxPublishedAt Instant must not be null");
+        }
     }
 }

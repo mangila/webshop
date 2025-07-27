@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.application;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.identity.application.validation.DomainId;
+import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
 import com.github.mangila.webshop.shared.annotation.RegisteredDomain;
 import com.github.mangila.webshop.shared.annotation.RegisteredEvent;
 import jakarta.validation.constraints.Min;
@@ -18,7 +18,7 @@ public record OutboxDto(
         @RegisteredEvent
         String event,
         @NotNull
-        @DomainId
+        @GeneratedIdentity
         UUID aggregateId,
         @NotNull
         ObjectNode payload,

@@ -15,7 +15,6 @@ public class ProductEventMapper {
 
     private final ProductDtoMapper dtoMapper;
     private final JsonMapper jsonMapper;
-
     private final DomainRegistry domainRegistry;
     private final EventRegistry eventRegistry;
 

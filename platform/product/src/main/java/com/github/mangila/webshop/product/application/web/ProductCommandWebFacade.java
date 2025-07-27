@@ -1,7 +1,8 @@
 package com.github.mangila.webshop.product.application.web;
 
-import com.github.mangila.webshop.identity.application.DomainIdFacade;
-import com.github.mangila.webshop.identity.application.NewDomainIdRequest;
+import com.github.mangila.webshop.identity.application.IdentityService;
+import com.github.mangila.webshop.identity.domain.Identity;
+import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.mapper.ProductDtoMapper;
 import com.github.mangila.webshop.product.application.mapper.ProductRequestMapper;
@@ -21,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.UUID;
-
 @Service
 @Validated
 public class ProductCommandWebFacade {
@@ -30,18 +29,17 @@ public class ProductCommandWebFacade {
     private final ProductDtoMapper dtoMapper;
     private final ProductRequestMapper requestMapper;
     private final ProductCommandService commandService;
-    private final DomainIdFacade domainIdFacade;
+    private final IdentityService identityService;
     private final DomainRegistry domainRegistry;
 
     public ProductCommandWebFacade(ProductDtoMapper dtoMapper,
                                    ProductRequestMapper requestMapper,
-                                   ProductCommandService commandService,
-                                   DomainIdFacade domainIdFacade,
+                                   ProductCommandService commandService, IdentityService identityService,
                                    DomainRegistry domainRegistry) {
         this.dtoMapper = dtoMapper;
         this.requestMapper = requestMapper;
         this.commandService = commandService;
-        this.domainIdFacade = domainIdFacade;
+        this.identityService = identityService;
         this.domainRegistry = domainRegistry;
     }
 
@@ -49,9 +47,8 @@ public class ProductCommandWebFacade {
     @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertRequest request) {
         var domain = new Domain(Product.class, domainRegistry);
-        var domainIdRequest = new NewDomainIdRequest(domain);
-        UUID id = domainIdFacade.generate(domainIdRequest);
-        ProductInsertCommand command = requestMapper.toCommand(id, request);
+        Identity record = identityService.generate(new NewIdentityCommand(domain));
+        ProductInsertCommand command = requestMapper.toCommand(record.id(), request);
         Product product = commandService.insert(command);
         return dtoMapper.toDto(product);
     }

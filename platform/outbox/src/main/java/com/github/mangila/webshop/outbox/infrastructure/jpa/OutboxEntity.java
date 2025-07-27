@@ -5,15 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "outbox")
-@EntityListeners(AuditingEntityListener.class)
 public class OutboxEntity {
 
     @Id
@@ -42,27 +40,32 @@ public class OutboxEntity {
     @Column(nullable = false)
     private boolean published;
 
+    @Column(name = "published_at")
+    @Nullable
+    private Instant publishedAt;
+
     @Column(nullable = false, updatable = false)
     private int sequence;
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant created;
 
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence, boolean published) {
+    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, boolean published, Instant publishedAt, int sequence, Instant created) {
         this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
         this.payload = payload;
         this.sequence = sequence;
         this.published = published;
+        this.publishedAt = publishedAt;
+        this.created = created;
     }
 
     public static OutboxEntity from(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence) {
-        return new OutboxEntity(domain, event, aggregateId, payload, sequence, false);
+        return new OutboxEntity(domain, event, aggregateId, payload, false, null, sequence, Instant.now());
     }
 
     public Long getId() {
@@ -111,6 +114,14 @@ public class OutboxEntity {
 
     public void setPublished(boolean published) {
         this.published = published;
+    }
+
+    public @Nullable Instant getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(@Nullable Instant publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public int getSequence() {

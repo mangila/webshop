@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.identity.infrastructure;
 
-import com.github.mangila.webshop.identity.domain.DomainId;
-import com.github.mangila.webshop.identity.domain.DomainIdRepository;
+import com.github.mangila.webshop.identity.domain.Identity;
+import com.github.mangila.webshop.identity.domain.IdentityRepository;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
@@ -10,19 +10,19 @@ import java.util.UUID;
 
 
 @Repository
-public class DomainIdJpaRepository implements DomainIdRepository {
+public class IdentityJpaRepository implements IdentityRepository {
 
-    private final DomainIdEntityRepository repository;
-    private final DomainIdEntityMapper mapper;
+    private final IdentityEntityRepository repository;
+    private final IdentityEntityMapper mapper;
 
-    public DomainIdJpaRepository(DomainIdEntityRepository repository,
-                                 DomainIdEntityMapper mapper) {
+    public IdentityJpaRepository(IdentityEntityRepository repository,
+                                 IdentityEntityMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Override
-    public DomainId save(DomainId record) {
+    public Identity save(Identity record) {
         return Stream.of(record)
                 .map(mapper::toEntity)
                 .map(repository::save)
@@ -31,7 +31,7 @@ public class DomainIdJpaRepository implements DomainIdRepository {
     }
 
     @Override
-    public Optional<DomainId> findById(UUID id) {
+    public Optional<Identity> findById(UUID id) {
         return repository.findById(id).map(mapper::toDomain);
     }
 

@@ -3,11 +3,11 @@ package com.github.mangila.webshop.identity.domain;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface DomainIdRepository {
+public interface IdentityRepository {
 
-    DomainId save(DomainId record);
+    Identity save(Identity record);
 
-    Optional<DomainId> findById(UUID id);
+    Optional<Identity> findById(UUID id);
 
     boolean existsById(UUID id);
 }

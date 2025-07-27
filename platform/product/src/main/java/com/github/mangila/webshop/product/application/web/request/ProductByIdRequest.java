@@ -1,10 +1,10 @@
 package com.github.mangila.webshop.product.application.web.request;
 
 
-import com.github.mangila.webshop.identity.application.validation.DomainId;
+import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record ProductByIdRequest(@NotNull @DomainId UUID value) {
+public record ProductByIdRequest(@NotNull @GeneratedIdentity UUID value) {
 }

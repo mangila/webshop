@@ -9,6 +9,7 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublishedAt;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity;
 import io.vavr.collection.Stream;
@@ -47,8 +48,8 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public void updatePublished(OutboxId id, OutboxPublished published) {
-        entityCommandRepository.updatePublished(id.value(), published.value());
+    public void updatePublished(OutboxId id, OutboxPublished published, OutboxPublishedAt publishedAt) {
+        entityCommandRepository.updatePublished(id.value(), published.value(), publishedAt.value());
     }
 
     @Override

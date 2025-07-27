@@ -2,12 +2,15 @@ package com.github.mangila.webshop.shared;
 
 import com.github.mangila.webshop.shared.model.DomainEvent;
 import com.github.mangila.webshop.shared.model.DomainMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SpringEventPublisher {
 
+    private static final Logger log = LoggerFactory.getLogger(SpringEventPublisher.class);
     private final ApplicationEventPublisher publisher;
 
     public SpringEventPublisher(ApplicationEventPublisher publisher) {
@@ -15,10 +18,14 @@ public class SpringEventPublisher {
     }
 
     public void publishDomainEvent(DomainEvent event) {
+        Ensure.notNull(event, "DomainEvent cannot be null");
+        log.debug("Publishing DomainEvent: {}", event);
         publisher.publishEvent(event);
     }
 
     public void publishDomainMessage(DomainMessage message) {
+        Ensure.notNull(message, "DomainMessage cannot be null");
+        log.debug("Publishing DomainMessage: {}", message);
         publisher.publishEvent(message);
     }
 }

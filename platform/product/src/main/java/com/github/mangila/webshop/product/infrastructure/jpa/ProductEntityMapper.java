@@ -5,6 +5,8 @@ import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+
 @Component
 public class ProductEntityMapper {
 
@@ -13,7 +15,9 @@ public class ProductEntityMapper {
                 command.id().value(),
                 command.name().value(),
                 command.attributes().value(),
-                command.unit().value()
+                command.unit().value(),
+                Instant.now(),
+                Instant.now()
         );
     }
 

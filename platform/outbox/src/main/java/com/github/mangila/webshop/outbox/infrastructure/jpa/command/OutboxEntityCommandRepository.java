@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +42,15 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
     @Modifying
     @Query(
             value = """
-                    UPDATE outbox
-                    SET published = :published
+                    UPDATE outbox SET
+                    published = :published,
+                    published_at = :publishedAt
                     WHERE id = :id
                     """,
             nativeQuery = true
     )
     void updatePublished(@Param("id") long id,
-                         @Param("published") boolean published);
+                         @Param("published") boolean published,
+                         @Param("publishedAt") Instant publishedAt
+    );
 }

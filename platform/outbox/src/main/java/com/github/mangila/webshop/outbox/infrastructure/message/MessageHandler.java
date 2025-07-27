@@ -3,6 +3,7 @@ package com.github.mangila.webshop.outbox.infrastructure.message;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublishedAt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class MessageHandler {
                 .ifPresentOrElse(
                         outboxMessage -> {
                             springEventProducer.produce(outboxMessage);
-                            commandRepository.updatePublished(outboxMessage.id(), OutboxPublished.published());
+                            commandRepository.updatePublished(outboxMessage.id(), OutboxPublished.published(), OutboxPublishedAt.now());
                         }, () -> log.debug("Message locked or already processed: {}", outboxId)
                 );
     }

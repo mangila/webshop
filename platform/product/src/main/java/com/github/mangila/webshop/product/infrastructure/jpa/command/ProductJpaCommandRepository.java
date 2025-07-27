@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Repository
@@ -39,6 +40,7 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
         if (optional.isPresent()) {
             ProductEntity entity = optional.get();
             repository.delete(entity);
+            entity.setUpdated(Instant.now());
             return Optional.of(entityMapper.toDomain(entity));
         } else {
             log.error("Product not found with id {}", productId.value());

@@ -34,29 +34,26 @@ public class OutboxEntityMapper {
     }
 
     public Outbox toDomain(OutboxEntity entity) {
-        var domain = new Domain(entity.getDomain(), domainRegistry);
-        var event = new Event(entity.getEvent(), eventRegistry);
         var aggregateId = new OutboxAggregateId(entity.getAggregateId());
         return new Outbox(
                 new OutboxId(entity.getId()),
-                domain,
-                event,
+                new Domain(entity.getDomain(), domainRegistry),
+                new Event(entity.getEvent(), eventRegistry),
                 aggregateId,
                 new OutboxPayload(entity.getPayload()),
-                new OutboxSequence(aggregateId, entity.getSequence()),
                 new OutboxPublished(entity.isPublished()),
+                new OutboxPublishedAt(entity.getPublishedAt()),
+                new OutboxSequence(aggregateId, entity.getSequence()),
                 new OutboxCreated(entity.getCreated())
         );
     }
 
     public OutboxMessage toDomain(OutboxMessageProjection projection) {
-        var domain = new Domain(projection.domain(), domainRegistry);
-        var event = new Event(projection.event(), eventRegistry);
         return new OutboxMessage(
                 new OutboxId(projection.id()),
                 new OutboxAggregateId(projection.aggregateId()),
-                domain,
-                event
+                new Domain(projection.domain(), domainRegistry),
+                new Event(projection.event(), eventRegistry)
         );
     }
 

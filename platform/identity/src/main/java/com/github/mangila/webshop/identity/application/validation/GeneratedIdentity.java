@@ -7,9 +7,11 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {DomainIdValidator.class})
+@Constraint(validatedBy = {
+        GeneratedIdentityValidator.class
+})
 @Documented
-public @interface DomainId {
+public @interface GeneratedIdentity {
 
     String message() default "Not a valid ID";
 

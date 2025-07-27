@@ -5,17 +5,13 @@ import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "product")
-@EntityListeners(AuditingEntityListener.class)
 public class ProductEntity implements Persistable<UUID> {
 
     @Id
@@ -33,11 +29,9 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private ProductUnitType unit;
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant created;
 
-    @LastModifiedDate
     @Column(nullable = false)
     private Instant updated;
 
@@ -47,11 +41,13 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductUnitType unit) {
+    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductUnitType unit, Instant created, Instant updated) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
         this.unit = unit;
+        this.created = created;
+        this.updated = updated;
     }
 
     @Override
