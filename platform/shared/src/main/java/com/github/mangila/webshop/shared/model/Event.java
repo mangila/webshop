@@ -18,8 +18,8 @@ public record Event(String value) {
         registry.ensureIsRegistered(this);
     }
 
-    public Event(String domain, EventRegistry registry) {
-        this(domain);
+    public Event(String event, EventRegistry registry) {
+        this(event);
         registry.ensureIsRegistered(this);
     }
 }

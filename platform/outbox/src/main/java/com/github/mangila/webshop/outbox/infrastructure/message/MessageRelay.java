@@ -1,15 +1,20 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
+import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublishedAt;
 import io.vavr.control.Try;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -20,11 +25,11 @@ public class MessageRelay {
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxQueryRepository queryRepository;
-    private final MessageProcessor processor;
+    private final Processor processor;
 
     public MessageRelay(InternalMessageQueue internalMessageQueue,
                         OutboxQueryRepository queryRepository,
-                        MessageProcessor processor) {
+                        Processor processor) {
         this.internalMessageQueue = internalMessageQueue;
         this.queryRepository = queryRepository;
         this.processor = processor;
@@ -56,5 +61,45 @@ public class MessageRelay {
     private void tryProcess(OutboxId id) {
         Try.run(() -> processor.process(id))
                 .onFailure(e -> log.error("Error while relaying message with ID: {}", id, e));
+    }
+
+    @Component
+    public static class Processor {
+        private final RetryTemplate retryTemplate;
+        private final Handler handler;
+
+        public Processor(RetryTemplate retryTemplate,
+                          Handler handler) {
+            this.retryTemplate = retryTemplate;
+            this.handler = handler;
+        }
+
+        public boolean process(OutboxId outboxId) {
+            return retryTemplate.execute(
+                    context -> handler.handle(outboxId),
+                    context -> false);
+        }
+    }
+
+    @Component
+    public static class Handler {
+
+        private final OutboxCommandRepository commandRepository;
+        private final SpringEventProducer springEventProducer;
+
+        public Handler(OutboxCommandRepository commandRepository, SpringEventProducer springEventProducer) {
+            this.commandRepository = commandRepository;
+            this.springEventProducer = springEventProducer;
+        }
+
+        @Transactional
+        public boolean handle(OutboxId outboxId) {
+            commandRepository.findByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
+                    .ifPresent(message -> {
+                        springEventProducer.produce(message);
+                        commandRepository.updatePublished(message.id(), OutboxPublished.published(), OutboxPublishedAt.now());
+                    });
+            return true;
+        }
     }
 }

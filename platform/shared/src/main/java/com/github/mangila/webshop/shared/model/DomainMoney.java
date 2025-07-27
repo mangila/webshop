@@ -1,17 +1,13 @@
 package com.github.mangila.webshop.shared.model;
 
 import org.joda.money.CurrencyUnit;
-import org.joda.money.IllegalCurrencyException;
 import org.joda.money.Money;
 
 import java.math.BigDecimal;
 
-public final class DomainMoney {
-
-    private final Money value;
-
-    private DomainMoney(String currency, BigDecimal amount) throws ArithmeticException, IllegalCurrencyException {
-        this.value = Money.of(CurrencyUnit.of(currency), amount);
+public record DomainMoney(Money value) {
+    private DomainMoney(String currency, BigDecimal amount) {
+        this(Money.of(CurrencyUnit.of(currency), amount));
     }
 
     public static DomainMoney from(String currency, BigDecimal amount) {
@@ -26,3 +22,4 @@ public final class DomainMoney {
         return value.getCurrencyUnit().getCode();
     }
 }
+
