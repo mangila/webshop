@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.annotation;
 
 import com.github.mangila.webshop.shared.model.Event;
-import com.github.mangila.webshop.shared.registry.RegistryService;
+import com.github.mangila.webshop.shared.registry.EventRegistry;
 import io.vavr.control.Try;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegisteredEventStringValidator implements ConstraintValidator<RegisteredDomain, String> {
 
-    private final RegistryService registryService;
+    private final EventRegistry eventRegistry;
 
-    public RegisteredEventStringValidator(RegistryService registryService) {
-        this.registryService = registryService;
+    public RegisteredEventStringValidator(EventRegistry eventRegistry) {
+        this.eventRegistry = eventRegistry;
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return Try.of(() -> {
-            new Event(value, registryService);
+            new Event(value, eventRegistry);
             return true;
         }).getOrElseGet(failure -> false);
     }

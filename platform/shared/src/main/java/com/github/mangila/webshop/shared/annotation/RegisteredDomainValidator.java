@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.annotation;
 
 import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.registry.RegistryService;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegisteredDomainValidator implements ConstraintValidator<RegisteredDomain, Domain> {
 
-    private final RegistryService registryService;
+    private final DomainRegistry domainRegistry;
 
-    public RegisteredDomainValidator(RegistryService registryService) {
-        this.registryService = registryService;
+    public RegisteredDomainValidator(DomainRegistry domainRegistry) {
+        this.domainRegistry = domainRegistry;
     }
 
     @Override
     public boolean isValid(Domain value, ConstraintValidatorContext context) {
-        return registryService.isRegistered(value);
+        return domainRegistry.isRegistered(value);
     }
 }

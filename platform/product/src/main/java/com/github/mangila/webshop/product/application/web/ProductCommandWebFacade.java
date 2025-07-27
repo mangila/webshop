@@ -11,9 +11,9 @@ import com.github.mangila.webshop.product.application.web.request.ProductInsertR
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
-import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.model.CacheName;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -31,24 +31,24 @@ public class ProductCommandWebFacade {
     private final ProductRequestMapper requestMapper;
     private final ProductCommandService commandService;
     private final DomainIdFacade domainIdFacade;
-    private final RegistryService registryService;
+    private final DomainRegistry domainRegistry;
 
     public ProductCommandWebFacade(ProductDtoMapper dtoMapper,
                                    ProductRequestMapper requestMapper,
                                    ProductCommandService commandService,
                                    DomainIdFacade domainIdFacade,
-                                   RegistryService registryService) {
+                                   DomainRegistry domainRegistry) {
         this.dtoMapper = dtoMapper;
         this.requestMapper = requestMapper;
         this.commandService = commandService;
         this.domainIdFacade = domainIdFacade;
-        this.registryService = registryService;
+        this.domainRegistry = domainRegistry;
     }
 
     @Transactional
     @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertRequest request) {
-        var domain = new Domain(Product.class, registryService);
+        var domain = new Domain(Product.class, domainRegistry);
         var domainIdRequest = new NewDomainIdRequest(domain);
         UUID id = domainIdFacade.generate(domainIdRequest);
         ProductInsertCommand command = requestMapper.toCommand(id, request);

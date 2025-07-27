@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.model;
 
-import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.Ensure;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
 
 public record Domain(String value) {
 
@@ -13,12 +13,12 @@ public record Domain(String value) {
         this(domain.getSimpleName().toUpperCase());
     }
 
-    public Domain(Class<?> domain, RegistryService registry) {
+    public Domain(Class<?> domain, DomainRegistry registry) {
         this(domain.getSimpleName().toUpperCase());
         registry.ensureIsRegistered(this);
     }
 
-    public Domain(String domain, RegistryService registry) {
+    public Domain(String domain, DomainRegistry registry) {
         this(domain);
         registry.ensureIsRegistered(this);
     }

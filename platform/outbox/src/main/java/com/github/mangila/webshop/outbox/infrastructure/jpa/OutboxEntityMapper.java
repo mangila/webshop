@@ -6,18 +6,21 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.*;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
-import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.model.Event;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
+import com.github.mangila.webshop.shared.registry.EventRegistry;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OutboxEntityMapper {
 
-    private final RegistryService registryService;
+    private final DomainRegistry domainRegistry;
+    private final EventRegistry eventRegistry;
 
-    public OutboxEntityMapper(RegistryService registryService) {
-        this.registryService = registryService;
+    public OutboxEntityMapper(DomainRegistry domainRegistry, EventRegistry eventRegistry) {
+        this.domainRegistry = domainRegistry;
+        this.eventRegistry = eventRegistry;
     }
 
     public OutboxEntity toEntity(OutboxInsertCommand command) {
@@ -31,8 +34,8 @@ public class OutboxEntityMapper {
     }
 
     public Outbox toDomain(OutboxEntity entity) {
-        var domain = new Domain(entity.getDomain(), registryService);
-        var event = new Event(entity.getEvent(), registryService);
+        var domain = new Domain(entity.getDomain(), domainRegistry);
+        var event = new Event(entity.getEvent(), eventRegistry);
         var aggregateId = new OutboxAggregateId(entity.getAggregateId());
         return new Outbox(
                 new OutboxId(entity.getId()),
@@ -47,8 +50,8 @@ public class OutboxEntityMapper {
     }
 
     public OutboxMessage toDomain(OutboxMessageProjection projection) {
-        var domain = new Domain(projection.domain(), registryService);
-        var event = new Event(projection.event(), registryService);
+        var domain = new Domain(projection.domain(), domainRegistry);
+        var event = new Event(projection.event(), eventRegistry);
         return new OutboxMessage(
                 new OutboxId(projection.id()),
                 new OutboxAggregateId(projection.aggregateId()),

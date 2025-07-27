@@ -2,20 +2,21 @@ package com.github.mangila.webshop.identity.infrastructure;
 
 import com.github.mangila.webshop.identity.domain.DomainId;
 import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.registry.RegistryService;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DomainIdEntityMapper {
 
-    private final RegistryService registryService;
+    private final DomainRegistry domainRegistry;
 
-    public DomainIdEntityMapper(RegistryService registryService) {
-        this.registryService = registryService;
+    public DomainIdEntityMapper(DomainRegistry domainRegistry) {
+        this.domainRegistry = domainRegistry;
     }
 
     public DomainId toDomain(DomainIdEntity entity) {
-        return DomainId.from(entity.getId(), new Domain(entity.getDomain(), registryService), entity.getCreated());
+        var domain = new Domain(entity.getDomain(), domainRegistry);
+        return DomainId.from(entity.getId(), domain, entity.getCreated());
     }
 
     public DomainIdEntity toEntity(DomainId domainId) {

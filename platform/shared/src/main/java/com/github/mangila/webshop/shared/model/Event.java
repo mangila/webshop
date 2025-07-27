@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.shared.model;
 
-import com.github.mangila.webshop.shared.registry.RegistryService;
 import com.github.mangila.webshop.shared.Ensure;
+import com.github.mangila.webshop.shared.registry.EventRegistry;
 
 public record Event(String value) {
 
@@ -13,12 +13,12 @@ public record Event(String value) {
         this(event.name());
     }
 
-    public Event(Enum<?> event, RegistryService registry) {
+    public Event(Enum<?> event, EventRegistry registry) {
         this(event.name());
         registry.ensureIsRegistered(this);
     }
 
-    public Event(String domain, RegistryService registry) {
+    public Event(String domain, EventRegistry registry) {
         this(domain);
         registry.ensureIsRegistered(this);
     }
