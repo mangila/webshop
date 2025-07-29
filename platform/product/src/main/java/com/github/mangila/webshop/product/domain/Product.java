@@ -14,10 +14,10 @@ public record Product(
     public Product {
         Ensure.notNull(id, "ProductId cannot be null");
         Ensure.notNull(name, "ProductName cannot be null");
-        Ensure.notNull(attributes, "Attributes cannot be null");
+        Ensure.notNull(attributes, "ProductAttributes cannot be null");
         Ensure.notNull(unit, "ProductUnit cannot be null");
-        Ensure.notNull(created, "Created cannot be null");
-        Ensure.notNull(updated, "Updated cannot be null");
+        Ensure.notNull(created, "ProductCreated cannot be null");
+        Ensure.notNull(updated, "ProductUpdated cannot be null");
         Ensure.isBeforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
     }
 }

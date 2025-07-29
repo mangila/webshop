@@ -15,7 +15,7 @@ public record ProductInsertCommand(
     public ProductInsertCommand {
         Ensure.notNull(id, "ProductId cannot be null");
         Ensure.notNull(name, "ProductName cannot be null");
-        Ensure.notNull(attributes, "Attributes cannot be null");
+        Ensure.notNull(attributes, "ProductAttributes cannot be null");
         Ensure.notNull(unit, "ProductUnit cannot be null");
     }
 }

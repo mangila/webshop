@@ -10,9 +10,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class InternalMessageQueue {
 
     private final Queue<OutboxId> queue;
+    private final Queue<OutboxId> dlq;
 
     public InternalMessageQueue() {
-        queue = new ConcurrentLinkedQueue<>();
+        this.queue = new ConcurrentLinkedQueue<>();
+        this.dlq = new ConcurrentLinkedQueue<>();
     }
 
     public void add(OutboxId outboxId) {
@@ -21,5 +23,13 @@ public class InternalMessageQueue {
 
     public OutboxId poll() {
         return queue.poll();
+    }
+
+    public void addDlq(OutboxId id) {
+        dlq.add(id);
+    }
+
+    public OutboxId pollDlq() {
+        return dlq.poll();
     }
 }

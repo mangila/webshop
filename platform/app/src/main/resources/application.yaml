@@ -2,10 +2,12 @@
 app:
   message-relay:
     enabled: true
-    poller-queue:
+    process-queue-task:
       fixed-rate: 500ms
-    poller-database:
-      fixed-rate: 30s
+    process-dlq-task:
+      fixed-rate: 500ms
+    fill-queue-task:
+      fixed-rate: 5m
 # Spring Properties
 spring:
   application:
