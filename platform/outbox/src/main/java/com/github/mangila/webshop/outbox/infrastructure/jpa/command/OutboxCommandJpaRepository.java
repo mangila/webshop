@@ -42,8 +42,8 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxMessage> findByIdAndStatusForUpdate(OutboxId id, OutboxStatusType status) {
-        return entityCommandRepository.findByIdAndStatusForUpdate(id.value(), status)
+    public Optional<OutboxMessage> findByIdForUpdate(OutboxId id) {
+        return entityCommandRepository.findByIdForUpdate(id.value())
                 .map(mapper::toDomain);
     }
 
@@ -51,7 +51,7 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     public void updateStatus(OutboxId id, OutboxStatusType status, OutboxUpdated updated) {
         entityCommandRepository.updateStatus(
                 id.value(),
-                status,
+                status.name(),
                 updated.value()
         );
     }

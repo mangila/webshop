@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,13 +16,13 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
             value = """
                     SELECT id,aggregate_id,domain,event
                     FROM outbox
-                    WHERE id = :id AND status = :status
+                    WHERE id = :id
+                    AND status != 'PUBLISHED'
                     FOR UPDATE SKIP LOCKED
                     """,
             nativeQuery = true
     )
-    Optional<OutboxMessageProjection> findByIdAndStatusForUpdate(@Param("id") long id,
-                                                                 @Param("status") OutboxStatusType status);
+    Optional<OutboxMessageProjection> findByIdForUpdate(@Param("id") long id);
 
     @Modifying
     @Query(
@@ -36,6 +35,6 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
             nativeQuery = true
     )
     void updateStatus(@Param("id") long id,
-                      @Param("status") OutboxStatusType status,
+                      @Param("status") String status,
                       @Param("updated") Instant updated);
 }

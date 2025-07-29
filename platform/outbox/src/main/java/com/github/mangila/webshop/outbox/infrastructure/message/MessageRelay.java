@@ -112,7 +112,7 @@ public class MessageRelay {
 
         @Transactional
         public void handle(OutboxId outboxId) {
-            commandRepository.findByIdAndStatusForUpdate(outboxId, OutboxStatusType.PENDING)
+            commandRepository.findByIdForUpdate(outboxId)
                     .ifPresentOrElse(message -> {
                         springEventProducer.produce(message);
                         commandRepository.updateStatus(message.id(), OutboxStatusType.PUBLISHED, OutboxUpdated.now());

@@ -37,7 +37,7 @@ public class OutboxEntity {
             updatable = false)
     private ObjectNode payload;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OutboxStatusType status;
 
