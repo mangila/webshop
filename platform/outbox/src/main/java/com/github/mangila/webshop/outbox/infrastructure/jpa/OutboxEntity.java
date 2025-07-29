@@ -2,10 +2,10 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
-import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -37,15 +37,15 @@ public class OutboxEntity {
             updatable = false)
     private ObjectNode payload;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private boolean published;
-
-    @Column(name = "published_at")
-    @Nullable
-    private Instant publishedAt;
+    private OutboxStatusType status;
 
     @Column(nullable = false, updatable = false)
     private int sequence;
+
+    @Column(nullable = false)
+    private Instant updated;
 
     @Column(nullable = false, updatable = false)
     private Instant created;
@@ -53,19 +53,19 @@ public class OutboxEntity {
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, boolean published, Instant publishedAt, int sequence, Instant created) {
+    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, OutboxStatusType status, int sequence, Instant updated, Instant created) {
         this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
         this.payload = payload;
         this.sequence = sequence;
-        this.published = published;
-        this.publishedAt = publishedAt;
+        this.status = status;
+        this.updated = updated;
         this.created = created;
     }
 
     public static OutboxEntity from(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence) {
-        return new OutboxEntity(domain, event, aggregateId, payload, false, null, sequence, Instant.now());
+        return new OutboxEntity(domain, event, aggregateId, payload, OutboxStatusType.PENDING, sequence, Instant.now(), Instant.now());
     }
 
     public Long getId() {
@@ -108,20 +108,12 @@ public class OutboxEntity {
         this.payload = payload;
     }
 
-    public boolean isPublished() {
-        return published;
+    public OutboxStatusType getStatus() {
+        return status;
     }
 
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
-
-    public @Nullable Instant getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(@Nullable Instant publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setStatus(OutboxStatusType status) {
+        this.status = status;
     }
 
     public int getSequence() {
@@ -130,6 +122,14 @@ public class OutboxEntity {
 
     public void setSequence(int sequence) {
         this.sequence = sequence;
+    }
+
+    public Instant getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Instant updated) {
+        this.updated = updated;
     }
 
     public Instant getCreated() {

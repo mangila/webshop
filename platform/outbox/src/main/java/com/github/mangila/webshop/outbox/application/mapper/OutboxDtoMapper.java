@@ -16,8 +16,9 @@ public class OutboxDtoMapper {
                 outbox.event().value(),
                 outbox.aggregateId().value(),
                 outbox.payload().value(),
-                outbox.published().value(),
+                outbox.status(),
                 outbox.sequence().value(),
+                outbox.updated().value(),
                 outbox.created().value()
         );
     }

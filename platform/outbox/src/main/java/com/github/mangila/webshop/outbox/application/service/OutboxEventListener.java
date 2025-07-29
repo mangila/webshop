@@ -30,7 +30,7 @@ public class OutboxEventListener {
 
     @EventListener
     public void listen(DomainEvent event) {
-        repository.findSequenceAndLockByAggregateId(new OutboxAggregateId(event.aggregateId()))
+        repository.findCurrentSequenceAndLockByAggregateId(new OutboxAggregateId(event.aggregateId()))
                 .ifPresentOrElse(
                         currentSequence -> tryOutbox(event, OutboxSequence.incrementFrom(currentSequence)),
                         () -> tryOutbox(event, OutboxSequence.initial(event.aggregateId()))
@@ -40,7 +40,7 @@ public class OutboxEventListener {
     private void tryOutbox(DomainEvent event, OutboxSequence newSequence) {
         OutboxInsertCommand command = mapper.toCommand(event, newSequence);
         Outbox outbox = repository.insert(command);
-        repository.updateNewSequence(newSequence);
+        repository.updateSequence(newSequence);
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override

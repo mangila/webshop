@@ -8,8 +8,8 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublishedAt;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
+import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity;
 import io.vavr.collection.Stream;
@@ -42,24 +42,28 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxMessage> findByIdAndPublishedForUpdate(OutboxId id, OutboxPublished published) {
-        return entityCommandRepository.findByIdAndPublishedForUpdate(id.value(), published.value())
+    public Optional<OutboxMessage> findByIdAndStatusForUpdate(OutboxId id, OutboxStatusType status) {
+        return entityCommandRepository.findByIdAndStatusForUpdate(id.value(), status)
                 .map(mapper::toDomain);
     }
 
     @Override
-    public void updatePublished(OutboxId id, OutboxPublished published, OutboxPublishedAt publishedAt) {
-        entityCommandRepository.updatePublished(id.value(), published.value(), publishedAt.value());
+    public void updateStatus(OutboxId id, OutboxStatusType status, OutboxUpdated updated) {
+        entityCommandRepository.updateStatus(
+                id.value(),
+                status,
+                updated.value()
+        );
     }
 
     @Override
-    public Optional<OutboxSequence> findSequenceAndLockByAggregateId(OutboxAggregateId aggregateId) {
+    public Optional<OutboxSequence> findCurrentSequenceAndLockByAggregateId(OutboxAggregateId aggregateId) {
         return sequenceRepository.findAndLockByAggregateId(aggregateId.value())
                 .map(mapper::toDomain);
     }
 
     @Override
-    public void updateNewSequence(OutboxSequence outboxSequence) {
+    public void updateSequence(OutboxSequence outboxSequence) {
         OutboxSequenceEntity entity = mapper.toEntity(outboxSequence);
         sequenceRepository.save(entity);
     }

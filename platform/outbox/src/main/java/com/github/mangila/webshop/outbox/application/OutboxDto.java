@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.application;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
+import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.annotation.RegisteredDomain;
 import com.github.mangila.webshop.shared.annotation.RegisteredEvent;
 import jakarta.validation.constraints.Min;
@@ -22,9 +23,12 @@ public record OutboxDto(
         UUID aggregateId,
         @NotNull
         ObjectNode payload,
-        boolean published,
+        @NotNull
+        OutboxStatusType status,
         @Min(1)
         int sequence,
+        @NotNull
+        Instant updated,
         @NotNull
         Instant created
 ) {

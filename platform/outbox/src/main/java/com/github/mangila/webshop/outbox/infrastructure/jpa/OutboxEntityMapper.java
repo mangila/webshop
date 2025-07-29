@@ -41,9 +41,9 @@ public class OutboxEntityMapper {
                 new Event(entity.getEvent(), eventRegistry),
                 aggregateId,
                 new OutboxPayload(entity.getPayload()),
-                new OutboxPublished(entity.isPublished()),
-                new OutboxPublishedAt(entity.getPublishedAt()),
+                entity.getStatus(),
                 new OutboxSequence(aggregateId, entity.getSequence()),
+                new OutboxUpdated(entity.getUpdated()),
                 new OutboxCreated(entity.getCreated())
         );
     }

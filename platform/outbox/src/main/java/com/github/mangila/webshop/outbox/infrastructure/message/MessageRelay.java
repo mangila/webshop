@@ -3,8 +3,8 @@ package com.github.mangila.webshop.outbox.infrastructure.message;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublished;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxPublishedAt;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
+import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import io.vavr.control.Try;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -25,21 +25,24 @@ public class MessageRelay {
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxQueryRepository queryRepository;
+    private final OutboxCommandRepository commandRepository;
     private final Processor processor;
 
     public MessageRelay(InternalMessageQueue internalMessageQueue,
                         OutboxQueryRepository queryRepository,
+                        OutboxCommandRepository commandRepository,
                         Processor processor) {
         this.internalMessageQueue = internalMessageQueue;
         this.queryRepository = queryRepository;
+        this.commandRepository = commandRepository;
         this.processor = processor;
     }
 
     @PostConstruct
     public void init() {
-        queryRepository.findAllIdsByPublished(OutboxPublished.notPublished(), 50)
+        queryRepository.findAllIdsByStatus(OutboxStatusType.PENDING, 50)
                 .stream()
-                .peek(id -> log.info("Queue Message with ID: {}", id))
+                .peek(id -> log.info("Queue Message: {}", id))
                 .forEach(internalMessageQueue::add);
     }
 
@@ -54,13 +57,24 @@ public class MessageRelay {
 
     @Scheduled(fixedRateString = "${app.message-relay.poller-database.fixed-rate}")
     public void pollDatabase() {
-        queryRepository.findAllIdsByPublished(OutboxPublished.notPublished(), 10)
+        queryRepository.findAllIdsByStatus(OutboxStatusType.PENDING, 10)
                 .forEach(this::tryProcess);
     }
 
     private void tryProcess(OutboxId id) {
-        Try.run(() -> processor.process(id))
-                .onFailure(e -> log.error("Error while relaying message with ID: {}", id, e));
+        Try.of(() -> processor.process(id))
+                .onSuccess(processed -> {
+                    if (processed) {
+                        log.info("Message: {} was successfully processed", id);
+                    } else {
+                        log.error("Failed to process message: {}", id);
+                        commandRepository.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
+                    }
+                })
+                .onFailure(e -> {
+                    log.error("Failed to process message: {}", id, e.getCause());
+                    commandRepository.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
+                });
     }
 
     @Component
@@ -69,14 +83,18 @@ public class MessageRelay {
         private final Handler handler;
 
         public Processor(RetryTemplate retryTemplate,
-                          Handler handler) {
+                         Handler handler) {
             this.retryTemplate = retryTemplate;
             this.handler = handler;
         }
 
         public boolean process(OutboxId outboxId) {
             return retryTemplate.execute(
-                    context -> handler.handle(outboxId),
+                    context -> {
+                        log.debug("Processing message: {} - Retry Attempt {}", outboxId, context.getRetryCount());
+                        handler.handle(outboxId);
+                        return true;
+                    },
                     context -> false);
         }
     }
@@ -93,13 +111,12 @@ public class MessageRelay {
         }
 
         @Transactional
-        public boolean handle(OutboxId outboxId) {
-            commandRepository.findByIdAndPublishedForUpdate(outboxId, OutboxPublished.notPublished())
-                    .ifPresent(message -> {
+        public void handle(OutboxId outboxId) {
+            commandRepository.findByIdAndStatusForUpdate(outboxId, OutboxStatusType.PENDING)
+                    .ifPresentOrElse(message -> {
                         springEventProducer.produce(message);
-                        commandRepository.updatePublished(message.id(), OutboxPublished.published(), OutboxPublishedAt.now());
-                    });
-            return true;
+                        commandRepository.updateStatus(message.id(), OutboxStatusType.PUBLISHED, OutboxUpdated.now());
+                    }, () -> log.debug("Message: {} was locked or already processed", outboxId));
         }
     }
 }
