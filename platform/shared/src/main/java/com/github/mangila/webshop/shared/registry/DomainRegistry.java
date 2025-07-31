@@ -4,6 +4,13 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.CacheName;
 import com.github.mangila.webshop.shared.model.Domain;
+import jakarta.annotation.PostConstruct;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +20,7 @@ import java.util.Objects;
 @Component
 public class DomainRegistry implements Registry<Domain, String> {
 
+    private static final Logger log = LoggerFactory.getLogger(DomainRegistry.class);
     private final Cache<Domain, String> registry;
 
     @SuppressWarnings("unchecked")
@@ -20,6 +28,25 @@ public class DomainRegistry implements Registry<Domain, String> {
         this.registry = (Cache<Domain, String>) cacheManager.getCache(CacheName.DOMAIN_REGISTRY)
                 .getNativeCache();
     }
+
+    @PostConstruct
+    public void init() {
+        scanDomainAnnotations();
+    }
+
+    private void scanDomainAnnotations() {
+        log.info("Scanning for @Domain annotated classes");
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forJavaClassPath())
+                .setScanners(Scanners.TypesAnnotated));
+        reflections.getTypesAnnotatedWith(com.github.mangila.webshop.shared.annotation.Domain.class)
+                .forEach(domainClazz -> {
+                    log.info("Register domain: {}", domainClazz.getSimpleName().toUpperCase());
+                    var domain = new Domain(domainClazz);
+                    register(domain, domain.value());
+                });
+    }
+
 
     @Override
     public boolean isRegistered(Domain key) {

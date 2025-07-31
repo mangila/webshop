@@ -25,8 +25,8 @@ public class InternalMessageQueue {
         return queue.poll();
     }
 
-    public void addDlq(OutboxId id) {
-        dlq.add(id);
+    public void addDlq(OutboxId outboxId) {
+        dlq.add(outboxId);
     }
 
     public OutboxId pollDlq() {

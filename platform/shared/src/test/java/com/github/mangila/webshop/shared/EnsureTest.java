@@ -21,7 +21,7 @@ class EnsureTest {
 
     @Test
     void notEmpty() {
-        assertThatThrownBy(() -> Ensure.notEmpty(null, "error"))
+        assertThatThrownBy(() -> Ensure.notEmpty((byte[]) null, "error"))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessage("error");
         assertThatThrownBy(() -> Ensure.notEmpty(new byte[0], "error"))

@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.outbox.infrastructure.message.task;
 
-import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
@@ -13,12 +12,13 @@ import java.util.Objects;
 @Component
 public class ProcessQueueOutboxTask implements OutboxTask {
 
-    private static final Logger log = LoggerFactory.getLogger(ProcessQueueOutboxTask.class);
     public static final OutboxTaskKey KEY = new OutboxTaskKey(ProcessQueueOutboxTask.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(ProcessQueueOutboxTask.class);
     private final InternalMessageQueue internalMessageQueue;
     private final MessageProcessor processor;
 
-    public ProcessQueueOutboxTask(InternalMessageQueue internalMessageQueue, OutboxCommandRepository commandRepository, MessageProcessor processor) {
+    public ProcessQueueOutboxTask(InternalMessageQueue internalMessageQueue,
+                                  MessageProcessor processor) {
         this.internalMessageQueue = internalMessageQueue;
         this.processor = processor;
     }

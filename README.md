@@ -13,7 +13,7 @@ This project demonstrates a modern e-commerce application architecture with the 
 
 - Modular backend with domain-driven design
 - CQRS pattern with GraphQL for queries and REST for commands
-- Event-driven architecture with Transactional Outbox pattern
+- Event-driven architecture with a Transactional Outbox pattern
 - Observability and monitoring tools integration
 - React-based admin web-dashboard
 - Flutter-based Webshop UI

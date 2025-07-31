@@ -27,8 +27,14 @@ public final class Ensure {
         }
     }
 
-    public static void notEmpty(byte[] bytes, String message) {
-        if (Objects.isNull(bytes) || bytes.length == 0) {
+    public static void notEmpty(byte[] array, String message) {
+        if (Objects.isNull(array) || array.length == 0) {
+            throw new ApplicationException(message);
+        }
+    }
+
+    public static void notEmpty(Object[] array, String message) {
+        if (Objects.isNull(array) || array.length == 0) {
             throw new ApplicationException(message);
         }
     }

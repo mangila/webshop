@@ -28,8 +28,8 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
         return entityRepository.replay(
                         query.sequence().aggregateId().value(),
                         query.sequence().value(),
-                        query.limit()
-                ).stream()
+                        query.limit())
+                .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
