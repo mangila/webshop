@@ -66,13 +66,8 @@ management:
     web:
       exposure:
         include: "*"
-  endpoint:
-    metrics:
-      access: unrestricted
-    shutdown:
-      access: unrestricted
-    caches:
-      access: unrestricted
+    access:
+      default: unrestricted
   zipkin:
     tracing:
       export:

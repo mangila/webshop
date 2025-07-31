@@ -2,9 +2,9 @@ package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.Ensure;
+import com.github.mangila.webshop.shared.annotation.Event;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.CacheName;
-import com.github.mangila.webshop.shared.model.Event;
 import jakarta.annotation.PostConstruct;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class EventRegistry implements Registry<Event, String> {
+public class EventRegistry implements Registry<com.github.mangila.webshop.shared.model.Event, String> {
 
     private static final Logger log = LoggerFactory.getLogger(EventRegistry.class);
-    private final Cache<Event, String> registry;
+    private final Cache<com.github.mangila.webshop.shared.model.Event, String> registry;
 
     @SuppressWarnings("unchecked")
     public EventRegistry(CacheManager cacheManager) {
-        this.registry = (Cache<Event, String>) cacheManager.getCache(CacheName.EVENT_REGISTRY)
+        this.registry = (Cache<com.github.mangila.webshop.shared.model.Event, String>) cacheManager.getCache(CacheName.EVENT_REGISTRY)
                 .getNativeCache();
     }
 
@@ -40,7 +40,7 @@ public class EventRegistry implements Registry<Event, String> {
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
                 .setScanners(Scanners.TypesAnnotated));
-        reflections.getTypesAnnotatedWith(com.github.mangila.webshop.shared.annotation.Event.class)
+        reflections.getTypesAnnotatedWith(Event.class)
                 .forEach(eventClazz -> {
                     if (eventClazz.isEnum()) {
                         var enumConstants = eventClazz.getEnumConstants();
@@ -48,7 +48,7 @@ public class EventRegistry implements Registry<Event, String> {
                         for (Object enumValue : enumConstants) {
                             Enum<?> e = (Enum<?>) enumValue;
                             log.info("Register event: {}", e.name());
-                            var event = new Event(e);
+                            var event = new com.github.mangila.webshop.shared.model.Event(e);
                             register(event, event.value());
                         }
                     } else {
@@ -58,24 +58,24 @@ public class EventRegistry implements Registry<Event, String> {
     }
 
     @Override
-    public boolean isRegistered(Event key) {
+    public boolean isRegistered(com.github.mangila.webshop.shared.model.Event key) {
         return Objects.nonNull(registry.getIfPresent(key));
     }
 
     @Override
-    public void ensureIsRegistered(Event key) {
+    public void ensureIsRegistered(com.github.mangila.webshop.shared.model.Event key) {
         if (!isRegistered(key)) {
             throw new ApplicationException(String.format("Event %s is not registered", key));
         }
     }
 
     @Override
-    public String get(Event key) {
+    public String get(com.github.mangila.webshop.shared.model.Event key) {
         return registry.getIfPresent(key);
     }
 
     @Override
-    public void register(Event key, String value) {
+    public void register(com.github.mangila.webshop.shared.model.Event key, String value) {
         registry.put(key, value);
     }
 
@@ -85,7 +85,7 @@ public class EventRegistry implements Registry<Event, String> {
     }
 
     @Override
-    public List<Event> keys() {
+    public List<com.github.mangila.webshop.shared.model.Event> keys() {
         return registry.asMap().keySet().stream().toList();
     }
 }

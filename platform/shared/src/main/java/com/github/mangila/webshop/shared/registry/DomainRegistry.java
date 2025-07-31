@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.mangila.webshop.shared.annotation.DomainObject;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.CacheName;
 import com.github.mangila.webshop.shared.model.Domain;
@@ -35,11 +36,11 @@ public class DomainRegistry implements Registry<Domain, String> {
     }
 
     private void scanDomainAnnotations() {
-        log.info("Scanning for @Domain annotated classes");
+        log.info("Scanning for @DomainObject annotated classes");
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
                 .setScanners(Scanners.TypesAnnotated));
-        reflections.getTypesAnnotatedWith(com.github.mangila.webshop.shared.annotation.Domain.class)
+        reflections.getTypesAnnotatedWith(DomainObject.class)
                 .forEach(domainClazz -> {
                     log.info("Register domain: {}", domainClazz.getSimpleName().toUpperCase());
                     var domain = new Domain(domainClazz);

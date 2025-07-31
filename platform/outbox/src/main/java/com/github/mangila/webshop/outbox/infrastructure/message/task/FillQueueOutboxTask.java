@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FillQueueOutboxTask implements OutboxTask {
 
-    public static final OutboxTaskKey KEY = new OutboxTaskKey(FillQueueOutboxTask.class.getSimpleName());
     private static final Logger log = LoggerFactory.getLogger(FillQueueOutboxTask.class);
-
     private final OutboxQueryRepository queryRepository;
     private final InternalMessageQueue internalMessageQueue;
 
@@ -32,6 +30,6 @@ public class FillQueueOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return KEY;
+        return OutboxTaskKey.FILL_QUEUE_OUTBOX_TASK;
     }
 }

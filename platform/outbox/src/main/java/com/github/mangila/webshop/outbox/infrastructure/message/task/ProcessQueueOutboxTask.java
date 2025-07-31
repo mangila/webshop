@@ -12,7 +12,6 @@ import java.util.Objects;
 @Component
 public class ProcessQueueOutboxTask implements OutboxTask {
 
-    public static final OutboxTaskKey KEY = new OutboxTaskKey(ProcessQueueOutboxTask.class.getSimpleName());
     private static final Logger log = LoggerFactory.getLogger(ProcessQueueOutboxTask.class);
     private final InternalMessageQueue internalMessageQueue;
     private final MessageProcessor processor;
@@ -46,6 +45,6 @@ public class ProcessQueueOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return KEY;
+        return OutboxTaskKey.PROCESS_QUEUE_OUTBOX_TASK;
     }
 }
