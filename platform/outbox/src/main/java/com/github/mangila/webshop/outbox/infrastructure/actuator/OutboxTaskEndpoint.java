@@ -22,7 +22,7 @@ public class OutboxTaskEndpoint {
     @ReadOperation
     public WebEndpointResponse<Map<String, Object>> findAllTasks() {
         return new WebEndpointResponse<>(
-                Map.of("tasks", OutboxTaskKey.values()),
+                Map.of("outbox-tasks", OutboxTaskKey.values()),
                 200
         );
     }
