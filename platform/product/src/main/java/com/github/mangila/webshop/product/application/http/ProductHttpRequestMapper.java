@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.product.application.mapper;
+package com.github.mangila.webshop.product.application.http;
 
-import com.github.mangila.webshop.product.application.web.request.ProductByIdRequest;
-import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class ProductRequestMapper {
+public class ProductHttpRequestMapper {
 
     public ProductInsertCommand toCommand(UUID id, ProductInsertRequest request) {
         return new ProductInsertCommand(

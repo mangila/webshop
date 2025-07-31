@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.product.application.web;
+package com.github.mangila.webshop.product.application.http;
 
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.web.request.ProductByIdRequest;
-import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +12,9 @@ import java.util.UUID;
 @RequestMapping("api/v1/product/command")
 public class ProductCommandController {
 
-    private final ProductCommandWebFacade webFacade;
+    private final ProductCommandHttpFacade webFacade;
 
-    public ProductCommandController(ProductCommandWebFacade webFacade) {
+    public ProductCommandController(ProductCommandHttpFacade webFacade) {
         this.webFacade = webFacade;
     }
 

@@ -2,7 +2,7 @@ package com.github.mangila.webshop.app.bootstrap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;

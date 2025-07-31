@@ -1,12 +1,12 @@
-package com.github.mangila.webshop.outbox.application.mapper;
+package com.github.mangila.webshop.outbox.application.http;
 
-import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
+import com.github.mangila.webshop.outbox.application.http.request.OutboxReplayRequest;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OutboxRequestMapper {
+public class OutboxHttpRequestMapper {
     public OutboxReplayQuery toQuery(OutboxReplayRequest request) {
         return new OutboxReplayQuery(
                 OutboxSequence.from(request.aggregateId(), request.sequence()),

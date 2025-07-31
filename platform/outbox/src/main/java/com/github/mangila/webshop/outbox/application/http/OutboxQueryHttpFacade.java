@@ -1,10 +1,9 @@
-package com.github.mangila.webshop.outbox.application.web;
+package com.github.mangila.webshop.outbox.application.http;
 
 import com.github.mangila.webshop.outbox.application.OutboxDto;
 import com.github.mangila.webshop.outbox.application.mapper.OutboxDtoMapper;
-import com.github.mangila.webshop.outbox.application.mapper.OutboxRequestMapper;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
-import com.github.mangila.webshop.outbox.application.web.request.OutboxReplayRequest;
+import com.github.mangila.webshop.outbox.application.http.request.OutboxReplayRequest;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,15 @@ import java.util.List;
 
 @Service
 @Validated
-public class OutboxQueryWebFacade {
+public class OutboxQueryHttpFacade {
 
-    private final OutboxRequestMapper requestMapper;
+    private final OutboxHttpRequestMapper requestMapper;
     private final OutboxQueryService service;
     private final OutboxDtoMapper outboxDtoMapper;
 
-    public OutboxQueryWebFacade(OutboxRequestMapper requestMapper,
-                                OutboxQueryService service,
-                                OutboxDtoMapper outboxDtoMapper) {
+    public OutboxQueryHttpFacade(OutboxHttpRequestMapper requestMapper,
+                                 OutboxQueryService service,
+                                 OutboxDtoMapper outboxDtoMapper) {
         this.requestMapper = requestMapper;
         this.service = service;
         this.outboxDtoMapper = outboxDtoMapper;

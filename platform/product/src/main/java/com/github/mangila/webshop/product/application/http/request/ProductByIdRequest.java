@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.web.request;
+package com.github.mangila.webshop.product.application.http.request;
 
 
 import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;

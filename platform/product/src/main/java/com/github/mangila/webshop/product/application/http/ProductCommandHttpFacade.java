@@ -1,14 +1,13 @@
-package com.github.mangila.webshop.product.application.web;
+package com.github.mangila.webshop.product.application.http;
 
 import com.github.mangila.webshop.identity.application.IdentityService;
 import com.github.mangila.webshop.identity.domain.Identity;
 import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.mapper.ProductDtoMapper;
-import com.github.mangila.webshop.product.application.mapper.ProductRequestMapper;
 import com.github.mangila.webshop.product.application.service.ProductCommandService;
-import com.github.mangila.webshop.product.application.web.request.ProductByIdRequest;
-import com.github.mangila.webshop.product.application.web.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
@@ -24,18 +23,18 @@ import org.springframework.validation.annotation.Validated;
 
 @Service
 @Validated
-public class ProductCommandWebFacade {
+public class ProductCommandHttpFacade {
 
     private final ProductDtoMapper dtoMapper;
-    private final ProductRequestMapper requestMapper;
+    private final ProductHttpRequestMapper requestMapper;
     private final ProductCommandService commandService;
     private final IdentityService identityService;
     private final DomainRegistry domainRegistry;
 
-    public ProductCommandWebFacade(ProductDtoMapper dtoMapper,
-                                   ProductRequestMapper requestMapper,
-                                   ProductCommandService commandService, IdentityService identityService,
-                                   DomainRegistry domainRegistry) {
+    public ProductCommandHttpFacade(ProductDtoMapper dtoMapper,
+                                    ProductHttpRequestMapper requestMapper,
+                                    ProductCommandService commandService, IdentityService identityService,
+                                    DomainRegistry domainRegistry) {
         this.dtoMapper = dtoMapper;
         this.requestMapper = requestMapper;
         this.commandService = commandService;
@@ -54,7 +53,7 @@ public class ProductCommandWebFacade {
     }
 
     @Transactional
-    @CacheEvict(value = CacheName.LRU, key = "#a0.value()")
+    @CacheEvict(value = CacheName.LRU, key = "#request.value()")
     public void deleteById(@Valid ProductByIdRequest request) {
         ProductId productId = requestMapper.toDomain(request);
         commandService.deleteByIdOrThrow(productId);

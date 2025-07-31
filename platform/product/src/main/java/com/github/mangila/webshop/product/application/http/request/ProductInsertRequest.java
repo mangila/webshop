@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.web.request;
+package com.github.mangila.webshop.product.application.http.request;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.webshop.product.domain.types.ProductUnitType;

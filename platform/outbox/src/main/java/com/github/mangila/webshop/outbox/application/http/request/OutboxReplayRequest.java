@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.application.web.request;
+package com.github.mangila.webshop.outbox.application.http.request;
 
 import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
 import jakarta.validation.constraints.Max;
