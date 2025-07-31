@@ -45,6 +45,6 @@ public class ProcessQueueOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return OutboxTaskKey.PROCESS_QUEUE_OUTBOX_TASK;
+        return OutboxTaskKey.PROCESS_QUEUE;
     }
 }

@@ -48,6 +48,6 @@ public class ProcessDlqOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return OutboxTaskKey.PROCESS_DLQ_OUTBOX_TASK;
+        return OutboxTaskKey.PROCESS_DLQ;
     }
 }

@@ -30,6 +30,6 @@ public class FillQueueOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return OutboxTaskKey.FILL_QUEUE_OUTBOX_TASK;
+        return OutboxTaskKey.FILL_QUEUE;
     }
 }
