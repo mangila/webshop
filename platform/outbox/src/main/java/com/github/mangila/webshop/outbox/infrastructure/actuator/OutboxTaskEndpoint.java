@@ -19,9 +19,16 @@ public class OutboxTaskEndpoint {
     public OutboxTaskEndpoint(OutboxTaskRunner outboxTaskRunner) {
         this.outboxTaskRunner = outboxTaskRunner;
     }
+    @ReadOperation
+    public WebEndpointResponse<Map<String, Object>> findAllTasks() {
+        return new WebEndpointResponse<>(
+                Map.of("tasks", OutboxTaskKey.values()),
+                200
+        );
+    }
 
     @ReadOperation
-    public WebEndpointResponse<Map<String, Object>> readOperation(@Selector OutboxTaskKey key) {
+    public WebEndpointResponse<Map<String, Object>> runTask(@Selector OutboxTaskKey key) {
         outboxTaskRunner.execute(key);
         return new WebEndpointResponse<>(
                 Map.of("key", key.name(), "status", "OK"),
