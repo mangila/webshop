@@ -20,7 +20,7 @@ public record Product(
         Ensure.notNull(unit, "ProductUnit cannot be null");
         Ensure.notNull(created, "ProductCreated cannot be null");
         Ensure.notNull(updated, "ProductUpdated cannot be null");
-        Ensure.isBeforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
+        Ensure.beforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
     }
 }
 

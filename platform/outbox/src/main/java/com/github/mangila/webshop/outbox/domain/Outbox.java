@@ -28,6 +28,6 @@ public record Outbox(
         Ensure.notNull(sequence, "OutboxSequence must not be null");
         Ensure.notNull(updated, "OutboxUpdated must not be null");
         Ensure.notNull(created, "OutboxCreated must not be null");
-        Ensure.isBeforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
+        Ensure.beforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
     }
 }

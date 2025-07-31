@@ -28,19 +28,22 @@ public final class Ensure {
     }
 
     public static void notEmpty(byte[] array, String message) {
-        if (Objects.isNull(array) || array.length == 0) {
+        notNull(array, message);
+        if (array.length == 0) {
             throw new ApplicationException(message);
         }
     }
 
     public static void notEmpty(Object[] array, String message) {
-        if (Objects.isNull(array) || array.length == 0) {
+        notNull(array, message);
+        if (array.length == 0) {
             throw new ApplicationException(message);
         }
     }
 
     public static void notBlank(String value, String message) {
-        if (Objects.isNull(value) || value.isBlank()) {
+        notNull(value, message);
+        if (value.isBlank()) {
             throw new ApplicationException(message);
         }
     }
@@ -67,7 +70,9 @@ public final class Ensure {
         }
     }
 
-    public static void isBeforeOrEquals(Instant instant, Instant target, String message) {
+    public static void beforeOrEquals(Instant instant, Instant target, String message) {
+        notNull(instant, message);
+        notNull(target, message);
         if (!instant.isBefore(target) && !instant.equals(target)) {
             throw new ApplicationException(message);
         }

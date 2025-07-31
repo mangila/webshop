@@ -83,14 +83,14 @@ class EnsureTest {
     }
 
     @Test
-    void isBeforeOrEquals() {
-        assertThatThrownBy(() -> Ensure.isBeforeOrEquals(Instant.now(), Instant.now().minusSeconds(5), "error"))
+    void beforeOrEquals() {
+        assertThatThrownBy(() -> Ensure.beforeOrEquals(Instant.now(), Instant.now().minusSeconds(5), "error"))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessage("error");
         assertThatNoException()
                 .isThrownBy(() -> {
-                    Ensure.isBeforeOrEquals(Instant.now(), Instant.now().plusSeconds(5), "no error");
-                    Ensure.isBeforeOrEquals(Instant.now(), Instant.now(), "no error");
+                    Ensure.beforeOrEquals(Instant.now(), Instant.now().plusSeconds(5), "no error");
+                    Ensure.beforeOrEquals(Instant.now(), Instant.now(), "no error");
                 });
     }
 }
