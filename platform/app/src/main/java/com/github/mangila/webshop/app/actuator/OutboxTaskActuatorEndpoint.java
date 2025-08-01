@@ -14,13 +14,13 @@ import java.util.Set;
 
 @WebEndpoint(id = "outboxtask")
 @Component
-public class OutboxTaskEndpoint {
+public class OutboxTaskActuatorEndpoint {
 
     private final Map<String, OutboxTaskKey> outboxTaskKeys;
     private final OutboxTaskRunner outboxTaskRunner;
 
-    public OutboxTaskEndpoint(Map<String, OutboxTaskKey> outboxTaskKeys,
-                              OutboxTaskRunner outboxTaskRunner) {
+    public OutboxTaskActuatorEndpoint(Map<String, OutboxTaskKey> outboxTaskKeys,
+                                      OutboxTaskRunner outboxTaskRunner) {
         this.outboxTaskKeys = outboxTaskKeys;
         this.outboxTaskRunner = outboxTaskRunner;
     }
