@@ -8,14 +8,19 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
 import com.github.mangila.webshop.shared.model.DomainEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import java.util.function.Consumer;
+
 @Service
 public class OutboxEventListener {
 
+    private static final Logger log = LoggerFactory.getLogger(OutboxEventListener.class);
     private final InternalMessageQueue internalMessageQueue;
     private final OutboxEventMapper mapper;
     private final OutboxCommandRepository repository;
@@ -30,11 +35,18 @@ public class OutboxEventListener {
 
     @EventListener
     public void listen(DomainEvent event) {
-        repository.findCurrentSequenceAndLockByAggregateId(new OutboxAggregateId(event.aggregateId()))
-                .ifPresentOrElse(
-                        currentSequence -> tryOutbox(event, OutboxSequence.incrementFrom(currentSequence)),
-                        () -> tryOutbox(event, OutboxSequence.initial(event.aggregateId()))
-                );
+        var aggregateId = new OutboxAggregateId(event.aggregateId());
+        repository.findCurrentSequenceAndLockByAggregateId(aggregateId).ifPresentOrElse(
+                incrementCurrentSequence(event),
+                createInitialSequence(event));
+    }
+
+    private Consumer<OutboxSequence> incrementCurrentSequence(DomainEvent event) {
+        return currentSequence -> tryOutbox(event, OutboxSequence.incrementFrom(currentSequence));
+    }
+
+    private Runnable createInitialSequence(DomainEvent event) {
+        return () -> tryOutbox(event, OutboxSequence.initial(event.aggregateId()));
     }
 
     private void tryOutbox(DomainEvent event, OutboxSequence newSequence) {
@@ -45,6 +57,7 @@ public class OutboxEventListener {
                 new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
+                        // TODO put in domain queues or event queues
                         internalMessageQueue.add(outbox.id());
                     }
                 }
