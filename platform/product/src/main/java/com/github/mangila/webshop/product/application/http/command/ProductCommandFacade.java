@@ -4,7 +4,7 @@ import com.github.mangila.webshop.identity.application.IdentityService;
 import com.github.mangila.webshop.identity.domain.Identity;
 import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.mapper.ProductHttpRequestMapper;
+import com.github.mangila.webshop.product.application.mapper.ProductRequestMapper;
 import com.github.mangila.webshop.product.application.mapper.ProductDtoMapper;
 import com.github.mangila.webshop.product.application.service.ProductCommandService;
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
@@ -24,18 +24,18 @@ import org.springframework.validation.annotation.Validated;
 
 @Service
 @Validated
-public class ProductCommandHttpFacade {
+public class ProductCommandFacade {
 
     private final ProductDtoMapper dtoMapper;
-    private final ProductHttpRequestMapper requestMapper;
+    private final ProductRequestMapper requestMapper;
     private final ProductCommandService commandService;
     private final IdentityService identityService;
     private final DomainRegistry domainRegistry;
 
-    public ProductCommandHttpFacade(ProductDtoMapper dtoMapper,
-                                    ProductHttpRequestMapper requestMapper,
-                                    ProductCommandService commandService, IdentityService identityService,
-                                    DomainRegistry domainRegistry) {
+    public ProductCommandFacade(ProductDtoMapper dtoMapper,
+                                ProductRequestMapper requestMapper,
+                                ProductCommandService commandService, IdentityService identityService,
+                                DomainRegistry domainRegistry) {
         this.dtoMapper = dtoMapper;
         this.requestMapper = requestMapper;
         this.commandService = commandService;

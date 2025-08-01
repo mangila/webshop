@@ -9,18 +9,18 @@ import java.util.Map;
 @Service
 public class OutboxTaskRunner {
 
+    private final Map<String, OutboxTaskKey> keys;
     private final Map<OutboxTaskKey, OutboxTask> tasks;
-    private final Map<String, OutboxTaskKey> outboxTaskKeys;
 
-    public OutboxTaskRunner(Map<OutboxTaskKey, OutboxTask> outboxTasks,
-                            Map<String, OutboxTaskKey> outboxTaskKeys) {
-        this.tasks = outboxTasks;
-        this.outboxTaskKeys = outboxTaskKeys;
+    public OutboxTaskRunner(Map<String, OutboxTaskKey> keys,
+                            Map<OutboxTaskKey, OutboxTask> tasks) {
+        this.keys = keys;
+        this.tasks = tasks;
     }
 
     public OutboxTaskKey findKeyOrThrow(String value) {
         Ensure.notNull(value, String.class);
-        OutboxTaskKey key = outboxTaskKeys.get(value);
+        OutboxTaskKey key = keys.get(value);
         Ensure.notNull(key, () -> new ResourceNotFoundException(
                 OutboxTaskKey.class,
                 value

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class ProductHttpRequestMapper {
+public class ProductRequestMapper {
 
     public ProductInsertCommand toCommand(UUID id, ProductInsertRequest request) {
         return new ProductInsertCommand(

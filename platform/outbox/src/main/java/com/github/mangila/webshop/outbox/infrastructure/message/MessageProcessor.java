@@ -7,6 +7,7 @@ import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.retry.RetryState;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class MessageProcessor {
     private boolean process(OutboxId outboxId) {
         return retryTemplate.execute(
                 context -> {
-                    log.debug("Processing message: {} - Retry Attempt {}", outboxId, context.getRetryCount());
+                    context.setAttribute("outboxId", outboxId);
                     handler.handle(outboxId);
                     return true;
                 },
