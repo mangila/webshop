@@ -33,6 +33,7 @@ public class GenericExceptionController {
         problem.setTitle("Resource not found");
         problem.setDetail(ex.getMessage());
         problem.setProperty("resource", ex.resource());
+        problem.setProperty("identifier", ex.identifier());
         return problem;
     }
 

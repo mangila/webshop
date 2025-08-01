@@ -22,8 +22,8 @@ public class OutboxTaskRunner {
         Ensure.notNull(value, String.class);
         OutboxTaskKey key = outboxTaskKeys.get(value);
         Ensure.notNull(key, () -> new ResourceNotFoundException(
-                "OutboxTaskKey not found: %s".formatted(key),
-                OutboxTaskKey.class
+                OutboxTaskKey.class,
+                value
         ));
         return key;
     }
@@ -32,8 +32,8 @@ public class OutboxTaskRunner {
         Ensure.notNull(key, OutboxTaskKey.class);
         OutboxTask task = tasks.get(key);
         Ensure.notNull(task, () -> new ResourceNotFoundException(
-                "OutboxTask not found: %s".formatted(key),
-                OutboxTaskKey.class
+                OutboxTaskKey.class,
+                key
         ));
         task.execute();
     }

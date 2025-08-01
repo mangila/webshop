@@ -19,8 +19,6 @@ public class ProductQueryService {
     public Product findByIdOrThrow(ProductId productId) {
         Ensure.notNull(productId, ProductId.class);
         return repository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Product not found with id: %s".formatted(productId.value()),
-                        Product.class));
+                .orElseThrow(() -> new ResourceNotFoundException(Product.class, productId));
     }
 }

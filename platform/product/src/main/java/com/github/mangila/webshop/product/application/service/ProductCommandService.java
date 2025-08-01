@@ -46,8 +46,8 @@ public class ProductCommandService {
     public void deleteByIdOrThrow(ProductId productId) {
         Ensure.notNull(productId, ProductId.class);
         Product product = repository.deleteById(productId).orElseThrow(() -> new ResourceNotFoundException(
-                "Product not found with id: %s".formatted(productId.value()),
-                Product.class
+                Product.class,
+                productId
         ));
         DomainEvent domainEvent = eventMapper.toEvent(ProductEvent.PRODUCT_DELETED, product);
         publisher.publishDomainEvent(domainEvent);
