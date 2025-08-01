@@ -7,6 +7,7 @@ import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointResponse;
 import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -29,16 +30,13 @@ public class OutboxTaskActuatorEndpoint {
     public WebEndpointResponse<Map<String, Set<String>>> findAllTasks() {
         return new WebEndpointResponse<>(
                 Map.of("tasks", outboxTaskKeys.keySet()),
-                200
+                HttpStatus.OK.value()
         );
     }
 
     @WriteOperation
     public WebEndpointResponse<Map<String, Object>> runTask(@Selector String key) {
         outboxTaskRunner.runTask(new OutboxTaskKey(key));
-        return new WebEndpointResponse<>(
-                Map.of("key", key, "status", "OK"),
-                200
-        );
+        return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 }
