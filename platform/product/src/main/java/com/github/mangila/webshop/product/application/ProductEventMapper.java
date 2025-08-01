@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.mapper;
+package com.github.mangila.webshop.product.application;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;

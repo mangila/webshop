@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.application.service;
 
 import com.github.mangila.webshop.identity.application.IdentityService;
-import com.github.mangila.webshop.product.application.mapper.ProductEventMapper;
+import com.github.mangila.webshop.product.application.ProductEventMapper;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;

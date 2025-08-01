@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.application.service;
+package com.github.mangila.webshop.outbox.application.event;
 
 import com.github.mangila.webshop.outbox.application.mapper.OutboxEventMapper;
 import com.github.mangila.webshop.outbox.domain.Outbox;

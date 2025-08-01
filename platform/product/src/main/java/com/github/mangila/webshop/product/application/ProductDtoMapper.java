@@ -1,6 +1,5 @@
-package com.github.mangila.webshop.product.application.mapper;
+package com.github.mangila.webshop.product.application;
 
-import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.domain.Product;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;

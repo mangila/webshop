@@ -1,8 +1,8 @@
 extend type Query {
-    replay(request: OutboxReplayRequest): [Outbox]
+    replay(input: OutboxReplayInput): [Outbox]
 }
 
-input OutboxReplayRequest {
+input OutboxReplayInput {
     aggregateId: String!
     sequence: Int = 1
     limit: Int = 50
@@ -14,7 +14,14 @@ type Outbox {
     event: String!
     aggregateId: ID!
     payload: JSON!
-    published: Boolean!
+    status: OutboxStatusType!
     sequence: Int!
     created: DateTime!
 }
+
+enum OutboxStatusType {
+    PENDING
+    PUBLISHED
+    FAILED
+}
+

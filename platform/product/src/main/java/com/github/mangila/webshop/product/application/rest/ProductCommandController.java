@@ -1,8 +1,8 @@
-package com.github.mangila.webshop.product.application.http.command;
+package com.github.mangila.webshop.product.application.rest;
 
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
-import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

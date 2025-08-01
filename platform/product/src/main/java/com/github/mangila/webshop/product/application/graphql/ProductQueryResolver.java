@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.product.application.http.query;
+package com.github.mangila.webshop.product.application.graphql;
 
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.graphql.input.ProductIdInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class ProductQueryResolver {
     }
 
     @QueryMapping
-    public ProductDto findProductById(@Argument("request") ProductByIdRequest request) {
-        return facade.findProductById(request);
+    public ProductDto findProductById(@Argument("input") ProductIdInput input) {
+        return facade.findProductById(input);
     }
 }

@@ -1,18 +1,19 @@
-package com.github.mangila.webshop.product.application.mapper;
+package com.github.mangila.webshop.product.application.rest;
 
-import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
-import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
 import com.github.mangila.webshop.product.domain.primitive.ProductUnit;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
-public class ProductRequestMapper {
+public class ProductRestMapper {
 
     public ProductInsertCommand toCommand(UUID id, ProductInsertRequest request) {
         return new ProductInsertCommand(
@@ -23,7 +24,7 @@ public class ProductRequestMapper {
         );
     }
 
-    public ProductId toDomain(ProductByIdRequest request) {
+    public ProductId toDomain(@Valid ProductByIdRequest request) {
         return new ProductId(request.value());
     }
 }

@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.application.http.request;
+package com.github.mangila.webshop.outbox.application.graphql.input;
 
 import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
 import jakarta.validation.constraints.Max;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record OutboxReplayRequest(
+public record OutboxReplayInput(
         @NotNull
         @GeneratedIdentity
         UUID aggregateId,
