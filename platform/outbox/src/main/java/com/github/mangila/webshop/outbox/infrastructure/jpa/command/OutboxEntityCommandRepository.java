@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
-import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +22,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     """,
             nativeQuery = true
     )
-    Optional<OutboxMessageProjection> findByIdForUpdate(@Param("id") long id);
+    Optional<OutboxProjection> findByIdForUpdate(@Param("id") long id);
 
     @Modifying
     @Query(

@@ -4,30 +4,30 @@ import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
-import com.github.mangila.webshop.outbox.infrastructure.message.InternalMessageQueue;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
+import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
 public class ProcessDlqOutboxTask implements OutboxTask {
     private static final Logger log = LoggerFactory.getLogger(ProcessDlqOutboxTask.class);
-    private final InternalMessageQueue internalMessageQueue;
+    private final OutboxDomainMessageQueue queue;
     private final OutboxCommandRepository commandRepository;
     private final MessageProcessor processor;
 
-    public ProcessDlqOutboxTask(InternalMessageQueue internalMessageQueue, OutboxCommandRepository commandRepository, MessageProcessor processor) {
-        this.internalMessageQueue = internalMessageQueue;
+    public ProcessDlqOutboxTask(OutboxDomainMessageQueue queue,
+                                OutboxCommandRepository commandRepository,
+                                MessageProcessor processor) {
+        this.queue = queue;
         this.commandRepository = commandRepository;
         this.processor = processor;
     }
 
     @Override
     public void execute() {
-        OutboxId id = internalMessageQueue.pollDlq();
+        OutboxId id = queue.pollDlq();
         if (Objects.isNull(id)) {
             return;
         }
@@ -48,6 +48,9 @@ public class ProcessDlqOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return OutboxTaskKey.PROCESS_DLQ;
+        return new OutboxTaskKey(queue.domain().value()
+                .concat("_")
+                .concat("PROCESS_DLQ")
+        );
     }
 }

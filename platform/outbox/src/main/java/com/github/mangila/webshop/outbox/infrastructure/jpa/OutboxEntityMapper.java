@@ -5,7 +5,7 @@ import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.*;
-import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxMessageProjection;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxProjection;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;
@@ -48,7 +48,7 @@ public class OutboxEntityMapper {
         );
     }
 
-    public OutboxMessage toDomain(OutboxMessageProjection projection) {
+    public OutboxMessage toDomain(OutboxProjection projection) {
         return new OutboxMessage(
                 new OutboxId(projection.id()),
                 new OutboxAggregateId(projection.aggregateId()),

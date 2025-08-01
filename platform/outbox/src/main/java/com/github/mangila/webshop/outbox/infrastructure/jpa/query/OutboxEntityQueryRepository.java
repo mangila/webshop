@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,11 +24,11 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
                               @Param("limit") int limit);
 
     @Query("""
-                    SELECT o.id FROM OutboxEntity o
+                    SELECT o.id,o.aggregateId,o.domain,o.event FROM OutboxEntity o
                     WHERE o.status = :status
                     ORDER BY o.created ASC
                     LIMIT :limit
             """)
-    List<Long> findAllIdsByStatus(@Param("status") OutboxStatusType status,
-                                  @Param("limit") int limit);
+    List<OutboxProjection> findAllProjectionByStatus(@Param("status") OutboxStatusType status,
+                                                     @Param("limit") int limit);
 }

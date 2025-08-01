@@ -7,7 +7,7 @@ app:
     process-dlq-task:
       fixed-rate: 500ms
     fill-queue-task:
-      fixed-rate: 5m
+      fixed-rate: 1m
 # Spring Properties
 spring:
   application:

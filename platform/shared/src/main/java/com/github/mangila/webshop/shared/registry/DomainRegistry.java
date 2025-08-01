@@ -1,36 +1,27 @@
 package com.github.mangila.webshop.shared.registry;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.mangila.webshop.shared.model.CacheName;
 import com.github.mangila.webshop.shared.model.Domain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Component
 public final class DomainRegistry implements Registry<Domain, String> {
+    private final Map<Domain, String> registry;
 
-    private static final Logger log = LoggerFactory.getLogger(DomainRegistry.class);
-    private final Cache<Domain, String> registry;
-
-    @SuppressWarnings("unchecked")
-    public DomainRegistry(CacheManager cacheManager) {
-        this.registry = (Cache<Domain, String>) cacheManager.getCache(CacheName.DOMAIN_REGISTRY)
-                .getNativeCache();
+    public DomainRegistry(Map<Domain, String> registry) {
+        this.registry = registry;
     }
 
     @Override
     public boolean isRegistered(Domain key) {
-        return Objects.nonNull(registry.getIfPresent(key));
+        return registry.containsKey(key);
     }
 
     @Override
     public String get(Domain key) {
-        return registry.getIfPresent(key);
+        return registry.get(key);
     }
 
     @Override
@@ -40,11 +31,11 @@ public final class DomainRegistry implements Registry<Domain, String> {
 
     @Override
     public List<String> values() {
-        return registry.asMap().values().stream().toList();
+        return registry.values().stream().toList();
     }
 
     @Override
     public List<Domain> keys() {
-        return registry.asMap().keySet().stream().toList();
+        return registry.keySet().stream().toList();
     }
 }

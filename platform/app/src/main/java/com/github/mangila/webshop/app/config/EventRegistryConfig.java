@@ -11,9 +11,11 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class EventRegistryConfig {
@@ -21,8 +23,13 @@ public class EventRegistryConfig {
     private static final Logger log = LoggerFactory.getLogger(EventRegistryConfig.class);
 
     @Bean
-    public EventRegistry eventRegistry(CacheManager cacheManager) {
-        var eventRegistry = new EventRegistry(cacheManager);
+    Map<Event, String> eventMap() {
+        return new ConcurrentHashMap<>();
+    }
+
+    @Bean
+    EventRegistry eventRegistry() {
+        var eventRegistry = new EventRegistry(eventMap());
         registerEvents(eventRegistry);
         return eventRegistry;
     }

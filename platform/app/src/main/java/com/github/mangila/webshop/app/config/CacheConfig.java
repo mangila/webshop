@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.github.mangila.webshop.shared.model.CacheName.*;
+import static com.github.mangila.webshop.shared.model.CacheName.LRU;
+import static com.github.mangila.webshop.shared.model.CacheName.TTL;
 
 @Configuration
 @EnableCaching
@@ -37,10 +38,7 @@ public class CacheConfig {
                             .maximumSize(1000)
                             .recordStats();
 
-                    case EVENT_REGISTRY, DOMAIN_REGISTRY -> Caffeine.newBuilder()
-                            .initialCapacity(50)
-                            .recordStats();
-                    default -> throw new ApplicationException(String.format("Unknown cache name: %s", name));
+                    default -> throw new ApplicationException(String.format("Unknown cache value: %s", name));
                 };
 
                 Cache<Object, Object> nativeCache = caffeineBuilder.build();
