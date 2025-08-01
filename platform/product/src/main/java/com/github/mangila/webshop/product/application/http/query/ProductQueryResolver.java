@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.http;
+package com.github.mangila.webshop.product.application.http.query;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductQueryResolver {
 
-    private final ProductQueryHttpFacade webFacade;
+    private final ProductQueryHttpFacade facade;
 
-    public ProductQueryResolver(ProductQueryHttpFacade webFacade) {
-        this.webFacade = webFacade;
+    public ProductQueryResolver(ProductQueryHttpFacade facade) {
+        this.facade = facade;
     }
 
     @QueryMapping
     public ProductDto findProductById(@Argument("request") ProductByIdRequest request) {
-        return webFacade.findProductById(request);
+        return facade.findProductById(request);
     }
 }

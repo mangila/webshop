@@ -4,7 +4,7 @@ import com.github.mangila.webshop.shared.exception.ApplicationException;
 
 import java.util.List;
 
-public interface Registry<K, V> {
+sealed interface Registry<K, V> permits DomainRegistry, EventRegistry {
 
     boolean isRegistered(K key);
 

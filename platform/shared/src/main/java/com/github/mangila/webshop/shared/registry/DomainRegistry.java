@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class DomainRegistry implements Registry<Domain, String> {
+public final class DomainRegistry implements Registry<Domain, String> {
 
     private static final Logger log = LoggerFactory.getLogger(DomainRegistry.class);
     private final Cache<Domain, String> registry;

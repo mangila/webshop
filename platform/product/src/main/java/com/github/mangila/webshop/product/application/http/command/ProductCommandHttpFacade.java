@@ -1,9 +1,10 @@
-package com.github.mangila.webshop.product.application.http;
+package com.github.mangila.webshop.product.application.http.command;
 
 import com.github.mangila.webshop.identity.application.IdentityService;
 import com.github.mangila.webshop.identity.domain.Identity;
 import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
+import com.github.mangila.webshop.product.application.mapper.ProductHttpRequestMapper;
 import com.github.mangila.webshop.product.application.mapper.ProductDtoMapper;
 import com.github.mangila.webshop.product.application.service.ProductCommandService;
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
@@ -45,9 +46,9 @@ public class ProductCommandHttpFacade {
     @Transactional
     @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(@Valid ProductInsertRequest request) {
-        var domain = new Domain(Product.class, domainRegistry);
-        Identity record = identityService.generate(new NewIdentityCommand(domain));
-        ProductInsertCommand command = requestMapper.toCommand(record.id(), request);
+        Domain domain = new Domain(Product.class, domainRegistry);
+        Identity identity = identityService.generate(new NewIdentityCommand(domain));
+        ProductInsertCommand command = requestMapper.toCommand(identity.id(), request);
         Product product = commandService.insert(command);
         return dtoMapper.toDto(product);
     }

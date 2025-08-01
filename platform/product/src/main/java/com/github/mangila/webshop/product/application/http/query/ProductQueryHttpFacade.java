@@ -1,6 +1,7 @@
-package com.github.mangila.webshop.product.application.http;
+package com.github.mangila.webshop.product.application.http.query;
 
 import com.github.mangila.webshop.product.application.ProductDto;
+import com.github.mangila.webshop.product.application.mapper.ProductHttpRequestMapper;
 import com.github.mangila.webshop.product.application.mapper.ProductDtoMapper;
 import com.github.mangila.webshop.product.application.service.ProductQueryService;
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;

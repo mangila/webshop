@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.http;
+package com.github.mangila.webshop.product.application.http.command;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
@@ -12,21 +12,21 @@ import java.util.UUID;
 @RequestMapping("api/v1/product/command")
 public class ProductCommandController {
 
-    private final ProductCommandHttpFacade webFacade;
+    private final ProductCommandHttpFacade facade;
 
-    public ProductCommandController(ProductCommandHttpFacade webFacade) {
-        this.webFacade = webFacade;
+    public ProductCommandController(ProductCommandHttpFacade facade) {
+        this.facade = facade;
     }
 
     @PostMapping
     public ResponseEntity<ProductDto> insert(@RequestBody ProductInsertRequest request) {
-        ProductDto dto = webFacade.insert(request);
+        ProductDto dto = facade.insert(request);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") UUID id) {
-        webFacade.deleteById(new ProductByIdRequest(id));
+        facade.deleteById(new ProductByIdRequest(id));
         return ResponseEntity.noContent().build();
     }
 }

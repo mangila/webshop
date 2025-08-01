@@ -20,8 +20,8 @@ public class IdentityService {
 
     public Identity generate(NewIdentityCommand command) {
         Ensure.notNull(command, "NewIdentityCommand must not be null");
-        var record = Identity.createNew(command.domain());
-        return repository.save(record);
+        Identity identity = Identity.createNew(command.domain());
+        return repository.save(identity);
     }
 
     public boolean hasGenerated(UUID id) {

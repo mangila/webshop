@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.http;
+package com.github.mangila.webshop.product.application.mapper;
 
 import com.github.mangila.webshop.product.application.http.request.ProductByIdRequest;
 import com.github.mangila.webshop.product.application.http.request.ProductInsertRequest;
