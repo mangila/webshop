@@ -3,7 +3,6 @@ package com.github.mangila.webshop.shared;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  * Utility class for ensuring specific conditions are met at runtime.
@@ -22,7 +21,7 @@ public final class Ensure {
     }
 
     public static void notNull(Object object, String message) {
-        if (Objects.isNull(object)) {
+        if (object == null) {
             throw new ApplicationException(message);
         }
     }
