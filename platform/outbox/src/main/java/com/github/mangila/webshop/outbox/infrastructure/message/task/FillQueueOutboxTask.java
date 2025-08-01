@@ -2,17 +2,17 @@ package com.github.mangila.webshop.outbox.infrastructure.message.task;
 
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
-import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMessageQueue;
+import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FillQueueOutboxTask implements OutboxTask {
+public final class FillQueueOutboxTask implements OutboxTask {
     private static final Logger log = LoggerFactory.getLogger(FillQueueOutboxTask.class);
     private final OutboxQueryRepository queryRepository;
-    private final OutboxDomainMessageQueue queue;
+    private final OutboxQueue queue;
 
     public FillQueueOutboxTask(OutboxQueryRepository queryRepository,
-                               OutboxDomainMessageQueue queue) {
+                               OutboxQueue queue) {
         this.queryRepository = queryRepository;
         this.queue = queue;
     }

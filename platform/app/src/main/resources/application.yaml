@@ -72,6 +72,7 @@ management:
         include: "*"
       cors:
         allowed-origins: "*"
+        allowed-methods: "*"
     access:
       default: unrestricted
   zipkin:

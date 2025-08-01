@@ -50,7 +50,7 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.NOT_FOUND)
                 .message(ex.getMessage())
-                .extensions(Map.of("domain", ex.getDomain()))
+                .extensions(Map.of("resource", ex.resource()))
                 .build();
     }
 

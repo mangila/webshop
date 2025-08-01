@@ -32,7 +32,7 @@ public class GenericExceptionController {
         var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problem.setTitle("Resource not found");
         problem.setDetail(ex.getMessage());
-        problem.setProperty("domain", ex.getDomain());
+        problem.setProperty("resource", ex.resource());
         return problem;
     }
 

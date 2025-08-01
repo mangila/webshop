@@ -6,13 +6,13 @@ import com.github.mangila.webshop.shared.model.Domain;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class OutboxDomainMessageQueue {
+public class OutboxQueue {
 
     private final Domain domain;
     private final Queue<OutboxId> queue;
     private final Queue<OutboxId> dlq;
 
-    public OutboxDomainMessageQueue(Domain domain) {
+    public OutboxQueue(Domain domain) {
         this.domain = domain;
         this.queue = new ConcurrentLinkedQueue<>();
         this.dlq = new ConcurrentLinkedQueue<>();

@@ -5,17 +5,17 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
-import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMessageQueue;
+import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProcessDlqOutboxTask implements OutboxTask {
+public final class ProcessDlqOutboxTask implements OutboxTask {
     private static final Logger log = LoggerFactory.getLogger(ProcessDlqOutboxTask.class);
-    private final OutboxDomainMessageQueue queue;
+    private final OutboxQueue queue;
     private final OutboxCommandRepository commandRepository;
     private final MessageProcessor processor;
 
-    public ProcessDlqOutboxTask(OutboxDomainMessageQueue queue,
+    public ProcessDlqOutboxTask(OutboxQueue queue,
                                 OutboxCommandRepository commandRepository,
                                 MessageProcessor processor) {
         this.queue = queue;

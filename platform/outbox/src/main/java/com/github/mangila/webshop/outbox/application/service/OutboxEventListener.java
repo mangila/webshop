@@ -6,7 +6,7 @@ import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
-import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMessageQueue;
+import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.model.DomainEvent;
 import org.slf4j.Logger;
@@ -25,9 +25,9 @@ public class OutboxEventListener {
     private static final Logger log = LoggerFactory.getLogger(OutboxEventListener.class);
     private final OutboxEventMapper mapper;
     private final OutboxCommandRepository repository;
-    private final Map<Domain, OutboxDomainMessageQueue> domainQueues;
+    private final Map<Domain, OutboxQueue> domainQueues;
 
-    public OutboxEventListener(Map<Domain, OutboxDomainMessageQueue> domainQueues,
+    public OutboxEventListener(Map<Domain, OutboxQueue> domainQueues,
                                OutboxEventMapper mapper,
                                OutboxCommandRepository repository) {
         this.domainQueues = domainQueues;
@@ -59,7 +59,7 @@ public class OutboxEventListener {
                 new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
-                        OutboxDomainMessageQueue queue = domainQueues.get(event.domain());
+                        OutboxQueue queue = domainQueues.get(event.domain());
                         queue.add(outbox.id());
                         log.debug("Message: {} was successfully queued", outbox.id());
                     }

@@ -2,14 +2,14 @@ package com.github.mangila.webshop.shared.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 
-    private final Class<?> domain;
+    private final Class<?> resource;
 
-    public ResourceNotFoundException(String message, Class<?> domain) {
+    public ResourceNotFoundException(String message, Class<?> resource) {
         super(message);
-        this.domain = domain;
+        this.resource = resource;
     }
 
-    public Class<?> getDomain() {
-        return domain;
+    public Class<?> resource() {
+        return resource;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message.task;
 
 import com.github.mangila.webshop.shared.Ensure;
+import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -20,14 +21,20 @@ public class OutboxTaskRunner {
     public OutboxTaskKey findKeyOrThrow(String value) {
         Ensure.notNull(value, "OutboxTaskKey value must not be null");
         OutboxTaskKey key = outboxTaskKeys.get(value);
-        Ensure.notNull(key, "OutboxTaskKey not found: %s".formatted(value));
+        Ensure.notNull(key, () -> new ResourceNotFoundException(
+                "OutboxTaskKey not found: %s".formatted(key),
+                OutboxTaskKey.class
+        ));
         return key;
     }
 
     public void runTask(OutboxTaskKey key) {
         Ensure.notNull(key, "OutboxTaskKey must not be null");
         OutboxTask task = tasks.get(key);
-        Ensure.notNull(task, "OutboxTask not found: %s".formatted(key));
+        Ensure.notNull(task, () -> new ResourceNotFoundException(
+                "OutboxTask not found: %s".formatted(key),
+                OutboxTaskKey.class
+        ));
         task.execute();
     }
 }
