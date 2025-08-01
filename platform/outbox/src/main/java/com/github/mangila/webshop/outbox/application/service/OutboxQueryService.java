@@ -18,7 +18,7 @@ public class OutboxQueryService {
     }
 
     public List<Outbox> replay(OutboxReplayQuery query) {
-        Ensure.notNull(query, "OutboxReplayQuery must not be null");
+        Ensure.notNull(query, OutboxReplayQuery.class);
         return repository.replay(query);
     }
 }

@@ -21,9 +21,15 @@ public final class Ensure {
         throw new ApplicationException("Utility class");
     }
 
-    public static void notNull(Object object, String message) {
+    public static void notNull(Object object) {
         if (object == null) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("Object cannot be null");
+        }
+    }
+
+    public static void notNull(Object object, Class<?> clazz) {
+        if (object == null) {
+            throw new ApplicationException("%s cannot be null".formatted(clazz.getSimpleName()));
         }
     }
 
@@ -33,24 +39,17 @@ public final class Ensure {
         }
     }
 
-    public static void notEmpty(byte[] array, String message) {
-        notNull(array, message);
+    public static void notEmpty(Object[] array, Class<?> clazz) {
+        notNull(array, clazz);
         if (array.length == 0) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("%s cannot be empty".formatted(clazz.getSimpleName()));
         }
     }
 
-    public static void notEmpty(Object[] array, String message) {
-        notNull(array, message);
-        if (array.length == 0) {
-            throw new ApplicationException(message);
-        }
-    }
-
-    public static void notBlank(String value, String message) {
-        notNull(value, message);
+    public static void notBlank(String value, Class<?> clazz) {
+        notNull(value, clazz);
         if (value.isBlank()) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("%s cannot be blank".formatted(clazz.getSimpleName()));
         }
     }
 
@@ -60,29 +59,37 @@ public final class Ensure {
         }
     }
 
-    public static void min(int min, int target, String message) {
+    public static void min(int min, int target) {
         if (target < min) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("Target must be greater than or equal to %d but was %d"
+                    .formatted(min, target)
+            );
         }
     }
 
-    public static void min(long min, long target, String message) {
+    public static void min(long min, long target) {
         if (target < min) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("Target must be greater than or equal to %d but was %d"
+                    .formatted(min, target)
+            );
         }
     }
 
-    public static void max(int max, int target, String message) {
+    public static void max(int max, int target) {
         if (target > max) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("Target must be less than or equal to %d but was %d"
+                    .formatted(max, target)
+            );
         }
     }
 
-    public static void beforeOrEquals(Instant instant, Instant target, String message) {
-        notNull(instant, message);
-        notNull(target, message);
+    public static void beforeOrEquals(Instant instant, Instant target) {
+        notNull(instant, Instant.class);
+        notNull(target, Instant.class);
         if (!instant.isBefore(target) && !instant.equals(target)) {
-            throw new ApplicationException(message);
+            throw new ApplicationException("Target must be before or equal to %s but was %s"
+                    .formatted(target.toString(), instant.toString())
+            );
         }
     }
 }

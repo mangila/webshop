@@ -12,35 +12,35 @@ class EnsureTest {
 
     @Test
     void notNull() {
-        assertThatThrownBy(() -> Ensure.notNull(null, "error"))
+        assertThatThrownBy(() -> Ensure.notNull(null))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessage("Object cannot be null");
         assertThatNoException()
-                .isThrownBy(() -> Ensure.notNull("not null", "no error"));
+                .isThrownBy(() -> Ensure.notNull("not null", String.class));
     }
 
     @Test
     void notEmpty() {
-        assertThatThrownBy(() -> Ensure.notEmpty((byte[]) null, "error"))
+        assertThatThrownBy(() -> Ensure.notEmpty(null, Object[].class))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
-        assertThatThrownBy(() -> Ensure.notEmpty(new byte[0], "error"))
+                .hasMessageContaining("cannot be null");
+        assertThatThrownBy(() -> Ensure.notEmpty(new Object[0], Object[].class))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessageContaining("cannot be empty");
         assertThatNoException()
-                .isThrownBy(() -> Ensure.notEmpty(new byte[1], "no error"));
+                .isThrownBy(() -> Ensure.notEmpty(new Object[1], Object[].class));
     }
 
     @Test
     void notBlank() {
-        assertThatThrownBy(() -> Ensure.notBlank(null, "error"))
+        assertThatThrownBy(() -> Ensure.notBlank(null, String.class))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
-        assertThatThrownBy(() -> Ensure.notBlank("   ", "error"))
+                .hasMessageContaining("cannot be null");
+        assertThatThrownBy(() -> Ensure.notBlank("   ", String.class))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessageContaining("cannot be blank");
         assertThatNoException()
-                .isThrownBy(() -> Ensure.notBlank("not blank", "no error"));
+                .isThrownBy(() -> Ensure.notBlank("not blank", String.class));
     }
 
     @Test
@@ -54,43 +54,43 @@ class EnsureTest {
 
     @Test
     void min() {
-        assertThatThrownBy(() -> Ensure.min(1, 0, "error"))
+        assertThatThrownBy(() -> Ensure.min(1, 0))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
-        assertThatThrownBy(() -> Ensure.min(1, -1, "error"))
+                .hasMessageContaining("must be greater than or equal to");
+        assertThatThrownBy(() -> Ensure.min(1, -1))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessageContaining("must be greater than or equal to");
         assertThatNoException()
                 .isThrownBy(() -> {
-                    Ensure.min(1, 1, "no error");
-                    Ensure.min(1, 10, "no error");
+                    Ensure.min(1, 1);
+                    Ensure.min(1, 10);
                 });
     }
 
     @Test
     void max() {
-        assertThatThrownBy(() -> Ensure.max(10, 11, "error"))
+        assertThatThrownBy(() -> Ensure.max(10, 11))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
-        assertThatThrownBy(() -> Ensure.max(-10, -1, "error"))
+                .hasMessageContaining("must be less than or equal to");
+        assertThatThrownBy(() -> Ensure.max(-10, -1))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessageContaining("must be less than or equal to");
         assertThatNoException()
                 .isThrownBy(() -> {
-                    Ensure.max(1, 1, "no error");
-                    Ensure.max(10, 1, "no error");
+                    Ensure.max(1, 1);
+                    Ensure.max(10, 1);
                 });
     }
 
     @Test
     void beforeOrEquals() {
-        assertThatThrownBy(() -> Ensure.beforeOrEquals(Instant.now(), Instant.now().minusSeconds(5), "error"))
+        assertThatThrownBy(() -> Ensure.beforeOrEquals(Instant.now(), Instant.now().minusSeconds(5)))
                 .isInstanceOf(ApplicationException.class)
-                .hasMessage("error");
+                .hasMessageContaining("must be before or equal to");
         assertThatNoException()
                 .isThrownBy(() -> {
-                    Ensure.beforeOrEquals(Instant.now(), Instant.now().plusSeconds(5), "no error");
-                    Ensure.beforeOrEquals(Instant.now(), Instant.now(), "no error");
+                    Ensure.beforeOrEquals(Instant.now(), Instant.now().plusSeconds(5));
+                    Ensure.beforeOrEquals(Instant.now(), Instant.now());
                 });
     }
 }

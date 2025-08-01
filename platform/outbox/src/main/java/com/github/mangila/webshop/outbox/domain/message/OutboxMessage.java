@@ -11,9 +11,10 @@ public record OutboxMessage(OutboxId id,
                             Domain domain,
                             Event event) {
     public OutboxMessage {
-        Ensure.notNull(id, "OutboxId must not be null");
-        Ensure.notNull(aggregateId, "OutboxAggregateId must not be null");
-        Ensure.notNull(domain, "Domain must not be null");
-        Ensure.notNull(event, "Event must not be null");
+        Ensure.notNull(id, OutboxId.class);
+        Ensure.notNull(aggregateId, OutboxAggregateId.class);
+        Ensure.notNull(domain, Domain.class);
+        Ensure.notNull(event, Event.class);
     }
 }
+

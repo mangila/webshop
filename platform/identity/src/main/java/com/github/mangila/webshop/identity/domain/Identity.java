@@ -10,9 +10,9 @@ import java.util.UUID;
 public record Identity(UUID id, Domain domain, Instant created) {
 
     public Identity {
-        Ensure.notNull(id, "Identity Id must not be null");
-        Ensure.notNull(domain, "Identity Domain must not be null");
-        Ensure.notNull(created, "Identity Created must not be null");
+        Ensure.notNull(id, UUID.class);
+        Ensure.notNull(domain, Domain.class);
+        Ensure.notNull(created, Instant.class);
     }
 
     public static Identity from(UUID id, Domain domain, Instant created) {

@@ -19,15 +19,15 @@ public record Outbox(
         OutboxUpdated updated,
         OutboxCreated created) {
     public Outbox {
-        Ensure.notNull(id, "OutboxId must not be null");
-        Ensure.notNull(domain, "Domain must not be null");
-        Ensure.notNull(event, "Event must not be null");
-        Ensure.notNull(aggregateId, "OutboxAggregateId must not be null");
-        Ensure.notNull(payload, "OutboxPayload must not be null");
-        Ensure.notNull(status, "OutboxStatusType must not be null");
-        Ensure.notNull(sequence, "OutboxSequence must not be null");
-        Ensure.notNull(updated, "OutboxUpdated must not be null");
-        Ensure.notNull(created, "OutboxCreated must not be null");
-        Ensure.beforeOrEquals(created.value(), updated.value(), "Created must be before or equals updated");
+        Ensure.notNull(id, OutboxId.class);
+        Ensure.notNull(domain, Domain.class);
+        Ensure.notNull(event, Event.class);
+        Ensure.notNull(aggregateId, OutboxAggregateId.class);
+        Ensure.notNull(payload, OutboxPayload.class);
+        Ensure.notNull(status, OutboxStatusType.class);
+        Ensure.notNull(sequence, OutboxSequence.class);
+        Ensure.notNull(updated, OutboxUpdated.class);
+        Ensure.notNull(created, OutboxCreated.class);
+        Ensure.beforeOrEquals(created.value(), updated.value());
     }
 }

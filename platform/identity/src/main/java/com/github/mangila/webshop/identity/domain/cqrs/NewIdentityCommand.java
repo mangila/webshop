@@ -6,6 +6,6 @@ import com.github.mangila.webshop.shared.model.Domain;
 
 public record NewIdentityCommand(Domain domain) {
     public NewIdentityCommand {
-        Ensure.notNull(domain, "NewIdentityCommand Domain must not be null");
+        Ensure.notNull(domain, NewIdentityCommand.class);
     }
 }

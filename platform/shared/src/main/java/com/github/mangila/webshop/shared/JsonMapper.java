@@ -17,7 +17,7 @@ public class JsonMapper {
 
     public ObjectNode toObjectNode(Object object) {
         return Try.of(() -> {
-                    Ensure.notNull(object, "Object cannot be null");
+                    Ensure.notNull(object);
                     String json = objectMapper.writeValueAsString(object);
                     return (ObjectNode) objectMapper.readTree(json);
                 })

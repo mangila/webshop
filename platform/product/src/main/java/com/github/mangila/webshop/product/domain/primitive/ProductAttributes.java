@@ -5,6 +5,6 @@ import com.github.mangila.webshop.shared.Ensure;
 
 public record ProductAttributes(ObjectNode value) {
     public ProductAttributes {
-        Ensure.notNull(value, "Product attributes must not be null");
+        Ensure.notNull(value, ObjectNode.class);
     }
 }

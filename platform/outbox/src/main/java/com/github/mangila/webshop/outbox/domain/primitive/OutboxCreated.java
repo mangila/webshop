@@ -6,6 +6,6 @@ import java.time.Instant;
 
 public record OutboxCreated(Instant value) {
     public OutboxCreated {
-        Ensure.notNull(value, "Instant must not be null");
+        Ensure.notNull(value, Instant.class);
     }
 }

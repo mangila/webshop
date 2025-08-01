@@ -5,8 +5,8 @@ import com.github.mangila.webshop.shared.Ensure;
 
 public record OutboxReplayQuery(OutboxSequence sequence, int limit) {
     public OutboxReplayQuery {
-        Ensure.notNull(sequence, "OutboxSequence must not be null");
-        Ensure.min(1, limit, "OutboxSequence Limit must be greater than 0");
-        Ensure.max(500, limit, "OutboxSequence Limit must be less than 500");
+        Ensure.notNull(sequence, OutboxSequence.class);
+        Ensure.min(1, limit);
+        Ensure.max(500, limit);
     }
 }

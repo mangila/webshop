@@ -5,6 +5,6 @@ import com.github.mangila.webshop.shared.Ensure;
 
 public record OutboxPayload(ObjectNode value) {
     public OutboxPayload {
-        Ensure.notNull(value, "ObjectNode must not be null");
+        Ensure.notNull(value, ObjectNode.class);
     }
 }

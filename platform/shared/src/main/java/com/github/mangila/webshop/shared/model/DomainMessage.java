@@ -11,9 +11,9 @@ public record DomainMessage(
         Event event
 ) {
     public DomainMessage {
-        Ensure.min(1, outboxId, "outboxId must be greater than 0");
-        Ensure.notNull(aggregateId, "aggregateId cannot be null");
-        Ensure.notNull(domain, "domain cannot be null");
-        Ensure.notNull(event, "event cannot be null");
+        Ensure.min(1, outboxId);
+        Ensure.notNull(aggregateId, UUID.class);
+        Ensure.notNull(domain, Domain.class);
+        Ensure.notNull(event, Event.class);
     }
 }

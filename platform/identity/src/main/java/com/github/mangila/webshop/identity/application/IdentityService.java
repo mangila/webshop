@@ -19,7 +19,7 @@ public class IdentityService {
     }
 
     public Identity generate(NewIdentityCommand command) {
-        Ensure.notNull(command, "NewIdentityCommand must not be null");
+        Ensure.notNull(command, NewIdentityCommand.class);
         Identity identity = Identity.createNew(command.domain());
         return repository.save(identity);
     }

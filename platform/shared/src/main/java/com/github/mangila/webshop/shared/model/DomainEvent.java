@@ -12,9 +12,9 @@ public record DomainEvent(
         ObjectNode payload
 ) {
     public DomainEvent {
-        Ensure.notNull(domain, "domain cannot be null");
-        Ensure.notNull(event, "event cannot be null");
-        Ensure.notNull(aggregateId, "aggregateId cannot be null");
-        Ensure.notNull(payload, "payload cannot be null");
+        Ensure.notNull(domain, Domain.class);
+        Ensure.notNull(event, Event.class);
+        Ensure.notNull(aggregateId, UUID.class);
+        Ensure.notNull(payload, ObjectNode.class);
     }
 }

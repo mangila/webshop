@@ -18,13 +18,13 @@ public class SpringEventPublisher {
     }
 
     public void publishDomainEvent(DomainEvent event) {
-        Ensure.notNull(event, "DomainEvent cannot be null");
+        Ensure.notNull(event, DomainEvent.class);
         log.debug("Publishing DomainEvent: {}", event);
         publisher.publishEvent(event);
     }
 
     public void publishDomainMessage(DomainMessage message) {
-        Ensure.notNull(message, "DomainMessage cannot be null");
+        Ensure.notNull(message, DomainMessage.class);
         log.debug("Publishing DomainMessage: {}", message);
         publisher.publishEvent(message);
     }

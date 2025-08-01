@@ -9,9 +9,10 @@ public record OutboxProjection(long id,
                                String domain,
                                String event) {
     public OutboxProjection {
-        Ensure.min(1, id, "OutboxId must be greater than 0");
-        Ensure.notNull(aggregateId, "OutboxAggregateId must not be null");
-        Ensure.notNull(domain, "Domain must not be null");
-        Ensure.notNull(event, "Event must not be null");
+        Ensure.min(1, id);
+        Ensure.notNull(aggregateId, UUID.class);
+        Ensure.notNull(domain, String.class);
+        Ensure.notNull(event, String.class);
     }
 }
+

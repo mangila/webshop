@@ -8,8 +8,8 @@ import java.util.UUID;
 public record OutboxSequence(OutboxAggregateId aggregateId, int value) {
 
     public OutboxSequence {
-        Ensure.notNull(aggregateId, "OutboxAggregateId must not be null");
-        Ensure.min(1, value, "Sequence must be greater than 0");
+        Ensure.notNull(aggregateId, OutboxAggregateId.class);
+        Ensure.min(1, value);
     }
 
     public static OutboxSequence from(UUID aggregateId, int sequence) {

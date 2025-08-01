@@ -44,7 +44,7 @@ public class EventRegistryConfig {
                 .forEach(eventClazz -> {
                     if (eventClazz.isEnum()) {
                         var enumConstants = eventClazz.getEnumConstants();
-                        Ensure.notEmpty(enumConstants, "Enums cannot be empty");
+                        Ensure.notEmpty(enumConstants, eventClazz);
                         for (Object enumValue : enumConstants) {
                             Enum<?> e = (Enum<?>) enumValue;
                             log.info("Register event: {}", e.name());

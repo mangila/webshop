@@ -6,6 +6,6 @@ import java.time.Instant;
 
 public record ProductCreated(Instant value) {
     public ProductCreated {
-        Ensure.notNull(value, "Product created must not be null");
+        Ensure.notNull(value, Instant.class);
     }
 }
