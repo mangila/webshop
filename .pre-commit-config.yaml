@@ -3,7 +3,7 @@ repos:
   - repo: local
     hooks:
       - id: platform-build
-        name: Platform Parent Build
+        name: Platform Parent Build (Skip tests)
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
         language: system
