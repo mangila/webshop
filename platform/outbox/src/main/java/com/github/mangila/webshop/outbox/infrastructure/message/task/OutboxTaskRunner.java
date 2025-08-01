@@ -26,8 +26,8 @@ public class OutboxTaskRunner {
 
     public void runTask(OutboxTaskKey key) {
         Ensure.notNull(key, "OutboxTaskKey must not be null");
-        Ensure.isTrue(tasks.containsKey(key), "OutboxTaskKey not found: %s".formatted(key));
         OutboxTask task = tasks.get(key);
+        Ensure.notNull(task, "OutboxTask not found: %s".formatted(key));
         task.execute();
     }
 }

@@ -3,7 +3,6 @@ package com.github.mangila.webshop.outbox.infrastructure.message.task;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMessageQueue;
-import com.github.mangila.webshop.shared.model.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +19,7 @@ public class FillQueueOutboxTask implements OutboxTask {
 
     @Override
     public void execute() {
-        Domain domain = queue.domain();
-        queryRepository.findAllByDomainAndStatus(domain, OutboxStatusType.PENDING, 120)
+        queryRepository.findAllByDomainAndStatus(queue.domain(), OutboxStatusType.PENDING, 120)
                 .stream()
                 .peek(message -> log.info("Queue Message: {} - {}", message.id(), message.domain()))
                 .forEach(message -> queue.add(message.id()));
