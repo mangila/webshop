@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.Objects;
-
 @RestControllerAdvice
 public class GenericExceptionController {
 
@@ -66,7 +64,7 @@ public class GenericExceptionController {
                     if (fieldError.isBindingFailure()) {
                         return fieldError.getField();
                     }
-                    if (Objects.isNull(fieldError.getRejectedValue())) {
+                    if (fieldError.getRejectedValue() == null) {
                         return String.join(":", fieldError.getField(), fieldError.getDefaultMessage());
                     }
                     return String.join(":", fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue().toString());

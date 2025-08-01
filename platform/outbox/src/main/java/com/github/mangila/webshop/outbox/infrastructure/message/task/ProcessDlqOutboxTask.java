@@ -9,8 +9,6 @@ import com.github.mangila.webshop.outbox.infrastructure.message.OutboxDomainMess
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 public class ProcessDlqOutboxTask implements OutboxTask {
     private static final Logger log = LoggerFactory.getLogger(ProcessDlqOutboxTask.class);
     private final OutboxDomainMessageQueue queue;
@@ -28,7 +26,7 @@ public class ProcessDlqOutboxTask implements OutboxTask {
     @Override
     public void execute() {
         OutboxId id = queue.pollDlq();
-        if (Objects.isNull(id)) {
+        if (id == null) {
             return;
         }
         processor.tryProcess(id)
