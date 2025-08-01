@@ -48,7 +48,6 @@ public final class DomainRegistry implements Registry<Domain, String> {
                 });
     }
 
-
     @Override
     public boolean isRegistered(Domain key) {
         return Objects.nonNull(registry.getIfPresent(key));
