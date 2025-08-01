@@ -27,7 +27,7 @@ public final class ProcessQueueOutboxTask implements OutboxTask {
         processor.tryProcess(id)
                 .onSuccess(processed -> {
                     if (processed) {
-                        log.info("Message: {} was successfully processed", id);
+                        log.debug("Message: {} was successfully processed", id);
                     } else {
                         log.error("Failed to process message: {} add to DLQ", id);
                         queue.addDlq(id);

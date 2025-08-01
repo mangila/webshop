@@ -1,6 +1,5 @@
-package com.github.mangila.webshop.outbox.application.mapper;
+package com.github.mangila.webshop.outbox.application;
 
-import com.github.mangila.webshop.outbox.application.OutboxDto;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;

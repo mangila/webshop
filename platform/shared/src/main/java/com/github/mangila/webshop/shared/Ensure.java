@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.shared;
 
 import com.github.mangila.webshop.shared.exception.ApplicationException;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.Instant;
 import java.util.function.Supplier;
@@ -8,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * Utility class for ensuring specific conditions are met at runtime.
  * This class provides a set of static methods to validate method arguments
- * and enforce constraints, throwing an {@code ApplicationException} when a condition
+ * and enforce constraints, throwing an exception when a condition
  * is not satisfied.
  * <p>
  * All methods in this class are intended to be used as precondition checks,
@@ -91,5 +92,9 @@ public final class Ensure {
                     .formatted(target.toString(), instant.toString())
             );
         }
+    }
+
+    public static void activeSpringTransaction() {
+        Ensure.isTrue(TransactionSynchronizationManager.isActualTransactionActive(), "No active transaction");
     }
 }

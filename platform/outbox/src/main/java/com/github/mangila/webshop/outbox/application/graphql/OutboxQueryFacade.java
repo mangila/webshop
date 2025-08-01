@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.application.graphql;
 
 import com.github.mangila.webshop.outbox.application.OutboxDto;
-import com.github.mangila.webshop.outbox.application.mapper.OutboxDtoMapper;
+import com.github.mangila.webshop.outbox.application.OutboxDtoMapper;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
 import com.github.mangila.webshop.outbox.application.graphql.input.OutboxReplayInput;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;

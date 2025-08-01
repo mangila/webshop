@@ -6,7 +6,7 @@ import com.github.mangila.webshop.shared.registry.DomainRegistry;
 public record Domain(String value) {
 
     public Domain {
-        Ensure.notBlank(value, Domain.class);
+        Ensure.notBlank(value, String.class);
     }
 
     public Domain(Class<?> domain) {

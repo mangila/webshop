@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.inventory;
+package com.github.mangila.webshop.price;
 
 import com.github.mangila.webshop.shared.model.DomainMessage;
 import org.slf4j.Logger;
@@ -7,9 +7,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InventoryEventListener {
+public class PriceEventListener {
 
-    private static final Logger log = LoggerFactory.getLogger(InventoryEventListener.class);
+    private static final Logger log = LoggerFactory.getLogger(PriceEventListener.class);
 
     @EventListener(
             value = DomainMessage.class,

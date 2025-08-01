@@ -6,7 +6,7 @@ import com.github.mangila.webshop.shared.registry.EventRegistry;
 public record Event(String value) {
 
     public Event {
-        Ensure.notBlank(value, Event.class);
+        Ensure.notBlank(value, String.class);
     }
 
     public Event(Enum<?> event) {

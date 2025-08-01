@@ -72,10 +72,13 @@ public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapte
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fe -> String.join(":",
-                                fe.getDefaultMessage(),
-                                fe.getRejectedValue().toString())
-                ));
+                        fe -> {
+                            if (fe.getRejectedValue() == null) {
+                                return String.join(":", fe.getField(), fe.getDefaultMessage());
+                            }
+                            return String.join(":", fe.getField(), fe.getDefaultMessage(), fe.getRejectedValue().toString());
+                        })
+                );
         return GraphqlErrorBuilder.newError(env)
                 .errorType(ErrorType.BAD_REQUEST)
                 .message("Bind error")

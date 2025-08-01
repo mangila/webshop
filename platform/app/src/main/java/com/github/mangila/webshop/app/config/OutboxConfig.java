@@ -39,7 +39,7 @@ public class OutboxConfig {
         var map = new ConcurrentHashMap<Domain, OutboxQueue>();
         domainRegistry.keys()
                 .stream()
-                .peek(domain -> log.info("Create OutboxMessageQueue for domain: {}", domain))
+                .peek(domain -> log.info("Create OutboxQueue for domain: {}", domain))
                 .forEach(domain -> map.put(domain, new OutboxQueue(domain)));
         return map;
     }
