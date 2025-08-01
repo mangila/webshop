@@ -55,7 +55,9 @@ public final class Ensure {
     }
 
     public static void min(int min, int target, String message) {
-        min((long) min, (long) target, message);
+        if (target < min) {
+            throw new ApplicationException(message);
+        }
     }
 
     public static void min(long min, long target, String message) {

@@ -2,7 +2,7 @@ package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.Ensure;
-import com.github.mangila.webshop.shared.annotation.EventType;
+import com.github.mangila.webshop.shared.annotation.EventTypes;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.CacheName;
 import com.github.mangila.webshop.shared.model.Event;
@@ -34,15 +34,16 @@ public final class EventRegistry implements Registry<Event, String> {
 
     @PostConstruct
     public void init() {
-        scanEventAnnotations();
+        scanEventTypes();
     }
 
-    private void scanEventAnnotations() {
-        log.info("Scanning for @Event annotated enums");
+    private void scanEventTypes() {
+        Class<EventTypes> annotation = EventTypes.class;
+        log.info("Scan {}", annotation.getName());
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
                 .setScanners(Scanners.TypesAnnotated));
-        reflections.getTypesAnnotatedWith(EventType.class)
+        reflections.getTypesAnnotatedWith(annotation)
                 .forEach(eventClazz -> {
                     if (eventClazz.isEnum()) {
                         var enumConstants = eventClazz.getEnumConstants();
@@ -54,7 +55,7 @@ public final class EventRegistry implements Registry<Event, String> {
                             register(event, event.value());
                         }
                     } else {
-                        throw new ApplicationException(String.format("@Event %s must be an enum", eventClazz.getName()));
+                        throw new ApplicationException("Class %s is not an enum".formatted(eventClazz.getSimpleName()));
                     }
                 });
     }
@@ -62,13 +63,6 @@ public final class EventRegistry implements Registry<Event, String> {
     @Override
     public boolean isRegistered(Event key) {
         return Objects.nonNull(registry.getIfPresent(key));
-    }
-
-    @Override
-    public void ensureIsRegistered(Event key) {
-        if (!isRegistered(key)) {
-            throw new ApplicationException(String.format("Event %s is not registered", key));
-        }
     }
 
     @Override

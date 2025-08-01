@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.product.domain.event;
 
-import com.github.mangila.webshop.shared.annotation.EventType;
+import com.github.mangila.webshop.shared.annotation.EventTypes;
 
-@EventType
+@EventTypes
 public enum ProductEvent {
     PRODUCT_CREATED,
     PRODUCT_DELETED

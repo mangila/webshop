@@ -2,7 +2,6 @@ package com.github.mangila.webshop.shared.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.mangila.webshop.shared.annotation.DomainObject;
-import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.CacheName;
 import com.github.mangila.webshop.shared.model.Domain;
 import jakarta.annotation.PostConstruct;
@@ -32,15 +31,16 @@ public final class DomainRegistry implements Registry<Domain, String> {
 
     @PostConstruct
     public void init() {
-        scanDomainAnnotations();
+        scanDomainObjects();
     }
 
-    private void scanDomainAnnotations() {
-        log.info("Scanning for @DomainObject annotated classes");
+    private void scanDomainObjects() {
+        Class<DomainObject> annotation = DomainObject.class;
+        log.info("Scan {}", annotation.getName());
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
                 .setScanners(Scanners.TypesAnnotated));
-        reflections.getTypesAnnotatedWith(DomainObject.class)
+        reflections.getTypesAnnotatedWith(annotation)
                 .forEach(domainClazz -> {
                     log.info("Register domain: {}", domainClazz.getSimpleName().toUpperCase());
                     var domain = new Domain(domainClazz);
@@ -52,13 +52,6 @@ public final class DomainRegistry implements Registry<Domain, String> {
     @Override
     public boolean isRegistered(Domain key) {
         return Objects.nonNull(registry.getIfPresent(key));
-    }
-
-    @Override
-    public void ensureIsRegistered(Domain key) {
-        if (!isRegistered(key)) {
-            throw new ApplicationException(String.format("Domain %s is not registered", key));
-        }
     }
 
     @Override

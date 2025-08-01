@@ -70,6 +70,5 @@ repos:
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
         language: system
-        files: pom.xml$
         pass_filenames: false
         require_serial: true
