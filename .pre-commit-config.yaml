@@ -2,6 +2,14 @@ fail_fast: false
 repos:
   - repo: local
     hooks:
+      - id: platform-build
+        name: Platform Parent Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
+        language: system
+        pass_filenames: false
+        require_serial: true
+
       - id: app-build
         name: App Module Build
         entry: cmd.exe /c mvnw.cmd
@@ -64,11 +72,3 @@ repos:
         files: ^platform/shared
         require_serial: true
         pass_filenames: false
-
-      - id: platform-build
-        name: Platform Parent Build
-        entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
-        language: system
-        pass_filenames: false
-        require_serial: true
