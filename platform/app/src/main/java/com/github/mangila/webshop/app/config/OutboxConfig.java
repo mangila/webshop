@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.config;
+package com.github.mangila.webshop.app.config;
 
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;

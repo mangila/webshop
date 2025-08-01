@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.actuator;
+package com.github.mangila.webshop.app.actuator;
 
 import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskKey;
 import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskRunner;
