@@ -70,6 +70,8 @@ management:
     web:
       exposure:
         include: "*"
+      cors:
+        allowed-origins: "*"
     access:
       default: unrestricted
   zipkin:
