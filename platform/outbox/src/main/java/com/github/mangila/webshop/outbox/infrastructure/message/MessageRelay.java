@@ -18,13 +18,12 @@ public class MessageRelay {
 
     @PostConstruct
     public void init() {
-        OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("FILL_QUEUES");
-        outboxTaskRunner.runTask(key);
+        fillProductQueue();
     }
 
     @Scheduled(fixedRateString = "${app.message-relay.fill-queue-task.fixed-rate}")
-    public void fillQueue() {
-        OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("FILL_QUEUES");
+    public void fillProductQueue() {
+        OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("PRODUCT_FILL_QUEUE");
         outboxTaskRunner.runTask(key);
     }
 

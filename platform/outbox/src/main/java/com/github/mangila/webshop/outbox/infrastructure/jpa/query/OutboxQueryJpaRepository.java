@@ -7,6 +7,7 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
 import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
+import com.github.mangila.webshop.shared.model.Domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public List<OutboxMessage> findAllByStatus(OutboxStatusType status, int limit) {
-        return entityRepository.findAllProjectionByStatus(status, limit)
+    public List<OutboxMessage> findAllByDomainAndStatus(Domain domain, OutboxStatusType status, int limit) {
+        return entityRepository.findAllProjectionByDomainAndStatus(domain.value(), status, limit)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

@@ -47,27 +47,26 @@ public class OutboxConfig {
     @Bean
     Map<OutboxTaskKey, OutboxTask> outboxTasks(Map<Domain, OutboxDomainMessageQueue> domainQueues) {
         var map = new ConcurrentHashMap<OutboxTaskKey, OutboxTask>();
-        var fillQueuesTask = new FillQueuesOutboxTask(queryRepository, domainQueues);
-        map.put(fillQueuesTask.key(), fillQueuesTask);
-        log.info("Created OutboxTask {}", fillQueuesTask.key());
         domainQueues.forEach((domain, queue) -> {
-            var queueTask = new ProcessQueueOutboxTask(queue, processor);
-            var dlqTask = new ProcessDlqOutboxTask(queue, commandRepository, processor);
-            map.put(queueTask.key(), queueTask);
-            map.put(dlqTask.key(), dlqTask);
-            log.info("Created OutboxTask for domain: {} with key: {}", domain, queueTask.key());
-            log.info("Created OutboxTask for domain: {} with key: {}", domain, dlqTask.key());
+            addTask(new FillQueueOutboxTask(queryRepository, queue), map);
+            addTask(new ProcessQueueOutboxTask(queue, processor), map);
+            addTask(new ProcessDlqOutboxTask(queue, commandRepository, processor), map);
         });
         return map;
     }
 
+    private void addTask(OutboxTask task, ConcurrentHashMap<OutboxTaskKey, OutboxTask> map) {
+        map.put(task.key(), task);
+        log.info("Created OutboxTask {}", task.key());
+    }
+
     @Bean
-    List<OutboxTaskKey> outboxTaskKeys(Map<OutboxTaskKey, OutboxTask> outboxTasks) {
+    List<OutboxTaskKey> outboxTaskKeysList(Map<OutboxTaskKey, OutboxTask> outboxTasks) {
         return outboxTasks.keySet().stream().toList();
     }
 
     @Bean
-    Map<String, OutboxTaskKey> outboxTaskKeys(List<OutboxTaskKey> outboxTaskKeys) {
+    Map<String, OutboxTaskKey> outboxTaskKeysMap(List<OutboxTaskKey> outboxTaskKeys) {
         return outboxTaskKeys.stream().collect(Collectors.toMap(OutboxTaskKey::value, Function.identity()));
     }
 }

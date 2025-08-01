@@ -7,32 +7,31 @@ import com.github.mangila.webshop.shared.model.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-public class FillQueuesOutboxTask implements OutboxTask {
-    private static final Logger log = LoggerFactory.getLogger(FillQueuesOutboxTask.class);
+public class FillQueueOutboxTask implements OutboxTask {
+    private static final Logger log = LoggerFactory.getLogger(FillQueueOutboxTask.class);
     private final OutboxQueryRepository queryRepository;
-    private final Map<Domain, OutboxDomainMessageQueue> domainQueues;
+    private final OutboxDomainMessageQueue queue;
 
-    public FillQueuesOutboxTask(OutboxQueryRepository queryRepository,
-                                Map<Domain, OutboxDomainMessageQueue> domainQueues) {
+    public FillQueueOutboxTask(OutboxQueryRepository queryRepository,
+                               OutboxDomainMessageQueue queue) {
         this.queryRepository = queryRepository;
-        this.domainQueues = domainQueues;
+        this.queue = queue;
     }
 
     @Override
     public void execute() {
-        queryRepository.findAllByStatus(OutboxStatusType.PENDING, 120)
+        Domain domain = queue.domain();
+        queryRepository.findAllByDomainAndStatus(domain, OutboxStatusType.PENDING, 120)
                 .stream()
                 .peek(message -> log.info("Queue Message: {} - {}", message.id(), message.domain()))
-                .forEach(message -> {
-                    OutboxDomainMessageQueue queue = domainQueues.get(message.domain());
-                    queue.add(message.id());
-                });
+                .forEach(message -> queue.add(message.id()));
     }
 
     @Override
     public OutboxTaskKey key() {
-        return new OutboxTaskKey("FILL_QUEUES");
+        return new OutboxTaskKey(queue.domain().value()
+                .concat("_")
+                .concat("FILL_QUEUE")
+        );
     }
 }

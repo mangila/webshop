@@ -25,10 +25,12 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
 
     @Query("""
                     SELECT o.id,o.aggregateId,o.domain,o.event FROM OutboxEntity o
-                    WHERE o.status = :status
+                    WHERE o.domain = :domain AND o.status = :status
                     ORDER BY o.created ASC
                     LIMIT :limit
             """)
-    List<OutboxProjection> findAllProjectionByStatus(@Param("status") OutboxStatusType status,
-                                                     @Param("limit") int limit);
+    List<OutboxProjection> findAllProjectionByDomainAndStatus(
+            @Param("domain") String domain,
+            @Param("status") OutboxStatusType status,
+            @Param("limit") int limit);
 }
