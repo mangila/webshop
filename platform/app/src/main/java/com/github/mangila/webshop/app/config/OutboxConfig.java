@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Configuration
 public class OutboxConfig {
@@ -62,5 +64,10 @@ public class OutboxConfig {
     @Bean
     List<OutboxTaskKey> outboxTaskKeys(Map<OutboxTaskKey, OutboxTask> outboxTasks) {
         return outboxTasks.keySet().stream().toList();
+    }
+
+    @Bean
+    Map<String, OutboxTaskKey> outboxTaskKeys(List<OutboxTaskKey> outboxTaskKeys) {
+        return outboxTaskKeys.stream().collect(Collectors.toMap(OutboxTaskKey::value, Function.identity()));
     }
 }
