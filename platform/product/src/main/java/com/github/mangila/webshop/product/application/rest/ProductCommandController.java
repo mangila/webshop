@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.application.rest;
 
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.rest.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductIdRequest;
 import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class ProductCommandController {
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") UUID id) {
-        facade.deleteById(new ProductByIdRequest(id));
+        facade.deleteById(new ProductIdRequest(id));
         return ResponseEntity.noContent().build();
     }
 }

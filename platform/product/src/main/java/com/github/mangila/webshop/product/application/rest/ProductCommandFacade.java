@@ -5,7 +5,7 @@ import com.github.mangila.webshop.identity.domain.Identity;
 import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.ProductDtoMapper;
-import com.github.mangila.webshop.product.application.rest.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductIdRequest;
 import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.application.service.ProductCommandService;
 import com.github.mangila.webshop.product.domain.Product;
@@ -56,7 +56,7 @@ public class ProductCommandFacade {
 
     @Transactional
     @CacheEvict(value = CacheName.LRU, key = "#request.value()")
-    public void deleteById(@Valid ProductByIdRequest request) {
+    public void deleteById(@Valid ProductIdRequest request) {
         ProductId productId = restMapper.toDomain(request);
         commandService.deleteByIdOrThrow(productId);
     }

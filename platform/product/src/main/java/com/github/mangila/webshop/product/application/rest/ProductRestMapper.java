@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.product.application.rest;
 
-import com.github.mangila.webshop.product.application.rest.request.ProductByIdRequest;
+import com.github.mangila.webshop.product.application.rest.request.ProductIdRequest;
 import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
 import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
@@ -24,7 +24,7 @@ public class ProductRestMapper {
         );
     }
 
-    public ProductId toDomain(@Valid ProductByIdRequest request) {
+    public ProductId toDomain(@Valid ProductIdRequest request) {
         return new ProductId(request.value());
     }
 }
