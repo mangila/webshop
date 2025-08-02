@@ -57,7 +57,7 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxSequence> findCurrentSequenceAndLockByAggregateId(OutboxAggregateId aggregateId) {
+    public Optional<OutboxSequence> findAndLockByAggregateId(OutboxAggregateId aggregateId) {
         return sequenceRepository.findAndLockByAggregateId(aggregateId.value())
                 .map(mapper::toDomain);
     }

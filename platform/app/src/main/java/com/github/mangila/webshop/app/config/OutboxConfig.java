@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.app.config;
 
-import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
-import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
+import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
+import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
 import com.github.mangila.webshop.outbox.infrastructure.message.task.*;
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,51 +21,50 @@ import java.util.stream.Collectors;
 public class OutboxConfig {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxConfig.class);
-    private final MessageProcessor processor;
-    private final OutboxCommandRepository commandRepository;
-    private final OutboxQueryRepository queryRepository;
 
-    public OutboxConfig(MessageProcessor processor,
-                        OutboxCommandRepository commandRepository,
-                        OutboxQueryRepository queryRepository) {
-        this.processor = processor;
-        this.commandRepository = commandRepository;
-        this.queryRepository = queryRepository;
+    private final OutboxQueryService queryService;
+    private final MessageProcessor messageProcessor;
+    private final OutboxCommandService commandService;
+
+    public OutboxConfig(OutboxQueryService queryService,
+                        MessageProcessor messageProcessor,
+                        OutboxCommandService commandService) {
+        this.queryService = queryService;
+        this.messageProcessor = messageProcessor;
+        this.commandService = commandService;
     }
 
     @Bean
-    Map<Domain, OutboxQueue> domainQueues(DomainRegistry domainRegistry) {
-        var map = new ConcurrentHashMap<Domain, OutboxQueue>();
-        domainRegistry.keys()
+    Map<Domain, OutboxQueue> domainToQueue(DomainRegistry domainRegistry) {
+        return domainRegistry.keys()
                 .stream()
                 .peek(domain -> log.info("Create OutboxQueue for domain: {}", domain))
-                .forEach(domain -> map.put(domain, new OutboxQueue(domain)));
-        return map;
+                .collect(Collectors.toMap(Function.identity(), OutboxQueue::new));
     }
 
     @Bean
-    Map<OutboxTaskKey, OutboxTask> outboxTasks(Map<Domain, OutboxQueue> domainQueues) {
+    Map<OutboxTaskKey, OutboxTask> keyToTask(Map<Domain, OutboxQueue> domainQueues) {
         var map = new ConcurrentHashMap<OutboxTaskKey, OutboxTask>();
-        domainQueues.forEach((domain, queue) -> {
-            addTask(new FillQueueOutboxTask(queryRepository, queue))
-                    .andThen(addTask(new ProcessQueueOutboxTask(queue, processor)))
-                    .andThen(addTask(new ProcessDlqOutboxTask(queue, commandRepository, processor)))
-                    .accept(map);
+        domainQueues.values().forEach(queue -> {
+            map.putAll(Map.ofEntries(
+                    addTask(new FillQueueOutboxTask(queryService, queue)),
+                    addTask(new ProcessQueueOutboxTask(messageProcessor, queue)),
+                    addTask(new ProcessDlqOutboxTask(commandService, messageProcessor, queue))
+            ));
         });
         return map;
     }
 
-    private Consumer<Map<OutboxTaskKey, OutboxTask>> addTask(OutboxTask task) {
-        return map -> {
-            map.put(task.key(), task);
-            log.info("Created OutboxTask {}", task.key());
-        };
+    private Map.Entry<OutboxTaskKey, OutboxTask> addTask(OutboxTask task) {
+        log.info("Add task: {}", task.key());
+        return Map.entry(task.key(), task);
     }
 
     @Bean
-    Map<String, OutboxTaskKey> outboxTaskKeys(Map<OutboxTaskKey, OutboxTask> outboxTasks) {
-        return outboxTasks.keySet()
-                .stream()
-                .collect(Collectors.toMap(OutboxTaskKey::value, Function.identity()));
+    Map<String, OutboxTaskKey> nameToKey(Map<OutboxTaskKey, OutboxTask> outboxTasks) {
+        return outboxTasks.keySet().stream().collect(Collectors.toMap(
+                OutboxTaskKey::value,
+                Function.identity()
+        ));
     }
 }

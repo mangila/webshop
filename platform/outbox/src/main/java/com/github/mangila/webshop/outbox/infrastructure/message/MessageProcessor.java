@@ -5,6 +5,7 @@ import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
+import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.SpringEventPublisher;
 import com.github.mangila.webshop.shared.model.DomainMessage;
 import io.vavr.control.Try;
@@ -32,6 +33,7 @@ public class MessageProcessor {
     }
 
     private boolean process(OutboxId outboxId) {
+        Ensure.notNull(outboxId, OutboxId.class);
         return retryTemplate.execute(
                 context -> {
                     context.setAttribute("outboxId", outboxId);

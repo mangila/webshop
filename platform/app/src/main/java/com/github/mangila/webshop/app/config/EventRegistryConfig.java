@@ -23,13 +23,13 @@ public class EventRegistryConfig {
     private static final Logger log = LoggerFactory.getLogger(EventRegistryConfig.class);
 
     @Bean
-    Map<Event, String> eventMap() {
+    Map<Event, String> eventToName() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean
-    EventRegistry eventRegistry() {
-        var eventRegistry = new EventRegistry(eventMap());
+    EventRegistry eventRegistry(Map<Event, String> eventToName) {
+        var eventRegistry = new EventRegistry(eventToName);
         registerEvents(eventRegistry);
         return eventRegistry;
     }

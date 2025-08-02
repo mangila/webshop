@@ -70,7 +70,7 @@ public class OutboxEventListener {
         @Transactional
         Outbox handle(DomainEvent event) {
             var aggregateId = new OutboxAggregateId(event.aggregateId());
-            OutboxSequence newSequence = commandService.findSequenceWithLockAndIncrement(aggregateId);
+            OutboxSequence newSequence = commandService.findByAggregateIdAndIncrementForUpdate(aggregateId);
             OutboxInsertCommand command = mapper.toCommand(event, newSequence);
             Outbox outbox = commandService.insert(command);
             commandService.updateSequence(newSequence);

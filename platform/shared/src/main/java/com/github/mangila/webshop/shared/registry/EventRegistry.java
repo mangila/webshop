@@ -10,8 +10,8 @@ import java.util.Map;
 public final class EventRegistry implements Registry<Event, String> {
     private final Map<Event, String> registry;
 
-    public EventRegistry(Map<Event, String> registry) {
-        this.registry = registry;
+    public EventRegistry(Map<Event, String> eventToName) {
+        this.registry = eventToName;
     }
 
     @Override

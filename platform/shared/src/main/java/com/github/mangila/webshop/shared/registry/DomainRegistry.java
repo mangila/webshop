@@ -10,8 +10,8 @@ import java.util.Map;
 public final class DomainRegistry implements Registry<Domain, String> {
     private final Map<Domain, String> registry;
 
-    public DomainRegistry(Map<Domain, String> registry) {
-        this.registry = registry;
+    public DomainRegistry(Map<Domain, String> domainToName) {
+        this.registry = domainToName;
     }
 
     @Override

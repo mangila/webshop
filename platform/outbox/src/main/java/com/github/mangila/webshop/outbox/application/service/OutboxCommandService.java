@@ -28,9 +28,9 @@ public class OutboxCommandService {
         return commandRepository.findByIdForUpdate(outboxId);
     }
 
-    public OutboxSequence findSequenceWithLockAndIncrement(OutboxAggregateId aggregateId) {
+    public OutboxSequence findByAggregateIdAndIncrementForUpdate(OutboxAggregateId aggregateId) {
         Ensure.activeSpringTransaction();
-        return commandRepository.findCurrentSequenceAndLockByAggregateId(aggregateId)
+        return commandRepository.findAndLockByAggregateId(aggregateId)
                 .map(OutboxSequence::incrementFrom)
                 .orElseGet(() -> OutboxSequence.initial(aggregateId.value()));
     }

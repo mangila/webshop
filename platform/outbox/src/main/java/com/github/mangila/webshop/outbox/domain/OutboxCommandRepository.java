@@ -17,7 +17,7 @@ public interface OutboxCommandRepository {
 
     void updateStatus(OutboxId id, OutboxStatusType status, OutboxUpdated updated);
 
-    Optional<OutboxSequence> findCurrentSequenceAndLockByAggregateId(OutboxAggregateId aggregateId);
+    Optional<OutboxSequence> findAndLockByAggregateId(OutboxAggregateId aggregateId);
 
     void updateSequence(OutboxSequence outboxSequence);
 }

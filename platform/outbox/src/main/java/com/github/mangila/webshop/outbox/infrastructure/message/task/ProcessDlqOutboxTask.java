@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.message.task;
 
-import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
+import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
@@ -11,16 +11,15 @@ import org.slf4j.LoggerFactory;
 
 public final class ProcessDlqOutboxTask implements OutboxTask {
     private static final Logger log = LoggerFactory.getLogger(ProcessDlqOutboxTask.class);
-    private final OutboxQueue queue;
-    private final OutboxCommandRepository commandRepository;
-    private final MessageProcessor processor;
 
-    public ProcessDlqOutboxTask(OutboxQueue queue,
-                                OutboxCommandRepository commandRepository,
-                                MessageProcessor processor) {
-        this.queue = queue;
-        this.commandRepository = commandRepository;
+    private final OutboxCommandService commandService;
+    private final MessageProcessor processor;
+    private final OutboxQueue queue;
+
+    public ProcessDlqOutboxTask(OutboxCommandService commandService, MessageProcessor processor, OutboxQueue queue) {
+        this.commandService = commandService;
         this.processor = processor;
+        this.queue = queue;
     }
 
     @Override
@@ -35,12 +34,12 @@ public final class ProcessDlqOutboxTask implements OutboxTask {
                         log.info("Message: {} was successfully processed", id);
                     } else {
                         log.error("Failed to process message: {} mark as FAILED", id);
-                        commandRepository.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
+                        commandService.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
                     }
                 })
                 .onFailure(e -> {
                     log.error("Failed to process message: {} mark as FAILED", id, e);
-                    commandRepository.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
+                    commandService.updateStatus(id, OutboxStatusType.FAILED, OutboxUpdated.now());
                 });
     }
 

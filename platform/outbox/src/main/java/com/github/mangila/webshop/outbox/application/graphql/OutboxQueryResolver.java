@@ -11,14 +11,14 @@ import java.util.List;
 @Controller
 public class OutboxQueryResolver {
 
-    private final OutboxQueryFacade webFacade;
+    private final OutboxQueryFacade facade;
 
-    public OutboxQueryResolver(OutboxQueryFacade webFacade) {
-        this.webFacade = webFacade;
+    public OutboxQueryResolver(OutboxQueryFacade facade) {
+        this.facade = facade;
     }
 
     @QueryMapping
     public List<OutboxDto> replay(@Argument("input") OutboxReplayInput input) {
-        return webFacade.replay(input);
+        return facade.replay(input);
     }
 }

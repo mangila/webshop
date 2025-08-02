@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 public final class ProcessQueueOutboxTask implements OutboxTask {
 
     private static final Logger log = LoggerFactory.getLogger(ProcessQueueOutboxTask.class);
-    private final OutboxQueue queue;
-    private final MessageProcessor processor;
 
-    public ProcessQueueOutboxTask(OutboxQueue queue,
-                                  MessageProcessor processor) {
-        this.queue = queue;
+    private final MessageProcessor processor;
+    private final OutboxQueue queue;
+
+    public ProcessQueueOutboxTask(MessageProcessor processor, OutboxQueue queue) {
         this.processor = processor;
+        this.queue = queue;
     }
 
     @Override

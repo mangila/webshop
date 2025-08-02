@@ -21,13 +21,13 @@ public class DomainRegistryConfig {
     private static final Logger log = LoggerFactory.getLogger(DomainRegistryConfig.class);
 
     @Bean
-    Map<Domain, String> domainMap() {
+    Map<Domain, String> domainToName() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean
-    DomainRegistry domainRegistry() {
-        var domainRegistry = new DomainRegistry(domainMap());
+    DomainRegistry domainRegistry(Map<Domain, String> domainToName) {
+        var domainRegistry = new DomainRegistry(domainToName);
         registerDomains(domainRegistry);
         return domainRegistry;
     }
