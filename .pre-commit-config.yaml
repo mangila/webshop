@@ -19,6 +19,15 @@ repos:
         require_serial: true
         pass_filenames: false
 
+      - id: category-build
+        name: Category Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/category/pom.xml", "-am", "clean", "test" ]
+        language: system
+        files: ^platform/category
+        require_serial: true
+        pass_filenames: false
+
       - id: identity-build
         name: Identity Module Build
         entry: cmd.exe /c mvnw.cmd

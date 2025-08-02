@@ -24,6 +24,7 @@
         <module>price</module>
         <module>identity</module>
         <module>outbox</module>
+        <module>category</module>
     </modules>
 
     <dependencyManagement>

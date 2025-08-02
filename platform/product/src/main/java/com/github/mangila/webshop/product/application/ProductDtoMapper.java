@@ -14,7 +14,6 @@ public class ProductDtoMapper {
                 product.id().value(),
                 product.name().value(),
                 product.attributes().value(),
-                product.unit().value(),
                 product.created().value(),
                 product.updated().value()
         );

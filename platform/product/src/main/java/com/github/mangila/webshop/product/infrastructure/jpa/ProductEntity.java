@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.product.domain.types.ProductUnitType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -24,11 +23,6 @@ public class ProductEntity implements Persistable<UUID> {
     @Type(JsonBinaryType.class)
     @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
     private ObjectNode attributes;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductUnitType unit;
-
     @Column(nullable = false, updatable = false)
     private Instant created;
 
@@ -41,11 +35,10 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductUnitType unit, Instant created, Instant updated) {
+    public ProductEntity(UUID id, String name, ObjectNode attributes, Instant created, Instant updated) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
-        this.unit = unit;
         this.created = created;
         this.updated = updated;
     }
@@ -84,14 +77,6 @@ public class ProductEntity implements Persistable<UUID> {
 
     public void setAttributes(ObjectNode attributes) {
         this.attributes = attributes;
-    }
-
-    public ProductUnitType getUnit() {
-        return unit;
-    }
-
-    public void setUnit(ProductUnitType unit) {
-        this.unit = unit;
     }
 
     public Instant getCreated() {

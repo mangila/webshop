@@ -6,6 +6,7 @@ import com.github.mangila.webshop.product.domain.primitive.*;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.List;
 
 @Component
 public class ProductEntityMapper {
@@ -15,7 +16,6 @@ public class ProductEntityMapper {
                 command.id().value(),
                 command.name().value(),
                 command.attributes().value(),
-                command.unit().value(),
                 Instant.now(),
                 Instant.now()
         );
@@ -26,7 +26,7 @@ public class ProductEntityMapper {
                 new ProductId(entity.getId()),
                 new ProductName(entity.getName()),
                 new ProductAttributes(entity.getAttributes()),
-                new ProductUnit(entity.getUnit()),
+                new ProductVariants(List.of()),
                 new ProductCreated(entity.getCreated()),
                 new ProductUpdated(entity.getUpdated())
         );
