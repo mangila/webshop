@@ -36,7 +36,7 @@ The backend follows several architectural patterns:
 - **GraphQL** is used for Queries
 - **REST** is used for Commands
 
-#### Transactional Outbox
+#### Transactional Outbox & Inbox
 
 - Message Relay with a Polling Publisher pattern
 - Ensures reliable message delivery across services

@@ -25,6 +25,7 @@
         <module>identity</module>
         <module>outbox</module>
         <module>category</module>
+        <module>inbox</module>
     </modules>
 
     <dependencyManagement>
