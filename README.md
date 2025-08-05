@@ -51,7 +51,7 @@ The application is structured according to DDD principles:
 
 #### Event Sourcing
 
-- Outbox table can be used for event replays
+- Inbox table can be used for event replays
 - Enables rebuilding state from event history
 
 #### Observability
