@@ -5,13 +5,13 @@ import com.github.mangila.webshop.shared.Ensure;
 
 import java.util.UUID;
 
-public record DomainEvent(
+public record OutboxEvent(
         Domain domain,
         Event event,
         UUID aggregateId,
         ObjectNode payload
 ) {
-    public DomainEvent {
+    public OutboxEvent {
         Ensure.notNull(domain, Domain.class);
         Ensure.notNull(event, Event.class);
         Ensure.notNull(aggregateId, UUID.class);

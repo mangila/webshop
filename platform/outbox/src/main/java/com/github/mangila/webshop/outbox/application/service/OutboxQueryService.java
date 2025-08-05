@@ -3,7 +3,7 @@ package com.github.mangila.webshop.outbox.application.service;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
+import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.model.Domain;
@@ -25,7 +25,7 @@ public class OutboxQueryService {
         return repository.replay(query);
     }
 
-    public List<OutboxMessage> findAllByDomainAndStatus(Domain domain, OutboxStatusType status, int limit) {
+    public List<OutboxProjection> findAllByDomainAndStatus(Domain domain, OutboxStatusType status, int limit) {
         return repository.findAllByDomainAndStatus(domain, status, limit);
     }
 }

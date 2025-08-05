@@ -18,23 +18,23 @@ public class MessageRelay {
 
     @PostConstruct
     public void init() {
-        fillProductQueue();
+        productFillQueue();
     }
 
     @Scheduled(fixedRateString = "${app.message-relay.fill-queue-task.fixed-rate}")
-    public void fillProductQueue() {
+    public void productFillQueue() {
         OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("PRODUCT_FILL_QUEUE");
         outboxTaskRunner.runTask(key);
     }
 
     @Scheduled(fixedRateString = "${app.message-relay.process-queue-task.fixed-rate}")
-    public void processProductQueue() {
+    public void productProcessQueue() {
         OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("PRODUCT_PROCESS_QUEUE");
         outboxTaskRunner.runTask(key);
     }
 
     @Scheduled(fixedRateString = "${app.message-relay.process-dlq-task.fixed-rate}")
-    public void processProductDlq() {
+    public void productProcessDlq() {
         OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("PRODUCT_PROCESS_DLQ");
         outboxTaskRunner.runTask(key);
     }

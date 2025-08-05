@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.domain;
 
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
-import com.github.mangila.webshop.outbox.domain.message.OutboxMessage;
+import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
@@ -13,7 +13,7 @@ public interface OutboxCommandRepository {
 
     Outbox insert(OutboxInsertCommand command);
 
-    Optional<OutboxMessage> findByIdForUpdate(OutboxId id);
+    Optional<OutboxProjection> findByIdForUpdate(OutboxId id);
 
     void updateStatus(OutboxId id, OutboxStatusType status, OutboxUpdated updated);
 

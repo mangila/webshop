@@ -5,7 +5,7 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
-import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
+import com.github.mangila.webshop.shared.InternalQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +14,11 @@ public final class ProcessDlqOutboxTask implements OutboxTask {
 
     private final OutboxCommandService commandService;
     private final MessageProcessor processor;
-    private final OutboxQueue queue;
+    private final InternalQueue<OutboxId> queue;
 
-    public ProcessDlqOutboxTask(OutboxCommandService commandService, MessageProcessor processor, OutboxQueue queue) {
+    public ProcessDlqOutboxTask(OutboxCommandService commandService,
+                                MessageProcessor processor,
+                                InternalQueue<OutboxId> queue) {
         this.commandService = commandService;
         this.processor = processor;
         this.queue = queue;

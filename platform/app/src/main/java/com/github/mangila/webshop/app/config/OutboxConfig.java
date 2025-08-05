@@ -2,9 +2,10 @@ package com.github.mangila.webshop.app.config;
 
 import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
-import com.github.mangila.webshop.outbox.infrastructure.message.OutboxQueue;
 import com.github.mangila.webshop.outbox.infrastructure.message.task.*;
+import com.github.mangila.webshop.shared.InternalQueue;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import org.slf4j.Logger;
@@ -35,17 +36,17 @@ public class OutboxConfig {
     }
 
     @Bean
-    Map<Domain, OutboxQueue> domainToQueue(DomainRegistry domainRegistry) {
+    Map<Domain, InternalQueue<OutboxId>> domainToOutboxIdQueue(DomainRegistry domainRegistry) {
         return domainRegistry.keys()
                 .stream()
                 .peek(domain -> log.info("Create OutboxQueue for domain: {}", domain))
-                .collect(Collectors.toMap(Function.identity(), OutboxQueue::new));
+                .collect(Collectors.toMap(Function.identity(), InternalQueue::new));
     }
 
     @Bean
-    Map<OutboxTaskKey, OutboxTask> keyToTask(Map<Domain, OutboxQueue> domainQueues) {
+    Map<OutboxTaskKey, OutboxTask> keyToOutboxTask(Map<Domain, InternalQueue<OutboxId>> domainToOutboxIdQueue) {
         var map = new ConcurrentHashMap<OutboxTaskKey, OutboxTask>();
-        domainQueues.values().forEach(queue -> {
+        domainToOutboxIdQueue.values().forEach(queue -> {
             map.putAll(Map.ofEntries(
                     addTask(new FillQueueOutboxTask(queryService, queue)),
                     addTask(new ProcessQueueOutboxTask(messageProcessor, queue)),

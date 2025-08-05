@@ -4,6 +4,7 @@ import com.github.mangila.webshop.shared.exception.ApplicationException;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -96,5 +97,15 @@ public final class Ensure {
 
     public static void activeSpringTransaction() {
         Ensure.isTrue(TransactionSynchronizationManager.isActualTransactionActive(), "No active transaction");
+    }
+
+    public static void activeSpringSynchronization() {
+        Ensure.isTrue(TransactionSynchronizationManager.isSynchronizationActive(), "No active synchronization");
+    }
+
+    public static void equals(Object object, Object another) {
+        if (!Objects.equals(object, another)) {
+            throw new ApplicationException("Objects are not equal: %s != %s".formatted(object, another));
+        }
     }
 }

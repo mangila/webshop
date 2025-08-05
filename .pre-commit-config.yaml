@@ -37,6 +37,15 @@ repos:
         require_serial: true
         pass_filenames: false
 
+      - id: inbox-build
+        name: Inventory Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/inbox/pom.xml", "-am", "clean", "test" ]
+        language: system
+        files: ^platform/inbox
+        require_serial: true
+        pass_filenames: false
+
       - id: inventory-build
         name: Inventory Module Build
         entry: cmd.exe /c mvnw.cmd
