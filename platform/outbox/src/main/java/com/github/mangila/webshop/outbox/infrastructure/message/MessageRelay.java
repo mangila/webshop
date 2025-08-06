@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(name = "app.message-relay.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "app.outbox.message-relay.enabled", havingValue = "true")
 public class MessageRelay {
     private final OutboxTaskRunner outboxTaskRunner;
 

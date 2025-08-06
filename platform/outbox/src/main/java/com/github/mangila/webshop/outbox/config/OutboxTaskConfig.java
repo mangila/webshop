@@ -50,7 +50,8 @@ public class OutboxTaskConfig {
             map.putAll(Map.ofEntries(
                     addTask(new FillQueueOutboxTask(queryService, queue)),
                     addTask(new ProcessQueueOutboxTask(messageProcessor, queue)),
-                    addTask(new ProcessDlqOutboxTask(commandService, messageProcessor, queue))
+                    addTask(new ProcessDlqOutboxTask(commandService, messageProcessor, queue)),
+                    addTask(new DeletePublishedOutboxTask(commandService, queryService))
             ));
         });
         return map;
