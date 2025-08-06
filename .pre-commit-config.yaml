@@ -28,6 +28,15 @@ repos:
         require_serial: true
         pass_filenames: false
 
+      - id: config-build
+        name: Config Module Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/config/pom.xml", "-am", "clean", "test" ]
+        language: system
+        files: ^platform/config
+        require_serial: true
+        pass_filenames: false
+
       - id: identity-build
         name: Identity Module Build
         entry: cmd.exe /c mvnw.cmd
@@ -38,7 +47,7 @@ repos:
         pass_filenames: false
 
       - id: inbox-build
-        name: Inventory Module Build
+        name: Inbox Module Build
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/inbox/pom.xml", "-am", "clean", "test" ]
         language: system
