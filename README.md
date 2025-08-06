@@ -1,6 +1,5 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
-![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Grafana](https://img.shields.io/badge/grafana-%23F46800.svg?style=for-the-badge&logo=grafana&logoColor=white)
@@ -11,8 +10,7 @@
 
 ***Educational purposes only***
 
-A mock webshop application built with Spring Boot, PostgreSQL, React Vite for Admin Web UI, and Flutter for Webshop
-UI
+A mock webshop application built with Spring Boot, PostgreSQL, and React Vite for Admin Web UI
 
 ## Project Overview
 
@@ -23,7 +21,6 @@ This project demonstrates a modern e-commerce application architecture with the 
 - Event-driven architecture with a Transactional Outbox pattern
 - Observability and monitoring tools integration
 - React-based admin web-dashboard
-- Flutter-based Webshop UI
 
 ## Architecture
 
@@ -80,10 +77,20 @@ The project is organized into multiple modules:
 - **price**: Pricing logic module
 - **identity**: User authentication and authorization module
 - **outbox**: Implementation of the Transactional Outbox pattern
+- **inbox**: Implementation of the Transactional Inbox pattern
+- **category**: Product category management module
+- **config**: Configuration and shared settings module
 
 ### Frontend Modules
 
 - **admin-dashboard**: React-based admin interface built with TypeScript and Vite
+
+Note: The project structure currently only includes the admin-dashboard frontend module.
+
+### Infrastructure Modules
+
+- **compose.yml**: Docker Compose file for running the infrastructure
+- **gateway**: Spring API Gateway
 
 ## Technology Stack
 
@@ -93,10 +100,14 @@ The project is organized into multiple modules:
 - **Spring Boot 3.5.3**
 - **Spring Data JPA**
 - **Spring GraphQL**
-- **PostgreSQL**
+- **PostgreSQL 17.5**
 - **Caffeine** (for caching)
 - **Micrometer** (for metrics)
 - **Zipkin** (for distributed tracing)
+- **Vavr** (for functional programming)
+- **Joda Money** (for currency and money operations)
+- **Hypersistence Utils** (for Hibernate extensions)
+- **SpringDoc OpenAPI** (for API documentation)
 
 ### Frontend
 
@@ -121,8 +132,11 @@ docker-compose up -d
 
 This will start:
 
-- PostgreSQL database on port 5432
+- PostgreSQL 17.5 database on port 5432
 - Zipkin on port 9411
+
+Note: The README mentions Grafana, Loki, and Prometheus for observability, but these are not currently configured in the
+docker-compose file.
 
 ### Running the Backend
 
