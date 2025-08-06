@@ -1,6 +1,5 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
-import com.github.mangila.webshop.outbox.OutboxJpaConfig;
 import com.github.mangila.webshop.outbox.OutboxTestContainerConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import({OutboxJpaConfig.class,
-        OutboxTestContainerConfig.class})
+@Import({OutboxTestContainerConfig.class})
 class OutboxEntityCommandRepositoryTest {
 
     @Autowired
