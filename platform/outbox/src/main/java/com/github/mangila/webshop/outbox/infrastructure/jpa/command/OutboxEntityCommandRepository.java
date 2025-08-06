@@ -28,7 +28,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                     """,
             nativeQuery = true
     )
-    Optional<OutboxEntityProjection> findByIdForUpdate(@Param("id") long id);
+    Optional<OutboxEntityProjection> findByIdWhereStatusNotPublishedForUpdate(@Param("id") long id);
 
     @Modifying
     @Query(

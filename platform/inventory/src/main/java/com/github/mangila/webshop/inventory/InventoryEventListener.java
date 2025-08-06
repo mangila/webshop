@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.inventory;
 
+import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.model.InboxEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,18 +13,20 @@ public class InventoryEventListener {
     private static final Logger log = LoggerFactory.getLogger(InventoryEventListener.class);
 
     @EventListener(
-            value = InboxEvent.class,
-            condition = "#message.event().value() == 'PRODUCT_CREATED'"
+            id = "inventory-listen-product-created",
+            condition = "#inboxEvent.event().value() == 'PRODUCT_CREATED'"
     )
-    void listenProductCreated(InboxEvent message) {
-        log.info("Received message: {}", message);
+    void listenProductCreated(InboxEvent inboxEvent) {
+        Ensure.equals("PRODUCT_CREATED", inboxEvent.event().value());
+        log.info("Received inboxEvent: {}", inboxEvent);
     }
 
     @EventListener(
-            value = InboxEvent.class,
-            condition = "#message.event().value() == 'PRODUCT_DELETED'"
+            id = "inventory-listen-product-deleted",
+            condition = "#inboxEvent.event().value() == 'PRODUCT_DELETED'"
     )
-    void listenProductDeleted(InboxEvent message) {
-        log.info("Received message: {}", message);
+    void listenProductDeleted(InboxEvent inboxEvent) {
+        Ensure.equals("PRODUCT_DELETED", inboxEvent.event().value());
+        log.info("Received inboxEvent: {}", inboxEvent);
     }
 }

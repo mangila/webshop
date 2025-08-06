@@ -1,13 +1,18 @@
 # Application Properties
 app:
-  message-relay:
-    enabled: true
-    process-queue-task:
-      fixed-rate: 500ms
-    process-dlq-task:
-      fixed-rate: 500ms
-    fill-queue-task:
-      fixed-rate: 1m
+  outbox:
+    scheduler:
+      enabled: true
+      delete-published:
+        fixed-rate: 1h
+    message-relay:
+      enabled: true
+      process-queue-task:
+        fixed-rate: 500ms
+      process-dlq-task:
+        fixed-rate: 500ms
+      fill-queue-task:
+        fixed-rate: 1m
 # Spring Properties
 spring:
   application:

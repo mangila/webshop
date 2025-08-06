@@ -3,8 +3,6 @@ package com.github.mangila.webshop.outbox.infrastructure.message.task;
 import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
 import com.github.mangila.webshop.shared.InternalQueue;
 import org.slf4j.Logger;
@@ -37,21 +35,13 @@ public final class ProcessDlqOutboxTask implements OutboxTask {
                         log.info("Message: {} was successfully processed", id);
                     } else {
                         log.error("Failed to process message: {} mark as FAILED", id);
-                        commandService.updateStatus(getOutboxUpdateStatusCommand(id));
+                        commandService.updateStatus(OutboxUpdateStatusCommand.failed(id));
                     }
                 })
                 .onFailure(e -> {
                     log.error("Failed to process message: {} mark as FAILED", id, e);
-                    commandService.updateStatus(getOutboxUpdateStatusCommand(id));
+                    commandService.updateStatus(OutboxUpdateStatusCommand.failed(id));
                 });
-    }
-
-    private static OutboxUpdateStatusCommand getOutboxUpdateStatusCommand(OutboxId id) {
-        return new OutboxUpdateStatusCommand(
-                id,
-                OutboxStatusType.FAILED,
-                OutboxUpdated.now()
-        );
     }
 
     @Override

@@ -27,5 +27,4 @@ public class InboxEventListener {
         Ensure.activeSpringSynchronization();
         eventHandler.handle(event);
     }
-
 }

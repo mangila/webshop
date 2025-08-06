@@ -42,8 +42,8 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxProjection> findByIdForUpdate(OutboxId id) {
-        return entityCommandRepository.findByIdForUpdate(id.value())
+    public Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(OutboxId id) {
+        return entityCommandRepository.findByIdWhereStatusNotPublishedForUpdate(id.value())
                 .map(mapper::toDomain);
     }
 

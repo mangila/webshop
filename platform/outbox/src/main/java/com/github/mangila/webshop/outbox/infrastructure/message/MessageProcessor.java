@@ -1,12 +1,14 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.Ensure;
 import io.vavr.control.Try;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class MessageProcessor {
 
     private final RetryTemplate retryTemplate;
@@ -22,8 +24,7 @@ public class MessageProcessor {
         return Try.of(() -> process(id));
     }
 
-    private boolean process(OutboxId outboxId) {
-        Ensure.notNull(outboxId, OutboxId.class);
+    private boolean process(@NotNull OutboxId outboxId) {
         return retryTemplate.execute(
                 context -> {
                     context.setAttribute("outboxId", outboxId);

@@ -41,6 +41,6 @@ public final class DeletePublishedOutboxTask implements OutboxTask {
 
     @Override
     public OutboxTaskKey key() {
-        return new OutboxTaskKey("CLEAN_UP_PUBLISHED");
+        return new OutboxTaskKey("DELETE_PUBLISHED");
     }
 }

@@ -15,4 +15,20 @@ public record OutboxUpdateStatusCommand(
         Ensure.notNull(outboxStatusType, OutboxStatusType.class);
         Ensure.notNull(outboxUpdated, OutboxUpdated.class);
     }
+
+    public static OutboxUpdateStatusCommand published(OutboxId id) {
+        return new OutboxUpdateStatusCommand(
+                id,
+                OutboxStatusType.PUBLISHED,
+                OutboxUpdated.now()
+        );
+    }
+
+    public static OutboxUpdateStatusCommand failed(OutboxId id) {
+        return new OutboxUpdateStatusCommand(
+                id,
+                OutboxStatusType.FAILED,
+                OutboxUpdated.now()
+        );
+    }
 }

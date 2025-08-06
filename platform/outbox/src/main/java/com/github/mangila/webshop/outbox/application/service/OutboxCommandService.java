@@ -26,9 +26,9 @@ public class OutboxCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Optional<OutboxProjection> findByIdForUpdate(@NotNull OutboxId outboxId) {
+    public Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(@NotNull OutboxId outboxId) {
         Ensure.activeSpringTransaction();
-        return commandRepository.findByIdForUpdate(outboxId);
+        return commandRepository.findByIdWhereStatusNotPublishedForUpdate(outboxId);
     }
 
     public OutboxSequence findByAggregateIdAndIncrementForUpdate(@NotNull OutboxAggregateId aggregateId) {

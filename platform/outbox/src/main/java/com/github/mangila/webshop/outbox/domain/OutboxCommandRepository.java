@@ -13,7 +13,7 @@ public interface OutboxCommandRepository {
 
     Outbox insert(OutboxInsertCommand command);
 
-    Optional<OutboxProjection> findByIdForUpdate(OutboxId id);
+    Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(OutboxId id);
 
     void updateStatus(OutboxUpdateStatusCommand command);
 

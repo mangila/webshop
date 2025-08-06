@@ -3,9 +3,6 @@ package com.github.mangila.webshop.outbox.infrastructure.message;
 import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.producer.SpringEventProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,18 +36,10 @@ public class MessageHandler {
      */
     @Transactional
     public void handle(OutboxId outboxId) {
-        commandService.findByIdForUpdate(outboxId)
+        commandService.findByIdWhereStatusNotPublishedForUpdate(outboxId)
                 .ifPresentOrElse(projection -> {
                     springEventProducer.produce(projection);
-                    commandService.updateStatus(getOutboxUpdateStatusCommand(projection));
+                    commandService.updateStatus(OutboxUpdateStatusCommand.published(projection.id()));
                 }, () -> log.debug("Message: {} locked or already processed", outboxId));
-    }
-
-    private static OutboxUpdateStatusCommand getOutboxUpdateStatusCommand(OutboxProjection projection) {
-        return new OutboxUpdateStatusCommand(
-                projection.id(),
-                OutboxStatusType.PUBLISHED,
-                OutboxUpdated.now()
-        );
     }
 }

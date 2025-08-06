@@ -24,8 +24,8 @@ class OutboxEntityCommandRepositoryTest {
     }
 
     @Test
-    void findByIdForUpdate() {
-        repository.findByIdForUpdate(1L);
+    void findByIdWhereStatusNotPublishedForUpdate() {
+        repository.findByIdWhereStatusNotPublishedForUpdate(1L);
     }
 
     @Test
