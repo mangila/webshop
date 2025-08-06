@@ -202,6 +202,10 @@
                     <target>21</target>
                     <release>21</release>
                     <compilerArgs>
+                        <!-- By default, compiled Java code doesn't retain parameter names.
+                         This flag preserves them, allowing frameworks like Spring and Jackson to access actual parameter names via reflection.
+                         This is enabled by default when using Spring Boot parent, NOT when using spring-boot-dependencies
+                         -->
                         <arg>-parameters</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
