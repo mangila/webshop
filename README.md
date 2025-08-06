@@ -89,7 +89,7 @@ Note: The project structure currently only includes the admin-dashboard frontend
 
 ### Infrastructure Modules
 
-- **compose.yml**: Docker Compose file for running the infrastructure
+- **compose.yaml**: Docker Compose file for running the infrastructure
 - **gateway**: Spring API Gateway
 
 ## Technology Stack
