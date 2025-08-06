@@ -8,6 +8,7 @@ repos:
         args: [ "-f", "infrastructure/gateway/pom.xml", "-am", "clean", "install" ]
         language: system
         files: ^infrastructure/gateway
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
