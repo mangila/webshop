@@ -22,6 +22,7 @@ This project demonstrates a modern e-commerce application architecture with the 
 - Observability and monitoring tools integration
 - React-based admin web-dashboard
 
+
 ## Architecture
 
 ### Backend Architecture

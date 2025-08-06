@@ -16,6 +16,7 @@ repos:
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
         language: system
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
