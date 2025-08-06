@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.config;
 
 
 import graphql.scalars.ExtendedScalars;

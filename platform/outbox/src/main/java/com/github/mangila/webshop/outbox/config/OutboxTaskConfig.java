@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.outbox.config;
 
 import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
@@ -19,17 +19,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Configuration
-public class OutboxConfig {
+public class OutboxTaskConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(OutboxConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(OutboxTaskConfig.class);
 
     private final OutboxQueryService queryService;
     private final MessageProcessor messageProcessor;
     private final OutboxCommandService commandService;
 
-    public OutboxConfig(OutboxQueryService queryService,
-                        MessageProcessor messageProcessor,
-                        OutboxCommandService commandService) {
+    public OutboxTaskConfig(OutboxQueryService queryService,
+                            MessageProcessor messageProcessor,
+                            OutboxCommandService commandService) {
         this.queryService = queryService;
         this.messageProcessor = messageProcessor;
         this.commandService = commandService;
@@ -57,7 +57,7 @@ public class OutboxConfig {
     }
 
     private Map.Entry<OutboxTaskKey, OutboxTask> addTask(OutboxTask task) {
-        log.info("Add task: {}", task.key());
+        log.info("Add OutboxTask: {}", task.key());
         return Map.entry(task.key(), task);
     }
 

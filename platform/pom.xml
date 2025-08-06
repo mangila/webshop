@@ -18,14 +18,15 @@
 
     <modules>
         <module>app</module>
-        <module>product</module>
-        <module>inventory</module>
-        <module>shared</module>
-        <module>price</module>
-        <module>identity</module>
-        <module>outbox</module>
         <module>category</module>
+        <module>config</module>
+        <module>identity</module>
         <module>inbox</module>
+        <module>inventory</module>
+        <module>outbox</module>
+        <module>price</module>
+        <module>product</module>
+        <module>shared</module>
     </modules>
 
     <dependencyManagement>
@@ -68,6 +69,16 @@
             <dependency>
                 <groupId>com.github.mangila.webshop</groupId>
                 <artifactId>shared</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.mangila.webshop</groupId>
+                <artifactId>config</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.mangila.webshop</groupId>
+                <artifactId>category</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

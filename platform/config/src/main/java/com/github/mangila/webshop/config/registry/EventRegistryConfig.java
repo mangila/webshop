@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.config.registry;
 
 import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.annotation.EventTypes;

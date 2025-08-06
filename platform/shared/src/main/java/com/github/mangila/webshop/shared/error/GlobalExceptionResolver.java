@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.error;
+package com.github.mangila.webshop.shared.error;
 
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class GenericExceptionResolver extends DataFetcherExceptionResolverAdapter {
+public class GlobalExceptionResolver extends DataFetcherExceptionResolverAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(GenericExceptionResolver.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionResolver.class);
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {

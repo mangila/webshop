@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;

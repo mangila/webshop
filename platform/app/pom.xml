@@ -12,17 +12,14 @@
     <artifactId>app</artifactId>
 
     <dependencies>
+        <!--    MODULES START:    -->
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>product</artifactId>
+            <artifactId>category</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>outbox</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mangila.webshop</groupId>
-            <artifactId>inbox</artifactId>
+            <artifactId>config</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
@@ -30,7 +27,15 @@
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>inbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>inventory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>outbox</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
@@ -38,36 +43,15 @@
         </dependency>
         <dependency>
             <groupId>com.github.mangila.webshop</groupId>
+            <artifactId>product</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mangila.webshop</groupId>
             <artifactId>shared</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-graphql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-extended-scalars</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
+        <!--    MODULES END:    -->
+
+        <!--    OBSERVABILITY START:    -->
         <dependency>
             <groupId>net.ttddyy.observation</groupId>
             <artifactId>datasource-micrometer-spring-boot</artifactId>
@@ -81,6 +65,22 @@
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--    OBSERVABILITY END:    -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -90,36 +90,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-testcontainers</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.graphql</groupId>
-            <artifactId>spring-graphql-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webflux</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

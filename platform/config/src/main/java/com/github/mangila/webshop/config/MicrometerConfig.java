@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.config;
 
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;

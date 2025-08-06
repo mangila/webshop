@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.config;
+package com.github.mangila.webshop.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

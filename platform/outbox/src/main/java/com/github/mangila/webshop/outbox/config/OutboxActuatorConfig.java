@@ -1,0 +1,22 @@
+package com.github.mangila.webshop.outbox.config;
+
+import com.github.mangila.webshop.outbox.infrastructure.actuator.OutboxTaskActuatorEndpoint;
+import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskKey;
+import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+
+@Configuration
+public class OutboxActuatorConfig {
+
+    @Bean
+    OutboxTaskActuatorEndpoint outboxTaskActuatorEndpoint(
+            Map<String, OutboxTaskKey> outboxTaskKeys,
+            OutboxTaskRunner outboxTaskRunner
+    ) {
+        return new OutboxTaskActuatorEndpoint(outboxTaskKeys, outboxTaskRunner);
+    }
+
+}

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories(basePackages = "com.github.mangila.webshop.outbox")
-@EntityScan(basePackages = "com.github.mangila.webshop.outbox")
+@EnableJpaRepositories(basePackages = "com.github.mangila.webshop")
+@EntityScan(basePackages = "com.github.mangila.webshop")
 public class OutboxJpaConfig {
 }

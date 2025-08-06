@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.app.error;
+package com.github.mangila.webshop.shared.error;
 
 
 import com.github.mangila.webshop.shared.exception.ApplicationException;
@@ -15,9 +15,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
-public class GenericExceptionController {
+public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GenericExceptionController.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex, WebRequest request) {
