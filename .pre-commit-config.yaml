@@ -2,25 +2,25 @@ fail_fast: false
 repos:
   - repo: local
     hooks:
-      - id: platform-build
-        name: Platform Parent Build (Skip tests)
-        entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
-        language: system
-        pass_filenames: false
-        require_serial: true
-
       - id: gateway-infrastructure-build
         name: Gateway Infrastructure Build
         entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "infrastructure/gateway/pom.xml", "-am", "clean", "test" ]
+        args: [ "-f", "infrastructure/gateway/pom.xml", "-am", "clean", "install" ]
         language: system
         files: ^infrastructure/gateway
         require_serial: true
         pass_filenames: false
 
-      - id: app-build
-        name: App Module Build
+      - id: platform-build
+        name: Platform Parent Build (Skip tests)
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "platform/pom.xml", "-am", "clean", "install", "-DskipTests" ]
+        language: system
+        require_serial: true
+        pass_filenames: false
+
+      - id: app-test
+        name: App Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/app/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -28,8 +28,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: category-build
-        name: Category Module Build
+      - id: category-test
+        name: Category Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/category/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -37,8 +37,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: config-build
-        name: Config Module Build
+      - id: config-test
+        name: Config Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/config/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -46,8 +46,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: identity-build
-        name: Identity Module Build
+      - id: identity-test
+        name: Identity Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -55,8 +55,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: inbox-build
-        name: Inbox Module Build
+      - id: inbox-test
+        name: Inbox Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/inbox/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -64,8 +64,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: inventory-build
-        name: Inventory Module Build
+      - id: inventory-test
+        name: Inventory Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/inventory/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -73,8 +73,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: outbox-build
-        name: Outbox Module Build
+      - id: outbox-test
+        name: Outbox Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/outbox/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -82,8 +82,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: price-build
-        name: Price Module Build
+      - id: price-test
+        name: Price Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/price/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -91,8 +91,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: product-build
-        name: Product Module Build
+      - id: product-test
+        name: Product Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/product/pom.xml", "-am", "clean", "test" ]
         language: system
@@ -100,8 +100,8 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: shared-build
-        name: Shared Module Build
+      - id: shared-test
+        name: Shared Module Test
         entry: cmd.exe /c mvnw.cmd
         args: [ "-f", "platform/shared/pom.xml", "-am", "clean", "test", ]
         language: system
