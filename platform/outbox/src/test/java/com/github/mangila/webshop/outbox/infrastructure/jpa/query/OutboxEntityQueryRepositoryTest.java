@@ -1,12 +1,19 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
+import com.github.mangila.webshop.outbox.OutboxTestContainerConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@DataJpaTest
+@Import({OutboxTestContainerConfig.class})
 class OutboxEntityQueryRepositoryTest {
+
+    @Autowired
+    private OutboxEntityQueryRepository repository;
 
     @BeforeEach
     void setUp() {
@@ -18,6 +25,7 @@ class OutboxEntityQueryRepositoryTest {
 
     @Test
     void replay() {
+        repository.findById(1L);
     }
 
     @Test
