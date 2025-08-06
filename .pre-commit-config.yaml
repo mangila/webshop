@@ -26,6 +26,7 @@ repos:
         args: [ "-f", "platform/app/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/app
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -35,6 +36,7 @@ repos:
         args: [ "-f", "platform/category/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/category
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -44,6 +46,7 @@ repos:
         args: [ "-f", "platform/config/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/config
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -53,6 +56,7 @@ repos:
         args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/identity
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -62,6 +66,7 @@ repos:
         args: [ "-f", "platform/inbox/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/inbox
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -71,6 +76,7 @@ repos:
         args: [ "-f", "platform/inventory/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/inventory
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -80,6 +86,7 @@ repos:
         args: [ "-f", "platform/outbox/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/outbox
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -89,6 +96,7 @@ repos:
         args: [ "-f", "platform/price/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/price
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -98,6 +106,7 @@ repos:
         args: [ "-f", "platform/product/pom.xml", "-am", "clean", "test" ]
         language: system
         files: ^platform/product
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
 
@@ -107,5 +116,6 @@ repos:
         args: [ "-f", "platform/shared/pom.xml", "-am", "clean", "test", ]
         language: system
         files: ^platform/shared
+        exclude: \.(ya?ml|md)$
         require_serial: true
         pass_filenames: false
