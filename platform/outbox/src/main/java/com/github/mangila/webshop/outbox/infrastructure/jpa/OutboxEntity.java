@@ -31,18 +31,16 @@ public class OutboxEntity {
     private UUID aggregateId;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "payload",
-            columnDefinition = "jsonb",
+    @Column(columnDefinition = "jsonb",
             nullable = false,
             updatable = false)
     private ObjectNode payload;
 
+    @Column(nullable = false, updatable = false)
+    private int sequence;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OutboxStatusType status;
-
-    @Column(nullable = false, updatable = false)
-    private int sequence;
 
     @Column(nullable = false)
     private Instant updated;
@@ -53,7 +51,7 @@ public class OutboxEntity {
     protected OutboxEntity() {
     }
 
-    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, OutboxStatusType status, int sequence, Instant updated, Instant created) {
+    private OutboxEntity(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence, OutboxStatusType status, Instant updated, Instant created) {
         this.domain = domain;
         this.event = event;
         this.aggregateId = aggregateId;
@@ -65,7 +63,7 @@ public class OutboxEntity {
     }
 
     public static OutboxEntity from(String domain, String event, UUID aggregateId, ObjectNode payload, int sequence) {
-        return new OutboxEntity(domain, event, aggregateId, payload, OutboxStatusType.PENDING, sequence, Instant.now(), Instant.now());
+        return new OutboxEntity(domain, event, aggregateId, payload, sequence, OutboxStatusType.PENDING, Instant.now(), Instant.now());
     }
 
     public Long getId() {

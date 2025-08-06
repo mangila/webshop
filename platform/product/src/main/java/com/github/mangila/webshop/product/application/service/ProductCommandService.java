@@ -40,7 +40,7 @@ public class ProductCommandService {
         OutboxEvent outboxEvent = outboxMapper.toOutboxEvent(
                 ProductEvent.PRODUCT_CREATED,
                 product);
-        publisher.publishDomainEvent(outboxEvent);
+        publisher.publishOutboxEvent(outboxEvent);
         return product;
     }
 
@@ -54,6 +54,6 @@ public class ProductCommandService {
         OutboxEvent outboxEvent = outboxMapper.toOutboxEvent(
                 ProductEvent.PRODUCT_DELETED,
                 product);
-        publisher.publishDomainEvent(outboxEvent);
+        publisher.publishOutboxEvent(outboxEvent);
     }
 }

@@ -29,8 +29,8 @@ public class ProductJpaCommandRepository implements ProductCommandRepository {
 
     @Override
     public Product insert(ProductInsertCommand command) {
-        ProductEntity entity = entityMapper.toEntity(command);
-        ProductEntity savedEntity = repository.save(entity);
+        ProductEntity mappedEntity = entityMapper.toEntity(command);
+        ProductEntity savedEntity = repository.save(mappedEntity);
         return entityMapper.toDomain(savedEntity);
     }
 

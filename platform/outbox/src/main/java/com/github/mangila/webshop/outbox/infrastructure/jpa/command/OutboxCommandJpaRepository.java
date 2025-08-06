@@ -5,16 +5,16 @@ import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
+import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxUpdated;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
+import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -48,11 +48,11 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public void updateStatus(OutboxId id, OutboxStatusType status, OutboxUpdated updated) {
+    public void updateStatus(OutboxUpdateStatusCommand command) {
         entityCommandRepository.updateStatus(
-                id.value(),
-                status.name(),
-                updated.value()
+                command.id().value(),
+                command.outboxStatusType().name(),
+                command.outboxUpdated().value()
         );
     }
 
@@ -66,5 +66,13 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     public void updateSequence(OutboxSequence outboxSequence) {
         OutboxSequenceEntity entity = mapper.toEntity(outboxSequence);
         sequenceRepository.save(entity);
+    }
+
+    @Override
+    public void deleteByIds(List<OutboxId> ids) {
+        entityCommandRepository.deleteAllById(ids
+                .stream()
+                .map(OutboxId::value)
+                .toList());
     }
 }

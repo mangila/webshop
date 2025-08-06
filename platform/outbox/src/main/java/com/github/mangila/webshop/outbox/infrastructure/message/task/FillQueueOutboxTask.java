@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message.task;
 
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
+import com.github.mangila.webshop.outbox.domain.cqrs.OutboxDomainAndStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.InternalQueue;
@@ -20,7 +21,11 @@ public final class FillQueueOutboxTask implements OutboxTask {
 
     @Override
     public void execute() {
-        queryService.findAllByDomainAndStatus(queue.domain(), OutboxStatusType.PENDING, 120)
+        var query = new OutboxDomainAndStatusQuery(
+                queue.domain(),
+                OutboxStatusType.PENDING,
+                120);
+        queryService.findAllByDomainAndStatus(query)
                 .stream()
                 .peek(message -> log.info("Queue Message: {} - {}", message.id(), message.domain()))
                 .forEach(message -> queue.add(message.id()));

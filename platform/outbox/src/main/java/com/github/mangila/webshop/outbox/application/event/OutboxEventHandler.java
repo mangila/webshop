@@ -5,19 +5,20 @@ import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxPayload;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class OutboxEventHandler {
 
     private final OutboxCommandService commandService;
-    private final OutboxEventMapper eventMapper;
+    private final OutboxEventMapper eventMapper = new OutboxEventMapper();
 
-    public OutboxEventHandler(OutboxCommandService commandService,
-                              OutboxEventMapper eventMapper) {
+    public OutboxEventHandler(OutboxCommandService commandService) {
         this.commandService = commandService;
-        this.eventMapper = eventMapper;
     }
 
     public Outbox handle(OutboxEvent event) {
@@ -29,4 +30,16 @@ public class OutboxEventHandler {
         return outbox;
     }
 
+    private final static class OutboxEventMapper {
+        public OutboxInsertCommand toCommand(OutboxEvent event, OutboxSequence sequence) {
+            UUID aggregateId = event.aggregateId();
+            return new OutboxInsertCommand(
+                    event.domain(),
+                    event.event(),
+                    new OutboxAggregateId(aggregateId),
+                    new OutboxPayload(event.payload()),
+                    sequence
+            );
+        }
+    }
 }

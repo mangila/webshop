@@ -17,7 +17,7 @@ public class SpringEventPublisher {
         this.publisher = publisher;
     }
 
-    public void publishDomainEvent(OutboxEvent event) {
+    public void publishOutboxEvent(OutboxEvent event) {
         Ensure.notNull(event, OutboxEvent.class);
         log.debug("Publishing OutboxEvent: {}", event);
         publisher.publishEvent(event);

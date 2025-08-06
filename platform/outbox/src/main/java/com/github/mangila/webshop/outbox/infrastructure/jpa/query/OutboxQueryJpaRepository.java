@@ -3,11 +3,12 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
+import com.github.mangila.webshop.outbox.domain.cqrs.OutboxDomainAndStatusQuery;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxReplayQuery;
+import com.github.mangila.webshop.outbox.domain.cqrs.OutboxStatusAndDateBeforeQuery;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
-import com.github.mangila.webshop.shared.model.Domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,10 +37,24 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public List<OutboxProjection> findAllByDomainAndStatus(Domain domain, OutboxStatusType status, int limit) {
-        return entityRepository.findAllProjectionByDomainAndStatus(domain.value(), status, limit)
+    public List<OutboxProjection> findAllByDomainAndStatus(OutboxDomainAndStatusQuery query) {
+        return entityRepository.findAllProjectionByDomainAndStatus(
+                        query.domain().value(),
+                        query.status().name(),
+                        query.limit())
                 .stream()
                 .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<OutboxId> findAllIdsByStatusAndDateBefore(OutboxStatusAndDateBeforeQuery query) {
+        return entityRepository.findAllIdsByStatusAndDateBefore(
+                        query.status(),
+                        query.date(),
+                        query.limit())
+                .stream()
+                .map(OutboxId::new)
                 .toList();
     }
 }

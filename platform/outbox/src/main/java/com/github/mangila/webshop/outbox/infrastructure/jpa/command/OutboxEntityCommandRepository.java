@@ -14,7 +14,13 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
 
     @Query(
             value = """
-                    SELECT id,aggregate_id,domain,event
+                    SELECT
+                    id,
+                    aggregate_id as aggregateId,
+                    domain,
+                    event,
+                    payload::jsonb as payload,
+                    sequence
                     FROM outbox
                     WHERE id = :id
                     AND status != 'PUBLISHED'
