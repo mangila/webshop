@@ -10,6 +10,15 @@ repos:
         pass_filenames: false
         require_serial: true
 
+      - id: gateway-infrastructure-build
+        name: Gateway Infrastructure Build
+        entry: cmd.exe /c mvnw.cmd
+        args: [ "-f", "infrastructure/gateway/pom.xml", "-am", "clean", "test" ]
+        language: system
+        files: ^infrastructure/gateway
+        require_serial: true
+        pass_filenames: false
+
       - id: app-build
         name: App Module Build
         entry: cmd.exe /c mvnw.cmd
