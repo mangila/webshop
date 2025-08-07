@@ -24,7 +24,6 @@ This project demonstrates a modern e-commerce application architecture with the 
 - Observability and monitoring tools integration
 - React-based admin web-dashboard
 
-
 ## Architecture
 
 ### Backend Architecture
@@ -93,6 +92,7 @@ Note: The project structure currently only includes the admin-dashboard frontend
 ### Infrastructure Modules
 
 - **compose.yaml**: Docker Compose file for running the infrastructure
+- **authorization**: Spring Authorization Server
 - **gateway**: Spring API Gateway
 
 ## Technology Stack
