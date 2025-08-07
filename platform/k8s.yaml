@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webshop
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webshop-app
+  namespace: webshop
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webshop
+  template:
+    metadata:
+      labels:
+        app: webshop
+    spec:
+      containers:
+        - name: webshop
+          image: webshop:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webshop-service
+  namespace: webshop
+spec:
+  selector:
+    app: webshop
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webshop-config
+  namespace: webshop
+data:
+  application.properties: |
+    spring.profiles.active=prod
+    server.port=8080

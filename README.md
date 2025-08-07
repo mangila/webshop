@@ -12,7 +12,7 @@
 
 ***Educational purposes only***
 
-A mock webshop application built with Spring Boot, PostgreSQL, and React Vite for Admin Web UI
+A mock webshop application built with Spring Boot, Postgres, and React Vite for Admin Web UI
 
 ## Project Overview
 
@@ -55,6 +55,9 @@ The application is structured according to DDD principles:
 
 #### Observability
 
+Note: The README mentions Grafana, Loki, and Prometheus for observability, but these are not currently configured in the
+docker-compose file, yet!
+
 - **Loki**: Log aggregation
 - **Zipkin**: Distributed tracing
 - **Prometheus**: Metrics monitoring
@@ -94,84 +97,6 @@ Note: The project structure currently only includes the admin-dashboard frontend
 - **compose.yaml**: Docker Compose file for running the infrastructure
 - **authorization**: Spring Authorization Server
 - **gateway**: Spring API Gateway
-
-## Technology Stack
-
-### Backend
-
-- **Java 21**
-- **Spring Boot 3.5.3**
-- **Spring Data JPA**
-- **Spring GraphQL**
-- **PostgreSQL 17.5**
-- **Caffeine** (for caching)
-- **Micrometer** (for metrics)
-- **Zipkin** (for distributed tracing)
-- **Vavr** (for functional programming)
-- **Joda Money** (for currency and money operations)
-- **Hypersistence Utils** (for Hibernate extensions)
-- **SpringDoc OpenAPI** (for API documentation)
-
-### Frontend
-
-- **React**
-- **TypeScript**
-- **Vite**
-
-## Setup and Running
-
-### Prerequisites
-
-- Java 21
-- Docker and Docker Compose
-- Node.js and npm/yarn
-
-### Running the Infrastructure
-
-```bash
-cd infrastructure
-docker-compose up -d
-```
-
-This will start:
-
-- PostgreSQL 17.5 database on port 5432
-- Zipkin on port 9411
-
-Note: The README mentions Grafana, Loki, and Prometheus for observability, but these are not currently configured in the
-docker-compose file.
-
-### Running the Backend
-
-```bash
-cd platform
-./mvnw spring-boot:run -pl app
-```
-
-### Running the Admin Dashboard
-
-```bash
-cd ui/admin-dashboard
-npm install
-npm run dev
-```
-
-## API Documentation
-
-- **GraphQL**: Available at `/graphiql` for interactive queries
-- **Swagger UI**: Available at `/swagger-ui/index.html` for REST API documentation
-
-## Management and Monitoring
-
-- **Zipkin UI**: Available at port 9411
-
-## Database Configuration
-
-The PostgreSQL database is configured with:
-
-- Database name: `webshop`
-- Username: `my_user`
-- Password: `secret`
 
 ## Contributing
 
