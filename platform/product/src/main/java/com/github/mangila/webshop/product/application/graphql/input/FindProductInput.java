@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record ProductIdInput(@NotNull @GeneratedIdentity UUID value) {
+public record FindProductInput(@NotNull @GeneratedIdentity UUID value) {
 }

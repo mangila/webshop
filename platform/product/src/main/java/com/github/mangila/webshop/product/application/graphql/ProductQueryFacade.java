@@ -2,7 +2,7 @@ package com.github.mangila.webshop.product.application.graphql;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.ProductDtoMapper;
-import com.github.mangila.webshop.product.application.graphql.input.ProductIdInput;
+import com.github.mangila.webshop.product.application.graphql.input.FindProductInput;
 import com.github.mangila.webshop.product.application.service.ProductQueryService;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.FindProductQuery;
@@ -28,7 +28,7 @@ public class ProductQueryFacade {
     }
 
     @Cacheable(value = CacheName.LRU, key = "#request.value()")
-    public ProductDto findProductById(ProductIdInput request) {
+    public ProductDto findProductById(FindProductInput request) {
         FindProductQuery query = graphqlMapper.toQuery(request);
         Product product = service.findByIdOrThrow(query);
         return dtoMapper.toDto(product);
