@@ -2,6 +2,7 @@ package com.github.mangila.webshop.product.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;
+import com.github.mangila.webshop.product.domain.cqrs.FindProductQuery;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.infrastructure.jpa.ProductEntityMapper;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,9 @@ public class ProductJpaQueryRepository implements ProductQueryRepository {
     }
 
     @Override
-    public Optional<Product> findById(ProductId productId) {
-        return repository.findById(productId.value()).map(mapper::toDomain);
+    public Optional<Product> findById(FindProductQuery query) {
+        return repository.findById(query.id().value())
+                .map(mapper::toDomain);
     }
 
     @Override

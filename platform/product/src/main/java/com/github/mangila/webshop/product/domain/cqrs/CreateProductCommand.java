@@ -5,12 +5,12 @@ import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
 import com.github.mangila.webshop.shared.Ensure;
 
-public record ProductInsertCommand(
+public record CreateProductCommand(
         ProductId id,
         ProductName name,
         ProductAttributes attributes
 ) {
-    public ProductInsertCommand {
+    public CreateProductCommand {
         Ensure.notNull(id, ProductId.class);
         Ensure.notNull(name, ProductName.class);
         Ensure.notNull(attributes, ProductAttributes.class);

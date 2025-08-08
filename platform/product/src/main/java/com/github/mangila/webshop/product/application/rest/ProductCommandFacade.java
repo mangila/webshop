@@ -1,19 +1,16 @@
 package com.github.mangila.webshop.product.application.rest;
 
-import com.github.mangila.webshop.identity.application.IdentityService;
-import com.github.mangila.webshop.identity.domain.Identity;
-import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.ProductDtoMapper;
-import com.github.mangila.webshop.product.application.rest.request.ProductIdRequest;
-import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
-import com.github.mangila.webshop.product.application.service.ProductCommandService;
-import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
-import com.github.mangila.webshop.product.domain.primitive.ProductId;
+import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
+import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
+import com.github.mangila.webshop.product.application.service.CreateProductAction;
+import com.github.mangila.webshop.product.application.service.DeleteProductAction;
+import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
+import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
+import com.github.mangila.webshop.shared.JsonMapper;
 import com.github.mangila.webshop.shared.model.CacheName;
-import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.registry.DomainRegistry;
+import com.github.mangila.webshop.shared.model.OutboxEvent;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -27,37 +24,35 @@ public class ProductCommandFacade {
 
     private final ProductRestMapper restMapper;
     private final ProductDtoMapper dtoMapper;
-    private final ProductCommandService commandService;
-    private final IdentityService identityService;
-    private final DomainRegistry domainRegistry;
+
+    private final JsonMapper jsonMapper;
+    private final CreateProductAction createProductAction;
+    private final DeleteProductAction deleteProductAction;
 
     public ProductCommandFacade(ProductRestMapper restMapper,
                                 ProductDtoMapper dtoMapper,
-                                ProductCommandService commandService,
-                                IdentityService identityService,
-                                DomainRegistry domainRegistry) {
+                                JsonMapper jsonMapper,
+                                CreateProductAction createProductAction,
+                                DeleteProductAction deleteProductAction) {
         this.restMapper = restMapper;
         this.dtoMapper = dtoMapper;
-        this.commandService = commandService;
-        this.identityService = identityService;
-        this.domainRegistry = domainRegistry;
+        this.jsonMapper = jsonMapper;
+        this.createProductAction = createProductAction;
+        this.deleteProductAction = deleteProductAction;
     }
-
 
     @Transactional
     @CachePut(value = CacheName.LRU, key = "#result.id()")
-    public ProductDto insert(@Valid ProductInsertRequest request) {
-        Domain domain = new Domain(Product.class, domainRegistry);
-        Identity identity = identityService.generate(new NewIdentityCommand(domain));
-        ProductInsertCommand command = restMapper.toCommand(identity.id(), request);
-        Product product = commandService.insert(command);
-        return dtoMapper.toDto(product);
+    public ProductDto insert(@Valid CreateProductRequest request) {
+        CreateProductCommand command = restMapper.toCommand(request);
+        OutboxEvent outboxEvent = createProductAction.execute(command);
+        return jsonMapper.toObject(outboxEvent.payload(), ProductDto.class);
     }
 
     @Transactional
     @CacheEvict(value = CacheName.LRU, key = "#request.value()")
-    public void deleteById(@Valid ProductIdRequest request) {
-        ProductId productId = restMapper.toDomain(request);
-        commandService.deleteByIdOrThrow(productId);
+    public void deleteById(@Valid DeleteProductRequest request) {
+        DeleteProductCommand command = restMapper.toCommand(request);
+        deleteProductAction.execute(command);
     }
 }

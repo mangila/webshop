@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.github.mangila.webshop.product.domain.Product;
-import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
+import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 import com.github.mangila.webshop.product.domain.primitive.*;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class ProductEntityMapper {
 
-    public ProductEntity toEntity(ProductInsertCommand command) {
+    public ProductEntity toEntity(CreateProductCommand command) {
         return new ProductEntity(
                 command.id().value(),
                 command.name().value(),

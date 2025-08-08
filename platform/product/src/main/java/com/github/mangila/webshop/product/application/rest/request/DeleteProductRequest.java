@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record ProductIdRequest(@NotNull @GeneratedIdentity UUID value) {
+public record DeleteProductRequest(@NotNull @GeneratedIdentity UUID value) {
 }

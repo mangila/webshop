@@ -2,7 +2,7 @@ package com.github.mangila.webshop.app.bootstrap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
+import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class Bootstrap implements CommandLineRunner {
             while (true) {
                 try {
                     Thread.sleep(500);
-                    var request = new ProductInsertRequest(
+                    var request = new CreateProductRequest(
                             "test",
                             objectMapper.createObjectNode()
                     );

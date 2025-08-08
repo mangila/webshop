@@ -23,4 +23,13 @@ public class JsonMapper {
                 })
                 .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", object), cause));
     }
+
+    public <T> T toObject(ObjectNode node, Class<T> clazz) {
+        return Try.of(() -> {
+                    Ensure.notNull(node);
+                    Ensure.notNull(clazz);
+                    return objectMapper.treeToValue(node, clazz);
+                })
+                .getOrElseThrow(cause -> new ApplicationException(String.format("Error parsing object: %s", node), cause));
+    }
 }

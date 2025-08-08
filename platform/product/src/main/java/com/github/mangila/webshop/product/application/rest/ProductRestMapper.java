@@ -1,28 +1,44 @@
 package com.github.mangila.webshop.product.application.rest;
 
-import com.github.mangila.webshop.product.application.rest.request.ProductIdRequest;
-import com.github.mangila.webshop.product.application.rest.request.ProductInsertRequest;
-import com.github.mangila.webshop.product.domain.cqrs.ProductInsertCommand;
+import com.github.mangila.webshop.identity.application.IdentityService;
+import com.github.mangila.webshop.identity.domain.Identity;
+import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
+import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
+import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
+import com.github.mangila.webshop.product.domain.Product;
+import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
+import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
-import jakarta.validation.Valid;
+import com.github.mangila.webshop.shared.model.Domain;
+import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 public class ProductRestMapper {
 
-    public ProductInsertCommand toCommand(UUID id, ProductInsertRequest request) {
-        return new ProductInsertCommand(
-                new ProductId(id),
+    private final DomainRegistry domainRegistry;
+    private final IdentityService identityService;
+
+    public ProductRestMapper(DomainRegistry domainRegistry,
+                             IdentityService identityService) {
+        this.domainRegistry = domainRegistry;
+        this.identityService = identityService;
+    }
+
+    public CreateProductCommand toCommand(CreateProductRequest request) {
+        Domain domain = new Domain(Product.class, domainRegistry);
+        Identity identity = identityService.generate(new NewIdentityCommand(domain));
+        return new CreateProductCommand(
+                new ProductId(identity.id()),
                 new ProductName(request.name()),
                 new ProductAttributes(request.attributes())
         );
     }
 
-    public ProductId toDomain(@Valid ProductIdRequest request) {
-        return new ProductId(request.value());
+    public DeleteProductCommand toCommand(DeleteProductRequest request) {
+        ProductId productId = new ProductId(request.value());
+        return new DeleteProductCommand(productId);
     }
 }

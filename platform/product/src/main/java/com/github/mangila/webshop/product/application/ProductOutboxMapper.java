@@ -4,8 +4,8 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.shared.JsonMapper;
 import com.github.mangila.webshop.shared.model.Domain;
-import com.github.mangila.webshop.shared.model.OutboxEvent;
 import com.github.mangila.webshop.shared.model.Event;
+import com.github.mangila.webshop.shared.model.OutboxEvent;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import com.github.mangila.webshop.shared.registry.EventRegistry;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class ProductOutboxMapper {
     }
 
     public OutboxEvent toOutboxEvent(ProductEvent event, Product product) {
-        var dto = dtoMapper.toDto(product);
+        ProductDto dto = dtoMapper.toDto(product);
         return new OutboxEvent(
                 new Domain(Product.class, domainRegistry),
                 new Event(event, eventRegistry),
