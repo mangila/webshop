@@ -23,7 +23,7 @@ public class OutboxEventHandler {
 
     public Outbox handle(OutboxEvent event) {
         var aggregateId = new OutboxAggregateId(event.aggregateId());
-        OutboxSequence newSequence = commandService.findByAggregateIdAndIncrementForUpdate(aggregateId);
+        OutboxSequence newSequence = commandService.findSequenceAndIncrementAndLockByAggregateId(aggregateId);
         OutboxInsertCommand command = eventMapper.toCommand(event, newSequence);
         Outbox outbox = commandService.insert(command);
         commandService.updateSequence(newSequence);

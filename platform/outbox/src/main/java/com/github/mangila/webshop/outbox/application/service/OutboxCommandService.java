@@ -30,7 +30,7 @@ public class OutboxCommandService {
         return commandRepository.findByIdWhereStatusNotPublishedForUpdate(outboxId);
     }
 
-    public OutboxSequence findByAggregateIdAndIncrementForUpdate(@NotNull OutboxAggregateId aggregateId) {
+    public OutboxSequence findSequenceAndIncrementAndLockByAggregateId(@NotNull OutboxAggregateId aggregateId) {
         Ensure.activeSpringTransaction();
         return commandRepository.findAndLockByAggregateId(aggregateId)
                 .map(OutboxSequence::incrementFrom)

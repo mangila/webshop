@@ -24,15 +24,12 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
                       updated,
                       created
                     FROM outbox
-                    WHERE id = :id
-                      AND status != 'PUBLISHED'
+                    WHERE id = :id AND status != 'PUBLISHED'
                     FOR UPDATE SKIP LOCKED
                     """,
             nativeQuery = true
     )
     Optional<OutboxEntity> findByIdWhereStatusNotPublishedForUpdate(@Param("id") long id);
-
-
 
     @Modifying
     @Query(
