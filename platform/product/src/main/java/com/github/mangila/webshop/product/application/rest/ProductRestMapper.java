@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.product.application.rest;
 
-import com.github.mangila.webshop.identity.application.IdentityService;
-import com.github.mangila.webshop.identity.domain.Identity;
-import com.github.mangila.webshop.identity.domain.cqrs.NewIdentityCommand;
+import com.github.mangila.webshop.shared.identity.application.IdentityService;
+import com.github.mangila.webshop.shared.identity.domain.Identity;
+import com.github.mangila.webshop.shared.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
 import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
 import com.github.mangila.webshop.product.domain.Product;

@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.identity.infrastructure;
+package com.github.mangila.webshop.shared.identity.infrastructure;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;

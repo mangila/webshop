@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.application;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
+import com.github.mangila.webshop.shared.identity.application.validation.GeneratedIdentity;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.annotation.RegisteredDomain;
 import com.github.mangila.webshop.shared.annotation.RegisteredEvent;

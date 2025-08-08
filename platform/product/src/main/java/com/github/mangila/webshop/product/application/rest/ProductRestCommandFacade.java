@@ -3,13 +3,12 @@ package com.github.mangila.webshop.product.application.rest;
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
 import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
-import com.github.mangila.webshop.product.application.service.CreateProductAction;
-import com.github.mangila.webshop.product.application.service.DeleteProductAction;
+import com.github.mangila.webshop.product.application.service.CreateProductCommandAction;
+import com.github.mangila.webshop.product.application.service.DeleteProductCommandAction;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
 import com.github.mangila.webshop.shared.JsonMapper;
 import com.github.mangila.webshop.shared.model.CacheName;
-import com.github.mangila.webshop.shared.model.OutboxEvent;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -19,35 +18,36 @@ import org.springframework.validation.annotation.Validated;
 
 @Service
 @Validated
-public class ProductCommandFacade {
+public class ProductRestCommandFacade {
 
     private final ProductRestMapper restMapper;
     private final JsonMapper jsonMapper;
-    private final CreateProductAction createProductAction;
-    private final DeleteProductAction deleteProductAction;
+    private final CreateProductCommandAction createProductCommandAction;
+    private final DeleteProductCommandAction deleteProductCommandAction;
 
-    public ProductCommandFacade(ProductRestMapper restMapper,
-                                JsonMapper jsonMapper,
-                                CreateProductAction createProductAction,
-                                DeleteProductAction deleteProductAction) {
+    public ProductRestCommandFacade(ProductRestMapper restMapper,
+                                    JsonMapper jsonMapper,
+                                    CreateProductCommandAction createProductCommandAction,
+                                    DeleteProductCommandAction deleteProductCommandAction) {
         this.restMapper = restMapper;
         this.jsonMapper = jsonMapper;
-        this.createProductAction = createProductAction;
-        this.deleteProductAction = deleteProductAction;
+        this.createProductCommandAction = createProductCommandAction;
+        this.deleteProductCommandAction = deleteProductCommandAction;
     }
 
     @Transactional
     @CachePut(value = CacheName.LRU, key = "#result.id()")
     public ProductDto insert(@Valid CreateProductRequest request) {
         CreateProductCommand command = restMapper.toCommand(request);
-        OutboxEvent outboxEvent = createProductAction.execute(command);
-        return jsonMapper.toObject(outboxEvent.payload(), ProductDto.class);
+        return createProductCommandAction.execute()
+                .andThen(outboxEvent -> jsonMapper.toObject(outboxEvent.payload(), ProductDto.class))
+                .apply(command);
     }
 
     @Transactional
     @CacheEvict(value = CacheName.LRU, key = "#request.value()")
     public void deleteById(@Valid DeleteProductRequest request) {
         DeleteProductCommand command = restMapper.toCommand(request);
-        deleteProductAction.execute(command);
+        deleteProductCommandAction.execute(command);
     }
 }

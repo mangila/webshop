@@ -12,9 +12,9 @@ import java.util.UUID;
 @RequestMapping("api/v1/product/command")
 public class ProductCommandController {
 
-    private final ProductCommandFacade facade;
+    private final ProductRestCommandFacade facade;
 
-    public ProductCommandController(ProductCommandFacade facade) {
+    public ProductCommandController(ProductRestCommandFacade facade) {
         this.facade = facade;
     }
 

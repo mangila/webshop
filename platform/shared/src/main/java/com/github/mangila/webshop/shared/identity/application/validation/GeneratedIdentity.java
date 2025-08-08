@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.identity.application.validation;
+package com.github.mangila.webshop.shared.identity.application.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

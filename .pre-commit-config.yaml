@@ -61,16 +61,6 @@ repos:
         require_serial: true
         pass_filenames: false
 
-      - id: identity-test
-        name: Identity Module Test
-        entry: cmd.exe /c mvnw.cmd
-        args: [ "-f", "platform/identity/pom.xml", "-am", "clean", "test" ]
-        language: system
-        files: ^platform/identity
-        exclude: \.(ya?ml|md)$
-        require_serial: true
-        pass_filenames: false
-
       - id: inbox-test
         name: Inbox Module Test
         entry: cmd.exe /c mvnw.cmd

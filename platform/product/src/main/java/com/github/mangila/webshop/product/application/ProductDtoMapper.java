@@ -5,9 +5,15 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.function.Function;
+
 @Component
 @Validated
 public class ProductDtoMapper {
+
+    public Function<Product, ProductDto> toDto() {
+        return this::toDto;
+    }
 
     public @Valid ProductDto toDto(Product product) {
         return new ProductDto(

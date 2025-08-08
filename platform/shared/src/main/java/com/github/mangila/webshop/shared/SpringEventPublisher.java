@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
+
 @Component
 public class SpringEventPublisher {
 
@@ -21,6 +23,13 @@ public class SpringEventPublisher {
         Ensure.notNull(event, OutboxEvent.class);
         log.debug("Publishing OutboxEvent: {}", event);
         publisher.publishEvent(event);
+    }
+
+    public Function<OutboxEvent,OutboxEvent> publishOutboxEvent() {
+        return outboxEvent -> {
+            publishOutboxEvent(outboxEvent);
+            return outboxEvent;
+        };
     }
 
     public void publishInboxEvent(InboxEvent message) {

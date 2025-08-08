@@ -1,6 +1,6 @@
-package com.github.mangila.webshop.identity.application.validation;
+package com.github.mangila.webshop.shared.identity.application.validation;
 
-import com.github.mangila.webshop.identity.application.IdentityService;
+import com.github.mangila.webshop.shared.identity.application.IdentityService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;

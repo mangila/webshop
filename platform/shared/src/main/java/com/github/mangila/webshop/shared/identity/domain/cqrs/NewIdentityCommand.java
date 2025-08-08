@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.identity.domain.cqrs;
+package com.github.mangila.webshop.shared.identity.domain.cqrs;
 
 
 import com.github.mangila.webshop.shared.Ensure;

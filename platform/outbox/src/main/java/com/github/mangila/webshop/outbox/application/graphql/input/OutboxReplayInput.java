@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.application.graphql.input;
 
-import com.github.mangila.webshop.identity.application.validation.GeneratedIdentity;
+import com.github.mangila.webshop.shared.identity.application.validation.GeneratedIdentity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

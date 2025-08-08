@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.identity.domain;
+package com.github.mangila.webshop.shared.identity.domain;
 
 import java.util.Optional;
 import java.util.UUID;

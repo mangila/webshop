@@ -7,6 +7,8 @@ import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.function.Function;
+
 @Service
 public class ProductQueryService {
 
@@ -15,6 +17,8 @@ public class ProductQueryService {
     public ProductQueryService(ProductQueryRepository repository) {
         this.repository = repository;
     }
+
+    public Function<FindProductQuery, Product> findByIdOrThrow = this::findByIdOrThrow;
 
     public Product findByIdOrThrow(FindProductQuery query) {
         Ensure.notNull(query, FindProductQuery.class);

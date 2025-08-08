@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductQueryResolver {
 
-    private final ProductQueryFacade facade;
+    private final ProductGraphqlQueryFacade facade;
 
-    public ProductQueryResolver(ProductQueryFacade facade) {
+    public ProductQueryResolver(ProductGraphqlQueryFacade facade) {
         this.facade = facade;
     }
 

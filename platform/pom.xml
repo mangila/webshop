@@ -21,7 +21,6 @@
         <module>app</module>
         <module>category</module>
         <module>config</module>
-        <module>identity</module>
         <module>inbox</module>
         <module>inventory</module>
         <module>outbox</module>
@@ -46,11 +45,6 @@
             <dependency>
                 <groupId>com.github.mangila.webshop</groupId>
                 <artifactId>config</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.mangila.webshop</groupId>
-                <artifactId>identity</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

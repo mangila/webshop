@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.identity.infrastructure;
+package com.github.mangila.webshop.shared.identity.infrastructure;
 
-import com.github.mangila.webshop.identity.domain.Identity;
-import com.github.mangila.webshop.identity.domain.IdentityRepository;
+import com.github.mangila.webshop.shared.identity.domain.Identity;
+import com.github.mangila.webshop.shared.identity.domain.IdentityRepository;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
