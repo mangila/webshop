@@ -29,7 +29,7 @@ class OutboxEntityQueryRepositoryTest {
     }
 
     @Test
-    void findAllProjectionByDomainAndStatus() {
+    void findAllByDomainAndStatus() {
     }
 
     @Test

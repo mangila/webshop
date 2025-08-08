@@ -2,7 +2,6 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
-import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxEntityProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,21 +24,14 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
                               @Param("limit") int limit);
 
     @Query(value = """
-                    SELECT id,
-                           aggregate_id,
-                           domain,
-                           event,
-                           payload,
-                           sequence
-                    FROM outbox
-                    WHERE domain = :domain AND status = :status
-                    ORDER BY created ASC
+                    SELECT o FROM OutboxEntity o
+                    WHERE o.domain = :domain AND o.status = :status
+                    ORDER BY o.created ASC
                     LIMIT :limit
-            """,
-            nativeQuery = true)
-    List<OutboxEntityProjection> findAllProjectionByDomainAndStatus(
+            """)
+    List<OutboxEntity> findAllByDomainAndStatus(
             @Param("domain") String domain,
-            @Param("status") String status,
+            @Param("status") OutboxStatusType status,
             @Param("limit") int limit);
 
     @Query("""

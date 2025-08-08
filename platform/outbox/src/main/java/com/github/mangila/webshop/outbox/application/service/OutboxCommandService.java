@@ -7,7 +7,6 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 import com.github.mangila.webshop.shared.Ensure;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class OutboxCommandService {
         this.commandRepository = commandRepository;
     }
 
-    public Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(@NotNull OutboxId outboxId) {
+    public Optional<Outbox> findByIdWhereStatusNotPublishedForUpdate(@NotNull OutboxId outboxId) {
         Ensure.activeSpringTransaction();
         return commandRepository.findByIdWhereStatusNotPublishedForUpdate(outboxId);
     }

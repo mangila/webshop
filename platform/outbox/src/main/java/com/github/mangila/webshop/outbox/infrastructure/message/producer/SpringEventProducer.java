@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.message.producer;
 
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
+import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.infrastructure.message.InboxEventMapper;
 import com.github.mangila.webshop.shared.SpringEventPublisher;
 import com.github.mangila.webshop.shared.model.EventSource;
@@ -20,8 +20,8 @@ public final class SpringEventProducer implements Producer {
     }
 
     @Override
-    public void produce(OutboxProjection projection) {
-        InboxEvent inboxEvent = eventMapper.toInboxEvent(projection, source());
+    public void produce(Outbox outbox) {
+        InboxEvent inboxEvent = eventMapper.toInboxEvent(outbox, source());
         publisher.publishInboxEvent(inboxEvent);
     }
 

@@ -8,7 +8,6 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntityMapper;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxSequenceEntity;
 import io.vavr.collection.Stream;
@@ -42,7 +41,7 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     }
 
     @Override
-    public Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(OutboxId id) {
+    public Optional<Outbox> findByIdWhereStatusNotPublishedForUpdate(OutboxId id) {
         return entityCommandRepository.findByIdWhereStatusNotPublishedForUpdate(id.value())
                 .map(mapper::toDomain);
     }

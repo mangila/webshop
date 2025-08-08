@@ -4,7 +4,6 @@ import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.projection.OutboxProjection;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,7 @@ public interface OutboxCommandRepository {
 
     Outbox insert(OutboxInsertCommand command);
 
-    Optional<OutboxProjection> findByIdWhereStatusNotPublishedForUpdate(OutboxId id);
+    Optional<Outbox> findByIdWhereStatusNotPublishedForUpdate(OutboxId id);
 
     void updateStatus(OutboxUpdateStatusCommand command);
 

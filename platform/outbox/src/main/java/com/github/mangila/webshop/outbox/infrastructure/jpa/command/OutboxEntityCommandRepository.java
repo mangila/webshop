@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
-import com.github.mangila.webshop.outbox.infrastructure.jpa.projection.OutboxEntityProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,20 +14,25 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
     @Query(
             value = """
                     SELECT
-                    id,
-                    aggregate_id as aggregateId,
-                    domain,
-                    event,
-                    payload::jsonb as payload,
-                    sequence
+                      id,
+                      domain,
+                      event,
+                      aggregate_id,
+                      payload::jsonb,
+                      sequence,
+                      status,
+                      updated,
+                      created
                     FROM outbox
                     WHERE id = :id
-                    AND status != 'PUBLISHED'
+                      AND status != 'PUBLISHED'
                     FOR UPDATE SKIP LOCKED
                     """,
             nativeQuery = true
     )
-    Optional<OutboxEntityProjection> findByIdWhereStatusNotPublishedForUpdate(@Param("id") long id);
+    Optional<OutboxEntity> findByIdWhereStatusNotPublishedForUpdate(@Param("id") long id);
+
+
 
     @Modifying
     @Query(
