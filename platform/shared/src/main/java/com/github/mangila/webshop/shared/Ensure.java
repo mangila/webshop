@@ -108,4 +108,10 @@ public final class Ensure {
             throw new ApplicationException("Objects are not equal: %s != %s".formatted(object, another));
         }
     }
+
+    public static void notEquals(Enum<?> object, Enum<?> another, String message) {
+        if (object == another) {
+            throw new ApplicationException(message);
+        }
+    }
 }

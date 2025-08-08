@@ -1,5 +1,6 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
+import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.OutboxEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,14 +35,13 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
     @Modifying
     @Query(
             value = """
-                    UPDATE outbox SET
-                    status = :status,
-                    updated = :updated
-                    WHERE id = :id
-                    """,
-            nativeQuery = true
+                     UPDATE OutboxEntity o
+                     SET o.status = :status,
+                         o.updated = :updated
+                     WHERE o.id = :id
+                    """
     )
     void updateStatus(@Param("id") long id,
-                      @Param("status") String status,
+                      @Param("status") OutboxStatusType status,
                       @Param("updated") Instant updated);
 }

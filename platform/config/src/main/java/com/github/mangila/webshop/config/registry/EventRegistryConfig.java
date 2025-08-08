@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.config.registry;
 
 import com.github.mangila.webshop.shared.Ensure;
-import com.github.mangila.webshop.shared.annotation.EventTypes;
+import com.github.mangila.webshop.shared.annotation.DomainEvent;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.registry.EventRegistry;
@@ -35,7 +35,7 @@ public class EventRegistryConfig {
     }
 
     void registerEvents(EventRegistry eventRegistry) {
-        Class<EventTypes> annotation = EventTypes.class;
+        Class<DomainEvent> annotation = DomainEvent.class;
         log.info("Scan {}", annotation.getName());
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
@@ -52,7 +52,7 @@ public class EventRegistryConfig {
                             eventRegistry.register(event, event.value());
                         }
                     } else {
-                        throw new ApplicationException("Class %s is not an enum".formatted(eventClazz.getSimpleName()));
+                        throw new ApplicationException("Class %s is not an enum, cannot be a registered event".formatted(eventClazz.getSimpleName()));
                     }
                 });
     }

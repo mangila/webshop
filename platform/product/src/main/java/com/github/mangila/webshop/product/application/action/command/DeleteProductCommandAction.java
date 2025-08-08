@@ -1,47 +1,49 @@
-package com.github.mangila.webshop.product.application.service;
+package com.github.mangila.webshop.product.application.action.command;
 
 import com.github.mangila.webshop.product.application.ProductOutboxEventMapper;
+import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
-import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
+import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.shared.CommandAction;
 import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.SpringEventPublisher;
-import com.github.mangila.webshop.shared.identity.application.IdentityService;
+import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CreateProductCommandAction implements CommandAction<CreateProductCommand> {
-
-    private final ProductCommandRepository repository;
+public class DeleteProductCommandAction implements CommandAction<DeleteProductCommand> {
     private final ProductOutboxEventMapper productOutboxEventMapper;
+    private final ProductCommandRepository repository;
     private final SpringEventPublisher publisher;
-    private final IdentityService identityService;
 
-    public CreateProductCommandAction(ProductCommandRepository repository,
-                                      ProductOutboxEventMapper productOutboxEventMapper,
-                                      SpringEventPublisher publisher,
-                                      IdentityService identityService) {
+    public DeleteProductCommandAction(ProductOutboxEventMapper productOutboxEventMapper,
+                                      ProductCommandRepository repository,
+                                      SpringEventPublisher publisher) {
         this.productOutboxEventMapper = productOutboxEventMapper;
         this.repository = repository;
         this.publisher = publisher;
-        this.identityService = identityService;
     }
 
     @Override
     public Event event() {
-        return ProductEvent.PRODUCT_CREATED.asEvent();
+        return ProductEvent.PRODUCT_DELETED.toEvent();
     }
 
-    @Override
     @Transactional
-    public OutboxEvent execute(CreateProductCommand command) {
-        Ensure.notNull(command, CreateProductCommand.class);
-        identityService.ensureHasGenerated(command.id().value());
-        return repository.create()
+    @Override
+    public OutboxEvent execute(DeleteProductCommand command) {
+        Ensure.notNull(command, DeleteProductCommand.class);
+        return repository.delete()
+                .andThen(product -> {
+                    return product.orElseThrow(() -> new ResourceNotFoundException(
+                            Product.class,
+                            command.id()
+                    ));
+                })
                 .andThen(product -> productOutboxEventMapper.toEvent(event(), product))
                 .andThen(publisher.publishOutboxEvent())
                 .apply(command);

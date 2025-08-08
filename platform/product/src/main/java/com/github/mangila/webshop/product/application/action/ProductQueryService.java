@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.product.application.service;
+package com.github.mangila.webshop.product.application.action;
 
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductQueryRepository;

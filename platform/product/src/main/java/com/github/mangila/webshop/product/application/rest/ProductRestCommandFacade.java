@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.product.application.rest;
 
 import com.github.mangila.webshop.product.application.ProductDto;
+import com.github.mangila.webshop.product.application.action.command.CreateProductCommandAction;
+import com.github.mangila.webshop.product.application.action.command.UpdateProductStatusCommandAction;
 import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
 import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
-import com.github.mangila.webshop.product.application.service.CreateProductCommandAction;
-import com.github.mangila.webshop.product.application.service.DeleteProductCommandAction;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
-import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
+import com.github.mangila.webshop.product.domain.cqrs.UpdateProductStatusCommand;
 import com.github.mangila.webshop.shared.JsonMapper;
 import com.github.mangila.webshop.shared.model.CacheName;
 import jakarta.validation.Valid;
@@ -23,16 +23,16 @@ public class ProductRestCommandFacade {
     private final ProductRestMapper restMapper;
     private final JsonMapper jsonMapper;
     private final CreateProductCommandAction createProductCommandAction;
-    private final DeleteProductCommandAction deleteProductCommandAction;
+    private final UpdateProductStatusCommandAction updateProductStatusCommandAction;
 
     public ProductRestCommandFacade(ProductRestMapper restMapper,
                                     JsonMapper jsonMapper,
                                     CreateProductCommandAction createProductCommandAction,
-                                    DeleteProductCommandAction deleteProductCommandAction) {
+                                    UpdateProductStatusCommandAction updateProductStatusCommandAction) {
         this.restMapper = restMapper;
         this.jsonMapper = jsonMapper;
         this.createProductCommandAction = createProductCommandAction;
-        this.deleteProductCommandAction = deleteProductCommandAction;
+        this.updateProductStatusCommandAction = updateProductStatusCommandAction;
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class ProductRestCommandFacade {
     @Transactional
     @CacheEvict(value = CacheName.LRU, key = "#request.value()")
     public void deleteById(@Valid DeleteProductRequest request) {
-        DeleteProductCommand command = restMapper.toCommand(request);
-        deleteProductCommandAction.execute(command);
+        UpdateProductStatusCommand command = restMapper.toCommand(request);
+        updateProductStatusCommandAction.execute(command);
     }
 }

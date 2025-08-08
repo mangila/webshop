@@ -50,7 +50,7 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     public void updateStatus(OutboxUpdateStatusCommand command) {
         entityCommandRepository.updateStatus(
                 command.id().value(),
-                command.outboxStatusType().name(),
+                command.outboxStatusType(),
                 command.outboxUpdated().value()
         );
     }

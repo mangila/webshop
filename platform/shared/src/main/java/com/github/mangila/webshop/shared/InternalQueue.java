@@ -13,6 +13,7 @@ public final class InternalQueue<T> {
     private final Queue<T> dlq;
 
     public InternalQueue(Domain domain) {
+        Ensure.notNull(domain, Domain.class);
         this.domain = domain;
         this.queue = new ConcurrentLinkedQueue<>();
         this.dlq = new ConcurrentLinkedQueue<>();

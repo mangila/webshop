@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class ProductEntityMapper {
@@ -21,6 +22,10 @@ public class ProductEntityMapper {
                 Instant.now(),
                 Instant.now()
         );
+    }
+
+    public Function<CreateProductCommand, ProductEntity> toEntity() {
+        return this::toEntity;
     }
 
     public Product toDomain(ProductEntity entity) {

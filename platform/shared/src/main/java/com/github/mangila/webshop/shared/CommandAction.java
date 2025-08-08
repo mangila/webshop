@@ -5,7 +5,7 @@ import com.github.mangila.webshop.shared.model.OutboxEvent;
 
 import java.util.function.Function;
 
-public interface CommandAction<C extends Record> {
+public interface CommandAction<C> {
 
     Event event();
 

@@ -2,10 +2,11 @@ package com.github.mangila.webshop.product.application.graphql;
 
 import com.github.mangila.webshop.product.application.ProductDto;
 import com.github.mangila.webshop.product.application.ProductDtoMapper;
+import com.github.mangila.webshop.product.application.action.ProductQueryService;
 import com.github.mangila.webshop.product.application.graphql.input.FindProductInput;
-import com.github.mangila.webshop.product.application.service.ProductQueryService;
 import com.github.mangila.webshop.product.domain.cqrs.FindProductQuery;
 import com.github.mangila.webshop.shared.model.CacheName;
+import jakarta.validation.Valid;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +28,7 @@ public class ProductGraphqlQueryFacade {
     }
 
     @Cacheable(value = CacheName.LRU, key = "#request.value()")
-    public ProductDto findProductById(FindProductInput request) {
+    public ProductDto findProductById(@Valid FindProductInput request) {
         FindProductQuery query = graphqlMapper.toQuery(request);
         return service.findByIdOrThrow.andThen(dtoMapper::toDto)
                 .apply(query);
