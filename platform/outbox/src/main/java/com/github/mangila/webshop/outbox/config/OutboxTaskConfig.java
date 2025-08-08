@@ -4,7 +4,7 @@ import com.github.mangila.webshop.outbox.application.service.OutboxCommandServic
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
-import com.github.mangila.webshop.outbox.infrastructure.message.task.*;
+import com.github.mangila.webshop.outbox.infrastructure.task.*;
 import com.github.mangila.webshop.shared.InternalQueue;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;

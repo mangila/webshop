@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.outbox.config;
 
 import com.github.mangila.webshop.outbox.infrastructure.actuator.OutboxTaskActuatorEndpoint;
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

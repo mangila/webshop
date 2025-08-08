@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.product.application.rest;
 
 import com.github.mangila.webshop.product.application.ProductDto;
-import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
 import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
+import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

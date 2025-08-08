@@ -1,7 +1,7 @@
-package com.github.mangila.webshop.outbox.infrastructure.message;
+package com.github.mangila.webshop.outbox.infrastructure.scheduler;
 
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

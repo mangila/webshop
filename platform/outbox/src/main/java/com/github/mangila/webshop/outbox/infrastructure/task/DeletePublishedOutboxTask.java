@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.message.task;
+package com.github.mangila.webshop.outbox.infrastructure.task;
 
 import com.github.mangila.webshop.outbox.application.service.OutboxCommandService;
 import com.github.mangila.webshop.outbox.application.service.OutboxQueryService;

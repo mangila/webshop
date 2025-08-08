@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.jpa;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.mangila.webshop.product.domain.types.ProductStatusType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -24,8 +25,10 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
     private ObjectNode attributes;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean active;
+    private ProductStatusType status;
+
     @Column(nullable = false, updatable = false)
     private Instant created;
 
@@ -38,10 +41,11 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    public ProductEntity(UUID id, String name, ObjectNode attributes, Instant created, Instant updated) {
+    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductStatusType status, Instant created, Instant updated) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
+        this.status = status;
         this.created = created;
         this.updated = updated;
     }
@@ -49,6 +53,10 @@ public class ProductEntity implements Persistable<UUID> {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     @Transient
@@ -60,10 +68,6 @@ public class ProductEntity implements Persistable<UUID> {
     @Transient
     public void setNew(boolean isNew) {
         this.isNew = isNew;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -80,6 +84,14 @@ public class ProductEntity implements Persistable<UUID> {
 
     public void setAttributes(ObjectNode attributes) {
         this.attributes = attributes;
+    }
+
+    public ProductStatusType getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatusType status) {
+        this.status = status;
     }
 
     public Instant getCreated() {

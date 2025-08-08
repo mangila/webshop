@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.message.task;
+package com.github.mangila.webshop.outbox.infrastructure.task;
 
 import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;

@@ -1,5 +1,8 @@
 # Application Properties
 app:
+  product:
+    scheduler:
+      enabled: true
   outbox:
     scheduler:
       enabled: true

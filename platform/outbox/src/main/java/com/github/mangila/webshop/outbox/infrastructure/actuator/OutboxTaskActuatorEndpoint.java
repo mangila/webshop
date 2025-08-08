@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.message.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskRunner;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;

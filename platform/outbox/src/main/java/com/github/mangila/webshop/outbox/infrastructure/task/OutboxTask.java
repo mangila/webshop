@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.message.task;
+package com.github.mangila.webshop.outbox.infrastructure.task;
 
 public sealed interface OutboxTask permits DeletePublishedOutboxTask, FillQueueOutboxTask, ProcessDlqOutboxTask, ProcessQueueOutboxTask {
     void execute();
