@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegisteredEventStringValidator implements ConstraintValidator<RegisteredDomain, String> {
+public class RegisteredEventStringValidator implements ConstraintValidator<RegisteredEvent, String> {
 
     private final EventRegistry eventRegistry;
 

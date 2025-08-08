@@ -5,7 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {
         RegisteredDomainValidator.class,
