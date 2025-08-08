@@ -23,6 +23,9 @@ public class ProductEntity implements Persistable<UUID> {
     @Type(JsonBinaryType.class)
     @Column(name = "attributes", columnDefinition = "jsonb", nullable = false)
     private ObjectNode attributes;
+
+    @Column(nullable = false)
+    private boolean active;
     @Column(nullable = false, updatable = false)
     private Instant created;
 

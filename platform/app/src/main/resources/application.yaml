@@ -68,11 +68,9 @@ management:
     sampling:
       probability: 1
     enabled: true
-  info:
-    env:
-      enabled: true
   endpoints:
     web:
+      # Expose all endpoints for development purposes
       exposure:
         include: "*"
       cors:

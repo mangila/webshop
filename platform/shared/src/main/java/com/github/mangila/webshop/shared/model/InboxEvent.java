@@ -6,6 +6,7 @@ import com.github.mangila.webshop.shared.Ensure;
 import java.util.UUID;
 
 public record InboxEvent(
+        long outboxId,
         UUID aggregateId,
         Domain domain,
         Event event,
@@ -14,6 +15,7 @@ public record InboxEvent(
         EventSource source
 ) {
     public InboxEvent {
+        Ensure.min(1, outboxId);
         Ensure.notNull(aggregateId, UUID.class);
         Ensure.notNull(domain, Domain.class);
         Ensure.notNull(event, Event.class);

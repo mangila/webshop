@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.inbox.application.event;
 
 import com.github.mangila.webshop.inbox.application.InboxCommandService;
+import com.github.mangila.webshop.inbox.domain.Inbox;
 import com.github.mangila.webshop.inbox.domain.cqrs.InboxInsertCommand;
 import com.github.mangila.webshop.inbox.domain.primitive.InboxAggregateId;
 import com.github.mangila.webshop.inbox.domain.primitive.InboxPayload;
@@ -20,8 +21,9 @@ public class InboxEventHandler {
 
     public void handle(InboxEvent event) {
         var command = eventMapper.toCommand(event);
-        commandService.insert(command);
+        Inbox inbox = commandService.insert(command);
     }
+
 
     private static final class InboxEventMapper {
         public InboxInsertCommand toCommand(InboxEvent event) {

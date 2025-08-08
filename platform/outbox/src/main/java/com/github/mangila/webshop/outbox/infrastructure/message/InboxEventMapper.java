@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class InboxEventMapper {
     public InboxEvent toInboxEvent(OutboxProjection outboxProjection, EventSource source) {
         return new InboxEvent(
+                outboxProjection.id().value(),
                 outboxProjection.aggregateId().value(),
                 outboxProjection.domain(),
                 outboxProjection.event(),
