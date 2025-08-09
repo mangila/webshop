@@ -17,9 +17,9 @@ public record OutboxSequence(OutboxAggregateId aggregateId, int value) {
         return new OutboxSequence(outboxAggregateId, sequence);
     }
 
-    public static OutboxSequence initial(UUID aggregateId) {
+    public static OutboxSequence initial(OutboxAggregateId aggregateId) {
         final int initial = 1;
-        return new OutboxSequence(new OutboxAggregateId(aggregateId), initial);
+        return new OutboxSequence(aggregateId, initial);
     }
 
     public static OutboxSequence incrementFrom(OutboxSequence currentSequence) {

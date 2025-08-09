@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.scheduler;
 
 import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxSimpleTaskRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "app.outbox.scheduler.enabled", havingValue = "true")
 public class OutboxScheduler {
 
-    private final OutboxTaskRunner outboxTaskRunner;
+    private final OutboxSimpleTaskRunner outboxSimpleTaskRunner;
 
-    public OutboxScheduler(OutboxTaskRunner outboxTaskRunner) {
-        this.outboxTaskRunner = outboxTaskRunner;
+    public OutboxScheduler(OutboxSimpleTaskRunner outboxSimpleTaskRunner) {
+        this.outboxSimpleTaskRunner = outboxSimpleTaskRunner;
     }
 
     @Scheduled(fixedRateString = "${app.outbox.scheduler.delete-published.fixed-rate}")
     public void deletePublished() {
-        OutboxTaskKey key = outboxTaskRunner.findKeyOrThrow("DELETE_PUBLISHED");
-        outboxTaskRunner.runTask(key);
+        OutboxTaskKey key = outboxSimpleTaskRunner.findKey("DELETE_PUBLISHED");
+        outboxSimpleTaskRunner.execute(key);
     }
 }

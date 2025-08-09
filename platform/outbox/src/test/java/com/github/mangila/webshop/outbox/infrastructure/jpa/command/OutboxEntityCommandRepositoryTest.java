@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.command;
 
 import com.github.mangila.webshop.outbox.OutboxTestContainerConfig;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.outbox.OutboxEntityCommandRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,8 @@ class OutboxEntityCommandRepositoryTest {
     }
 
     @Test
-    void findByIdWhereStatusNotPublishedForUpdate() {
-        repository.findByIdWhereStatusNotPublishedForUpdate(1L);
+    void findByIdForUpdate() {
+        repository.findByIdForUpdate(1L);
     }
 
     @Test

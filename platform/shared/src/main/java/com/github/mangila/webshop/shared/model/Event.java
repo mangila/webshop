@@ -5,6 +5,8 @@ import com.github.mangila.webshop.shared.registry.EventRegistry;
 
 public record Event(String value) {
 
+    public static final Event EMPTY = new Event("EMPTY");
+
     public Event {
         Ensure.notBlank(value, String.class);
     }

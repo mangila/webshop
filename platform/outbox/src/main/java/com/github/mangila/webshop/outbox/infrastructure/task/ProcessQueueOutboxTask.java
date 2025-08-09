@@ -3,21 +3,14 @@ package com.github.mangila.webshop.outbox.infrastructure.task;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
 import com.github.mangila.webshop.shared.InternalQueue;
+import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ProcessQueueOutboxTask implements OutboxTask {
+public record ProcessQueueOutboxTask(MessageProcessor processor,
+                                     InternalQueue<OutboxId> queue) implements SimpleTask<OutboxTaskKey> {
 
     private static final Logger log = LoggerFactory.getLogger(ProcessQueueOutboxTask.class);
-
-    private final MessageProcessor processor;
-    private final InternalQueue<OutboxId> queue;
-
-    public ProcessQueueOutboxTask(MessageProcessor processor,
-                                  InternalQueue<OutboxId> queue) {
-        this.processor = processor;
-        this.queue = queue;
-    }
 
     @Override
     public void execute() {

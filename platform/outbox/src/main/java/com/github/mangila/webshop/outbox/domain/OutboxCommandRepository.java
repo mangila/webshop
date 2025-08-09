@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.outbox.domain;
 
-import com.github.mangila.webshop.outbox.domain.cqrs.OutboxInsertCommand;
-import com.github.mangila.webshop.outbox.domain.cqrs.OutboxUpdateStatusCommand;
+import com.github.mangila.webshop.outbox.domain.cqrs.command.*;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 
@@ -10,15 +9,17 @@ import java.util.Optional;
 
 public interface OutboxCommandRepository {
 
-    Outbox insert(OutboxInsertCommand command);
+    Outbox insert(CreateOutboxCommand command);
 
-    Optional<Outbox> findByIdWhereStatusNotPublishedForUpdate(OutboxId id);
+    Optional<Outbox> findForUpdate(FindOutboxForUpdateCommand command);
 
-    void updateStatus(OutboxUpdateStatusCommand command);
+    void updateStatus(UpdateOutboxStatusCommand command);
 
-    Optional<OutboxSequence> findAndLockByAggregateId(OutboxAggregateId aggregateId);
+    Optional<OutboxSequence> findCurrentSequence(OutboxAggregateId aggregateId);
 
-    void updateSequence(OutboxSequence outboxSequence);
+    void updateSequence(UpdateOutboxSequenceCommand outboxSequence);
 
     void deleteByIds(List<OutboxId> ids);
+
+    void delete(DeleteOutboxCommand command);
 }

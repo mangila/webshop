@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.jpa.query;
 
 import com.github.mangila.webshop.outbox.OutboxTestContainerConfig;
+import com.github.mangila.webshop.outbox.infrastructure.jpa.outbox.OutboxEntityQueryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

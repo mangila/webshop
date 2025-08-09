@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DeleteProductCommandAction implements CommandAction<DeleteProductCommand> {
+public class DeleteProductCommandAction implements CommandAction<DeleteProductCommand, OutboxEvent> {
     private final ProductOutboxEventMapper productOutboxEventMapper;
     private final ProductCommandRepository repository;
     private final SpringEventPublisher publisher;

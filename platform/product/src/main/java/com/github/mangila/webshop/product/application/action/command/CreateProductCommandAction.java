@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CreateProductCommandAction implements CommandAction<CreateProductCommand> {
+public class CreateProductCommandAction implements CommandAction<CreateProductCommand, OutboxEvent> {
 
     private final ProductCommandRepository repository;
     private final ProductOutboxEventMapper productOutboxEventMapper;

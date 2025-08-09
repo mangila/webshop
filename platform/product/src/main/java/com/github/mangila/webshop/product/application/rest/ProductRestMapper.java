@@ -1,20 +1,21 @@
 package com.github.mangila.webshop.product.application.rest;
 
 import com.github.mangila.webshop.product.application.rest.request.CreateProductRequest;
-import com.github.mangila.webshop.product.application.rest.request.DeleteProductRequest;
+import com.github.mangila.webshop.product.application.rest.request.UpdateProductStatusRequest;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 import com.github.mangila.webshop.product.domain.cqrs.UpdateProductStatusCommand;
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
-import com.github.mangila.webshop.product.domain.types.ProductStatusType;
 import com.github.mangila.webshop.shared.identity.application.IdentityService;
 import com.github.mangila.webshop.shared.identity.domain.Identity;
 import com.github.mangila.webshop.shared.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Function;
 
 @Component
 public class ProductRestMapper {
@@ -37,9 +38,8 @@ public class ProductRestMapper {
                 new ProductAttributes(request.attributes())
         );
     }
-
-    public UpdateProductStatusCommand toCommand(DeleteProductRequest request) {
+    public UpdateProductStatusCommand toCommand(UpdateProductStatusRequest request) {
         ProductId productId = new ProductId(request.value());
-        return new UpdateProductStatusCommand(productId, ProductStatusType.MARKED_FOR_DELETION);
+        return new UpdateProductStatusCommand(productId, request.status());
     }
 }

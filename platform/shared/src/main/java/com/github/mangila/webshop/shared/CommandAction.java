@@ -1,17 +1,24 @@
 package com.github.mangila.webshop.shared;
 
 import com.github.mangila.webshop.shared.model.Event;
-import com.github.mangila.webshop.shared.model.OutboxEvent;
+import io.vavr.control.Try;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.function.Function;
 
-public interface CommandAction<C> {
+public interface CommandAction<C, R> {
 
-    Event event();
+    R execute(@NotNull C command);
 
-    OutboxEvent execute(C command);
-
-    default Function<C, OutboxEvent> execute() {
+    default Function<C, R> execute() {
         return this::execute;
+    }
+
+    default Try<R> tryExecute(C command) {
+        return Try.of(() -> execute(command));
+    }
+
+    default Event event() {
+        return Event.EMPTY;
     }
 }

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
 import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.task.OutboxSimpleTaskRunner;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
@@ -18,12 +18,12 @@ import java.util.Set;
 public class OutboxTaskActuatorEndpoint {
 
     private final Map<String, OutboxTaskKey> outboxTaskKeys;
-    private final OutboxTaskRunner outboxTaskRunner;
+    private final OutboxSimpleTaskRunner outboxSimpleTaskRunner;
 
     public OutboxTaskActuatorEndpoint(Map<String, OutboxTaskKey> outboxTaskKeys,
-                                      OutboxTaskRunner outboxTaskRunner) {
+                                      OutboxSimpleTaskRunner outboxSimpleTaskRunner) {
         this.outboxTaskKeys = outboxTaskKeys;
-        this.outboxTaskRunner = outboxTaskRunner;
+        this.outboxSimpleTaskRunner = outboxSimpleTaskRunner;
     }
 
     @ReadOperation
@@ -35,8 +35,8 @@ public class OutboxTaskActuatorEndpoint {
     }
 
     @WriteOperation
-    public WebEndpointResponse<Map<String, Object>> runTask(@Selector String key) {
-        outboxTaskRunner.runTask(new OutboxTaskKey(key));
+    public WebEndpointResponse<Map<String, Object>> execute(@Selector String key) {
+        outboxSimpleTaskRunner.execute(new OutboxTaskKey(key));
         return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 }

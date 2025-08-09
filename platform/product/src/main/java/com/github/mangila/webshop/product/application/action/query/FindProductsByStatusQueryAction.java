@@ -19,7 +19,7 @@ public class FindProductsByStatusQueryAction implements QueryAction<FindProductB
     }
 
     @Override
-    public List<Product> query(FindProductByStatusQuery query) {
+    public List<Product> execute(FindProductByStatusQuery query) {
         Ensure.notNull(query, FindProductByStatusQuery.class);
         return repository.findByStatus(query);
     }
