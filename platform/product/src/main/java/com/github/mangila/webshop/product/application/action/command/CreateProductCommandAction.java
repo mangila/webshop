@@ -42,7 +42,6 @@ public class CreateProductCommandAction implements CommandAction<CreateProductCo
     @Transactional
     @Override
     public OutboxEvent execute(@NotNull CreateProductCommand command) {
-        Ensure.notNull(command, CreateProductCommand.class);
         identityService.ensureHasGenerated(command.id().value());
         return repository.create()
                 .andThen(product -> productOutboxEventMapper.toEvent(event(), product))

@@ -2,6 +2,7 @@ package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.application.action.command.FindOutboxForUpdateCommandAction;
 import com.github.mangila.webshop.outbox.application.action.command.UpdateOutboxStatusCommandAction;
+import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.FindOutboxForUpdateCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
@@ -41,9 +42,10 @@ public class MessageHandler {
     @Transactional
     public void handle(OutboxId outboxId) {
         findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
-                .ifPresentOrElse(projection -> {
-                    springEventProducer.produce(projection);
-                    updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.published(projection.id()));
-                }, () -> log.debug("Message: {} locked or already processed", outboxId));
+                .ifPresentOrElse(outbox -> springEventProducer.produce()
+                        .andThen(Outbox::id)
+                        .andThen(UpdateOutboxStatusCommand::published)
+                        .andThen(updateOutboxStatusCommandAction::execute)
+                        .apply(outbox), () -> log.debug("Message: {} locked or already processed", outboxId));
     }
 }
