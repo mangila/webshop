@@ -30,4 +30,8 @@ public record Outbox(
         Ensure.notNull(created, OutboxCreated.class);
         Ensure.beforeOrEquals(created.value(), updated.value());
     }
+
+    public boolean notPublished() {
+        return status != OutboxStatusType.PUBLISHED;
+    }
 }

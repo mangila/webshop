@@ -6,7 +6,6 @@ import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.FindOutboxForUpdateCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.outbox.infrastructure.message.producer.SpringEventProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public class MessageHandler {
     @Transactional
     public void handle(OutboxId outboxId) {
         findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
-                .filter(outbox -> !outbox.status().equals(OutboxStatusType.PUBLISHED))
+                .filter(Outbox::notPublished)
                 .ifPresentOrElse(outbox -> springEventProducer.produce()
                         .andThen(Outbox::id)
                         .andThen(UpdateOutboxStatusCommand::published)
