@@ -2,7 +2,7 @@ package com.github.mangila.webshop.product.domain;
 
 
 import com.github.mangila.webshop.product.domain.cqrs.FindProductByStatusQuery;
-import com.github.mangila.webshop.product.domain.cqrs.FindProductQuery;
+import com.github.mangila.webshop.product.domain.cqrs.FindProductByIdQuery;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.function.Function;
 
 public interface ProductQueryRepository {
 
-    Optional<Product> findById(FindProductQuery query);
+    Optional<Product> findById(FindProductByIdQuery query);
 
-    default Function<FindProductQuery, Optional<Product>> findById() {
+    default Function<FindProductByIdQuery, Optional<Product>> findById() {
         return this::findById;
     }
 
