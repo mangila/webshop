@@ -41,13 +41,20 @@ public class ProductEntity implements Persistable<UUID> {
     protected ProductEntity() {
     }
 
-    public ProductEntity(UUID id, String name, ObjectNode attributes, ProductStatusType status, Instant created, Instant updated) {
+    public ProductEntity(UUID id,
+                         String name,
+                         ObjectNode attributes,
+                         ProductStatusType status,
+                         Instant created,
+                         Instant updated,
+                         boolean isNew) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
         this.status = status;
         this.created = created;
         this.updated = updated;
+        this.isNew = isNew;
     }
 
     @Override

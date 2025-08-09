@@ -3,7 +3,9 @@ package com.github.mangila.webshop.product.application.action.command;
 import com.github.mangila.webshop.product.application.ProductOutboxEventMapper;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
+import com.github.mangila.webshop.product.domain.ProductQueryRepository;
 import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
+import com.github.mangila.webshop.product.domain.cqrs.FindProductByIdQuery;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.shared.CommandAction;
 import com.github.mangila.webshop.shared.JavaOptionalUtil;
@@ -19,14 +21,16 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class DeleteProductCommandAction implements CommandAction<DeleteProductCommand, OutboxEvent> {
     private final ProductOutboxEventMapper productOutboxEventMapper;
-    private final ProductCommandRepository repository;
+    private final ProductCommandRepository commandRepository;
+    private final ProductQueryRepository queryRepository;
     private final SpringEventPublisher publisher;
 
     public DeleteProductCommandAction(ProductOutboxEventMapper productOutboxEventMapper,
-                                      ProductCommandRepository repository,
+                                      ProductCommandRepository commandRepository, ProductQueryRepository queryRepository,
                                       SpringEventPublisher publisher) {
         this.productOutboxEventMapper = productOutboxEventMapper;
-        this.repository = repository;
+        this.commandRepository = commandRepository;
+        this.queryRepository = queryRepository;
         this.publisher = publisher;
     }
 
@@ -38,10 +42,11 @@ public class DeleteProductCommandAction implements CommandAction<DeleteProductCo
     @Transactional
     @Override
     public OutboxEvent execute(@NotNull DeleteProductCommand command) {
-        return repository.delete()
+        return queryRepository.findById()
                 .andThen(optionalProduct -> JavaOptionalUtil.orElseThrowResourceNotFound(optionalProduct, Product.class, command.id()))
+                .andThen(commandRepository::delete)
                 .andThen(product -> productOutboxEventMapper.toEvent(event(), product))
                 .andThen(publisher.publishOutboxEvent())
-                .apply(command);
+                .apply(new FindProductByIdQuery(command.id()));
     }
 }

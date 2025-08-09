@@ -1,10 +1,7 @@
 package com.github.mangila.webshop.product.domain;
 
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
-import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
-import com.github.mangila.webshop.product.domain.cqrs.UpdateProductStatusCommand;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public interface ProductCommandRepository {
@@ -15,15 +12,15 @@ public interface ProductCommandRepository {
         return this::create;
     }
 
-    Optional<Product> delete(DeleteProductCommand command);
+    Product delete(Product product);
 
-    default Function<DeleteProductCommand, Optional<Product>> delete() {
+    default Function<Product, Product> delete() {
         return this::delete;
     }
 
-    Optional<Product> updateStatus(UpdateProductStatusCommand command);
+    Product updateStatus(Product product);
 
-    default Function<UpdateProductStatusCommand, Optional<Product>> updateStatus() {
+    default Function<Product, Product> updateStatus() {
         return this::updateStatus;
     }
 }

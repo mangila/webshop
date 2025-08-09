@@ -8,4 +8,8 @@ public record ProductUpdated(Instant value) {
     public ProductUpdated {
         Ensure.notNull(value, Instant.class);
     }
+
+    public static ProductUpdated now() {
+        return new ProductUpdated(Instant.now());
+    }
 }

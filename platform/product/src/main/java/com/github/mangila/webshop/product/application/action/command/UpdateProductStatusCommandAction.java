@@ -3,9 +3,13 @@ package com.github.mangila.webshop.product.application.action.command;
 import com.github.mangila.webshop.product.application.ProductOutboxEventMapper;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.ProductCommandRepository;
+import com.github.mangila.webshop.product.domain.ProductQueryRepository;
+import com.github.mangila.webshop.product.domain.cqrs.FindProductByIdQuery;
 import com.github.mangila.webshop.product.domain.cqrs.UpdateProductStatusCommand;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
+import com.github.mangila.webshop.product.domain.primitive.ProductUpdated;
 import com.github.mangila.webshop.shared.CommandAction;
+import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.JavaOptionalUtil;
 import com.github.mangila.webshop.shared.SpringEventPublisher;
 import com.github.mangila.webshop.shared.model.Event;
@@ -20,14 +24,17 @@ import org.springframework.validation.annotation.Validated;
 public class UpdateProductStatusCommandAction implements CommandAction<UpdateProductStatusCommand, OutboxEvent> {
 
     private final ProductOutboxEventMapper productOutboxEventMapper;
-    private final ProductCommandRepository repository;
+    private final ProductCommandRepository commandRepository;
+    private final ProductQueryRepository queryRepository;
     private final SpringEventPublisher publisher;
+    private final UpdateProductStatusMapper mapper = new UpdateProductStatusMapper();
 
     public UpdateProductStatusCommandAction(ProductOutboxEventMapper productOutboxEventMapper,
-                                            ProductCommandRepository repository,
+                                            ProductCommandRepository commandRepository, ProductQueryRepository queryRepository,
                                             SpringEventPublisher publisher) {
         this.productOutboxEventMapper = productOutboxEventMapper;
-        this.repository = repository;
+        this.commandRepository = commandRepository;
+        this.queryRepository = queryRepository;
         this.publisher = publisher;
     }
 
@@ -39,10 +46,30 @@ public class UpdateProductStatusCommandAction implements CommandAction<UpdatePro
     @Transactional
     @Override
     public OutboxEvent execute(@NotNull UpdateProductStatusCommand command) {
-        return repository.updateStatus()
+        return queryRepository.findById()
                 .andThen(optionalProduct -> JavaOptionalUtil.orElseThrowResourceNotFound(optionalProduct, Product.class, command.id()))
+                .andThen(product -> {
+                    Ensure.notEquals(command.status(), product.status(), "Product status is already: %s".formatted(command.status()));
+                    return product;
+                })
+                .andThen(product -> mapper.toUpdatedProduct(product, command))
+                .andThen(commandRepository::updateStatus)
                 .andThen(product -> productOutboxEventMapper.toEvent(event(), product))
                 .andThen(publisher.publishOutboxEvent())
-                .apply(command);
+                .apply(new FindProductByIdQuery(command.id()));
+    }
+
+    private static final class UpdateProductStatusMapper {
+        Product toUpdatedProduct(Product currentProduct, UpdateProductStatusCommand command) {
+            return new Product(
+                    currentProduct.id(),
+                    currentProduct.name(),
+                    currentProduct.attributes(),
+                    command.status(),
+                    currentProduct.variants(),
+                    currentProduct.created(),
+                    ProductUpdated.now()
+            );
+        }
     }
 }
