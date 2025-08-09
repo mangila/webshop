@@ -72,9 +72,11 @@ public class OutboxTaskConfig {
 
     @Bean
     Map<String, OutboxTaskKey> nameToOutboxTaskKey(Map<OutboxTaskKey, SimpleTask<OutboxTaskKey>> outboxTasks) {
-        return outboxTasks.keySet().stream().collect(Collectors.toMap(
-                OutboxTaskKey::value,
-                Function.identity()
-        ));
+        return outboxTasks.keySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        OutboxTaskKey::value,
+                        Function.identity()
+                ));
     }
 }
