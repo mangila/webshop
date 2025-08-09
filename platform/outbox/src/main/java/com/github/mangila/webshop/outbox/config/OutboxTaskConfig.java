@@ -3,7 +3,7 @@ package com.github.mangila.webshop.outbox.config;
 import com.github.mangila.webshop.outbox.application.action.command.DeleteOutboxCommandAction;
 import com.github.mangila.webshop.outbox.application.action.command.UpdateOutboxStatusCommandAction;
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxByDomainAndStatusQueryAction;
-import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusAndDateBeforeQueryAction;
+import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;
 import com.github.mangila.webshop.outbox.infrastructure.task.*;
@@ -29,14 +29,14 @@ public class OutboxTaskConfig {
     private final MessageProcessor messageProcessor;
 
     private final UpdateOutboxStatusCommandAction updateOutboxStatusCommandAction;
-    private final FindAllOutboxIdsByStatusAndDateBeforeQueryAction findAllOutboxIdsByStatusAndDateBeforeQueryAction;
+    private final FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction;
     private final FindAllOutboxByDomainAndStatusQueryAction findAllOutboxByDomainAndStatusQueryAction;
     private final DeleteOutboxCommandAction deleteOutboxCommandAction;
 
-    public OutboxTaskConfig(MessageProcessor messageProcessor, UpdateOutboxStatusCommandAction updateOutboxStatusCommandAction, FindAllOutboxIdsByStatusAndDateBeforeQueryAction findAllOutboxIdsByStatusAndDateBeforeQueryAction, FindAllOutboxByDomainAndStatusQueryAction findAllOutboxByDomainAndStatusQueryAction, DeleteOutboxCommandAction deleteOutboxCommandAction) {
+    public OutboxTaskConfig(MessageProcessor messageProcessor, UpdateOutboxStatusCommandAction updateOutboxStatusCommandAction, FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction, FindAllOutboxByDomainAndStatusQueryAction findAllOutboxByDomainAndStatusQueryAction, DeleteOutboxCommandAction deleteOutboxCommandAction) {
         this.messageProcessor = messageProcessor;
         this.updateOutboxStatusCommandAction = updateOutboxStatusCommandAction;
-        this.findAllOutboxIdsByStatusAndDateBeforeQueryAction = findAllOutboxIdsByStatusAndDateBeforeQueryAction;
+        this.findAllOutboxIdsByStatusQueryAction = findAllOutboxIdsByStatusQueryAction;
         this.findAllOutboxByDomainAndStatusQueryAction = findAllOutboxByDomainAndStatusQueryAction;
         this.deleteOutboxCommandAction = deleteOutboxCommandAction;
     }
@@ -60,7 +60,7 @@ public class OutboxTaskConfig {
             );
         });
         map.putAll(Map.ofEntries(
-                addTask(new DeletePublishedOutboxTask(findAllOutboxIdsByStatusAndDateBeforeQueryAction, deleteOutboxCommandAction))
+                addTask(new DeletePublishedOutboxTask(findAllOutboxIdsByStatusQueryAction, deleteOutboxCommandAction))
         ));
         return map;
     }

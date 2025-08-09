@@ -4,7 +4,7 @@ package com.github.mangila.webshop.outbox.infrastructure.jpa.outbox;
 import com.github.mangila.webshop.outbox.domain.Outbox;
 import com.github.mangila.webshop.outbox.domain.OutboxQueryRepository;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxByDomainAndStatusQuery;
-import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdsByStatusAndDateBeforeQuery;
+import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import org.springframework.stereotype.Repository;
 
@@ -34,10 +34,9 @@ public class OutboxQueryJpaRepository implements OutboxQueryRepository {
     }
 
     @Override
-    public List<OutboxId> findAllIdsByStatusAndDateBefore(FindAllOutboxIdsByStatusAndDateBeforeQuery query) {
+    public List<OutboxId> findAllIdsByStatus(FindAllOutboxIdByStatusQuery query) {
         return entityRepository.findAllIdsByStatusAndDateBefore(
                         query.status(),
-                        query.date(),
                         query.limit())
                 .stream()
                 .map(OutboxId::new)

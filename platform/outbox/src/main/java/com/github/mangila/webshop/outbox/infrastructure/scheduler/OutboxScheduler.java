@@ -16,7 +16,7 @@ public class OutboxScheduler {
         this.outboxSimpleTaskRunner = outboxSimpleTaskRunner;
     }
 
-    @Scheduled(fixedRateString = "${app.outbox.scheduler.delete-published.fixed-rate}")
+    @Scheduled(fixedRateString = "5s")
     public void deletePublished() {
         OutboxTaskKey key = outboxSimpleTaskRunner.findKey("DELETE_PUBLISHED");
         outboxSimpleTaskRunner.execute(key);

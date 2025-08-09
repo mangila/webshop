@@ -29,6 +29,7 @@ public class OutboxEventListener {
 
     @EventListener
     void listen(OutboxEvent event) {
+        Ensure.activeSpringTransaction();
         Ensure.activeSpringSynchronization();
         Outbox outbox = eventHandler.handle(event);
         SpringTransactionUtil.registerSynchronization(() -> new TransactionSynchronization() {

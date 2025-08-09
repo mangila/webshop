@@ -5,6 +5,7 @@ import com.github.mangila.webshop.product.infrastructure.task.ProductTaskKey;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @ConditionalOnProperty(name = "app.product.scheduler.enabled", havingValue = "true")
@@ -16,6 +17,7 @@ public class ProductScheduler {
         this.taskRunner = taskRunner;
     }
 
+    @Transactional
     @Scheduled(fixedRateString = "10s")
     public void deleteProducts() {
         ProductTaskKey key = taskRunner.findKey("DELETE_PRODUCT");

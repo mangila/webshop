@@ -5,14 +5,12 @@ import com.github.mangila.webshop.product.domain.ProductCommandRepository;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 import com.github.mangila.webshop.product.domain.event.ProductEvent;
 import com.github.mangila.webshop.shared.CommandAction;
-import com.github.mangila.webshop.shared.Ensure;
 import com.github.mangila.webshop.shared.SpringEventPublisher;
 import com.github.mangila.webshop.shared.identity.application.IdentityService;
 import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -39,7 +37,6 @@ public class CreateProductCommandAction implements CommandAction<CreateProductCo
         return ProductEvent.PRODUCT_CREATED.toEvent();
     }
 
-    @Transactional
     @Override
     public OutboxEvent execute(@NotNull CreateProductCommand command) {
         identityService.ensureHasGenerated(command.id().value());

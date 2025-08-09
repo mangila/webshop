@@ -16,7 +16,6 @@ import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -42,7 +41,6 @@ public class UpdateProductStatusCommandAction implements CommandAction<UpdatePro
         return ProductEvent.PRODUCT_STATUS_UPDATED.toEvent();
     }
 
-    @Transactional
     @Override
     public OutboxEvent execute(@NotNull UpdateProductStatusCommand command) {
         return queryRepository.findById()

@@ -39,7 +39,6 @@ public class DeleteProductCommandAction implements CommandAction<DeleteProductCo
         return ProductEvent.PRODUCT_DELETED.toEvent();
     }
 
-    @Transactional
     @Override
     public OutboxEvent execute(@NotNull DeleteProductCommand command) {
         return queryRepository.findById()

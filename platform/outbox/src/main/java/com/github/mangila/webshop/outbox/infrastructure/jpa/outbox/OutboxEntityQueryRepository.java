@@ -36,11 +36,9 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
     @Query("""
             SELECT o.id FROM OutboxEntity o
             WHERE o.status = :status
-            AND o.created < :date
             ORDER BY o.created ASC
             LIMIT :limit
             """)
     List<Long> findAllIdsByStatusAndDateBefore(@Param("status") OutboxStatusType status,
-                                               @Param("date") Instant date,
                                                @Param("limit") int limit);
 }
