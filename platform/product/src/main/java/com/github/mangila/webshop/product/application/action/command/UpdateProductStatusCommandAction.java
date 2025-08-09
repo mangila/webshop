@@ -27,7 +27,6 @@ public class UpdateProductStatusCommandAction implements CommandAction<UpdatePro
     private final ProductCommandRepository commandRepository;
     private final ProductQueryRepository queryRepository;
     private final SpringEventPublisher publisher;
-    private final UpdateProductStatusMapper mapper = new UpdateProductStatusMapper();
 
     public UpdateProductStatusCommandAction(ProductOutboxEventMapper productOutboxEventMapper,
                                             ProductCommandRepository commandRepository, ProductQueryRepository queryRepository,
@@ -52,24 +51,23 @@ public class UpdateProductStatusCommandAction implements CommandAction<UpdatePro
                     Ensure.notEquals(command.status(), product.status(), "Product status is already: %s".formatted(command.status()));
                     return product;
                 })
-                .andThen(product -> mapper.toUpdatedProduct(product, command))
+                .andThen(product -> toUpdatedProduct(product, command))
                 .andThen(commandRepository::updateStatus)
                 .andThen(product -> productOutboxEventMapper.toEvent(event(), product))
                 .andThen(publisher.publishOutboxEvent())
                 .apply(new FindProductByIdQuery(command.id()));
     }
 
-    private static final class UpdateProductStatusMapper {
-        Product toUpdatedProduct(Product currentProduct, UpdateProductStatusCommand command) {
-            return new Product(
-                    currentProduct.id(),
-                    currentProduct.name(),
-                    currentProduct.attributes(),
-                    command.status(),
-                    currentProduct.variants(),
-                    currentProduct.created(),
-                    ProductUpdated.now()
-            );
-        }
+    private static Product toUpdatedProduct(Product currentProduct, UpdateProductStatusCommand command) {
+        return new Product(
+                currentProduct.id(),
+                currentProduct.name(),
+                currentProduct.attributes(),
+                command.status(),
+                currentProduct.variants(),
+                currentProduct.created(),
+                ProductUpdated.now()
+        );
     }
+
 }
