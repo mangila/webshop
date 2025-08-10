@@ -13,12 +13,9 @@ import java.util.List;
 public class OutboxQueryJpaRepository implements OutboxQueryRepository {
 
     private final OutboxEntityQueryRepository entityRepository;
-    private final OutboxEntityMapper mapper;
 
-    public OutboxQueryJpaRepository(OutboxEntityQueryRepository entityRepository,
-                                    OutboxEntityMapper mapper) {
+    public OutboxQueryJpaRepository(OutboxEntityQueryRepository entityRepository) {
         this.entityRepository = entityRepository;
-        this.mapper = mapper;
     }
 
     @Override

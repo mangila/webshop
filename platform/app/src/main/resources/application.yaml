@@ -3,6 +3,8 @@ app:
   product:
     scheduler:
       enabled: true
+      delete-marked:
+        fixed-rate: 5s
   outbox:
     scheduler:
       enabled: true
@@ -12,9 +14,9 @@ app:
         fixed-rate: 5s
     message-relay:
       enabled: true
-      process-queue-task:
+      process-queue:
         fixed-rate: 500ms
-      process-dlq-task:
+      process-dlq:
         fixed-rate: 500ms
 # Spring Properties
 spring:

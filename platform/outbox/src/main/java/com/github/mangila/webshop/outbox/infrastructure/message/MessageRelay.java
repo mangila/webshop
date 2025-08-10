@@ -15,12 +15,12 @@ public class MessageRelay {
         this.outboxTaskRunner = outboxTaskRunner;
     }
 
-    @Scheduled(fixedRateString = "${app.outbox.message-relay.process-queue-task.fixed-rate}")
+    @Scheduled(fixedRateString = "${app.outbox.message-relay.process-queue.fixed-rate}")
     public void productProcessQueue() {
         outboxTaskRunner.execute(new OutboxTaskKey("PRODUCT_PROCESS_QUEUE"));
     }
 
-    @Scheduled(fixedRateString = "${app.outbox.message-relay.process-dlq-task.fixed-rate}")
+    @Scheduled(fixedRateString = "${app.outbox.message-relay.process-dlq.fixed-rate}")
     public void productProcessDlq() {
         outboxTaskRunner.execute(new OutboxTaskKey("PRODUCT_PROCESS_DLQ"));
     }

@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.product.infrastructure.scheduler;
 
-import com.github.mangila.webshop.product.infrastructure.task.ProductSimpleTaskRunner;
-import com.github.mangila.webshop.product.infrastructure.task.ProductTaskKey;
+import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobKey;
+import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 @ConditionalOnProperty(name = "app.product.scheduler.enabled", havingValue = "true")
 public class ProductScheduler {
 
-    private final ProductSimpleTaskRunner taskRunner;
+    private final ProductJobRunner taskRunner;
 
-    public ProductScheduler(ProductSimpleTaskRunner taskRunner) {
+    public ProductScheduler(ProductJobRunner taskRunner) {
         this.taskRunner = taskRunner;
     }
 
     @Transactional
-    @Scheduled(fixedRateString = "10s")
-    public void deleteProducts() {
-        taskRunner.execute(new ProductTaskKey("DELETE_PRODUCT"));
+    @Scheduled(fixedRateString = "${app.product.scheduler.delete-marked.fixed-rate}")
+    public void deleteMarkedProducts() {
+        taskRunner.execute(new ProductJobKey("DELETE_MARKED_PRODUCTS"));
     }
 }

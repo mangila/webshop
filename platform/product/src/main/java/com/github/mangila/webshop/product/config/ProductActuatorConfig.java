@@ -1,8 +1,9 @@
 package com.github.mangila.webshop.product.config;
 
-import com.github.mangila.webshop.product.infrastructure.actuator.ProductTaskActuatorEndpoint;
-import com.github.mangila.webshop.product.infrastructure.task.ProductTaskKey;
-import com.github.mangila.webshop.product.infrastructure.task.ProductSimpleTaskRunner;
+import com.github.mangila.webshop.product.infrastructure.actuator.ProductJobActuatorEndpoint;
+import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobKey;
+import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobRunner;
+import com.github.mangila.webshop.shared.SimpleTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,11 +13,11 @@ import java.util.Map;
 public class ProductActuatorConfig {
 
     @Bean
-    ProductTaskActuatorEndpoint productTaskActuatorEndpoint(
-            Map<String, ProductTaskKey> nameToProductTaskKey,
-            ProductSimpleTaskRunner productSimpleTaskRunner
+    ProductJobActuatorEndpoint productJobActuatorEndpoint(
+            Map<ProductJobKey, SimpleTask<ProductJobKey>> keyToProductJob,
+            ProductJobRunner productJobRunner
     ) {
-        return new ProductTaskActuatorEndpoint(nameToProductTaskKey, productSimpleTaskRunner);
+        return new ProductJobActuatorEndpoint(keyToProductJob, productJobRunner);
     }
 
 }
