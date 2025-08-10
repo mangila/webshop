@@ -35,7 +35,7 @@ public class MessageHandler {
      * If the outbox message is locked or has already been processed, it skips the operation
      * and logs a debug message.
      * <p>
-     * Publishes to Spring Event listeners, add more publishers to any other infrastructure (e.g., RabbitMQ queue, Kafka Topic, WebHook)
+     * Publishes to Spring Event listeners, add more publishers to any other infrastructure (e.g., RabbitMQ queue/stream, Kafka Topic, Redis Stream)
      *
      * @param outboxId the identifier of the outbox message to process
      */
