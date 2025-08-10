@@ -30,7 +30,7 @@ class OutboxEntityQueryRepositoryTest {
     }
 
     @Test
-    void findAllByDomainAndStatus() {
+    void findAllIdsByDomainAndStatus() {
     }
 
     @Test

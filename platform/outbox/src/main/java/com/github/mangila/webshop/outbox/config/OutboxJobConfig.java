@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.config;
 
 import com.github.mangila.webshop.outbox.application.action.command.DeleteOutboxCommandAction;
-import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxByDomainAndStatusQueryAction;
+import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByDomainAndStatusQueryAction;
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedJob;
@@ -26,12 +26,12 @@ public class OutboxJobConfig {
     Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob(
             FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
             DeleteOutboxCommandAction deleteOutboxCommandAction,
-            FindAllOutboxByDomainAndStatusQueryAction findAllOutboxByDomainAndStatusQueryAction,
+            FindAllOutboxIdsByDomainAndStatusQueryAction findAllOutboxIdsByDomainAndStatusQueryAction,
             Map<Domain, InternalQueue<OutboxId>> domainToOutboxIdQueue
     ) {
         return Map.ofEntries(
                 addJob(new DeletePublishedJob(findAllOutboxIdsByStatusQueryAction, deleteOutboxCommandAction)),
-                addJob(new FillQueuesJob(findAllOutboxByDomainAndStatusQueryAction, domainToOutboxIdQueue))
+                addJob(new FillQueuesJob(findAllOutboxIdsByDomainAndStatusQueryAction, domainToOutboxIdQueue))
         );
     }
 

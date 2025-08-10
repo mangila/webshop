@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.scheduler.job;
 
-import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxByDomainAndStatusQueryAction;
-import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxByDomainAndStatusQuery;
+import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByDomainAndStatusQueryAction;
+import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdsByDomainAndStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.InternalQueue;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public record FillQueuesJob(FindAllOutboxByDomainAndStatusQueryAction findAllOutboxByDomainAndStatusQueryAction,
+public record FillQueuesJob(FindAllOutboxIdsByDomainAndStatusQueryAction findAllOutboxIdsByDomainAndStatusQueryAction,
                             Map<Domain, InternalQueue<OutboxId>> domainToOutboxIdQueue) implements SimpleTask<OutboxJobKey> {
 
     private static final Logger log = LoggerFactory.getLogger(FillQueuesJob.class);
@@ -25,15 +25,13 @@ public record FillQueuesJob(FindAllOutboxByDomainAndStatusQueryAction findAllOut
     @Override
     public void execute() {
         for (InternalQueue<OutboxId> queue : domainToOutboxIdQueue.values()) {
-            findAllOutboxByDomainAndStatusQueryAction.execute(new FindAllOutboxByDomainAndStatusQuery(
+            findAllOutboxIdsByDomainAndStatusQueryAction.execute(new FindAllOutboxIdsByDomainAndStatusQuery(
                             queue.domain(),
                             OutboxStatusType.PENDING,
                             120))
                     .stream()
-                    .peek(outbox -> log.info("Queue Message: {} - {}", outbox.id(), outbox.domain()))
-                    .forEach(outbox -> {
-                        queue.add(outbox.id());
-                    });
+                    .peek(outboxId -> log.info("Queue Message: {} - {}", outboxId, queue.domain()))
+                    .forEach(queue::add);
         }
     }
 }
