@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
-import com.github.mangila.webshop.outbox.infrastructure.scheduler.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.scheduler.task.OutboxTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobRunner;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
@@ -14,34 +14,33 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-@WebEndpoint(id = "outboxtask")
+@WebEndpoint(id = "outboxjob")
 @Component
-public class OutboxTaskActuatorEndpoint {
+public class OutboxJobActuatorEndpoint {
 
-    private final Map<OutboxTaskKey, SimpleTask<OutboxTaskKey>> outboxTaskKeyToTask;
-    private final OutboxTaskRunner outboxTaskRunner;
+    private final Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob;
+    private final OutboxJobRunner outboxJobRunner;
 
-    public OutboxTaskActuatorEndpoint(Map<OutboxTaskKey, SimpleTask<OutboxTaskKey>> outboxTaskKeyToTask,
-                                      OutboxTaskRunner outboxTaskRunner) {
-        this.outboxTaskKeyToTask = outboxTaskKeyToTask;
-        this.outboxTaskRunner = outboxTaskRunner;
+    public OutboxJobActuatorEndpoint(Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob, OutboxJobRunner outboxJobRunner) {
+        this.outboxJobKeyToJob = outboxJobKeyToJob;
+        this.outboxJobRunner = outboxJobRunner;
     }
 
     @ReadOperation
     public WebEndpointResponse<Map<String, List<String>>> findAllTasks() {
-        var keys = outboxTaskKeyToTask.keySet()
+        var keys = outboxJobKeyToJob.keySet()
                 .stream()
-                .map(OutboxTaskKey::value)
+                .map(OutboxJobKey::value)
                 .toList();
         return new WebEndpointResponse<>(
-                Map.of("tasks", keys),
+                Map.of("jobs", keys),
                 HttpStatus.OK.value()
         );
     }
 
     @WriteOperation
     public WebEndpointResponse<Map<String, Object>> execute(@Selector String key) {
-        outboxTaskRunner.execute(new OutboxTaskKey(key));
+        outboxJobRunner.execute(new OutboxJobKey(key));
         return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 }

@@ -20,7 +20,6 @@ public class ProductScheduler {
     @Transactional
     @Scheduled(fixedRateString = "10s")
     public void deleteProducts() {
-        ProductTaskKey key = taskRunner.findKey("DELETE_PRODUCT");
-        taskRunner.execute(key);
+        taskRunner.execute(new ProductTaskKey("DELETE_PRODUCT"));
     }
 }

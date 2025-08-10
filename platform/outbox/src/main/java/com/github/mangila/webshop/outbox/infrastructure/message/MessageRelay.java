@@ -1,8 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxSimpleTaskRunner;
-import jakarta.annotation.PostConstruct;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.task.OutboxTaskKey;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.task.OutboxTaskRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,32 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnProperty(name = "app.outbox.message-relay.enabled", havingValue = "true")
 public class MessageRelay {
-    private final OutboxSimpleTaskRunner outboxSimpleTaskRunner;
+    private final OutboxTaskRunner outboxTaskRunner;
 
-    public MessageRelay(OutboxSimpleTaskRunner outboxSimpleTaskRunner) {
-        this.outboxSimpleTaskRunner = outboxSimpleTaskRunner;
-    }
-
-    @PostConstruct
-    public void init() {
-        productFillQueue();
-    }
-
-    @Scheduled(fixedRateString = "${app.outbox.message-relay.fill-queue-task.fixed-rate}")
-    public void productFillQueue() {
-        OutboxTaskKey key = outboxSimpleTaskRunner.findKey("PRODUCT_FILL_QUEUE");
-        outboxSimpleTaskRunner.execute(key);
+    public MessageRelay(OutboxTaskRunner outboxTaskRunner) {
+        this.outboxTaskRunner = outboxTaskRunner;
     }
 
     @Scheduled(fixedRateString = "${app.outbox.message-relay.process-queue-task.fixed-rate}")
     public void productProcessQueue() {
-        OutboxTaskKey key = outboxSimpleTaskRunner.findKey("PRODUCT_PROCESS_QUEUE");
-        outboxSimpleTaskRunner.execute(key);
+        outboxTaskRunner.execute(new OutboxTaskKey("PRODUCT_PROCESS_QUEUE"));
     }
 
     @Scheduled(fixedRateString = "${app.outbox.message-relay.process-dlq-task.fixed-rate}")
     public void productProcessDlq() {
-        OutboxTaskKey key = outboxSimpleTaskRunner.findKey("PRODUCT_PROCESS_DLQ");
-        outboxSimpleTaskRunner.execute(key);
+        outboxTaskRunner.execute(new OutboxTaskKey("PRODUCT_PROCESS_DLQ"));
     }
 }

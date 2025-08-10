@@ -21,23 +21,12 @@ public class ProductSimpleTaskRunner implements SimpleTaskRunner<ProductTaskKey>
     }
 
     @Override
-    public ProductTaskKey findKey(String taskKey) {
-        Ensure.notNull(taskKey, String.class);
-        ProductTaskKey key = nameToProductTaskKey.get(taskKey);
-        Ensure.notNull(key, () -> new ResourceNotFoundException(
-                ProductTaskKey.class,
-                taskKey
-        ));
-        return key;
-    }
-
-    @Override
-    public void execute(ProductTaskKey taskKey) {
-        Ensure.notNull(taskKey, ProductTaskKey.class);
-        var task = keyToProductTask.get(taskKey);
+    public void execute(ProductTaskKey key) {
+        Ensure.notNull(key, ProductTaskKey.class);
+        var task = keyToProductTask.get(key);
         Ensure.notNull(task, () -> new ResourceNotFoundException(
                 ProductTaskKey.class,
-                taskKey
+                key
         ));
         task.execute();
     }

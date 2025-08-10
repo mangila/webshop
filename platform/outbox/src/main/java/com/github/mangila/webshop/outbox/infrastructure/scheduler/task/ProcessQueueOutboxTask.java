@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.task;
+package com.github.mangila.webshop.outbox.infrastructure.scheduler.task;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.MessageProcessor;

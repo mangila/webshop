@@ -1,7 +1,8 @@
 package com.github.mangila.webshop.outbox.infrastructure.scheduler;
 
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxTaskKey;
-import com.github.mangila.webshop.outbox.infrastructure.task.OutboxSimpleTaskRunner;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobRunner;
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,15 +11,25 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "app.outbox.scheduler.enabled", havingValue = "true")
 public class OutboxScheduler {
 
-    private final OutboxSimpleTaskRunner outboxSimpleTaskRunner;
+    private final OutboxJobRunner outboxJobRunner;
 
-    public OutboxScheduler(OutboxSimpleTaskRunner outboxSimpleTaskRunner) {
-        this.outboxSimpleTaskRunner = outboxSimpleTaskRunner;
+    public OutboxScheduler(OutboxJobRunner outboxJobRunner) {
+        this.outboxJobRunner = outboxJobRunner;
     }
 
-    @Scheduled(fixedRateString = "5s")
+    @PostConstruct
+    void init() {
+        deletePublished();
+        fillQueues();
+    }
+
+    @Scheduled(fixedRateString = "${app.outbox.scheduler.delete-published.fixed-rate}")
     public void deletePublished() {
-        OutboxTaskKey key = outboxSimpleTaskRunner.findKey("DELETE_PUBLISHED");
-        outboxSimpleTaskRunner.execute(key);
+        outboxJobRunner.execute(new OutboxJobKey("DELETE_PUBLISHED"));
+    }
+
+    @Scheduled(fixedRateString = "${app.outbox.scheduler.fill-queues.fixed-rate}")
+    public void fillQueues() {
+        outboxJobRunner.execute(new OutboxJobKey("FILL_QUEUES"));
     }
 }

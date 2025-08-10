@@ -7,15 +7,15 @@ app:
     scheduler:
       enabled: true
       delete-published:
-        fixed-rate: 1h
+        fixed-rate: 5s
+      fill-queues:
+        fixed-rate: 5s
     message-relay:
       enabled: true
       process-queue-task:
         fixed-rate: 500ms
       process-dlq-task:
         fixed-rate: 500ms
-      fill-queue-task:
-        fixed-rate: 1m
 # Spring Properties
 spring:
   application:

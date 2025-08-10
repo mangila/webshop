@@ -1,4 +1,4 @@
-package com.github.mangila.webshop.outbox.infrastructure.task;
+package com.github.mangila.webshop.outbox.infrastructure.scheduler.task;
 
 import com.github.mangila.webshop.outbox.application.action.command.UpdateOutboxStatusCommandAction;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxStatusCommand;
