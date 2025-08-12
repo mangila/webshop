@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
+/**
+ * Convenience class for publishing events.
+ * All ApplicationEventPublisher calls are delegated to this class.
+ */
 @Component
 public class SpringEventPublisher {
     private final ApplicationEventPublisher publisher;
