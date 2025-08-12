@@ -7,8 +7,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import java.util.function.Supplier;
 
 /**
- * Utility class for working with Spring transactions.
- * For easier codebase maintenance, all calls to TransactionSynchronizationManager/TransactionManager can be done here.
+ * Utility class providing methods for working with Spring transaction synchronizations.
+ * This class serves as a simple facade for interacting with the Spring `TransactionSynchronizationManager`.
  */
 public final class SpringTransactionUtil {
     private SpringTransactionUtil() {

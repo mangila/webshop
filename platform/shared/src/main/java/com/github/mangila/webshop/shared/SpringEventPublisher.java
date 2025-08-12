@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * Convenience class for publishing events.
- * All ApplicationEventPublisher calls are delegated to this class.
+ * The {@code SpringEventPublisher} class is responsible for publishing
+ * application events in a Spring-based application. It acts as a wrapper
+ * around Spring's {@code ApplicationEventPublisher}, providing methods
+ * to publish specific types of events
+ * <p>
+ * This class ensures that the events being published are not null before
+ * delegating the event publishing to the underlying {@code ApplicationEventPublisher}.
  */
 @Component
 public class SpringEventPublisher {
@@ -32,7 +37,7 @@ public class SpringEventPublisher {
         };
     }
 
-    public void publishInboxEvent(@NotNull InboxEvent inboxEvent) {
+    public void publishInboxEvent(InboxEvent inboxEvent) {
         Ensure.notNull(inboxEvent, InboxEvent.class);
         publisher.publishEvent(inboxEvent);
     }
