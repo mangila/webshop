@@ -5,7 +5,6 @@ import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxI
 import com.github.mangila.webshop.outbox.domain.cqrs.command.DeleteOutboxCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.domain.types.OutboxStatusType;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,21 +29,20 @@ public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findA
 
     private static final Logger log = LoggerFactory.getLogger(DeletePublishedOutboxJob.class);
 
+    private static final OutboxJobKey KEY = new OutboxJobKey("DELETE_PUBLISHED");
+    private static final FindAllOutboxIdByStatusQuery QUERY = FindAllOutboxIdByStatusQuery.published(120);
+
     @Override
     public OutboxJobKey key() {
-        return new OutboxJobKey("DELETE_PUBLISHED");
+        return KEY;
     }
 
     @Override
     public void execute() {
-        var query = new FindAllOutboxIdByStatusQuery(
-                OutboxStatusType.PUBLISHED,
-                50
-        );
-        List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(query);
+        List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(QUERY);
         for (OutboxId id : ids) {
             deleteOutboxCommandAction.tryExecute(new DeleteOutboxCommand(id))
-                    .onSuccess(ok -> log.info("Outbox: {} was successfully deleted", id))
+                    .onSuccess(ok -> log.debug("Outbox: {} was successfully deleted", id))
                     .onFailure(e -> log.error("Failed to delete Outbox: {}", id, e));
         }
     }

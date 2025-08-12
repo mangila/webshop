@@ -9,4 +9,13 @@ public record FindAllOutboxIdByStatusQuery(OutboxStatusType status,
         Ensure.notNull(status, OutboxStatusType.class);
         Ensure.min(1, limit);
     }
+
+    public static FindAllOutboxIdByStatusQuery pending(int limit) {
+        return new FindAllOutboxIdByStatusQuery(OutboxStatusType.PENDING, limit);
+    }
+
+    public static FindAllOutboxIdByStatusQuery published(int limit) {
+        return new FindAllOutboxIdByStatusQuery(OutboxStatusType.PUBLISHED, limit);
+    }
+
 }
