@@ -42,9 +42,11 @@ public class OutboxPublishActuatorEndpoint {
 
     @WriteOperation
     public WebEndpointResponse<Map<String, Object>> execute(@Selector List<Long> outboxIds) {
-        outboxIds.stream()
+        var ids = outboxIds.stream()
                 .map(OutboxId::new)
-                .forEach(outboxIdDistinctQueue::addDlq);
+                .toList();
+        outboxIdDistinctQueue.fillDlq(ids);
+        log.debug("Fill Dlq with {} outbox IDs for processing -- {}", ids.size(), ids);
         return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 }

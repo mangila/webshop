@@ -2,6 +2,7 @@ package com.github.mangila.webshop.shared;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +22,10 @@ public class DistinctQueue<T> {
     public DistinctQueue() {
         this.queue = new ConcurrentLinkedQueue<>();
         this.inQueue = ConcurrentHashMap.newKeySet();
+    }
+
+    public void fill(List<T> types) {
+        types.forEach(this::add);
     }
 
     public void add(T type) {

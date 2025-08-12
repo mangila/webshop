@@ -5,6 +5,8 @@ import com.github.mangila.webshop.shared.DistinctQueue;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class OutboxIdDistinctQueue {
     private final DistinctQueue<OutboxId> queue;
@@ -13,6 +15,14 @@ public class OutboxIdDistinctQueue {
     public OutboxIdDistinctQueue() {
         this.queue = new DistinctQueue<>();
         this.dlq = new DistinctQueue<>();
+    }
+
+    public void fillQueue(List<OutboxId> ids) {
+        queue.fill(ids);
+    }
+
+    public void fillDlq(List<OutboxId> ids) {
+        dlq.fill(ids);
     }
 
     public void add(OutboxId id) {

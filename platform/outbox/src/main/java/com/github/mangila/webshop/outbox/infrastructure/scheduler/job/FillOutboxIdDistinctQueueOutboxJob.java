@@ -2,10 +2,13 @@ package com.github.mangila.webshop.outbox.infrastructure.scheduler.job;
 
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
+import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.OutboxIdDistinctQueue;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * The FillEventQueueOutboxJob is responsible for populating an internal event queue
@@ -47,9 +50,8 @@ public record FillOutboxIdDistinctQueueOutboxJob(
 
     @Override
     public void execute() {
-        findAllOutboxIdsByStatusQueryAction.execute(FindAllOutboxIdByStatusQuery.pending())
-                .stream()
-                .peek(outboxId -> log.info("Queue Message: {}", outboxId))
-                .forEach(outboxIdDistinctQueue::add);
+        List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(FindAllOutboxIdByStatusQuery.pending());
+        outboxIdDistinctQueue.fillQueue(ids);
+        log.debug("Fetched {} outbox IDs for processing -- {}", ids.size(), ids);
     }
 }
