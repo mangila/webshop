@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.config;
 
-import com.github.mangila.webshop.outbox.infrastructure.EventDistinctQueue;
+import com.github.mangila.webshop.outbox.infrastructure.OutboxEventDistinctQueue;
 import com.github.mangila.webshop.outbox.infrastructure.actuator.OutboxJobActuatorEndpoint;
 import com.github.mangila.webshop.outbox.infrastructure.actuator.OutboxPublishActuatorEndpoint;
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxPublisher;
@@ -17,8 +17,8 @@ public class OutboxActuatorConfig {
 
     @Bean
     OutboxPublishActuatorEndpoint outboxPublishActuatorEndpoint(OutboxPublisher outboxPublisher,
-                                                                EventDistinctQueue eventDistinctQueue) {
-        return new OutboxPublishActuatorEndpoint(outboxPublisher, eventDistinctQueue);
+                                                                OutboxEventDistinctQueue outboxEventDistinctQueue) {
+        return new OutboxPublishActuatorEndpoint(outboxPublisher, outboxEventDistinctQueue);
     }
 
     @Bean
