@@ -38,7 +38,7 @@ public record FillEventQueueOutboxJob(FindAllOutboxIdsByStatusQueryAction findAl
 
     private static final Logger log = LoggerFactory.getLogger(FillEventQueueOutboxJob.class);
 
-    private static final OutboxJobKey KEY = new OutboxJobKey("FILL_EVENT_QUEUE");
+    public static final OutboxJobKey KEY = new OutboxJobKey("FILL_EVENT_QUEUE");
     private static final FindAllOutboxIdByStatusQuery QUERY = FindAllOutboxIdByStatusQuery.pending(120);
 
     @Override

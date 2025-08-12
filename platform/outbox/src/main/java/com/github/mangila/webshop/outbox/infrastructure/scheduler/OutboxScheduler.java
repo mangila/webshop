@@ -1,6 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.scheduler;
 
-import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedOutboxJob;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.FillEventQueueOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobRunner;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,16 +21,16 @@ public class OutboxScheduler {
     @PostConstruct
     void init() {
         deletePublished();
-        fillQueues();
+        fillEventQueue();
     }
 
     @Scheduled(fixedRateString = "${app.outbox.scheduler.delete-published.fixed-rate}")
-    public void deletePublished() {
-        outboxJobRunner.execute(new OutboxJobKey("DELETE_PUBLISHED"));
+    void deletePublished() {
+        outboxJobRunner.execute(DeletePublishedOutboxJob.KEY);
     }
 
     @Scheduled(fixedRateString = "${app.outbox.scheduler.fill-queues.fixed-rate}")
-    public void fillQueues() {
-        outboxJobRunner.execute(new OutboxJobKey("FILL_EVENT_QUEUE"));
+    void fillEventQueue() {
+        outboxJobRunner.execute(FillEventQueueOutboxJob.KEY);
     }
 }

@@ -29,7 +29,7 @@ public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findA
 
     private static final Logger log = LoggerFactory.getLogger(DeletePublishedOutboxJob.class);
 
-    private static final OutboxJobKey KEY = new OutboxJobKey("DELETE_PUBLISHED");
+    public static final OutboxJobKey KEY = new OutboxJobKey("DELETE_PUBLISHED");
     private static final FindAllOutboxIdByStatusQuery QUERY = FindAllOutboxIdByStatusQuery.published(120);
 
     @Override
