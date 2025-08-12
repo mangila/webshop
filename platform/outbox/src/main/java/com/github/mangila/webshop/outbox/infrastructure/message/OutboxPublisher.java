@@ -67,19 +67,30 @@ public class OutboxPublisher {
         return Try.of(() -> publish(id));
     }
 
+    /**
+     * Publishes an outbox entry identified by the given {@code outboxId}.
+     *
+     * This method ensures the outbox entry is retrieved, processed, and its status is updated accordingly.
+     * If the operation fails, it retries using the configured retry mechanism. If the entry cannot
+     * be published or is already in a processed state (published or locked), appropriate handling
+     * is performed and status updates are logged. Transactional and retry mechanisms are utilized
+     * for reliability.
+     *
+     * @param outboxId the identifier of the outbox entry to be published; must not be null.
+     * @return {@code true} if the outbox entry was successfully published; {@code false} otherwise.
+     *         This includes cases where the entry is already processed or locked by another thread.
+     */
     private boolean publish(OutboxId outboxId) {
         Ensure.notNull(outboxId, OutboxId.class);
         return retryTemplate.execute(retryContext -> {
                     retryContext.setAttribute("outboxId", outboxId);
                     return findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
                             .map(outbox -> {
-                                transactionTemplate.executeWithoutResult(tx -> {
-                                    producer.produce()
-                                            .andThen(Outbox::id)
-                                            .andThen(UpdateOutboxStatusCommand::published)
-                                            .andThen(updateOutboxStatusCommandAction::execute)
-                                            .apply(outbox);
-                                });
+                                transactionTemplate.executeWithoutResult(tx -> producer.produce()
+                                        .andThen(Outbox::id)
+                                        .andThen(UpdateOutboxStatusCommand::published)
+                                        .andThen(updateOutboxStatusCommandAction::execute)
+                                        .apply(outbox));
                                 return true;
                             })
                             .orElseGet(() -> {

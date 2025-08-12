@@ -45,7 +45,7 @@ public class MessageRelay {
             publisher.tryPublish(id)
                     .onSuccess(logSuccess(id))
                     .onFailure(e -> {
-                        log.error("Failed to process message: {} add to DLQ", id, e.getCause());
+                        log.error("Failed to process message: {} add to DLQ", id, e);
                         eventQueue.addDlq(id);
                     });
         }
@@ -57,7 +57,7 @@ public class MessageRelay {
         if (id != null) {
             publisher.tryPublish(id)
                     .onSuccess(logSuccess(id))
-                    .onFailure(e -> log.error("Failed to process message: {}", id, e.getCause()));
+                    .onFailure(e -> log.error("Failed to process message: {}", id, e));
         }
     }
 
