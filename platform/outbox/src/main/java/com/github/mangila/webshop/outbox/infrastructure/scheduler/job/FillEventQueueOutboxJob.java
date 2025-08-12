@@ -3,7 +3,7 @@ package com.github.mangila.webshop.outbox.infrastructure.scheduler.job;
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.InternalDistinctQueue;
+import com.github.mangila.webshop.shared.DistinctQueue;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @param eventQueue                          The internal queue to populate with fetched outbox IDs.
  */
 public record FillEventQueueOutboxJob(FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
-                                      InternalDistinctQueue<OutboxId> eventQueue) implements SimpleTask<OutboxJobKey> {
+                                      DistinctQueue<OutboxId> eventQueue) implements SimpleTask<OutboxJobKey> {
 
     private static final Logger log = LoggerFactory.getLogger(FillEventQueueOutboxJob.class);
 

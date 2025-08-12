@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * InternalDistinctQueue is a thread-safe queue implementation that ensures distinct elements are maintained within
+ * DistinctQueue is a thread-safe queue implementation that ensures distinct elements are maintained within
  * two separate queues: a primary queue and a dead-letter queue (DLQ). This class aims to prevent duplicate entries
  * in the queues while allowing elements to be added or retrieved safely.
  *
@@ -26,13 +26,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *            - Avoids duplicate entries by tracking enqueued elements using sets.
  */
 @Component
-public class InternalDistinctQueue<T> {
+public class DistinctQueue<T> {
     private final Queue<T> queue;
     private final Set<T> inQueue;
     private final Queue<T> dlq;
     private final Set<T> inDlq;
 
-    public InternalDistinctQueue() {
+    public DistinctQueue() {
         this.queue = new ConcurrentLinkedQueue<>();
         this.inQueue = ConcurrentHashMap.newKeySet();
         this.dlq = new ConcurrentLinkedQueue<>();

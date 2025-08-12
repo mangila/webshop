@@ -2,7 +2,7 @@ package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxPublisher;
-import com.github.mangila.webshop.shared.InternalDistinctQueue;
+import com.github.mangila.webshop.shared.DistinctQueue;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,10 @@ public class OutboxPublishActuatorEndpoint {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxPublishActuatorEndpoint.class);
     private final OutboxPublisher outboxPublisher;
-    private final InternalDistinctQueue<OutboxId> eventQueue;
+    private final DistinctQueue<OutboxId> eventQueue;
 
     public OutboxPublishActuatorEndpoint(OutboxPublisher outboxPublisher,
-                                         InternalDistinctQueue<OutboxId> eventQueue) {
+                                         DistinctQueue<OutboxId> eventQueue) {
         this.outboxPublisher = outboxPublisher;
         this.eventQueue = eventQueue;
     }

@@ -6,7 +6,7 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.FillEventQueueOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
-import com.github.mangila.webshop.shared.InternalDistinctQueue;
+import com.github.mangila.webshop.shared.DistinctQueue;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class OutboxJobConfig {
     Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob(
             FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
             DeleteOutboxCommandAction deleteOutboxCommandAction,
-            InternalDistinctQueue<OutboxId> eventQueue
+            DistinctQueue<OutboxId> eventQueue
     ) {
         return Map.ofEntries(
                 addJob(new DeletePublishedOutboxJob(findAllOutboxIdsByStatusQueryAction, deleteOutboxCommandAction)),

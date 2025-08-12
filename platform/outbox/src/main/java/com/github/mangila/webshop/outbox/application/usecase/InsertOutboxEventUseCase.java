@@ -11,7 +11,7 @@ import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxSequenc
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxPayload;
-import com.github.mangila.webshop.shared.InternalDistinctQueue;
+import com.github.mangila.webshop.shared.DistinctQueue;
 import com.github.mangila.webshop.shared.SpringTransactionUtil;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
 import org.slf4j.Logger;
@@ -31,12 +31,12 @@ public class InsertOutboxEventUseCase {
     private final UpdateOutboxSequenceCommandAction updateOutboxSequenceCommandAction;
     private final IncrementOutboxSequenceCommandAction incrementOutboxSequenceCommandAction;
     private final CreateOutboxCommandAction createOutboxCommandAction;
-    private final InternalDistinctQueue<OutboxId> eventQueue;
+    private final DistinctQueue<OutboxId> eventQueue;
 
     public InsertOutboxEventUseCase(UpdateOutboxSequenceCommandAction updateOutboxSequenceCommandAction,
                                     IncrementOutboxSequenceCommandAction incrementOutboxSequenceCommandAction,
                                     CreateOutboxCommandAction createOutboxCommandAction,
-                                    InternalDistinctQueue<OutboxId> eventQueue) {
+                                    DistinctQueue<OutboxId> eventQueue) {
         this.updateOutboxSequenceCommandAction = updateOutboxSequenceCommandAction;
         this.incrementOutboxSequenceCommandAction = incrementOutboxSequenceCommandAction;
         this.createOutboxCommandAction = createOutboxCommandAction;

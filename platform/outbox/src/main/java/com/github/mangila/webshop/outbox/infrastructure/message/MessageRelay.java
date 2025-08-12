@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.InternalDistinctQueue;
+import com.github.mangila.webshop.shared.DistinctQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,10 +30,10 @@ public class MessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
     private final OutboxPublisher publisher;
-    private final InternalDistinctQueue<OutboxId> eventQueue;
+    private final DistinctQueue<OutboxId> eventQueue;
 
     public MessageRelay(OutboxPublisher publisher,
-                        InternalDistinctQueue<OutboxId> eventQueue) {
+                        DistinctQueue<OutboxId> eventQueue) {
         this.publisher = publisher;
         this.eventQueue = eventQueue;
     }
