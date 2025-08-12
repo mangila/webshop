@@ -30,7 +30,6 @@ public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findA
     private static final Logger log = LoggerFactory.getLogger(DeletePublishedOutboxJob.class);
 
     public static final OutboxJobKey KEY = new OutboxJobKey("DELETE_PUBLISHED");
-    private static final FindAllOutboxIdByStatusQuery QUERY = FindAllOutboxIdByStatusQuery.published();
 
     @Override
     public OutboxJobKey key() {
@@ -39,7 +38,7 @@ public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findA
 
     @Override
     public void execute() {
-        List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(QUERY);
+        List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(FindAllOutboxIdByStatusQuery.published());
         for (OutboxId id : ids) {
             deleteOutboxCommandAction.tryExecute(new DeleteOutboxCommand(id))
                     .onSuccess(ok -> log.debug("Outbox: {} was successfully deleted", id))
