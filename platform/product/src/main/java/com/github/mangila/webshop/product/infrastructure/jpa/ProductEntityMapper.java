@@ -3,7 +3,6 @@ package com.github.mangila.webshop.product.infrastructure.jpa;
 import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 import com.github.mangila.webshop.product.domain.primitive.*;
-import com.github.mangila.webshop.product.domain.types.ProductStatusType;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -13,14 +12,14 @@ import java.util.List;
 public class ProductEntityMapper {
 
     public ProductEntity toEntity(CreateProductCommand command) {
+        var now = Instant.now();
         return new ProductEntity(
                 command.id().value(),
                 command.name().value(),
                 command.attributes().value(),
-                ProductStatusType.INACTIVE,
-                Instant.now(),
-                Instant.now(),
-                Boolean.TRUE
+                command.status(),
+                now,
+                now
         );
     }
 
@@ -43,8 +42,7 @@ public class ProductEntityMapper {
                 product.attributes().value(),
                 product.status(),
                 product.created().value(),
-                product.updated().value(),
-                Boolean.FALSE
+                product.updated().value()
         );
     }
 }

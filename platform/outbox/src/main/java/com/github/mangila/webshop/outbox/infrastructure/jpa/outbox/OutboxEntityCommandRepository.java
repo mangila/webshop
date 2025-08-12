@@ -15,6 +15,7 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
             value = """
                     SELECT
                       id,
+                      version,
                       domain,
                       event,
                       aggregate_id,
@@ -31,12 +32,15 @@ public interface OutboxEntityCommandRepository extends JpaRepository<OutboxEntit
     )
     Optional<OutboxEntity> findByIdForUpdate(@Param("id") long id);
 
-    @Modifying
+    @Modifying(
+            clearAutomatically = true,
+            flushAutomatically = true)
     @Query(
             value = """
                      UPDATE OutboxEntity o
                      SET o.status = :status,
-                         o.updated = :updated
+                         o.updated = :updated,
+                         o.version = o.version + 1
                      WHERE o.id = :id
                     """
     )

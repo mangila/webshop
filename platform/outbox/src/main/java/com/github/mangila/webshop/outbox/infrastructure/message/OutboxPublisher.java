@@ -92,6 +92,9 @@ public class OutboxPublisher {
                                     () -> log.debug("Message: {} locked or already processed", outboxId));
                     return true;
                 },
-                retryContext -> false);
+                retryContext -> {
+                    updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(outboxId));
+                    return false;
+                });
     }
 }

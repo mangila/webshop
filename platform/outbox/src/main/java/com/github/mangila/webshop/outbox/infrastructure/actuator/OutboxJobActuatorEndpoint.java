@@ -27,7 +27,7 @@ public class OutboxJobActuatorEndpoint {
     }
 
     @ReadOperation
-    public WebEndpointResponse<Map<String, List<String>>> findAllJobs() {
+    public WebEndpointResponse<Map<String, List<String>>> execute() {
         var keys = outboxJobKeyToJob.keySet()
                 .stream()
                 .map(OutboxJobKey::value)

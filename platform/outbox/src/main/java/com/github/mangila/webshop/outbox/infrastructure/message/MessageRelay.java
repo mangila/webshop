@@ -1,7 +1,5 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
-import com.github.mangila.webshop.outbox.application.action.command.UpdateOutboxStatusCommandAction;
-import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxStatusCommand;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.shared.InternalDistinctQueue;
 import org.slf4j.Logger;
@@ -9,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.function.Consumer;
 
 /**
  * MessageRelay is responsible for scheduling tasks to process outbox messages.
@@ -31,15 +31,11 @@ public class MessageRelay {
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
     private final OutboxPublisher publisher;
     private final InternalDistinctQueue<OutboxId> eventQueue;
-    private final UpdateOutboxStatusCommandAction updateOutboxStatusCommandAction;
-
 
     public MessageRelay(OutboxPublisher publisher,
-                        InternalDistinctQueue<OutboxId> eventQueue,
-                        UpdateOutboxStatusCommandAction updateOutboxStatusCommandAction) {
+                        InternalDistinctQueue<OutboxId> eventQueue) {
         this.publisher = publisher;
         this.eventQueue = eventQueue;
-        this.updateOutboxStatusCommandAction = updateOutboxStatusCommandAction;
     }
 
     @Scheduled(fixedRateString = "${app.outbox.message-relay.process-queue.fixed-rate}")
@@ -47,12 +43,7 @@ public class MessageRelay {
         OutboxId id = eventQueue.poll();
         if (id != null) {
             publisher.tryPublish(id)
-                    .onSuccess(ok -> {
-                        if (!ok) {
-                            log.error("Failed to process message: {} add to DLQ", id);
-                            eventQueue.addDlq(id);
-                        }
-                    })
+                    .onSuccess(logSuccess(id))
                     .onFailure(e -> {
                         log.error("Failed to process message: {} add to DLQ", id, e.getCause());
                         eventQueue.addDlq(id);
@@ -65,16 +56,18 @@ public class MessageRelay {
         OutboxId id = eventQueue.pollDlq();
         if (id != null) {
             publisher.tryPublish(id)
-                    .onSuccess(ok -> {
-                        if (!ok) {
-                            log.error("Failed to process message: {} mark as FAILED", id);
-                            updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(id));
-                        }
-                    })
-                    .onFailure(e -> {
-                        log.error("Failed to process message: {} mark as FAILED", id, e);
-                        updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(id));
-                    });
+                    .onSuccess(logSuccess(id))
+                    .onFailure(e -> log.error("Failed to process message: {}", id, e.getCause()));
         }
+    }
+
+    private Consumer<Boolean> logSuccess(OutboxId outboxId) {
+        return ok -> {
+            if (ok) {
+                log.debug("OutboxId: {} was successfully published", outboxId);
+            } else {
+                log.warn("Failed to process outbox, outbox might be locked or already processed: {}", outboxId);
+            }
+        };
     }
 }

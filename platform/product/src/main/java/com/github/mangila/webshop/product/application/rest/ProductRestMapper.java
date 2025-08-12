@@ -8,14 +8,13 @@ import com.github.mangila.webshop.product.domain.cqrs.UpdateProductStatusCommand
 import com.github.mangila.webshop.product.domain.primitive.ProductAttributes;
 import com.github.mangila.webshop.product.domain.primitive.ProductId;
 import com.github.mangila.webshop.product.domain.primitive.ProductName;
+import com.github.mangila.webshop.product.domain.types.ProductStatusType;
 import com.github.mangila.webshop.shared.identity.application.IdentityService;
 import com.github.mangila.webshop.shared.identity.domain.Identity;
 import com.github.mangila.webshop.shared.identity.domain.cqrs.NewIdentityCommand;
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.registry.DomainRegistry;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 @Component
 public class ProductRestMapper {
@@ -35,9 +34,11 @@ public class ProductRestMapper {
         return new CreateProductCommand(
                 new ProductId(identity.id()),
                 new ProductName(request.name()),
-                new ProductAttributes(request.attributes())
+                new ProductAttributes(request.attributes()),
+                ProductStatusType.INACTIVE
         );
     }
+
     public UpdateProductStatusCommand toCommand(UpdateProductStatusRequest request) {
         ProductId productId = new ProductId(request.value());
         return new UpdateProductStatusCommand(productId, request.status());

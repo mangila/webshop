@@ -1,0 +1,10 @@
+type Inbox {
+    id: ID!
+    domain: String!
+    event: String!
+    aggregateId: ID!
+    payload: JSON!
+    status: OutboxStatusType!
+    sequence: Int!
+    created: DateTime!
+}

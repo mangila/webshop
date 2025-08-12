@@ -18,6 +18,10 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(columnDefinition = "uuid")
     private UUID id;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -35,9 +39,6 @@ public class ProductEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private Instant updated;
 
-    @Transient
-    private volatile boolean isNew = true;
-
     protected ProductEntity() {
     }
 
@@ -46,15 +47,13 @@ public class ProductEntity implements Persistable<UUID> {
                          ObjectNode attributes,
                          ProductStatusType status,
                          Instant created,
-                         Instant updated,
-                         boolean isNew) {
+                         Instant updated) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
         this.status = status;
         this.created = created;
         this.updated = updated;
-        this.isNew = isNew;
     }
 
     @Override
@@ -66,15 +65,18 @@ public class ProductEntity implements Persistable<UUID> {
         this.id = id;
     }
 
-    @Transient
-    @Override
-    public boolean isNew() {
-        return isNew;
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     @Transient
-    public void setNew(boolean isNew) {
-        this.isNew = isNew;
+    @Override
+    public boolean isNew() {
+        return version == null;
     }
 
     public String getName() {
