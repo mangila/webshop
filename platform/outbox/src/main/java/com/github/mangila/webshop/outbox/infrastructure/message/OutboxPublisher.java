@@ -67,30 +67,25 @@ public class OutboxPublisher {
         return Try.of(() -> publish(id));
     }
 
-    /**
-     * Publishes an outbox message identified by the given {@code outboxId}.
-     * <p>
-     * This method uses a retry mechanism to attempt publishing until successful or until a failure condition
-     * is met. During the execution, the outbox message is retrieved and its status is updated to reflect
-     * the publication state. If the message is locked or already processed, no action is taken.
-     *
-     * @param outboxId the unique identifier of the outbox message to be published; must not be null
-     * @return {@code true} if the message was successfully published or appropriately handled,
-     * {@code false} if the retry mechanism failed
-     */
     private boolean publish(OutboxId outboxId) {
         Ensure.notNull(outboxId, OutboxId.class);
         return retryTemplate.execute(retryContext -> {
                     retryContext.setAttribute("outboxId", outboxId);
-                    findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
-                            .ifPresentOrElse(outbox -> transactionTemplate.executeWithoutResult(tx ->
-                                            producer.produce()
-                                                    .andThen(Outbox::id)
-                                                    .andThen(UpdateOutboxStatusCommand::published)
-                                                    .andThen(updateOutboxStatusCommandAction::execute)
-                                                    .apply(outbox)),
-                                    () -> log.debug("Message: {} locked or already processed", outboxId));
-                    return true;
+                    return findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
+                            .map(outbox -> {
+                                transactionTemplate.executeWithoutResult(tx -> {
+                                    producer.produce()
+                                            .andThen(Outbox::id)
+                                            .andThen(UpdateOutboxStatusCommand::published)
+                                            .andThen(updateOutboxStatusCommandAction::execute)
+                                            .apply(outbox);
+                                });
+                                return true;
+                            })
+                            .orElseGet(() -> {
+                                log.debug("Outbox: {} already published or locked by another thread", outboxId);
+                                return false;
+                            });
                 },
                 retryContext -> {
                     updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(outboxId));
