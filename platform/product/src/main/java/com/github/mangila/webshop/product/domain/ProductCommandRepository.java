@@ -3,6 +3,7 @@ package com.github.mangila.webshop.product.domain;
 import com.github.mangila.webshop.product.domain.cqrs.CreateProductCommand;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface ProductCommandRepository {
 
@@ -14,13 +15,13 @@ public interface ProductCommandRepository {
 
     Product delete(Product product);
 
-    default Function<Product, Product> delete() {
+    default UnaryOperator<Product> delete() {
         return this::delete;
     }
 
     Product updateStatus(Product product);
 
-    default Function<Product, Product> updateStatus() {
+    default UnaryOperator<Product> updateStatus() {
         return this::updateStatus;
     }
 }

@@ -6,13 +6,11 @@ import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.*;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxAggregateId;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.sequence.OutboxSequenceEntity;
 import com.github.mangila.webshop.outbox.infrastructure.jpa.sequence.OutboxSequenceEntityCommandRepository;
 import io.vavr.collection.Stream;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -64,14 +62,6 @@ public class OutboxCommandJpaRepository implements OutboxCommandRepository {
     public void updateSequence(UpdateOutboxSequenceCommand command) {
         OutboxSequenceEntity entity = mapper.toEntity(command.sequence());
         sequenceRepository.save(entity);
-    }
-
-    @Override
-    public void deleteByIds(List<OutboxId> ids) {
-        entityCommandRepository.deleteAllById(ids
-                .stream()
-                .map(OutboxId::value)
-                .toList());
     }
 
     @Override

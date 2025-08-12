@@ -2,11 +2,10 @@ package com.github.mangila.webshop.shared;
 
 import com.github.mangila.webshop.shared.model.InboxEvent;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * The {@code SpringEventPublisher} class is responsible for publishing
@@ -30,7 +29,7 @@ public class SpringEventPublisher {
         publisher.publishEvent(outboxEvent);
     }
 
-    public Function<OutboxEvent, OutboxEvent> publishOutboxEvent() {
+    public UnaryOperator<OutboxEvent> publishOutboxEvent() {
         return outboxEvent -> {
             publishOutboxEvent(outboxEvent);
             return outboxEvent;

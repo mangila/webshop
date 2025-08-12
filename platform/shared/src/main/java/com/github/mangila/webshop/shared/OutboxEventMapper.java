@@ -7,6 +7,7 @@ import com.github.mangila.webshop.shared.identity.application.validation.Generat
 import com.github.mangila.webshop.shared.model.Domain;
 import com.github.mangila.webshop.shared.model.Event;
 import com.github.mangila.webshop.shared.model.OutboxEvent;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,7 +19,7 @@ public class OutboxEventMapper {
     public OutboxEvent toEvent(@RegisteredDomain Domain domain,
                                @RegisteredEvent Event event,
                                @GeneratedIdentity UUID aggregateId,
-                               ObjectNode payload) {
+                               @NotNull ObjectNode payload) {
         return new OutboxEvent(
                 domain,
                 event,
