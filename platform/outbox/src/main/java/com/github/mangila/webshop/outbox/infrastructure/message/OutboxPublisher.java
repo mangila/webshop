@@ -16,6 +16,8 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.Optional;
+
 /**
  * Publishes messages from the outbox with retry and transactional mechanisms.
  * <p>
@@ -69,7 +71,7 @@ public class OutboxPublisher {
 
     /**
      * Publishes an outbox entry identified by the given {@code outboxId}.
-     *
+     * <p>
      * This method ensures the outbox entry is retrieved, processed, and its status is updated accordingly.
      * If the operation fails, it retries using the configured retry mechanism. If the entry cannot
      * be published or is already in a processed state (published or locked), appropriate handling
@@ -78,29 +80,32 @@ public class OutboxPublisher {
      *
      * @param outboxId the identifier of the outbox entry to be published; must not be null.
      * @return {@code true} if the outbox entry was successfully published; {@code false} otherwise.
-     *         This includes cases where the entry is already processed or locked by another thread.
+     * This includes cases where the entry is already processed or locked by another thread.
      */
     private boolean publish(OutboxId outboxId) {
         Ensure.notNull(outboxId, OutboxId.class);
-        return retryTemplate.execute(retryContext -> {
-                    retryContext.setAttribute("outboxId", outboxId);
-                    return findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId))
-                            .map(outbox -> {
-                                transactionTemplate.executeWithoutResult(tx -> producer.produce()
-                                        .andThen(Outbox::id)
-                                        .andThen(UpdateOutboxStatusCommand::published)
-                                        .andThen(updateOutboxStatusCommandAction::execute)
-                                        .apply(outbox));
-                                return true;
-                            })
-                            .orElseGet(() -> {
-                                log.debug("Outbox: {} already published or locked by another thread", outboxId);
-                                return false;
-                            });
-                },
-                retryContext -> {
-                    updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(outboxId));
-                    return false;
-                });
+        Optional<Outbox> optionalOutbox = findOutboxForUpdateCommandAction.execute(new FindOutboxForUpdateCommand(outboxId));
+        if (optionalOutbox.isEmpty()) {
+            log.debug("Outbox: {} already published or locked by another thread", outboxId);
+            return false;
+        } else {
+            return retryTemplate.execute(retryContext -> {
+                        retryContext.setAttribute("outboxId", outboxId);
+                        return transactionTemplate.execute(tx -> producer.produce()
+                                .andThen(Outbox::id)
+                                .andThen(UpdateOutboxStatusCommand::published)
+                                .andThen(updateOutboxStatusCommandAction::execute)
+                                .apply(optionalOutbox.get()));
+                    },
+                    retryContext -> {
+                        /*
+                        If the update fails here and the status remains in PROCESSING, manual intervention is required,
+                        OR the Message relay DLQ task will retry again and hopefully succeed.
+                        Re-run from the actuator endpoint to retry the event processing.
+                        */
+                        updateOutboxStatusCommandAction.execute(UpdateOutboxStatusCommand.failed(outboxId));
+                        return false;
+                    });
+        }
     }
 }

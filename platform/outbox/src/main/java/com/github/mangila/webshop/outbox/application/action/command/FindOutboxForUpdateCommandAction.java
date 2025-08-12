@@ -30,13 +30,17 @@ public class FindOutboxForUpdateCommandAction implements CommandAction<FindOutbo
     public Optional<Outbox> execute(@NotNull FindOutboxForUpdateCommand command) {
         return repository.findForUpdate(command)
                 .filter(outbox -> {
-                    if (outbox.notPublished()) {
+                    if (outbox.canBePublished()) {
                         return true;
                     }
-                    log.debug("Message: {} already published", outbox.id());
+                    log.debug("Message: {} was already published", outbox.id());
                     return false;
                 })
                 .map(outbox -> {
+                    if (outbox.processing()) {
+                        log.debug("Message: {} has already processing status, early return", outbox.id());
+                        return outbox;
+                    }
                     var processing = UpdateOutboxStatusCommand.processing(outbox.id());
                     repository.updateStatus(processing);
                     return updated(outbox, processing);

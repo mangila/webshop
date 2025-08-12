@@ -31,7 +31,15 @@ public record Outbox(
         Ensure.beforeOrEquals(created.value(), updated.value());
     }
 
-    public boolean notPublished() {
-        return status != OutboxStatusType.PUBLISHED;
+    public boolean canBePublished() {
+        return !published();
+    }
+
+    public boolean published() {
+        return status == OutboxStatusType.PUBLISHED;
+    }
+
+    public boolean processing() {
+        return status == OutboxStatusType.PROCESSING;
     }
 }
