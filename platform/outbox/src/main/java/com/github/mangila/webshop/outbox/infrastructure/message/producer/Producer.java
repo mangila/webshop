@@ -5,7 +5,7 @@ import com.github.mangila.webshop.shared.model.EventSource;
 
 import java.util.function.Function;
 
-sealed interface Producer permits SpringEventProducer {
+public sealed interface Producer permits SpringEventProducer {
 
     void produce(Outbox outbox);
 

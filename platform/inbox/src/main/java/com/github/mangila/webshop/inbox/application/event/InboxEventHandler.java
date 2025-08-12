@@ -13,28 +13,24 @@ import org.springframework.stereotype.Service;
 public class InboxEventHandler {
 
     private final InboxCommandService commandService;
-    private final InboxEventMapper eventMapper = new InboxEventMapper();
 
     public InboxEventHandler(InboxCommandService commandService) {
         this.commandService = commandService;
     }
 
     public void handle(InboxEvent event) {
-        var command = eventMapper.toCommand(event);
+        InboxInsertCommand command = toCommand(event);
         Inbox inbox = commandService.insert(command);
     }
 
-
-    private static final class InboxEventMapper {
-        public InboxInsertCommand toCommand(InboxEvent event) {
-            return new InboxInsertCommand(
-                    new InboxAggregateId(event.aggregateId()),
-                    event.domain(),
-                    event.event(),
-                    new InboxPayload(event.payload()),
-                    new InboxSequence(event.sequence()),
-                    event.source()
-            );
-        }
+    public static InboxInsertCommand toCommand(InboxEvent event) {
+        return new InboxInsertCommand(
+                new InboxAggregateId(event.aggregateId()),
+                event.domain(),
+                event.event(),
+                new InboxPayload(event.payload()),
+                new InboxSequence(event.sequence()),
+                event.source()
+        );
     }
 }

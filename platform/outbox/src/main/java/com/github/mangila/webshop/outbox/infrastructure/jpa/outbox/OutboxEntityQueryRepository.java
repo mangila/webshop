@@ -21,17 +21,6 @@ public interface OutboxEntityQueryRepository extends JpaRepository<OutboxEntity,
                               @Param("sequence") int sequence,
                               @Param("limit") int limit);
 
-    @Query(value = """
-                    SELECT o.id FROM OutboxEntity o
-                    WHERE o.domain = :domain AND o.status = :status
-                    ORDER BY o.created ASC
-                    LIMIT :limit
-            """)
-    List<Long> findAllIdsByDomainAndStatus(
-            @Param("domain") String domain,
-            @Param("status") OutboxStatusType status,
-            @Param("limit") int limit);
-
     @Query("""
             SELECT o.id FROM OutboxEntity o
             WHERE o.status = :status

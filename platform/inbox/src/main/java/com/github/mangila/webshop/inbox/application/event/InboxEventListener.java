@@ -1,12 +1,12 @@
 package com.github.mangila.webshop.inbox.application.event;
 
-import com.github.mangila.webshop.shared.Ensure;
-import com.github.mangila.webshop.shared.model.EventSource;
 import com.github.mangila.webshop.shared.model.InboxEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InboxEventListener {
@@ -19,12 +19,10 @@ public class InboxEventListener {
         this.eventHandler = eventHandler;
     }
 
-    @EventListener(value = InboxEvent.class)
+    @EventListener(id = "inbox-event-listener")
+    @Transactional(propagation = Propagation.MANDATORY)
     void listen(InboxEvent event) {
         log.info("Received event: {}", event);
-        Ensure.equals(event.source(), EventSource.SPRING_EVENT);
-        Ensure.activeSpringTransaction();
-        Ensure.activeSpringSynchronization();
         eventHandler.handle(event);
     }
 }

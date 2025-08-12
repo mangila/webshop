@@ -16,6 +16,14 @@ public record UpdateOutboxStatusCommand(
         Ensure.notNull(outboxUpdated, OutboxUpdated.class);
     }
 
+    public static UpdateOutboxStatusCommand processing(OutboxId id) {
+        return new UpdateOutboxStatusCommand(
+                id,
+                OutboxStatusType.PROCESSING,
+                OutboxUpdated.now()
+        );
+    }
+
     public static UpdateOutboxStatusCommand published(OutboxId id) {
         return new UpdateOutboxStatusCommand(
                 id,

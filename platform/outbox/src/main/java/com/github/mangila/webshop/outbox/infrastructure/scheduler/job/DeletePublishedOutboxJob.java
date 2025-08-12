@@ -12,10 +12,23 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public record DeletePublishedJob(FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
-                                 DeleteOutboxCommandAction deleteOutboxCommandAction) implements SimpleTask<OutboxJobKey> {
+/**
+ * This class represents a scheduled task designed to delete outbox entries with a specific status.
+ * It is implemented as a record and encapsulates actions for querying specific outbox entries
+ * and performing deletions on them.
+ * <p>
+ * The DeletePublishedJob is primarily responsible for:
+ * - Querying outbox entries with the status "PUBLISHED".
+ * - Iterating over the retrieved outbox entries and attempting to delete them.
+ * - Logging the outcome of each deletion operation, either success or failure.
+ * <p>
+ * This task is identified by the key "DELETE_PUBLISHED" and adheres to the {@code SimpleTask} interface,
+ * allowing it to be executed as part of a broader task execution mechanism.
+ */
+public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
+                                       DeleteOutboxCommandAction deleteOutboxCommandAction) implements SimpleTask<OutboxJobKey> {
 
-    private static final Logger log = LoggerFactory.getLogger(DeletePublishedJob.class);
+    private static final Logger log = LoggerFactory.getLogger(DeletePublishedOutboxJob.class);
 
     @Override
     public OutboxJobKey key() {
@@ -31,7 +44,7 @@ public record DeletePublishedJob(FindAllOutboxIdsByStatusQueryAction findAllOutb
         List<OutboxId> ids = findAllOutboxIdsByStatusQueryAction.execute(query);
         for (OutboxId id : ids) {
             deleteOutboxCommandAction.tryExecute(new DeleteOutboxCommand(id))
-                    .onSuccess(processed -> log.info("Outbox: {} was successfully deleted", id))
+                    .onSuccess(ok -> log.info("Outbox: {} was successfully deleted", id))
                     .onFailure(e -> log.error("Failed to delete Outbox: {}", id, e));
         }
     }

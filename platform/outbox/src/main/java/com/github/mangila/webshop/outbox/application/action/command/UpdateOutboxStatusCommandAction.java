@@ -5,6 +5,7 @@ import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxStatusC
 import com.github.mangila.webshop.shared.CommandAction;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -18,6 +19,7 @@ public class UpdateOutboxStatusCommandAction implements CommandAction<UpdateOutb
     }
 
     @Override
+    @Transactional
     public Void execute(@NotNull UpdateOutboxStatusCommand command) {
         repository.updateStatus(command);
         return null;

@@ -18,25 +18,23 @@ public class OutboxEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String domain;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String event;
 
     @Column(name = "aggregate_id",
             columnDefinition = "uuid",
-            nullable = false,
-            updatable = false)
+            nullable = false)
     private UUID aggregateId;
 
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb",
-            nullable = false,
-            updatable = false)
+            nullable = false)
     private ObjectNode payload;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private int sequence;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

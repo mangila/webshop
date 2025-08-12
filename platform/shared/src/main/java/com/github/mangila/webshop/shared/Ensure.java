@@ -1,7 +1,6 @@
 package com.github.mangila.webshop.shared;
 
 import com.github.mangila.webshop.shared.exception.ApplicationException;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -93,14 +92,6 @@ public final class Ensure {
                     .formatted(target.toString(), instant.toString())
             );
         }
-    }
-
-    public static void activeSpringTransaction() {
-        Ensure.isTrue(TransactionSynchronizationManager.isActualTransactionActive(), "No active transaction");
-    }
-
-    public static void activeSpringSynchronization() {
-        Ensure.isTrue(TransactionSynchronizationManager.isSynchronizationActive(), "No active synchronization");
     }
 
     public static void equals(Object object, Object another) {

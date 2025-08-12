@@ -6,6 +6,7 @@ import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public interface OutboxCommandRepository {
 

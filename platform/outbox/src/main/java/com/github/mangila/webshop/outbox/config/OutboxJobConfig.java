@@ -1,15 +1,13 @@
 package com.github.mangila.webshop.outbox.config;
 
 import com.github.mangila.webshop.outbox.application.action.command.DeleteOutboxCommandAction;
-import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByDomainAndStatusQueryAction;
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedJob;
-import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.FillQueuesJob;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedOutboxJob;
+import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.FillEventQueueOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
-import com.github.mangila.webshop.shared.InternalQueue;
+import com.github.mangila.webshop.shared.InternalDistinctQueue;
 import com.github.mangila.webshop.shared.SimpleTask;
-import com.github.mangila.webshop.shared.model.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +24,11 @@ public class OutboxJobConfig {
     Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob(
             FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
             DeleteOutboxCommandAction deleteOutboxCommandAction,
-            FindAllOutboxIdsByDomainAndStatusQueryAction findAllOutboxIdsByDomainAndStatusQueryAction,
-            Map<Domain, InternalQueue<OutboxId>> domainToOutboxIdQueue
+            InternalDistinctQueue<OutboxId> eventQueue
     ) {
         return Map.ofEntries(
-                addJob(new DeletePublishedJob(findAllOutboxIdsByStatusQueryAction, deleteOutboxCommandAction)),
-                addJob(new FillQueuesJob(findAllOutboxIdsByDomainAndStatusQueryAction, domainToOutboxIdQueue))
+                addJob(new DeletePublishedOutboxJob(findAllOutboxIdsByStatusQueryAction, deleteOutboxCommandAction)),
+                addJob(new FillEventQueueOutboxJob(findAllOutboxIdsByStatusQueryAction, eventQueue))
         );
     }
 

@@ -5,6 +5,8 @@ import com.github.mangila.webshop.outbox.domain.cqrs.command.UpdateOutboxSequenc
 import com.github.mangila.webshop.shared.CommandAction;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -17,6 +19,7 @@ public class UpdateOutboxSequenceCommandAction implements CommandAction<UpdateOu
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public Void execute(@NotNull UpdateOutboxSequenceCommand command) {
         repository.updateSequence(command);
         return null;

@@ -4,9 +4,10 @@ import com.github.mangila.webshop.outbox.domain.OutboxCommandRepository;
 import com.github.mangila.webshop.outbox.domain.OutboxSequence;
 import com.github.mangila.webshop.outbox.domain.cqrs.command.IncrementOutboxSequenceCommand;
 import com.github.mangila.webshop.shared.CommandAction;
-import com.github.mangila.webshop.shared.Ensure;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -20,8 +21,8 @@ public class IncrementOutboxSequenceCommandAction implements CommandAction<Incre
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public OutboxSequence execute(@NotNull IncrementOutboxSequenceCommand command) {
-        Ensure.activeSpringTransaction();
         return repository.findCurrentSequence(command.id())
                 .map(OutboxSequence::incrementFrom)
                 .orElseGet(() -> OutboxSequence.initial(command.id()));

@@ -30,6 +30,6 @@ public class OutboxScheduler {
 
     @Scheduled(fixedRateString = "${app.outbox.scheduler.fill-queues.fixed-rate}")
     public void fillQueues() {
-        outboxJobRunner.execute(new OutboxJobKey("FILL_QUEUES"));
+        outboxJobRunner.execute(new OutboxJobKey("FILL_EVENT_QUEUE"));
     }
 }

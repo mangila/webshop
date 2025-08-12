@@ -29,10 +29,11 @@ public class RetryConfig {
                 .withListener(new RetryListener() {
                     @Override
                     public <T, E extends Throwable> void onError(RetryContext context, RetryCallback<T, E> callback, Throwable throwable) {
-                        log.warn("ERROR - Retry attempt: {}, outboxId: {}, error: {}",
+                        log.error("ERROR - Retry attempt: {}, outboxId: {}, error: {}",
                                 context.getRetryCount(),
                                 context.getAttribute("outboxId"),
-                                throwable.getMessage());
+                                throwable.getMessage(),
+                                throwable);
                     }
 
                     @Override
