@@ -1,8 +1,8 @@
 package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
+import com.github.mangila.webshop.outbox.infrastructure.EventDistinctQueue;
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxPublisher;
-import com.github.mangila.webshop.shared.DistinctQueue;
 import com.github.mangila.webshop.shared.exception.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,12 @@ public class OutboxPublishActuatorEndpoint {
 
     private static final Logger log = LoggerFactory.getLogger(OutboxPublishActuatorEndpoint.class);
     private final OutboxPublisher outboxPublisher;
-    private final DistinctQueue<OutboxId> eventQueue;
+    private final EventDistinctQueue eventDistinctQueue;
 
     public OutboxPublishActuatorEndpoint(OutboxPublisher outboxPublisher,
-                                         DistinctQueue<OutboxId> eventQueue) {
+                                         EventDistinctQueue eventDistinctQueue) {
         this.outboxPublisher = outboxPublisher;
-        this.eventQueue = eventQueue;
+        this.eventDistinctQueue = eventDistinctQueue;
     }
 
     @WriteOperation
@@ -44,7 +44,7 @@ public class OutboxPublishActuatorEndpoint {
     public WebEndpointResponse<Map<String, Object>> execute(@Selector List<Long> outboxIds) {
         outboxIds.stream()
                 .map(OutboxId::new)
-                .forEach(eventQueue::addDlq);
+                .forEach(eventDistinctQueue::addDlq);
         return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 }

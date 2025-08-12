@@ -1,7 +1,7 @@
 package com.github.mangila.webshop.outbox.infrastructure.message;
 
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.DistinctQueue;
+import com.github.mangila.webshop.outbox.infrastructure.EventDistinctQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,30 +30,30 @@ public class MessageRelay {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRelay.class);
     private final OutboxPublisher publisher;
-    private final DistinctQueue<OutboxId> eventQueue;
+    private final EventDistinctQueue eventDistinctQueue;
 
     public MessageRelay(OutboxPublisher publisher,
-                        DistinctQueue<OutboxId> eventQueue) {
+                        EventDistinctQueue eventDistinctQueue) {
         this.publisher = publisher;
-        this.eventQueue = eventQueue;
+        this.eventDistinctQueue = eventDistinctQueue;
     }
 
     @Scheduled(fixedRateString = "${app.outbox.message-relay.process-queue.fixed-rate}")
     public void publishFromQueue() {
-        OutboxId id = eventQueue.poll();
+        OutboxId id = eventDistinctQueue.poll();
         if (id != null) {
             publisher.tryPublish(id)
                     .onSuccess(logSuccess(id))
                     .onFailure(e -> {
                         log.error("Failed to process message: {} add to DLQ", id, e);
-                        eventQueue.addDlq(id);
+                        eventDistinctQueue.addDlq(id);
                     });
         }
     }
 
     @Scheduled(fixedRateString = "${app.outbox.message-relay.process-dlq.fixed-rate}")
     public void publishFromDlq() {
-        OutboxId id = eventQueue.pollDlq();
+        OutboxId id = eventDistinctQueue.pollDlq();
         if (id != null) {
             publisher.tryPublish(id)
                     .onSuccess(logSuccess(id))
