@@ -2,8 +2,7 @@ package com.github.mangila.webshop.outbox.infrastructure.scheduler.job;
 
 import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxIdsByStatusQueryAction;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
-import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.DistinctQueue;
+import com.github.mangila.webshop.outbox.infrastructure.OutboxIdDistinctQueue;
 import com.github.mangila.webshop.shared.SimpleTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +30,15 @@ import org.slf4j.LoggerFactory;
  * Constructor Parameters:
  *
  * @param findAllOutboxIdsByStatusQueryAction A service used to retrieve a list of outbox IDs filtered by their status.
- * @param eventQueue                          The internal queue to populate with fetched outbox IDs.
+ * @param outboxIdDistinctQueue               The internal queue to populate with fetched outbox IDs.
  */
-public record FillEventQueueOutboxJob(FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
-                                      DistinctQueue<OutboxId> eventQueue) implements SimpleTask<OutboxJobKey> {
+public record FillOutboxIdDistinctQueueOutboxJob(
+        FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
+        OutboxIdDistinctQueue outboxIdDistinctQueue) implements SimpleTask<OutboxJobKey> {
 
-    private static final Logger log = LoggerFactory.getLogger(FillEventQueueOutboxJob.class);
+    private static final Logger log = LoggerFactory.getLogger(FillOutboxIdDistinctQueueOutboxJob.class);
 
-    public static final OutboxJobKey KEY = new OutboxJobKey("FILL_EVENT_QUEUE");
+    public static final OutboxJobKey KEY = new OutboxJobKey("FILL_OUTBOX_ID_DISTINCT_QUEUE");
 
     @Override
     public OutboxJobKey key() {
@@ -50,6 +50,6 @@ public record FillEventQueueOutboxJob(FindAllOutboxIdsByStatusQueryAction findAl
         findAllOutboxIdsByStatusQueryAction.execute(FindAllOutboxIdByStatusQuery.pending())
                 .stream()
                 .peek(outboxId -> log.info("Queue Message: {}", outboxId))
-                .forEach(eventQueue::add);
+                .forEach(outboxIdDistinctQueue::add);
     }
 }

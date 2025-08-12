@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OutboxConfig {
 
-    @Bean("eventDistinctQueue")
-    OutboxIdDistinctQueue eventDistinctQueue() {
+    @Bean("outboxIdDistinctQueue")
+    OutboxIdDistinctQueue outboxIdDistinctQueue() {
         return new OutboxIdDistinctQueue();
     }
 }
