@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.function.Consumer;
 
 /**
+ * The Message Relay (part of Transactional Outbox Pattern).
+ * <a href="https://microservices.io/patterns/data/transactional-outbox.html">https://microservices.io/patterns/data/transactional-outbox.html</a>
+ * <p>
  * MessageRelay is responsible for scheduling tasks to process outbox messages.
  * It facilitates publishing messages from the queue and dead-letter queue (DLQ)
  * through the {@link OutboxPublisher}.

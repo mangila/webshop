@@ -24,6 +24,28 @@ import org.springframework.transaction.support.TransactionSynchronization;
 
 import java.util.UUID;
 
+/**
+ * The Transactional Outbox Pattern. This event should be produced from a domain module wrapped inside the same transaction
+ * <a href="https://microservices.io/patterns/data/transactional-outbox.html">https://microservices.io/patterns/data/transactional-outbox.html</a>
+ * <p>
+ * The InsertOutboxEventUseCase is a transactional use case that is responsible for handling the
+ * insertion of an outbox event into the system.
+ * Use case responsible for handling the insertion of an outbox event into the system.
+ * This involves incrementing the outbox sequence, creating a new outbox entry,
+ * updating the sequence information, and adding the generated outbox ID to a distinct queue.
+ * <p>
+ * This class ensures that the processing of outbox events is handled transactionally,
+ * maintaining consistency across database operations and ensuring that all the required
+ * steps for handling the event are executed.
+ * <p>
+ * Methods:
+ * - The {@code execute} method is the main entry point for processing an {@code OutboxEvent}.
+ * It performs the following steps in order:
+ * 1. Increments the outbox sequence for the given aggregate.
+ * 2. Creates a new outbox entry.
+ * 3. Updates the sequence information in the database.
+ * 4. Adds the outbox ID to the queue after the transaction commits.
+ */
 @Service
 public class InsertOutboxEventUseCase {
 
@@ -70,5 +92,4 @@ public class InsertOutboxEventUseCase {
                 sequence
         );
     }
-
 }
