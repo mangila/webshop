@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.outbox.config;
 
-import com.github.mangila.webshop.outbox.infrastructure.OutboxEventDistinctQueue;
+import com.github.mangila.webshop.outbox.infrastructure.OutboxIdDistinctQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class OutboxConfig {
 
     @Bean("eventDistinctQueue")
-    OutboxEventDistinctQueue eventDistinctQueue() {
-        return new OutboxEventDistinctQueue();
+    OutboxIdDistinctQueue eventDistinctQueue() {
+        return new OutboxIdDistinctQueue();
     }
 }

@@ -6,11 +6,11 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OutboxEventDistinctQueue {
+public class OutboxIdDistinctQueue {
     private final DistinctQueue<OutboxId> queue;
     private final DistinctQueue<OutboxId> dlq;
 
-    public OutboxEventDistinctQueue() {
+    public OutboxIdDistinctQueue() {
         this.queue = new DistinctQueue<>();
         this.dlq = new DistinctQueue<>();
     }
