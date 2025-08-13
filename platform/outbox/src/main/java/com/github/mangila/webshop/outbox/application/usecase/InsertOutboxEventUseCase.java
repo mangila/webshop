@@ -20,6 +20,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.support.TransactionSynchronization;
 
 import java.util.UUID;
@@ -65,6 +67,11 @@ public class InsertOutboxEventUseCase {
         this.eventQueue = eventQueue;
     }
 
+    /**
+     * Why not {@code @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)}?
+     * {@code @Transactional(propagation = Propagation.MANDATORY)} will ensure an active Transaction and will throw an exception,
+     * instead of not processing the event. Fail fast is the preferred approach here.
+     */
     @EventListener
     @Transactional(propagation = Propagation.MANDATORY)
     void execute(OutboxEvent event) {
