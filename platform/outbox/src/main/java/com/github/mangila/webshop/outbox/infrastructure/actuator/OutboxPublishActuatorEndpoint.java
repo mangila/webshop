@@ -34,10 +34,14 @@ public class OutboxPublishActuatorEndpoint {
     public WebEndpointResponse<Map<String, Object>> execute(@Selector long outboxId) {
         boolean ok = outboxPublisher.tryPublish(new OutboxId(outboxId))
                 .getOrElseThrow(throwable -> new ApplicationException("Failed to publish outbox: %d".formatted(outboxId), throwable));
-        if (!ok) {
-            log.error("Failed to publish outbox: {}", outboxId);
+        if (ok) {
+            return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
+        } else {
+            return new WebEndpointResponse<>(
+                    Map.of("message", "Outbox: %d was already processed or locked".formatted(outboxId)),
+                    HttpStatus.CONFLICT.value()
+            );
         }
-        return new WebEndpointResponse<>(HttpStatus.NO_CONTENT.value());
     }
 
     @WriteOperation
