@@ -10,7 +10,10 @@ import org.junit.jupiter.api.Test;
 
 public class OutboxArchitectureTest {
 
-    public static final String ROOT_INFRA = "com.github.mangila.webshop.outbox.infrastructure";
+    public static final String ROOT = "com.github.mangila.webshop.outbox";
+    public static final String ROOT_APPLICATION = ROOT.concat(".application");
+    public static final String ROOT_DOMAIN = ROOT.concat(".domain");
+    public static final String ROOT_INFRA = ROOT.concat(".infrastructure");
 
     @Test
     @DisplayName("Job classes should have suffix with Job or SimpleJob")
