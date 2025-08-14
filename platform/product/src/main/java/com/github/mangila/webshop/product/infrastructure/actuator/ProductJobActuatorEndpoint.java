@@ -2,7 +2,7 @@ package com.github.mangila.webshop.product.infrastructure.actuator;
 
 import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobKey;
 import com.github.mangila.webshop.product.infrastructure.scheduler.job.ProductJobRunner;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
@@ -18,10 +18,10 @@ import java.util.Map;
 @Component
 public class ProductJobActuatorEndpoint {
 
-    private final Map<ProductJobKey, SimpleTask<ProductJobKey>> productJobKeyToJob;
+    private final Map<ProductJobKey, SimpleJob<ProductJobKey>> productJobKeyToJob;
     private final ProductJobRunner productJobRunner;
 
-    public ProductJobActuatorEndpoint(Map<ProductJobKey, SimpleTask<ProductJobKey>> productJobKeyToJob,
+    public ProductJobActuatorEndpoint(Map<ProductJobKey, SimpleJob<ProductJobKey>> productJobKeyToJob,
                                       ProductJobRunner productJobRunner) {
         this.productJobKeyToJob = productJobKeyToJob;
         this.productJobRunner = productJobRunner;

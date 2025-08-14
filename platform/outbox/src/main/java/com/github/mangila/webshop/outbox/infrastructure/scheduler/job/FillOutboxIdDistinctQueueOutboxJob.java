@@ -4,7 +4,7 @@ import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxI
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
 import com.github.mangila.webshop.outbox.infrastructure.OutboxIdDistinctQueue;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ import java.util.List;
  */
 public record FillOutboxIdDistinctQueueOutboxJob(
         FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
-        OutboxIdDistinctQueue outboxIdDistinctQueue) implements SimpleTask<OutboxJobKey> {
+        OutboxIdDistinctQueue outboxIdDistinctQueue) implements SimpleJob<OutboxJobKey> {
 
     private static final Logger log = LoggerFactory.getLogger(FillOutboxIdDistinctQueueOutboxJob.class);
 

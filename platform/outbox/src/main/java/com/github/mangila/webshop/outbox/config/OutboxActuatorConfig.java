@@ -6,7 +6,7 @@ import com.github.mangila.webshop.outbox.infrastructure.actuator.OutboxPublishAc
 import com.github.mangila.webshop.outbox.infrastructure.message.OutboxPublisher;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobRunner;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +23,7 @@ public class OutboxActuatorConfig {
 
     @Bean
     OutboxJobActuatorEndpoint outboxJobActuatorEndpoint(
-            Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToTJobs,
+            Map<OutboxJobKey, SimpleJob<OutboxJobKey>> outboxJobKeyToTJobs,
             OutboxJobRunner outboxJobRunner
     ) {
         return new OutboxJobActuatorEndpoint(outboxJobKeyToTJobs, outboxJobRunner);

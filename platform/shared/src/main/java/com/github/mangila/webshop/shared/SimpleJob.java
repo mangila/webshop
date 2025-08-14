@@ -1,6 +1,6 @@
 package com.github.mangila.webshop.shared;
 
-public interface SimpleTask<K> {
+public interface SimpleJob<K> {
 
     K key();
 

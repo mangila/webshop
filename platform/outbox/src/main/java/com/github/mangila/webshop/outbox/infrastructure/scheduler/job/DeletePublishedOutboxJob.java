@@ -5,7 +5,7 @@ import com.github.mangila.webshop.outbox.application.action.query.FindAllOutboxI
 import com.github.mangila.webshop.outbox.domain.cqrs.command.DeleteOutboxCommand;
 import com.github.mangila.webshop.outbox.domain.cqrs.query.FindAllOutboxIdByStatusQuery;
 import com.github.mangila.webshop.outbox.domain.primitive.OutboxId;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * allowing it to be executed as part of a broader task execution mechanism.
  */
 public record DeletePublishedOutboxJob(FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
-                                       DeleteOutboxCommandAction deleteOutboxCommandAction) implements SimpleTask<OutboxJobKey> {
+                                       DeleteOutboxCommandAction deleteOutboxCommandAction) implements SimpleJob<OutboxJobKey> {
 
     private static final Logger log = LoggerFactory.getLogger(DeletePublishedOutboxJob.class);
 

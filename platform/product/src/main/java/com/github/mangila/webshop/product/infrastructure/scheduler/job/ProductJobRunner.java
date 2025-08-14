@@ -1,18 +1,18 @@
 package com.github.mangila.webshop.product.infrastructure.scheduler.job;
 
 import com.github.mangila.webshop.shared.Ensure;
-import com.github.mangila.webshop.shared.SimpleTask;
-import com.github.mangila.webshop.shared.SimpleTaskRunner;
+import com.github.mangila.webshop.shared.SimpleJob;
+import com.github.mangila.webshop.shared.SimpleJobRunner;
 import com.github.mangila.webshop.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
-public class ProductJobRunner implements SimpleTaskRunner<ProductJobKey> {
-    private final Map<ProductJobKey, SimpleTask<ProductJobKey>> keyToProductTask;
+public class ProductJobRunner implements SimpleJobRunner<ProductJobKey> {
+    private final Map<ProductJobKey, SimpleJob<ProductJobKey>> keyToProductTask;
 
-    public ProductJobRunner(Map<ProductJobKey, SimpleTask<ProductJobKey>> keyToProductTask) {
+    public ProductJobRunner(Map<ProductJobKey, SimpleJob<ProductJobKey>> keyToProductTask) {
         this.keyToProductTask = keyToProductTask;
     }
 

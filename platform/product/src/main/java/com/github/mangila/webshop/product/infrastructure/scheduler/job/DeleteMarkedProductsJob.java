@@ -6,14 +6,14 @@ import com.github.mangila.webshop.product.domain.Product;
 import com.github.mangila.webshop.product.domain.cqrs.DeleteProductCommand;
 import com.github.mangila.webshop.product.domain.cqrs.FindProductByStatusQuery;
 import com.github.mangila.webshop.product.domain.types.ProductStatusType;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public record DeleteMarkedProductsJob(FindProductsByStatusQueryAction findProductsByStatusQueryAction,
-                                      DeleteProductCommandAction deleteProductCommandAction) implements SimpleTask<ProductJobKey> {
+                                      DeleteProductCommandAction deleteProductCommandAction) implements SimpleJob<ProductJobKey> {
 
     private static final Logger log = LoggerFactory.getLogger(DeleteMarkedProductsJob.class);
 

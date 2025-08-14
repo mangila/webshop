@@ -2,7 +2,7 @@ package com.github.mangila.webshop.outbox.infrastructure.actuator;
 
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobRunner;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
@@ -18,10 +18,10 @@ import java.util.Map;
 @Component
 public class OutboxJobActuatorEndpoint {
 
-    private final Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob;
+    private final Map<OutboxJobKey, SimpleJob<OutboxJobKey>> outboxJobKeyToJob;
     private final OutboxJobRunner outboxJobRunner;
 
-    public OutboxJobActuatorEndpoint(Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob, OutboxJobRunner outboxJobRunner) {
+    public OutboxJobActuatorEndpoint(Map<OutboxJobKey, SimpleJob<OutboxJobKey>> outboxJobKeyToJob, OutboxJobRunner outboxJobRunner) {
         this.outboxJobKeyToJob = outboxJobKeyToJob;
         this.outboxJobRunner = outboxJobRunner;
     }

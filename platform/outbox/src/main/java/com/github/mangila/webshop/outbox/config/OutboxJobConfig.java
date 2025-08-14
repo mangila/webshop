@@ -6,7 +6,7 @@ import com.github.mangila.webshop.outbox.infrastructure.OutboxIdDistinctQueue;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.DeletePublishedOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.FillOutboxIdDistinctQueueOutboxJob;
 import com.github.mangila.webshop.outbox.infrastructure.scheduler.job.OutboxJobKey;
-import com.github.mangila.webshop.shared.SimpleTask;
+import com.github.mangila.webshop.shared.SimpleJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ public class OutboxJobConfig {
     private static final Logger log = LoggerFactory.getLogger(OutboxJobConfig.class);
 
     @Bean
-    Map<OutboxJobKey, SimpleTask<OutboxJobKey>> outboxJobKeyToJob(
+    Map<OutboxJobKey, SimpleJob<OutboxJobKey>> outboxJobKeyToJob(
             FindAllOutboxIdsByStatusQueryAction findAllOutboxIdsByStatusQueryAction,
             DeleteOutboxCommandAction deleteOutboxCommandAction,
             OutboxIdDistinctQueue outboxIdDistinctQueue
@@ -31,7 +31,7 @@ public class OutboxJobConfig {
         );
     }
 
-    Map.Entry<OutboxJobKey, SimpleTask<OutboxJobKey>> addJob(SimpleTask<OutboxJobKey> job) {
+    Map.Entry<OutboxJobKey, SimpleJob<OutboxJobKey>> addJob(SimpleJob<OutboxJobKey> job) {
         log.info("Add Job: {}", job.key());
         return Map.entry(job.key(), job);
     }
