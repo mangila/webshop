@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 public class OutboxArchitectureTest {
 
     @Test
-    @DisplayName("Should have job classes ending with Job or SimpleJob")
-    void jobClassesShouldEndWithJobOrSimpleJob() {
+    @DisplayName("Job classes should have suffix with Job or SimpleJob")
+    void jobClassesShouldHaveSuffixWithJobOrSimpleJob() {
         JavaClasses jobs = new ClassFileImporter()
                 .importPackages("com.github.mangila.webshop.outbox.infrastructure.scheduler.job");
         ArchRuleDefinition.classes()
