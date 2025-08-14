@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @param <T> The type of elements stored in the queue.
  */
 public class DistinctQueue<T> {
+
     private final Queue<T> queue;
     private final Set<T> inQueue;
 
@@ -29,7 +30,7 @@ public class DistinctQueue<T> {
     }
 
     public void add(T type) {
-        Ensure.notNull(type, type.getClass());
+        Ensure.notNull(type);
         if (inQueue.add(type)) {
             queue.add(type);
         }
@@ -41,5 +42,9 @@ public class DistinctQueue<T> {
             inQueue.remove(t);
         }
         return t;
+    }
+
+    public int size() {
+        return inQueue.size();
     }
 }
