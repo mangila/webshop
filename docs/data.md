@@ -1,5 +1,5 @@
 # Data
 
-BI & Data Analytics stuffs
+BI & Data Analytics
 
-PDF, Reports, CSV, etc
+PDF, Reports, CSV, Warehouse, etc.
