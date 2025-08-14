@@ -10,11 +10,13 @@ import org.junit.jupiter.api.Test;
 
 public class OutboxArchitectureTest {
 
+    public static final String ROOT_INFRA = "com.github.mangila.webshop.outbox.infrastructure";
+
     @Test
     @DisplayName("Job classes should have suffix with Job or SimpleJob")
     void jobClassesShouldHaveSuffixWithJobOrSimpleJob() {
         JavaClasses jobs = new ClassFileImporter()
-                .importPackages("com.github.mangila.webshop.outbox.infrastructure.scheduler.job");
+                .importPackages(ROOT_INFRA.concat(".scheduler.job"));
         ArchRuleDefinition.classes()
                 .that()
                 .implement(SimpleJob.class)
